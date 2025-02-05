@@ -14,7 +14,7 @@ export const OurProcess = async () => {
       }
     >
       <section
-        className=""
+        className="border border-gray-700"
         itemScope
         itemType="https://schema.org/WebPageElement"
       >
@@ -43,12 +43,13 @@ const ProcessTitleSubtitle = ({ t }: { t: any }) => {
 
 const ProcessItem = ({ t, index, item }: { t: any; index: number; item: any }) => {
   return (
-    <div key={index} className="p-4 border rounded shadow-sm">
-      <h2 className="text-lg font-bold">{t(`${item.title}`)}</h2>
-      <p className="mt-2 text-gray-600">
-        <ul>
+    <div key={index} className="p-4 border rounded shadow-sm flex flex-col gap-[16px] ">
+      <h2>0{index + 1}</h2>
+      <h2 className="text-lg text-black">{t(`${item.title}`)}</h2>
+      <p className=" text-gray-600">
+        <ul className="flex flex-col gap-[16px]">
         {item.list.map((listItem: any, index: number) => (
-          <li key={index} className="text-gray-600 list-disc">{t(`${listItem}`)}</li>
+          <li key={index} className="text-gray-600 list-disc ml-[16px]">{t(`${listItem}`)}</li>
         ))}
         </ul> 
 
