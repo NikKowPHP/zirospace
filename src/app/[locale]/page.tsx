@@ -102,6 +102,13 @@ const CaseStudies = dynamic(
   }
 )
 
+const FloatVideo = dynamic(
+  () => import('@/components/sections/float-video/float-video').then(mod => mod.FloatVideo),
+  {
+    ssr: true,
+  }
+)
+
 interface HomePageProps {
   params: Promise<{ locale: Locale }>
 }
@@ -200,6 +207,14 @@ export default async function HomePage({ params }: HomePageProps) {
           }
         >
           <StayInformed />
+        </Suspense>
+
+        <Suspense
+          fallback={
+            <div className="" />
+          }
+        >
+          <FloatVideo />
         </Suspense>
       </div>
     </div>
