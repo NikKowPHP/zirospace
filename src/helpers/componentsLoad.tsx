@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 
 
-const HeroSection = dynamic(
+export const HeroSection = dynamic(
   () =>
     import('@/components/sections/hero/hero').then((mod) => mod.HeroSection),
   {
@@ -9,7 +9,7 @@ const HeroSection = dynamic(
   }
 )
 
-const SubheroSection = dynamic(
+export const SubheroSection = dynamic(
   () =>
     import('@/components/sections/subhero/subhero').then(
       (mod) => mod.SubheroSection
@@ -18,7 +18,7 @@ const SubheroSection = dynamic(
     ssr: true,
   }
 )
-const OurProcess = dynamic(
+export const OurProcess = dynamic(
   () =>
     import('@/components/sections/our-process/our-process').then(
       (mod) => mod.OurProcess
@@ -28,7 +28,7 @@ const OurProcess = dynamic(
   }
 )
 
-const OurServices = dynamic(
+export const OurServices = dynamic(
   () =>
     import('@/components/sections/our-services/our-services').then(
       (mod) => mod.OurServices
@@ -38,14 +38,14 @@ const OurServices = dynamic(
   }
 )
 
-const WhyUs = dynamic(
+export const WhyUs = dynamic(
   () => import('@/components/sections/why-us/why-us').then((mod) => mod.WhyUs),
   {
     ssr: true,
   }
 )
 
-const Philosophy = dynamic(
+export const Philosophy = dynamic(
   () =>
     import('@/components/sections/philosophy/philosophy').then(
       (mod) => mod.Philosophy
@@ -55,7 +55,7 @@ const Philosophy = dynamic(
   }
 )
 
-const StayInformed = dynamic(
+export const StayInformed = dynamic(
   () =>
     import('@/components/sections/stay-informed/stay-informed').then(
       (mod) => mod.StayInformed
@@ -65,7 +65,7 @@ const StayInformed = dynamic(
   }
 )
 
-const Faq = dynamic(
+export const Faq = dynamic(
   () => import('@/components/sections/faq/faq').then((mod) => mod.Faq),
   {
     loading: () => (
@@ -75,7 +75,7 @@ const Faq = dynamic(
   }
 )
 
-const Testimonials = dynamic(
+export const Testimonials = dynamic(
   () =>
     import('@/components/sections/testimonials/testimonials').then(
       (mod) => mod.Testimonials
@@ -87,7 +87,7 @@ const Testimonials = dynamic(
 )
 
 // Dynamic imports with loading boundaries
-const CaseStudies = dynamic(
+export const CaseStudies = dynamic(
   () =>
     import('@/components/sections/case-studies/case-studies').then(
       (mod) => mod.CaseStudies
@@ -100,7 +100,7 @@ const CaseStudies = dynamic(
   }
 )
 
-const FloatVideo = dynamic(
+export  const FloatVideo = dynamic(
   () => import('@/components/sections/float-video/float-video').then(mod => mod.FloatVideo),
   {
     ssr: true,

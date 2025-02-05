@@ -1,7 +1,19 @@
 import { Suspense } from 'react'
 
-import dynamic from 'next/dynamic'
 import { type Locale } from '@/i18n'
+import {
+  HeroSection,
+  SubheroSection,
+  OurProcess,
+  OurServices,
+  Testimonials,
+  CaseStudies,
+  WhyUs,
+  Philosophy,
+  Faq,
+  StayInformed,
+  FloatVideo,
+} from '@/helpers/componentsLoad'
 
 
 
