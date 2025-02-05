@@ -141,6 +141,16 @@
       }
     }
   },
+  "stayInformedSection": {
+    "title": "Stay Informed",
+    "subtitle": "Subscribe to our newsletter to receive updates on our latest projects, insights, and industry news.",
+    "form": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "submit": "Submit"
+    }
+  },
   "404": {
     "title": "Page Not Found",
     "description": "The page you are looking for doesn't exist or has been moved.",
