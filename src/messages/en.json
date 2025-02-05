@@ -8,6 +8,45 @@
     "title": "We specialize in user-centric digital health to empower individuals and enhance care",
     "subtitle": "Our mission is to simplify healthcare interactions with intuitive designs and impactful technology, ensuring that everyone feels supported and engaged on their health journey"
   },
+  "processSection": {
+    "title": "Our process.",
+    "subtitle": "Reliable process for achieving distinctiveness.",
+    "items": {
+      "item1": {
+        "title": "Discovery.",
+        "list": {
+          "item1": "Gain insights into challenges, goals, and target audiences through discussions and research.",
+          "item2": "Align objectives to set the stage for effective collaboration.",
+          "item3": "Collect data on market trends and user preferences to inform design."
+        }
+      },
+      "item2": {
+        "title": "Ideation.",
+        "list": {
+          "item1": "Explore creative concepts and strategies to address healthcare challenges.",
+          "item2": "Generate a diverse range of ideas aimed at improving user engagement and satisfaction.",
+          "item3": "Refine promising ideas to enhance user experiences."
+        }
+      },
+      "item3": {
+        "title": "Design and Refinement.",
+        "list": {
+          "item1": "Create wireframes and prototypes that prioritize intuitive design.",
+          "item2": "Develop visually appealing digital experiences that resonate with users.",
+          "item3": "Ensure final designs are polished and consistent with brand identity."
+        }
+      },
+      "item4": {
+        "title": "Testing.",
+        "list": {
+          "item1": "Conduct testing to identify issues and ensure quality.",
+          "item2": "Collect insights from users and stakeholders to refine the design.",
+          "item3": "Make adjustments until the solution is ready for launch."
+        }
+      }
+     
+    }
+  },
   "servicesSection": {
     "ourServicesTitle": "Our Services.",
     "ourServicesSubtitle": "Your Partner in Innovative Digital Health Solutions",
