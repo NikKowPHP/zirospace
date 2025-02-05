@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
 
 export const SubheroSection = async () => {
-  const t = await getTranslations('hero')
+  const t = await getTranslations('subHeroSection')
 
   return (
     <Suspense
@@ -12,21 +12,23 @@ export const SubheroSection = async () => {
         </div>
       }
     >
-      <section className="flex flex-col items-center text-center pt-[180px] sm:pt-[180px] lg:pt-[160px] pb-[60px] sm:pb-[80px] lg:pb-[100px] space-y-6 sm:space-y-8"
+      <section className="flex flex-col border border-gray-500 items-center text-center py-[180px] sm:py-[180px] lg:py-[160px]"
         itemScope
         itemType="https://schema.org/WebPageElement"
       >
-        <h1 className="text-[40px] sm:text-[56px] lg:text-[80px] leading-[1.1] font-medium tracking-[-0.02em] text-primary"
+        <div className='flex flex-col items-center text-center max-w-6xl gap-[20px] sm:gap-[32px]'>
+
+        <h1 className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-black"
           itemProp="headline"
         >
-          {t('title1')}
-          <br className="hidden sm:block" />
-          <span className="sm:hidden"> </span>
-          {t('title2')}
+          {t('title')}
+         
         </h1>
-        <p className="text-[18px] sm:text-[20px] lg:text-[24px] text-gray-900 leading-relaxed max-w-xl sm:max-w-2xl px-4 sm:px-0">
+        <p className="text-[14px] sm:text-[16px] lg:text-[18px] text-gray-700 leading-relaxed  sm:px-0">
           {t('subtitle')}
         </p>
+
+        </div>
       </section>
     </Suspense>
 
