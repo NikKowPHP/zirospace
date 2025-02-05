@@ -8,8 +8,6 @@ import { type Locale } from '@/i18n'
 import { homePageMetadata } from '@/utils/metadata'
 
 
-
-
 const SubheroSection = dynamic(
   () => import('@/components/sections/subhero/subhero').then(mod => mod.SubheroSection),
   {
@@ -30,7 +28,7 @@ const OurServices = dynamic(
   }
 )
 const HeroSection = dynamic(
-  () => import('@/components/sections/hero/hero').then(mod => mod.HeroSection),
+  () => import('@/components/sections/HeroSection').then(mod => mod.HeroSection),
   {
     ssr: true
   }
@@ -65,6 +63,7 @@ const CaseStudies = dynamic(
 
 
 
+
 interface HomePageProps {
   params: Promise<{ locale: Locale }>
 }
@@ -84,6 +83,7 @@ export default async function HomePage({ params }: HomePageProps) {
       <meta itemProp="description" content="Professional Web Design & Development Services" />
       <div className="container relative mx-auto md:px-4 sm:px-6 lg:px-8">
       
+        <HeroSection locale={locale} />
 
         <Suspense
           fallback={
