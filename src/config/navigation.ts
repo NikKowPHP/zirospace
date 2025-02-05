@@ -1,13 +1,26 @@
 export const navigationConfig = {
   mainNav: [
     {
-      title: 'work',
-      href: 'work',
+      title: 'process',
+      href: 'process',
     },
     {
-      title: 'pricing',
-      href: 'pricing',
+      title: 'services',
+      href: 'services',
+    },
+    {
+      title: 'whyZiro',
+      href: 'why-ziro',
+    },
+    {
+      title: 'philosophy',
+      href: 'philosophy',
+    },
+    {
+      title: 'FAQs',
+      href: 'faqs',
     }
+
   ],
   languages: [
     {

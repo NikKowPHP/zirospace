@@ -8,7 +8,7 @@ export function HeroButtons() {
   
   return (
     <div 
-      className="flex flex-col sm:flex-row gap-[10px] pt-6 sm:pt-8 w-full px-[20px]  sm:w-auto sm:px-4 md:px-0"
+      className="flex flex-col sm:flex-row gap-[16px] pt-[36px] sm:pt-[36px] w-full px-[20px] sm:w-auto sm:px-4 md:px-0"
       role="group"
       aria-label="Hero actions"
     >
@@ -29,7 +29,7 @@ export function HeroButtons() {
         }}
         aria-label="View our pricing plans"
       >
-        {t('viewPricing')}
+        {t('learnMore')}
       </Button>
       <Button
         size="lg"

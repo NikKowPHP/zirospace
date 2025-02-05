@@ -8,17 +8,17 @@ import { cn } from '@/lib/utils/cn'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 
-export function Header() {
+export function Navbar() {
   const pathname = usePathname()
   const t = useTranslations('navigation')
 
   return (
     <header 
-      className="fixed top-6 md:top-10 mx-[25px]     px-[10px] sm:mx-[45px]   lg:mx-[37px] xl:mx-auto xl:max-w-[1246px] rounded-full left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm "
+      className="sticky top-6 md:top-10  mx-auto border border-red-500    px-[10px]  max-w-full rounded-full left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm "
       itemScope 
       itemType="https://schema.org/WPHeader"
     >
-      <div className="container mx-auto px-[5px]">
+      <div className=" mx-auto px-[5px]">
         <div className="flex h-[72px] items-center justify-between">
           <Link 
             href="/" 

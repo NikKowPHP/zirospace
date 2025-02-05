@@ -35,7 +35,7 @@ export default async function HomePage({ params }: HomePageProps) {
         itemProp="description"
         content="Professional Web Design & Development Services"
       />
-      <div className="container relative mx-auto md:px-4 sm:px-6 lg:px-8">
+      <div className="relative ">
         <Suspense
           fallback={
             <div className="flex items-center justify-center min-h-[200px]">
