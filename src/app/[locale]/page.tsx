@@ -28,7 +28,7 @@ const OurServices = dynamic(
   }
 )
 const HeroSection = dynamic(
-  () => import('@/components/sections/HeroSection').then(mod => mod.HeroSection),
+  () => import('@/components/sections/hero/hero').then(mod => mod.HeroSection),
   {
     ssr: true
   }
@@ -71,7 +71,6 @@ interface HomePageProps {
 
 export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params
-  const t = await getTranslations('hero')
 
   return (
     <div

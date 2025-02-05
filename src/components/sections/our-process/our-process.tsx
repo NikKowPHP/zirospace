@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
-import { HeroButtons } from './hero/hero-buttons'
+import { HeroButtons } from '../hero/hero-buttons'
 import { getTranslations } from 'next-intl/server'
 
-export const HeroSection = async ({ locale }: { locale: string }) => {
+export const OurProcess = async ({ locale }: { locale: string }) => {
   const t = await getTranslations('hero')
 
   return (
