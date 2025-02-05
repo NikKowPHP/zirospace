@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
 
-export const SubheroSection = async ({ locale }: { locale: string }) => {
+export const SubheroSection = async () => {
   const t = await getTranslations('hero')
 
   return (

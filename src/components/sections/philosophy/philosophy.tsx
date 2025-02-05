@@ -1,8 +1,7 @@
 import { Suspense } from 'react'
-import { HeroButtons } from '../hero/hero-buttons'
 import { getTranslations } from 'next-intl/server'
 
-export const OurProcess = async () => {
+export const Philosophy = async () => {
   const t = await getTranslations('hero')
 
   return (
@@ -28,7 +27,6 @@ export const OurProcess = async () => {
         <p className="text-[18px] sm:text-[20px] lg:text-[24px] text-gray-900 leading-relaxed max-w-xl sm:max-w-2xl px-4 sm:px-0">
           {t('subtitle')}
         </p>
-        <HeroButtons />
       </section>
     </Suspense>
 
