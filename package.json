@@ -1,6 +1,6 @@
 {
-  "name": "ziro",
-  "version": "0.2.0",
+  "name": "ziro.space",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3025",
@@ -12,7 +12,8 @@
     "test:watch": "jest --watch",
     "format": "prettier --write .",
     "analyze": "cross-env ANALYZE=true next build",
-    "build:prod": "next build && next-bundle-analyzer"
+    "build:prod": "next build && next-bundle-analyzer",
+    "docker:proxy": "docker-compose -f docker-compose.proxy.yml up"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

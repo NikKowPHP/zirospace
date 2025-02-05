@@ -1,8 +1,31 @@
 {
   "hero": {
-    "title1": "Creating Brands",
-    "title2": "with care",
-    "subtitle": "Partnering for Your Success Through Design"
+    "title1": "Pioneering Integrated",
+    "title2": "Digital Health Solutions",
+    "subtitle": "Designing User-Friendly Technology for Better Patient Experiences, from Apps to Devices"
+  },
+  "subHeroSection": {
+    "title": "We specialize in user-centric digital health to empower individuals and enhance care",
+    "subtitle": "Our mission is to simplify healthcare interactions with intuitive designs and impactful technology, ensuring that everyone feels supported and engaged on their health journey"
+  },
+  "servicesSection": {
+    "ourServicesTitle": "Our Services.",
+    "ourServicesSubtitle": "Your Partner in Innovative Digital Health Solutions",
+    "serviceCard1": {
+      "title": "UI/UX Design",
+      "subtitle": "Crafting Intuitive Experiences",
+      "description": "Create intuitive and engaging user interfaces that enhance the overall experience for patients and healthcare providers, ensuring that digital health solutions are user-friendly and accessible."
+    },
+    "serviceCard2": {
+      "title": "Branding & Identity",
+      "subtitle": "Creating Brand Excellence",
+      "description": "Develop impactful brand identities that resonate with target audiences, effectively communicating the values and mission of healthcare organizations through thoughtful design."
+    },
+    "serviceCard3": {
+      "title": "Digital Product",
+      "subtitle": "Transforming Ideas into Reality",
+      "description": "Design and build innovative digital health products, from mobile apps to web platforms, that address real-world healthcare challenges and improve patient engagement and outcomes."
+    }
   },
   "footer": {
     "address": "Ziro sp. z o.o., ul. Mogilska 43 31-545 Kraków, Poland",
@@ -17,10 +40,28 @@
     }
   },
   "navigation": {
-    "work": "Work",
-    "pricing": "Pricing",
+    "process": "Process",
+    "services": "Services",
+    "whyZiro": "Why Ziro?",
+    "philosophy": "Philosophy",
+    "FAQs": "FAQs",
     "bookCall": "Book a Call",
-    "viewPricing": "View Pricing"
+    "learnMore": "Learn More"
+  },
+  "caseStudiesSection": {
+    "title": "Our Projects",
+    "description": "Scroll through our recent projects"
+  },
+
+  "wyZiroSection": {
+    "title": "Why Choose Ziro?",
+    "description": "Ziro is a partner in innovation, dedicated to creating impactful digital health solutions that enhance patient care and engagement. Collaborate to transform healthcare through exceptional design."
+  },
+  "ziroPhilosophy": {
+    "title": "Ziro's Philosophy: The Art of Nearness",
+    "subtitle": "Based on idea \"Nearness Implies Separation.\" ",
+    "description1": "At Ziro, we believe innovation in digital health stems from balancing proximity and distance. By closely collaborating with clients and users to understand their needs while maintaining some separation to challenge assumptions, we create solutions that integrate seamlessly into patients' and healthcare providers' lives.",
+    "description2": "We view perfection as a continuous journey, aiming for \"close to perfect\" through iterative design processes that adapt to evolving user needs and technologies. Our core philosophy emphasizes that \"perfection in proximity\" is essential for transforming digital health and enhancing patient care and engagement."
   },
   "caseStudy": {
     "ctaText": {
@@ -63,39 +104,40 @@
     "ctaText": "Book a Call"
   },
   "faq": {
-    "title": "FAQ",
+    "title": "Our faqs.",
+    "subtitle": "The most common questions we get asked.",
     "items": {
       "one-page": {
-        "question": "What is a one-page website?",
-        "answer": "A one-page website is a single webpage that contains all essential information about your business or project. It's perfect for simple presentations, landing pages, or when you want to guide visitors through a specific narrative flow. All content is organized in sections that users can scroll through or navigate to using menu links."
+        "question": "What types of services does Ziro offer?",
+        "answer": "Ziro specializes in UI/UX design, branding, website and app design, and creative campaigns specifically tailored for the digital health sector. Our goal is to create user-centric solutions that enhance patient engagement and improve healthcare delivery."
       },
       "multi-page-benefits": {
-        "question": "What are the benefits of a multi-page website?",
-        "answer": "Multi-page websites offer more detailed content organization, better SEO opportunities, and are ideal for complex businesses. They allow for deeper content hierarchies, dedicated sections for different services or products, and can grow with your business. They're particularly effective for content-rich sites and e-commerce platforms."
+        "question": "How does Ziro approach project collaboration?",
+        "answer": "Ziro follows a structured process that includes discovery, ideation, design, and testing. This collaborative approach ensures that client needs are thoroughly understood and integrated into every stage of the project."
       },
       "timeline": {
-        "question": "How long does it take to design and develop a website?",
-        "answer": "The timeline varies depending on the project scope. A one-page website typically takes 2-3 days, while multi-page websites can take 1-4 weeks. Factors affecting the timeline include design complexity, number of pages, custom features, and content preparation."
+        "question": "What industries does Ziro focus on?",
+        "answer": "Ziro primarily focuses on the digital health industry, creating solutions for various domains such as mental health, fitness and wellness, telehealth, patient engagement platforms, and more."
       },
       "mobile-friendly": {
-        "question": "Will my website be mobile-friendly?",
-        "answer": "Yes, absolutely! All our websites are built with a mobile-first approach and are fully responsive. They automatically adjust to look and function perfectly on all devices - smartphones, tablets, laptops, and desktop computers."
+        "question": "How does Ziro ensure quality in its designs?",
+        "answer": "Quality is a top priority at Ziro. We conduct thorough usability testing and gather feedback from users and stakeholders throughout the design process to identify and resolve any issues before launch."
       },
       "support": {
-        "question": "Do you offer ongoing support after the website is launched?",
-        "answer": "Yes, we provide ongoing maintenance and support to ensure your website continues to perform optimally. This includes regular updates, security monitoring, and technical support when needed."
+        "question": "Can Ziro help with existing projects?",
+        "answer": "Yes! Ziro can collaborate on existing projects to enhance design, improve user experience, or develop new features. We are open to working with clients at any stage of their project."
       },
       "additional-features": {
-        "question": "What if I need additional features later?",
-        "answer": "Our websites are built to be scalable. You can easily add new features or functionality as your business grows. We can help you plan and implement these additions while maintaining the consistency and performance of your site."
+        "question": "How long does a typical project take?",
+        "answer": "Project timelines vary based on complexity and scope. After the initial discovery phase, we provide a detailed timeline tailored to your specific project needs."
       },
       "choose-type": {
-        "question": "How do I choose between a one-page and a multi-page website?",
-        "answer": "The choice depends on your specific needs. One-page sites are great for simple presentations and focused messages, while multi-page sites are better for complex content and larger businesses. We can help you evaluate your needs and recommend the best solution."
+        "question": "What is Ziro’s approach to user feedback?",
+        "answer": "User feedback is integral to our design process. We actively seek input during testing phases to refine solutions and ensure they meet user needs effectively."
       },
       "get-started": {
-        "question": "How do I get started?",
-        "answer": "Getting started is easy! Simply book a call with us, and we'll discuss your project requirements, timeline, and budget. We'll guide you through the entire process and help you choose the best solution for your needs."
+        "question": "How can I get started with Ziro?",
+        "answer": "To get started, you can schedule a consultation using our Book a Call(Calendly link) or email us directly at nikhil@ziro.space /nsingh2075@gmail.com. We look forward to discussing your needs and exploring how we can collaborate!"
       }
     }
   },
@@ -116,8 +158,8 @@
     "bookCall": "Book a call"
   },
   "testimonials": {
-    "title": "What Our Clients Say",
-    "description": "Discover the experiences that shape our story. Straight from those who inspire our best work",
+    "title": "Our results.",
+    "description": "Hear what our clients have to say about out team and our services.",
     "client1": {
       "role": "Developer",
       "company": "BaseSystem",
