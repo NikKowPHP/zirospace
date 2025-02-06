@@ -49,7 +49,7 @@ const CaseStudyImage = memo(function CaseStudyImage({
 // Separate tags component to prevent unnecessary re-renders
 const CaseStudyTags = memo(function CaseStudyTags({ tags }: { tags: string[] }) {
   return (
-    <div className="flex flex-wrap gap-2 sm:gap-3">
+    <div className="flex flex-wrap gap-2 sm:gap-3 border border-yellow-500">
       {tags.map((tag) => (
         <Tag 
           key={tag} 
@@ -92,20 +92,39 @@ export const CaseStudyCard = memo(function CaseStudyCard({
 
   return (
     <article 
-      className="flex flex-col rounded-[24px] sm:rounded-[32px] border border-gray-200 p-6 sm:p-8 lg:p-10 shadow-sm h-full"
+      className={`flex flex-col border border-gray-700 rounded-[24px] sm:rounded-[32px] border border-gray-200 shadow-sm h-full`}
+      style={{
+        color: caseStudy.color,
+        backgroundColor: caseStudy.backgroundColor,
+      }}
       itemScope
       itemType="https://schema.org/CreativeWork"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-[50px]  h-full p-2 sm:p-10 lg:p-2">
-        <div className="flex flex-col  sm:space-y-8 h-full">
-          <div className="">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8  border border-red-500  h-full">
+        <div className="flex flex-col border border-green-500 sm:space-y-8 h-full sm:p-[40px]">
+
+    
+
+          
+          <div className="border border-blue-500">
             {/* Title */}
             <h2 
-              className="text-[32px] sm:text-[40px] lg:text-[48px] font-medium tracking-[-0.02em] text-gray-900 mb-6 sm:mb-8"
+              className=" text-blue-500 text-[16px] sm:text-[18px] lg:text-[20px] font-medium tracking-[-0.02em] text-gray-900 mb-6 sm:mb-8"
               itemProp="name"
             >
               {caseStudy.title}
             </h2>
+
+            {/* Subtitle */}
+            <h3 
+              className="text-[14px] sm:text-[16px] lg:text-[48px] text-gray-600 max-w-xl sm:max-w-2xl px-4 sm:px-0 sm:max-w-sm leading-[1.2]"
+              style={{
+                color: caseStudy.color,
+              }}
+              itemProp="name"
+            >
+              {caseStudy.subtitle}
+            </h3>
             
             {/* Description */}
             <p 
@@ -113,8 +132,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
               itemProp="description"
             >
               {caseStudy.description}
-            </p>
-            
+              </p>
           </div>
 
           <div className='lg:flex-1'>
@@ -126,9 +144,9 @@ export const CaseStudyCard = memo(function CaseStudyCard({
           </div>
           
           {/* Desktop/Tablet CTA Button */}
-          <div className="hidden lg:block mt-auto">
+          <div className="hidden lg:block mt-auto border border-purple-500">
             <Button 
-              size="xl" 
+              size="sm" 
               href={`/${locale}/case-studies/${caseStudy.slug}`}
             >
               {ctaText()}
@@ -137,7 +155,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
         </div>
 
         {/* Images Grid */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 auto-rows-[150px] sm:auto-rows-[180px] lg:auto-rows-[200px]">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 auto-rows-[150px] sm:auto-rows-[180px] lg:auto-rows-[200px] border border-orange-500">
           {caseStudy.images.slice(0, 1).map((image: ImageType, index: number) => (
             <CaseStudyImage
               key={image.url}

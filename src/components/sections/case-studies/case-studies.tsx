@@ -54,7 +54,7 @@ const CaseStudyList = memo(function CaseStudyList({
   locale: Locale
 }) {
   return (
-    <div className="relative mx-auto border border-red-500 flex flex-col gap-16">
+    <div className="relative mx-auto border border-red-500 flex flex-col gap-16 max-w-5xl">
       {caseStudies.map((caseStudy) => (
         <CaseStudyCard key={caseStudy.id} caseStudy={caseStudy} locale={locale} />
       ))}
