@@ -28,6 +28,7 @@ services:
       - ./public:/app/public
       - ./package.json:/app/package.json
       - ./package-lock.json:/app/package-lock.json
+      - ./docker/db/entrypoint.sh:/docker-entrypoint-initdb.d/entrypoint.sh
     networks:
       - web-network
     healthcheck:
@@ -35,6 +36,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    entrypoint: /docker-entrypoint-initdb.d/entrypoint.sh
 
   db:
     image: postgres:13
@@ -45,7 +47,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5455:5432"
     networks:
       - web-network
 
