@@ -1,7 +1,7 @@
-import { AuthService } from '@/domain/services/auth.service'
+import { IAuthService } from '@/domain/services/auth.service'
 import { supabase } from '@/lib/supabase'
 
-export class SupabaseAuthService implements AuthService {
+export class SupabaseAuthService implements IAuthService {
   async login(email: string, password: string) {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,

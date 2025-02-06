@@ -5,6 +5,7 @@ import { Session, User, AuthError } from '@supabase/supabase-js'
 import { SupabaseAuthService } from '@/infrastructure/services/supabase-auth.service'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { MockAuthService } from '@/infrastructure/services/mock-auth-service.service'
 
 
 interface AuthContextType {
@@ -18,7 +19,9 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
-const authService = new SupabaseAuthService()
+const authService = process.env.MOCK_REPOSITORIES === 'true' 
+  ? new MockAuthService() 
+  : new SupabaseAuthService()
 
 const isAdminRoute = (path: string) => {
   const adminRoutes = ['/admin', '/admin/login', '/admin/dashboard', '/admin/case-studies']

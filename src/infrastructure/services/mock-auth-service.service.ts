@@ -1,7 +1,7 @@
-import { AuthService } from '@/domain/services/auth.service'
+import { IAuthService } from '@/domain/services/auth.service'
 import { Session, User } from '@supabase/supabase-js'
 
-export class MockAuthService implements AuthService {
+export class MockAuthService implements IAuthService {
   async login(email: string, password: string): Promise<{ user: User | null; session: Session | null }> {
     console.error('login', email, password)
     return {
