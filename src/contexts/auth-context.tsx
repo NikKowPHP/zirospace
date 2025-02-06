@@ -3,7 +3,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { Session, User, AuthError } from '@supabase/supabase-js'
 import { SupabaseAuthService } from '@/infrastructure/services/supabase-auth.service'
-import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { MockAuthService } from '@/infrastructure/services/mock-auth-service.service'
 
@@ -19,16 +18,19 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
-const authService = process.env.MOCK_REPOSITORIES === 'true' 
-  ? new MockAuthService() 
-  : new SupabaseAuthService()
+
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [isMock] = useState(() => process.env.NEXT_PUBLIC_MOCK_REPOSITORIES === 'true')
+  const [authService] = useState(() => 
+    isMock ? new MockAuthService() : new SupabaseAuthService()
+  )
 
 const isAdminRoute = (path: string) => {
   const adminRoutes = ['/admin', '/admin/login', '/admin/dashboard', '/admin/case-studies']
   return adminRoutes.some(route => path.startsWith(route))
 }
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
@@ -54,8 +56,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Get current path using window.location
         const currentPath = window.location.pathname
+        console.log('is mocked', isMock)
 
-        if (event === 'SIGNED_IN' && !isAdminRoute(currentPath)) {
+        if (isMock || (event === 'SIGNED_IN' && !isAdminRoute(currentPath))) {
+          console.log('redirecting to admin dashboard')
           router.replace('/admin/dashboard')
         } else if (event === 'SIGNED_OUT') {
           router.replace('/admin/login')
