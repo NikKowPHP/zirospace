@@ -24,7 +24,7 @@ interface CaseStudiesProps {
 
 export async function CaseStudies({ locale }: CaseStudiesProps) {
   const caseStudies = await caseStudyService.getCaseStudies(locale)
-  const caseStudiesSliders = await caseStudyService.getCaseStudiesSliders()
+  const caseStudySliders = await caseStudyService.getCaseStudiesSliders()
   const t = await getTranslations('caseStudiesSection')
 
   return (
@@ -35,7 +35,7 @@ export async function CaseStudies({ locale }: CaseStudiesProps) {
       </Suspense>
 
       <Suspense fallback={<CaseStudiesLoader />}>
-        <CaseStudySliders caseStudiesSliders={caseStudiesSliders} />
+        <CaseStudySliders caseStudySliders={caseStudySliders} />
       </Suspense>
     </section>
   )
@@ -76,13 +76,15 @@ const CaseStudyList = memo(function CaseStudyList({
 
 
 export const CaseStudySliders = memo(function CaseStudySliders({
-  caseStudiesSliders,
+  caseStudySliders,
 }: {
-  caseStudiesSliders: CaseStudySliderType[]
+  caseStudySliders: CaseStudySliderType[]
 }) {
   return (
     <div className="relative mx-auto max-w-5xl my-8">
-      <CaseStudySliderClient caseStudiesSlider={caseStudiesSliders} />
+      {caseStudySliders.map((caseStudySlider) => (
+        <CaseStudySliderClient key={caseStudySlider.id} caseStudySlider={caseStudySlider} />
+      ))}
     </div>
   )
 })

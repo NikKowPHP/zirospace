@@ -6,10 +6,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { CaseStudyImage, CaseStudySlider as CaseStudySliderType } from '@/domain/models/case-study-slider.model';
 
 interface CaseStudySliderProps {
-  caseStudiesSlider: CaseStudySliderType[];
+  caseStudySlider: CaseStudySliderType;
 }
 
-export function CaseStudySliderClient({ caseStudiesSlider }: CaseStudySliderProps) {
+export function CaseStudySliderClient({ caseStudySlider }: CaseStudySliderProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasOverflow, setHasOverflow] = useState(false);
   const [showLeftButton, setShowLeftButton] = useState(false);
@@ -93,33 +93,28 @@ export function CaseStudySliderClient({ caseStudiesSlider }: CaseStudySliderProp
 
       <div
         ref={containerRef}
-        className="flex  flex-col overflow-x-auto scrollbar-hide"
+        className="flex overflow-x-auto scrollbar-hide"
         style={{
-          scrollbarWidth: 'none', // Firefox
-          msOverflowStyle: 'none', // IE/Edge
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
         }}
       >
-        {caseStudiesSlider.map((slider) => (
-          <div 
-            key={slider.id} 
-            className="flex  flex-nowrap gap-4 px-4"
-          >
-            {slider.images.map((image: CaseStudyImage) => (
-              <div 
-                key={image.id} 
-                className="flex-none w-[700px]"
-              >
-                <Image 
-                  src={image.image} 
-                  alt={image.alt} 
-                  width={700} 
-                  height={415} 
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        ))}
+        <div className="flex flex-nowrap gap-4 px-4">
+          {caseStudySlider.images.map((image: CaseStudyImage) => (
+            <div 
+              key={image.id} 
+              className="flex-none w-[700px] max-h-[415px]"
+            >
+              <Image 
+                src={image.image} 
+                alt={image.alt} 
+                width={700} 
+                height={415} 
+                className="w-full h-auto object-cover"
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Fade overlays */}
