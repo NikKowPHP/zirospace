@@ -1,20 +1,26 @@
 import { Suspense, memo } from 'react';
-// import { getCaseStudies } from '@/lib/data/case-studies'
 import { CaseStudyCard } from '@/components/ui/case-study/case-study-card'
 import { type Locale } from '@/i18n'
 import { CaseStudy } from '@/domain/models/case-study.model'
 import { CaseStudiesLoader } from '@/components/sections/case-studies/case-studies-loader'
 import { caseStudyService } from '@/lib/services/caseStudy.service';
 import { getTranslations } from 'next-intl/server';
-import Image from 'next/image';
-import { CaseStudyImage, CaseStudySlider as CaseStudySliderType} from '@/domain/models/case-study-slider.model';
+import {  CaseStudySlider as CaseStudySliderType} from '@/domain/models/case-study-slider.model';
+import dynamic from 'next/dynamic';
+
+// Dynamically import the client slider (disable SSR)
+const CaseStudySliderClient = dynamic(
+  () =>
+    import('./case-study-slider.client').then(
+      (mod) => mod.CaseStudySliderClient
+    ),
+  { ssr: true }
+);
 
 interface CaseStudiesProps {
   locale: Locale
 }
-interface CaseStudySliderProps {
-  caseStudiesSlider: CaseStudySliderType[];
-}
+
 
 export async function CaseStudies({ locale }: CaseStudiesProps) {
   const caseStudies = await caseStudyService.getCaseStudies(locale)
@@ -27,7 +33,7 @@ export async function CaseStudies({ locale }: CaseStudiesProps) {
       <Suspense fallback={<CaseStudiesLoader />}>
         <CaseStudyList caseStudies={caseStudies} locale={locale} />
       </Suspense>
-      
+
       <Suspense fallback={<CaseStudiesLoader />}>
         <CaseStudySliders caseStudiesSliders={caseStudiesSliders} />
       </Suspense>
@@ -75,35 +81,9 @@ export const CaseStudySliders = memo(function CaseStudySliders({
   caseStudiesSliders: CaseStudySliderType[]
 }) {
   return (
-    <div className="relative mx-auto border border-blue-500 max-w-5xl my-8">
-      <CaseStudySlider caseStudiesSlider={caseStudiesSliders} />
+    <div className="relative mx-auto max-w-5xl my-8">
+      <CaseStudySliderClient caseStudiesSlider={caseStudiesSliders} />
     </div>
   )
 })
 
-export const CaseStudySlider = memo(function CaseStudySlider({
-  caseStudiesSlider,
-}: CaseStudySliderProps) {
-  return (
-    <div className="relative mx-auto border border-blue-500 max-w-5xl my-8">
-      {/* A flex container with horizontal scrolling to simulate a slider */}
-      <div className="flex overflow-x-auto gap-4 p-4 scrollbar-w-0">
-        {caseStudiesSlider.map((caseStudySlider) => (
-          <div key={caseStudySlider.id} className="flex-shrink-0 w-80">
-            {caseStudySlider.images.map((image) => (
-              <CaseStudyImageComponent caseStudyImage={image} />
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-});
-
-export const CaseStudyImageComponent = memo(function CaseStudyImageComponent({
-  caseStudyImage,
-}: {
-  caseStudyImage: CaseStudyImage;
-}) {
-  return <Image src={caseStudyImage.image} alt={caseStudyImage.alt} />;
-});
