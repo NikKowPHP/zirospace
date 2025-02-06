@@ -28,7 +28,7 @@ const CaseStudyImage = memo(function CaseStudyImage({
   return (
     <div
       className={cn(
-        'relative rounded-primary sm:rounded-[18px]  overflow-hidden',
+        'relative h-full rounded-primary sm:rounded-[18px] overflow-hidden',
         isFirst ? 'col-span-2 row-span-2' : ''
       )}
     >
@@ -47,21 +47,37 @@ const CaseStudyImage = memo(function CaseStudyImage({
 })
 
 // Separate tags component to prevent unnecessary re-renders
-const CaseStudyTags = memo(function CaseStudyTags({ tags }: { tags: string[] }) {
+const CaseStudyTags = memo(function CaseStudyTags({
+  tags,
+  theme,
+}: {
+  tags: string[];
+  theme: string;
+}) {
   return (
-    <div className="flex flex-wrap gap-2 sm:gap-3 border border-yellow-500">
-      {tags.map((tag) => (
-        <Tag 
-          key={tag} 
-          variant="primary" 
-          className="px-8 text-sm sm:text-base"
-        >
-          {tag}
-        </Tag>
+    <div className="flex flex-wrap  border border-yellow-500">
+      {tags.map((tag, index) => (
+        <div key={tag} className="flex items-center ">
+        <span key={tag}> 
+          <Tag
+            variant={theme === 'dark' ? 'dark' : 'primary'}
+            className="px-8 text-sm sm:text-base"
+          >
+            {tag}
+          </Tag>
+         
+        </span>
+
+         {index !== tags.length - 1 && (
+          <span className=" select-none mx-1 text-[10px] text-blue-500" aria-hidden="true">
+            •
+          </span>
+        )}
+        </div>
       ))}
     </div>
-  )
-})
+  );
+});
 
 // Main component with performance optimizations
 export const CaseStudyCard = memo(function CaseStudyCard({ 
@@ -101,15 +117,15 @@ export const CaseStudyCard = memo(function CaseStudyCard({
       itemType="https://schema.org/CreativeWork"
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8  border border-red-500  h-full">
-        <div className="flex flex-col border border-green-500 sm:space-y-8 h-full sm:p-[40px]">
+        <div className="flex flex-col border border-green-500  h-full sm:p-[40px] gap-[20px]">
 
     
 
           
-          <div className="border border-blue-500">
+        
             {/* Title */}
             <h2 
-              className=" text-blue-500 text-[16px] sm:text-[18px] lg:text-[20px] font-medium tracking-[-0.02em] text-gray-900 mb-6 sm:mb-8"
+              className=" text-blue-500 text-[16px] sm:text-[18px] lg:text-[20px] font-medium tracking-[-0.02em] text-gray-900 border border-yellow-500"
               itemProp="name"
             >
               {caseStudy.title}
@@ -117,7 +133,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
 
             {/* Subtitle */}
             <h3 
-              className="text-[14px] sm:text-[16px] lg:text-[48px] text-gray-600 max-w-xl sm:max-w-2xl px-4 sm:px-0 sm:max-w-sm leading-[1.2]"
+              className="text-[14px] sm:text-[16px] lg:text-[48px] text-gray-600 max-w-xl sm:max-w-2xl px-4 sm:px-0 sm:max-w-sm leading-[1.2] border border-yellow-500"
               style={{
                 color: caseStudy.color,
               }}
@@ -128,17 +144,17 @@ export const CaseStudyCard = memo(function CaseStudyCard({
             
             {/* Description */}
             <p 
-              className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed lg:mb-8 sm:mb-[20px] line-clamp-4 overflow-hidden"
+              className="text-base sm:text-[24px] text-gray-400  line-clamp-4 overflow-hidden leading-[1.2] border border-yellow-500"
               itemProp="description"
             >
               {caseStudy.description}
               </p>
-          </div>
+   
 
           <div className='lg:flex-1'>
 
             {/* Tags */}
-            <CaseStudyTags tags={caseStudy.tags as string[]} />
+            <CaseStudyTags theme={caseStudy.theme} tags={caseStudy.tags as string[]} />
             
             <meta itemProp="keywords" content={caseStudy.tags.join(', ')} />
           </div>
@@ -155,7 +171,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
         </div>
 
         {/* Images Grid */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 auto-rows-[150px] sm:auto-rows-[180px] lg:auto-rows-[200px] border border-orange-500">
+        <div className="h-full  border border-orange-500">
           {caseStudy.images.slice(0, 1).map((image: ImageType, index: number) => (
             <CaseStudyImage
               key={image.url}

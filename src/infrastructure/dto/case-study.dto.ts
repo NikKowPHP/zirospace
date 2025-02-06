@@ -14,7 +14,7 @@ export interface CaseStudyDTO {
   cta_url: string;
   color: string;
   background_color: string;
-
+  theme: string;
   created_at: string;
   updated_at: string;
 } 

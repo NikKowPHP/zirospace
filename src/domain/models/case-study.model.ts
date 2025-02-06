@@ -18,4 +18,5 @@ export interface CaseStudy {
   readonly updatedAt: Date;
   readonly color: string;
   readonly backgroundColor: string;
+  readonly theme: string;
 }

@@ -19,6 +19,7 @@ export class CaseStudyMapper {
       ctaUrl: dto.cta_url,
       color: dto.color,
       backgroundColor: dto.background_color,
+      theme: dto.theme,
       createdAt: new Date(dto.created_at),
       updatedAt: new Date(dto.updated_at),
     };
@@ -48,6 +49,7 @@ export class CaseStudyMapper {
       cta_url: domain.ctaUrl,
       color: domain.color,
       background_color: domain.backgroundColor,
+      theme: domain.theme,
     }
   }
 } 
