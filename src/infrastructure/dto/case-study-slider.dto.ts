@@ -1,4 +1,4 @@
-export interface CaseStudyDTO {
+export interface CaseStudySliderDTO {
   id: string;
   slug: string;
   title: string;

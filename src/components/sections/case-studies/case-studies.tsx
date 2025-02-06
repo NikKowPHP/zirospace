@@ -10,7 +10,10 @@ import { getTranslations } from 'next-intl/server';
 interface CaseStudiesProps {
   locale: Locale
 }
-
+interface CaseStudySliderProps {
+  caseStudies: CaseStudy[];
+  locale: Locale;
+}
 
 
 export async function CaseStudies({ locale }: CaseStudiesProps) {
@@ -60,4 +63,32 @@ const CaseStudyList = memo(function CaseStudyList({
       ))}
     </div>
   );
+});
+
+
+
+export const CaseStudySlider = memo(function CaseStudySlider({
+  caseStudies,
+  locale,
+}: CaseStudySliderProps) {
+  return (
+    <div className="relative mx-auto border border-blue-500 max-w-5xl my-8">
+      {/* A flex container with horizontal scrolling to simulate a slider */}
+      <div className="flex overflow-x-auto gap-4 p-4 scrollbar-w-0">
+        {caseStudies.map((caseStudy) => (
+          <div key={caseStudy.id} className="flex-shrink-0 w-80">
+            <CaseStudyCard caseStudy={caseStudy} locale={locale} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+});
+
+export const CaseStudyImage = memo(function CaseStudyImage({
+  caseStudy,
+}: {
+  caseStudy: CaseStudy;
+}) {
+  return <Image src={caseStudy.image} alt={caseStudy.title} />;
 });
