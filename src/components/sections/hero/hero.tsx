@@ -6,7 +6,7 @@ export const HeroSection = async () => {
 
   return (
     <section
-      className="flex flex-col border border-green-900  pt-[180px] sm:pt-[175px] pb-[60px] sm:pb-[150px]space-y-6 sm:space-y-8"
+      className="flex flex-col border border-green-900  pt-[180px] sm:pt-[175px] sm:pb-[100px] space-y-6 sm:space-y-8"
       itemScope
       itemType="https://schema.org/WebPageElement"
     >

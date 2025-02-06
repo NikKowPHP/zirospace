@@ -12,7 +12,7 @@ export const SubheroSection = async () => {
         </div>
       }
     >
-      <section className="flex flex-col border border-gray-500 items-center text-center py-[180px] sm:py-[180px] lg:py-[160px]"
+      <section className="flex flex-col border border-gray-500 items-center text-center py-[100px]  sm:py-[100px]"
         itemScope
         itemType="https://schema.org/WebPageElement"
       >

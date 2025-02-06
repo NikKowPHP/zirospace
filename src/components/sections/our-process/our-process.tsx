@@ -14,7 +14,7 @@ export const OurProcess = async () => {
       }
     >
       <section
-        className="border border-gray-700 "
+        className="border border-gray-700 py-[100px] "
         itemScope
         itemType="https://schema.org/WebPageElement"
       >
@@ -67,7 +67,7 @@ const ProcessItemList = async ({
   const items = await processItems
   console.log(items)
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-[20px] max-w-3xl justify-center mx-auto">
+    <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-[20px] max-w-5xl justify-center mx-auto">
       {items.map((item: any, index: number) => (
         <ProcessItem t={t} index={index} item={item} key={index} />
       ))}
