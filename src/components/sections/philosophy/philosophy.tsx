@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
 
 export const Philosophy = async () => {
-  const t = await getTranslations('hero')
+  const t = await getTranslations('ziroPhilosophy')
 
   return (
     <Suspense
@@ -12,23 +12,32 @@ export const Philosophy = async () => {
         </div>
       }
     >
-      <section className="flex flex-col items-center text-center pt-[180px] sm:pt-[180px] lg:pt-[160px] pb-[60px] sm:pb-[80px] lg:pb-[100px] space-y-6 sm:space-y-8"
+      <section
+        className="flex flex-col border border-gray-500 items-center text-center   py-[100px] "
         itemScope
         itemType="https://schema.org/WebPageElement"
       >
-        <h1 className="text-[40px] sm:text-[56px] lg:text-[80px] leading-[1.1] font-medium tracking-[-0.02em] text-primary"
-          itemProp="headline"
-        >
-          {t('title1')}
-          <br className="hidden sm:block" />
-          <span className="sm:hidden"> </span>
-          {t('title2')}
-        </h1>
-        <p className="text-[18px] sm:text-[20px] lg:text-[24px] text-gray-900 leading-relaxed max-w-xl sm:max-w-2xl px-4 sm:px-0">
-          {t('subtitle')}
-        </p>
+        <div className="flex flex-col items-center text-center max-w-5xl gap-[10px] sm:gap-[12px]">
+          <h1
+            className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-black"
+            itemProp="headline"
+          >
+            {t('title')}
+          </h1>
+          <h3 className="text-[18px] sm:text-[20px] lg:text-[20px] text-gray-700 leading-[1.2] sm:px-0">
+            <span className="text-[#868788]">{t('subtitle')} </span>
+            <span className="text-primary">"{t('idea')}"</span>
+          </h3>
+          <div className="flex flex-col gap-[20px] ">
+            <p className="text-[18px] sm:text-[20px] lg:text-[20px] text-gray-700 leading-[1.2] sm:px-0 text-[#868788]">
+              {t('description1')}
+            </p>
+            <p className="text-[18px] sm:text-[20px] lg:text-[20px] text-gray-700 leading-[1.2] sm:px-0 text-[#868788]">
+              {t('description2')}
+            </p>
+          </div>
+        </div>
       </section>
     </Suspense>
-
   )
 }

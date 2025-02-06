@@ -98,7 +98,8 @@
   },
   "ziroPhilosophy": {
     "title": "Ziro's Philosophy: The Art of Nearness",
-    "subtitle": "Based on idea \"Nearness Implies Separation.\" ",
+    "subtitle": "Based on idea",
+    "idea": "Nearness Implies Separation",
     "description1": "At Ziro, we believe innovation in digital health stems from balancing proximity and distance. By closely collaborating with clients and users to understand their needs while maintaining some separation to challenge assumptions, we create solutions that integrate seamlessly into patients' and healthcare providers' lives.",
     "description2": "We view perfection as a continuous journey, aiming for \"close to perfect\" through iterative design processes that adapt to evolving user needs and technologies. Our core philosophy emphasizes that \"perfection in proximity\" is essential for transforming digital health and enhancing patient care and engagement."
   },
