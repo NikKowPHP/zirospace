@@ -67,15 +67,7 @@ export function Footer() {
               {t('description')}
             </p>
 
-            {/* Address
-            <div 
-              className="text-sm text-gray-500"
-              itemProp="address"
-              itemScope
-              itemType="https://schema.org/PostalAddress"
-            >
-              {t('address')}
-            </div> */}
+         
           </div>
 
           {/* Right Column - Links */}
