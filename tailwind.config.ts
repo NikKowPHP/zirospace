@@ -14,7 +14,8 @@ const config: Config = {
         secondary: '#F7F7F7',
 
         text: {
-          primary: '#0171E3',
+          title: '#0F1012',
+          subtitle: '#A5ABB0',
           secondary: '#0171E2',
           tertiary: '#999999',
           black: '#000000'

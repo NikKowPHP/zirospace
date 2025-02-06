@@ -31,7 +31,7 @@ export async function CaseStudies({ locale }: CaseStudiesProps) {
  
 
   return (
-    <section id="work" className="relative overflow-hidden bg-white">
+    <section id="work" className="relative overflow-hidden bg-white border border-gray-700 py-[100px]">
       <Suspense fallback={<CaseStudiesLoader />}>
         <CaseStudyList caseStudies={caseStudies} locale={locale} />
       </Suspense>

@@ -62,9 +62,9 @@ const ServiceItemList = async ({
 const ServiceItem = ({ t, index, item }: { t: any; index: number; item: any }) => {
   return (
     <div key={index} className="p-[36px] rounded-xl border border-red-500 bg-gray-100 shadow-sm flex flex-col gap-[16px] ">
-      <h4 className='text-[16px] leading-[1.2]'>{t(`${item.subtitle}`)}</h4>
-      <h2 className="text-[48px] text-black">{t(`${item.title}`)}</h2>
-      <p className=" text-gray-600">
+      <h4 className='text-[18px] leading-[1.2]'>{t(`${item.subtitle}`)}</h4>
+      <h2 className="text-[48px] leading-[1.2] text-black">{t(`${item.title}`)}</h2>
+      <p className=" text-[18px] text-gray-600">
         {t(`${item.description}`)}
 
       </p>
