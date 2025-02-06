@@ -9,9 +9,7 @@ export function ClientWrapper({ children }: { children: React.ReactNode }) {
     <div className='bg-white border border-red-500 pb-[40px] md:container relative'>
       <Navbar />
       {children}
-      <div className=' md:px-14'>
         <Footer />
-      </div>
       <LanguageSwitcher />
     </div>
   )
