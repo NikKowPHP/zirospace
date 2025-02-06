@@ -93,7 +93,7 @@ export function CaseStudySliderClient({ caseStudiesSlider }: CaseStudySliderProp
 
       <div
         ref={containerRef}
-        className="flex overflow-x-auto scrollbar-hide"
+        className="flex  flex-col overflow-x-auto scrollbar-hide"
         style={{
           scrollbarWidth: 'none', // Firefox
           msOverflowStyle: 'none', // IE/Edge
@@ -102,7 +102,7 @@ export function CaseStudySliderClient({ caseStudiesSlider }: CaseStudySliderProp
         {caseStudiesSlider.map((slider) => (
           <div 
             key={slider.id} 
-            className="flex flex-nowrap gap-4 px-4"
+            className="flex  flex-nowrap gap-4 px-4"
           >
             {slider.images.map((image: CaseStudyImage) => (
               <div 
