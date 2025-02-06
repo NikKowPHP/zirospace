@@ -79,10 +79,10 @@ export function Testimonials() {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex flex-col items-center mb-10 sm:mb-12">
 
-          <h2 className="text-3xl font-medium sm:text-4xl font-medium mb-4 sm:mb-8">
+          <h2 className="text-[36px] font-medium sm:text-[48px] font-medium mb-4 sm:mb-8">
             {t('title')}
           </h2>
-          <h3 className='text-gray-500 text-lg sm:text-xl'>
+          <h3 className='text-gray-500 text-[18px] sm:text-[20px]'>
             {t('description')}
           </h3>
         </div>
