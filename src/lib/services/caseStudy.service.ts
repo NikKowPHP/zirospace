@@ -1,7 +1,8 @@
 import { Locale } from "@/i18n"
 import { CaseStudyRepository } from "../repositories/caseStudy.repository"
 import { CaseStudy } from "@/domain/models/case-study.model"
-import { mockCaseStudyRepository } from "../__mocks__/caseStudyRepository.mock"
+// import { mockCaseStudyRepository } from "../__mocks__/caseStudyRepository.mock"
+import { caseStudyRepositoryLocal } from "../__mocks__/caseStudyRepository.local"
 import { ICaseStudyRepository } from "../interfaces/caseStudyRepository.interface"
 import { CaseStudySlider } from "@/domain/models/case-study-slider.model"
 import { ICaseStudySliderRepository } from "../interfaces/caseStudySliderRepository.interface"
@@ -17,7 +18,7 @@ export class CaseStudyService {
   private caseStudySliderRepository: ICaseStudySliderRepository
   constructor() {
     if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.caseStudyRepository = mockCaseStudyRepository
+      this.caseStudyRepository = caseStudyRepositoryLocal
       this.caseStudySliderRepository = mockCaseStudySliderRepository
     } else {
       this.caseStudyRepository = caseStudyRepository
