@@ -1,7 +1,13 @@
+'use client'
 import { Suspense } from 'react'
-import YouTube from 'react-youtube'
+import dynamic from 'next/dynamic'
 
-export const FloatVideo = async () => {
+const YouTube = dynamic(
+  () => import('react-youtube'),
+  { ssr: false } // Disable server-side rendering for this component
+)
+
+export const FloatVideo = () => {
   const videoId = 'vKb9WcH8Qpg'
 
   const opts = {
