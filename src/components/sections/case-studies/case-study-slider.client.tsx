@@ -72,7 +72,7 @@ export function CaseStudySliderClient({ caseStudiesSlider }: CaseStudySliderProp
   };
 
   return (
-    <div className="relative mx-auto border border-blue-500 max-w-5xl my-8">
+    <div className="relative mx-auto max-w-5xl my-8">
       {/* Navigation buttons */}
       {showLeftButton && (
         <button
@@ -93,17 +93,29 @@ export function CaseStudySliderClient({ caseStudiesSlider }: CaseStudySliderProp
 
       <div
         ref={containerRef}
-        className="flex overflow-x-auto gap-4 p-4 scrollbar-w-0 relative"
+        className="flex overflow-x-auto scrollbar-hide"
         style={{
           scrollbarWidth: 'none', // Firefox
           msOverflowStyle: 'none', // IE/Edge
         }}
       >
         {caseStudiesSlider.map((slider) => (
-          <div key={slider.id} className="flex-shrink-0 w-80">
+          <div 
+            key={slider.id} 
+            className="flex flex-nowrap gap-4 px-4"
+          >
             {slider.images.map((image: CaseStudyImage) => (
-              <div key={image.id} className="mb-4">
-                <Image src={image.image} alt={image.alt} width={100} height={100} />
+              <div 
+                key={image.id} 
+                className="flex-none w-[700px]"
+              >
+                <Image 
+                  src={image.image} 
+                  alt={image.alt} 
+                  width={700} 
+                  height={415} 
+                  className="w-full h-auto object-cover"
+                />
               </div>
             ))}
           </div>
