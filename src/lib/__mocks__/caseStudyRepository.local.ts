@@ -5,6 +5,7 @@ import { CaseStudyDTO } from '@/infrastructure/dto/case-study.dto'
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import { PostgresDBRepository } from '@/lib/repositories/db/postgresdb.repository';
 import { ICaseStudyRepository } from '../interfaces/caseStudyRepository.interface';
+import { logger } from '../utils/logger';
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -17,7 +18,9 @@ export class CaseStudyRepositoryLocal extends PostgresDBRepository<CaseStudy, st
 
   getCaseStudies = async (locale: Locale): Promise<CaseStudy[]> => {
     const caseStudyDBRepository = new PostgresDBRepository<CaseStudy, string>(`case_studies_${locale}`, pool);
-    return caseStudyDBRepository.list()
+    const result = await caseStudyDBRepository.list()
+    console.log(result)
+    return result
   }
 
   getCaseStudyBySlug = async (slug: string, locale: Locale): Promise<CaseStudy | null> => {
@@ -29,6 +32,7 @@ export class CaseStudyRepositoryLocal extends PostgresDBRepository<CaseStudy, st
         WHERE slug = $1;
       `;
       const result = await client.query(query, [slug]);
+      console.log(result)
       if (result.rows.length === 0) {
         return null; // Entity not found
       }
