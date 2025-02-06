@@ -5,12 +5,11 @@ export class CaseStudySliderMapper {
   static toDomain(dto: CaseStudySliderDTO): CaseStudySlider {
     return {
       id: dto.id,
-   
       images: dto.images.map(image => ({
-        url: image.url,
+        id: image.id,
+        image: image.image,
         alt: image.alt,
       })),
-     
       theme: dto.theme,
       createdAt: new Date(dto.created_at),
       updatedAt: new Date(dto.updated_at),
@@ -28,7 +27,8 @@ export class CaseStudySliderMapper {
     return {
       id,
       images: domain.images?.map(image => ({
-        url: image.url,
+        id: image.id,
+        image: image.image,
         alt: image.alt,
       })),
       theme: domain.theme,

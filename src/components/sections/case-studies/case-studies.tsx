@@ -6,20 +6,20 @@ import { CaseStudy } from '@/domain/models/case-study.model'
 import { CaseStudiesLoader } from '@/components/sections/case-studies/case-studies-loader'
 import { caseStudyService } from '@/lib/services/caseStudy.service';
 import { getTranslations } from 'next-intl/server';
+import Image from 'next/image';
+import { CaseStudyImage, CaseStudySlider as CaseStudySliderType} from '@/domain/models/case-study-slider.model';
 
 interface CaseStudiesProps {
   locale: Locale
 }
 interface CaseStudySliderProps {
-  caseStudies: CaseStudy[];
-  locale: Locale;
+  caseStudiesSlider: CaseStudySliderType[];
 }
-
 
 export async function CaseStudies({ locale }: CaseStudiesProps) {
   const caseStudies = await caseStudyService.getCaseStudies(locale)
+  const caseStudiesSliders = await caseStudyService.getCaseStudiesSliders()
   const t = await getTranslations('caseStudiesSection')
-
 
   return (
     <section id="work" className="relative overflow-hidden bg-white border border-gray-700 py-[100px]">
@@ -27,10 +27,13 @@ export async function CaseStudies({ locale }: CaseStudiesProps) {
       <Suspense fallback={<CaseStudiesLoader />}>
         <CaseStudyList caseStudies={caseStudies} locale={locale} />
       </Suspense>
+      
+      <Suspense fallback={<CaseStudiesLoader />}>
+        <CaseStudySliders caseStudiesSliders={caseStudiesSliders} />
+      </Suspense>
     </section>
   )
 }
-
 
 const CaseStudiesTitleSubtitle = ({ t }: { t: any }) => {
   return (
@@ -66,18 +69,30 @@ const CaseStudyList = memo(function CaseStudyList({
 });
 
 
+export const CaseStudySliders = memo(function CaseStudySliders({
+  caseStudiesSliders,
+}: {
+  caseStudiesSliders: CaseStudySliderType[]
+}) {
+  return (
+    <div className="relative mx-auto border border-blue-500 max-w-5xl my-8">
+      <CaseStudySlider caseStudiesSlider={caseStudiesSliders} />
+    </div>
+  )
+})
 
 export const CaseStudySlider = memo(function CaseStudySlider({
-  caseStudies,
-  locale,
+  caseStudiesSlider,
 }: CaseStudySliderProps) {
   return (
     <div className="relative mx-auto border border-blue-500 max-w-5xl my-8">
       {/* A flex container with horizontal scrolling to simulate a slider */}
       <div className="flex overflow-x-auto gap-4 p-4 scrollbar-w-0">
-        {caseStudies.map((caseStudy) => (
-          <div key={caseStudy.id} className="flex-shrink-0 w-80">
-            <CaseStudyCard caseStudy={caseStudy} locale={locale} />
+        {caseStudiesSlider.map((caseStudySlider) => (
+          <div key={caseStudySlider.id} className="flex-shrink-0 w-80">
+            {caseStudySlider.images.map((image) => (
+              <CaseStudyImageComponent caseStudyImage={image} />
+            ))}
           </div>
         ))}
       </div>
@@ -85,10 +100,10 @@ export const CaseStudySlider = memo(function CaseStudySlider({
   );
 });
 
-export const CaseStudyImage = memo(function CaseStudyImage({
-  caseStudy,
+export const CaseStudyImageComponent = memo(function CaseStudyImageComponent({
+  caseStudyImage,
 }: {
-  caseStudy: CaseStudy;
+  caseStudyImage: CaseStudyImage;
 }) {
-  return <Image src={caseStudy.image} alt={caseStudy.title} />;
+  return <Image src={caseStudyImage.image} alt={caseStudyImage.alt} />;
 });
