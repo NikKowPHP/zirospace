@@ -28,7 +28,7 @@ const buttonStyles = {
     navbar: 'text-[16px] font-medium transition-colors text-gray-900',
   },
   sizes: {
-    sm: 'h-10 px-4 text-[15px] rounded-full',
+    sm: 'py-[6px] px-[12px] text-[15px] rounded-full',
     md: 'h-[56px] px-8 text-[16px] rounded-full',
     lg: 'h-[64px] px-10 text-[18px] rounded-full',
     xl: 'h-[72px] px-12 text-[20px] rounded-full w-full',

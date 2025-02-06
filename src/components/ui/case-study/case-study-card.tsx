@@ -9,6 +9,7 @@ import Image from 'next/image'
 import { type Image as ImageType } from '@/domain/models/case-study.model'
 import { type CaseStudy } from '@/domain/models/case-study.model'
 import { Locale } from '@/i18n'
+import { ArrowBigRightIcon, ArrowUpRight } from 'lucide-react'
 
 interface CaseStudyCardProps {
   caseStudy: CaseStudy
@@ -166,6 +167,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
               href={`/${locale}/case-studies/${caseStudy.slug}`}
             >
               {ctaText()}
+              <ArrowUpRight className='' />
             </Button>
           </div>
         </div>
