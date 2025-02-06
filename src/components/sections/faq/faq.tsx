@@ -40,12 +40,12 @@ function FaqAccordion({ itemId, isOpen, onToggle }: FaqAccordionProps) {
       </button>
       <div
         className={cn(
-          'grid overflow-hidden transition-all duration-300 ease-in-out',
-          isOpen ? 'grid-rows-[1fr] pb-6 px-10' : 'grid-rows-[0fr]'
+          'grid overflow-hidden  duration-300 ease-in-out',
+          isOpen ? 'grid-rows-[1fr] ' : 'grid-rows-[0fr] '
         )}
       >
         <div className="overflow-hidden">
-          <p className="text-gray-600 text-sm sm:text-base">
+          <p className="text-gray-600 text-sm sm:text-base pb-6 px-10">
             {t(`${itemId}.answer`)}
           </p>
         </div>
