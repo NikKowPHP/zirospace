@@ -6,8 +6,8 @@ export interface BaseEntity<ID> {
 }
 
 export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
-  private tableName: string;
-  private db: Database;
+  protected tableName: string;
+  protected db: Database;
 
   constructor(tableName: string, db: Database) {
     this.tableName = tableName;

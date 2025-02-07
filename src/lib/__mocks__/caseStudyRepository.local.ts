@@ -17,11 +17,28 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
   }
 
   getCaseStudies = async (locale: Locale): Promise<CaseStudy[]> => {
-    // const caseStudyDBRepository = new PostgresDBRepository<CaseStudy, string>(`case_studies_${locale}`, pool);
-    // const result = await caseStudyDBRepository.list()
-    const result = await this.list()
+    const result = await this.list(locale)
     console.log(result)
     return result
+  }
+
+  async list(locale?: Locale): Promise<CaseStudy[]> {
+    const tableName = locale ? `case_studies_${locale}` : this.tableName;
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT * FROM "${tableName}";
+      `;
+
+      this.db.all(query, [], (err, rows: any[]) => {
+        if (err) {
+          console.error(`Error listing entities from table "${tableName}":`, err);
+          reject(new Error(`Database error listing entities from table "${tableName}": ${err.message || 'Unknown error'}`));
+          return;
+        }
+        const caseStudies = rows.map(CaseStudyMapper.toDomain);
+        resolve(caseStudies || []);
+      });
+    });
   }
 
   getCaseStudyBySlug = async (slug: string, locale: Locale): Promise<CaseStudy | null> => {
