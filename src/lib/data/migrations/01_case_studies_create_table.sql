@@ -34,3 +34,41 @@ CREATE TABLE public.case_studies_pl (
     theme VARCHAR(50),
     order_index INTEGER DEFAULT 0 -- Added order_index as in your INSERT statement
 );
+
+INSERT INTO public.case_studies_en (
+    id, slug, title, subtitle, description, tags, images, cta_text, cta_text_name, cta_url, color, background_color, theme, order_index
+) VALUES (
+    'example-case-study-en-1',
+    'example-case-study-en-1',
+    'Example Case Study EN 1',
+    'Example Subtitle EN 1',
+    'Example Description EN 1',
+    '{"tag1", "tag2"}',
+    '[{"alt": "hf 01", "url": "https://i.postimg.cc/3xwHPQmr/hf-01.png"}, {"alt": "hf 02", "url": "https://i.postimg.cc/jdtT47j7/hf-02.png"}, {"alt": "hf 03", "url": "https://i.postimg.cc/dt6YHV7S/hf-03.png"}, {"alt": "hf 04", "url": "https://i.postimg.cc/SQWq9rm4/hf-04.png"}, {"alt": "hf 05", "url": "https://i.postimg.cc/BnwG37BT/hf-05.png"}]'::jsonb[],
+    'Learn More',
+    'caseStudy.ctaText.viewCaseStudy',
+    '/case-studies/example-case-study-en-1',
+    '#FFFFFF',
+    '#F0F0F0',
+    'default',
+    0
+);
+
+INSERT INTO public.case_studies_pl (
+    id, slug, title, subtitle, description, tags, images, cta_text, cta_text_name, cta_url, color, background_color, theme, order_index
+) VALUES (
+    'example-case-study-pl-1',
+    'example-case-study-pl-1',
+    'Example Case Study PL 1',
+    'Example Subtitle PL 1',
+    'Example Description PL 1',
+    '{"tag1", "tag2"}',
+    '[{"alt": "hf 01", "url": "https://i.postimg.cc/3xwHPQmr/hf-01.png"}, {"alt": "hf 02", "url": "https://i.postimg.cc/jdtT47j7/hf-02.png"}, {"alt": "hf 03", "url": "https://i.postimg.cc/dt6YHV7S/hf-03.png"}, {"alt": "hf 04", "url": "https://i.postimg.cc/SQWq9rm4/hf-04.png"}, {"alt": "hf 05", "url": "https://i.postimg.cc/BnwG37BT/hf-05.png"}]'::jsonb[],
+    'Dowiedz się więcej',
+    'caseStudy.ctaText.viewCaseStudy',
+    '/pl/case-studies/example-case-study-pl-1',
+    '#FFFFFF',
+    '#F0F0F0',
+    'default',
+    0
+);

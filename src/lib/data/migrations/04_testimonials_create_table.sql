@@ -21,3 +21,51 @@ CREATE TABLE public.testimonials_pl (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO public.testimonials_en (
+    id, author, role, company, quote, image, image_alt
+) VALUES (
+    'testimonial-en-1',
+    'John Doe',
+    'Software Engineer',
+    'Acme Corp',
+    'This is an example testimonial in English.',
+    'https://i.postimg.cc/T1nrzdwP/BCJ9upw-V2-ARbexiidm-P5w0okz-LE.avif',
+    'John Doe'
+);
+
+INSERT INTO public.testimonials_en (
+    id, author, role, company, quote, image, image_alt
+) VALUES (
+    'testimonial-en-2',
+    'Jane Smith',
+    'Product Manager',
+    'Beta Inc',
+    'Another inspiring testimonial in English.',
+    'https://i.postimg.cc/T1nrzdwP/BCJ9upw-V2-ARbexiidm-P5w0okz-LE.avif',
+    'Jane Smith'
+);
+
+INSERT INTO public.testimonials_pl (
+    id, author, role, company, quote, image, image_alt
+) VALUES (
+    'testimonial-pl-1',
+    'Jan Kowalski',
+    'Inżynier Oprogramowania',
+    'Gamma Sp. z o.o.',
+    'To jest przykładowa opinia po polsku.',
+    'https://i.postimg.cc/T1nrzdwP/BCJ9upw-V2-ARbexiidm-P5w0okz-LE.avif',
+    'Jan Kowalski'
+);
+
+INSERT INTO public.testimonials_pl (
+    id, author, role, company, quote, image, image_alt
+) VALUES (
+    'testimonial-pl-2',
+    'Anna Nowak',
+    'Menadżer Produktu',
+    'Delta S.A.',
+    'Kolejna inspirująca opinia po polsku.',
+    'https://i.postimg.cc/T1nrzdwP/BCJ9upw-V2-ARbexiidm-P5w0okz-LE.avif',
+    'Anna Nowak'
+);
