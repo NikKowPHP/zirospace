@@ -25,4 +25,13 @@ export const mockCaseStudySliderRepository: ICaseStudySliderRepository = {
   getCaseStudiesSliders: async () => {
     return mockCaseStudySliderDTOs.map(CaseStudySliderMapper.toDomain);
   },
+  createCaseStudySlider: async () => {
+    return mockCaseStudySliderDTOs[0];
+  },
+  updateCaseStudySlider: async () => {
+    return mockCaseStudySliderDTOs[0];
+  },
+  deleteCaseStudySlider: async () => {
+    return true;
+  },
 };

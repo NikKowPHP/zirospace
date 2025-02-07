@@ -3,6 +3,7 @@ import { CaseStudySlider } from '@/domain/models/case-study-slider.model';
 import { ICaseStudySliderRepository } from '../interfaces/caseStudySliderRepository.interface';
 import { Database } from 'sqlite3';
 import { getDatabaseFilePath } from '@/lib/config/database.config';
+import { Locale } from '@/i18n';
 
 const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);
@@ -12,8 +13,8 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
     super("case_study_sliders", db);
   }
 
-  getCaseStudiesSliders = async (): Promise<CaseStudySlider[]> => {
-    const sliders = await this.list()
+  getCaseStudiesSliders = async (locale: string): Promise<CaseStudySlider[]> => {
+    const sliders = await this.list(locale)
     console.log('sliders in repository ', sliders)
 
     return Promise.all(sliders.map(async (slider) => {
@@ -23,6 +24,190 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
         images: images,
       };
     }));
+  }
+
+  async createCaseStudySlider(caseStudySlider: Omit<CaseStudySlider, 'id'>, locale: string): Promise<CaseStudySlider> {
+    try {
+      const tableName = `case_study_sliders_${locale}`;
+      const id = `slider-${Date.now()}`; // Generate a simple ID
+      const query = `
+        INSERT INTO "${tableName}" (id, theme, created_at, updated_at)
+        VALUES (?, ?, ?, ?)
+      `;
+      const params = [
+        id,
+        caseStudySlider.theme,
+        new Date().toISOString(),
+        new Date().toISOString()
+      ];
+
+      await new Promise<void>((resolve, reject) => {
+        this.db.run(query, params, function (err: Error | null) {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve();
+        });
+      });
+
+      // Create the images
+      // await Promise.all(caseStudySlider.images.map(async (image) => {
+      //   const imageQuery = `
+      //     INSERT INTO case_study_slider_images (id, slider_id, image, alt)
+      //     VALUES (?, ?, ?, ?)
+      //   `;
+      //   const imageParams = [
+      //     image.id,
+      //     id,
+      //     image.image,
+      //     image.alt
+      //   ];
+
+      //   await new Promise<void>((resolve, reject) => {
+      //     db.run(imageQuery, imageParams, function (err: Error | null) {
+      //       if (err) {
+      //         reject(err);
+      //         return;
+      //       }
+      //       resolve();
+      //     });
+      //   });
+      // }));
+
+      return {
+        id,
+        ...caseStudySlider,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+    } catch (error: any) {
+      console.error(`Error creating case study slider in locale ${locale}:`, error);
+      throw new Error(`Failed to create case study slider: ${error.message}`);
+    }
+  }
+
+  async updateCaseStudySlider(id: string, caseStudySlider: Partial<CaseStudySlider>, locale: string): Promise<CaseStudySlider | null> {
+    try {
+      const tableName = `case_study_sliders_${locale}`;
+      const updates: string[] = [];
+      const params: any[] = [];
+
+      for (const key in caseStudySlider) {
+        if (caseStudySlider.hasOwnProperty(key) && key !== 'id' && key !== 'images') {
+          updates.push(`${key} = ?`);
+          params.push((caseStudySlider as any)[key]);
+        }
+      }
+
+      if (updates.length === 0) {
+        return this.getCaseStudySliderById(id, locale);
+      }
+
+      params.push(id);
+
+      const query = `
+        UPDATE "${tableName}"
+        SET ${updates.join(', ')}, updated_at = ?
+        WHERE id = ?
+      `;
+
+      params.unshift(new Date().toISOString());
+      updates.push(`updated_at = ?`);
+
+      await new Promise<void>((resolve, reject) => {
+        this.db.run(query, params, function (err: Error | null) {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve();
+        });
+      });
+
+      return this.getCaseStudySliderById(id, locale);
+    } catch (error: any) {
+      console.error(`Error updating case study slider with id ${id} in locale ${locale}:`, error);
+      throw new Error(`Failed to update case study slider: ${error.message}`);
+    }
+  }
+
+  async deleteCaseStudySlider(id: string, locale: string): Promise<void> {
+    try {
+      const tableName = `case_study_sliders_${locale}`;
+      const query = `DELETE FROM "${tableName}" WHERE id = ?`;
+
+      await new Promise<void>((resolve, reject) => {
+        this.db.run(query, [id], function (err: Error | null) {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve();
+        });
+      });
+    } catch (error: any) {
+      console.error(`Error deleting case study slider with id ${id} in locale ${locale}:`, error);
+      throw new Error(`Failed to delete case study slider: ${error.message}`);
+    }
+  }
+
+  async getCaseStudySliderById(id: string, locale: string): Promise<CaseStudySlider | null> {
+    try {
+      const tableName = `case_study_sliders_${locale}`;
+      const query = `SELECT * FROM "${tableName}" WHERE id = ?;`;
+
+      const result = await new Promise<any>((resolve, reject) => {
+        this.db.get(query, [id], (err, row) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(row ? { rows: [row] } : { rows: [] });
+        });
+      });
+
+      if (!result || !result.rows || result.rows.length === 0) {
+        return null;
+      }
+
+      const slider = result.rows[0] as CaseStudySlider;
+      const images = await this.getImagesForSlider(id);
+      return {
+        ...slider,
+        images: images,
+      };
+    } catch (error: any) {
+      console.error(`Error fetching case study slider with id ${id} from locale ${locale}:`, error);
+      throw new Error(`Failed to fetch case study slider: ${error.message}`);
+    }
+  }
+
+  async list(locale?: string): Promise<CaseStudySlider[]> {
+    const tableName = locale ? `case_study_sliders_${locale}` : this.tableName;
+    console.log('table name in list ', tableName)
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT * FROM "${tableName}";
+      `;
+
+      this.db.all(query, [], (err, rows: any[]) => {
+        if (err) {
+          console.error(`Error listing entities from table "${tableName}":`, err);
+          reject(new Error(`Database error listing entities from table "${tableName}": ${err.message || 'Unknown error'}`));
+          return;
+        }
+        const caseStudySliders = rows.map((row: any) => ({
+          id: row.id,
+          theme: row.theme,
+          images: [], // Fetch images separately if needed
+          createdAt: new Date(row.created_at),
+          updatedAt: new Date(row.updated_at),
+        }));
+        console.log('case study sliders in repository ', caseStudySliders)
+        resolve(caseStudySliders || []);
+      });
+    });
   }
 
   private async getImagesForSlider(sliderId: string): Promise<any[]> {

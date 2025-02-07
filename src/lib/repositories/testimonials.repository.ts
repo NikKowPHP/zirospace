@@ -6,7 +6,6 @@ import { TestimonialDTO } from '@/infrastructure/dto/testimonial.dto'
 import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { ITestimonialRepository } from '../interfaces/testimonials.interface'
-import { Locale } from '@/i18n'
 
 export class TestimonialRepository implements ITestimonialRepository {
   private supabaseClient: SupabaseClient
@@ -16,7 +15,7 @@ export class TestimonialRepository implements ITestimonialRepository {
   }
 
   getTestimonials = unstable_cache(
-    async (locale: Locale): Promise<Testimonial[]> => {
+    async (locale: string): Promise<Testimonial[]> => {
       const tableName = `testimonials_${locale}`
       const { data, error } = await this.supabaseClient
         .from(tableName)
@@ -37,7 +36,7 @@ export class TestimonialRepository implements ITestimonialRepository {
     }
   )
 
-  getTestimonialById = async (id: string, locale: Locale): Promise<Testimonial | null> => {
+  getTestimonialById = async (id: string, locale: string): Promise<Testimonial | null> => {
     const tableName = `testimonials_${locale}`
     const { data, error } = await this.supabaseClient
       .from(tableName)
@@ -57,7 +56,7 @@ export class TestimonialRepository implements ITestimonialRepository {
     return TestimonialMapper.toDomain(data as TestimonialDTO)
   }
 
-  createTestimonial = async (testimonial: Omit<Testimonial, 'id'>, locale: Locale): Promise<Testimonial> => {
+  createTestimonial = async (testimonial: Omit<Testimonial, 'id'>, locale: string): Promise<Testimonial> => {
     const tableName = `testimonials_${locale}`
     const { data, error } = await this.supabaseClient
       .from(tableName)
@@ -82,7 +81,7 @@ export class TestimonialRepository implements ITestimonialRepository {
     return TestimonialMapper.toDomain(data as TestimonialDTO)
   }
 
-  updateTestimonial = async (id: string, testimonial: Partial<Testimonial>, locale: Locale): Promise<Testimonial | null> => {
+  updateTestimonial = async (id: string, testimonial: Partial<Testimonial>, locale: string): Promise<Testimonial | null> => {
     const tableName = `testimonials_${locale}`
     const { data, error } = await this.supabaseClient
       .from(tableName)
@@ -111,7 +110,7 @@ export class TestimonialRepository implements ITestimonialRepository {
     return TestimonialMapper.toDomain(data as TestimonialDTO)
   }
 
-  deleteTestimonial = async (id: string, locale: Locale): Promise<boolean> => {
+  deleteTestimonial = async (id: string, locale: string): Promise<boolean> => {
     const tableName = `testimonials_${locale}`
     const { error } = await this.supabaseClient
       .from(tableName)

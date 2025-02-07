@@ -81,13 +81,13 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
     super("testimonials", db);
   }
 
-  async getTestimonials(locale: Locale): Promise<Testimonial[]> {
+  async getTestimonials(locale: string): Promise<Testimonial[]> {
     const result = await this.list(locale)
     console.log(result)
     return result
   }
 
-  async getTestimonialById(id: string, locale: Locale): Promise<Testimonial | null> {
+  async getTestimonialById(id: string, locale: string): Promise<Testimonial | null> {
     try {
       const tableName = `testimonials_${locale}`;
       const query = `SELECT * FROM "${tableName}" WHERE id = ?;`;
@@ -113,7 +113,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
     }
   }
 
-  async createTestimonial(testimonial: Omit<Testimonial, 'id'>, locale: Locale): Promise<Testimonial> {
+  async createTestimonial(testimonial: Omit<Testimonial, 'id'>, locale: string): Promise<Testimonial> {
     try {
       const tableName = `testimonials_${locale}`;
       const id = testimonial.author.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now();
@@ -155,7 +155,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
     }
   }
 
-  async updateTestimonial(id: string, testimonial: Partial<Testimonial>, locale: Locale): Promise<Testimonial | null> {
+  async updateTestimonial(id: string, testimonial: Partial<Testimonial>, locale: string): Promise<Testimonial | null> {
     try {
       const tableName = `testimonials_${locale}`;
       // Construct the SET part of the SQL query dynamically based on provided fields
@@ -201,7 +201,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
     }
   }
 
-  async deleteTestimonial(id: string, locale: Locale): Promise<boolean> {
+  async deleteTestimonial(id: string, locale: string): Promise<boolean> {
     try {
       const tableName = `testimonials_${locale}`;
       const query = `DELETE FROM "${tableName}" WHERE id = ?`;
@@ -223,7 +223,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
     }
   }
 
-  async list(locale?: Locale): Promise<Testimonial[]> {
+  async list(locale?: string): Promise<Testimonial[]> {
     const tableName = locale ? `testimonials_${locale}` : this.tableName;
     console.log('table name in list ', tableName)
     return new Promise((resolve, reject) => {
