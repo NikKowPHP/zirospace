@@ -14,7 +14,7 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link 
-          href="/admin/case-studies"
+          href="/admin/sections/case-studies"
           className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
         >
           <h2 className="text-xl font-medium text-gray-900 mb-2">
@@ -29,7 +29,7 @@ export default function AdminDashboard() {
         </Link>
 
         <Link
-          href="/admin/case-study-sliders"
+          href="/admin/sections/case-study-sliders"
           className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
         >
           <h2 className="text-xl font-medium text-gray-900 mb-2">
@@ -44,7 +44,7 @@ export default function AdminDashboard() {
         </Link>
 
         <Link
-          href="/admin/testimonials"
+          href="/admin/sections/testimonials"
           className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
         >
           <h2 className="text-xl font-medium text-gray-900 mb-2">
