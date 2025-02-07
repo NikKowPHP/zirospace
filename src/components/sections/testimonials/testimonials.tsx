@@ -1,12 +1,18 @@
 'use client'
 
-import { TestimonialItem, testimonialItems } from '@/lib/data/testimonials'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Testimonial } from '@/domain/models/testimonial.model'
 
-export function Testimonials() {
+// Define the props for the Testimonials component
+interface TestimonialsProps {
+  testimonials: Testimonial[];
+}
+
+// Update the Testimonials component to accept testimonials as props
+export function Testimonials({ testimonials }: TestimonialsProps) {
   const t = useTranslations('testimonials')
   const containerRef = useRef<HTMLDivElement>(null)
   const [hasOverflow, setHasOverflow] = useState(false)
@@ -96,22 +102,21 @@ export function Testimonials() {
               msOverflowStyle: 'none'  // IE/Edge
             }}
           >
-            {testimonialItems.map((testimonial: TestimonialItem) => (
+            {testimonials.map((testimonial: Testimonial) => (
               <div
                 key={testimonial.id}
                 className="flex-shrink-0 w-[300px] sm:w-[400px] sm:h-[180px] bg-gray-100 rounded-[32px] p-6"
               >
                 <div className="space-y-6 flex flex-col h-full">
                   <p className="text-gray-900 text-lg leading-relaxed flex-1">
-                    &quot;{t(`${testimonial.id}.quote`)}&quot;
+                    &quot;{testimonial.quote}&quot;
                   </p>
 
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full overflow-hidden">
                       <Image
                         src={testimonial.image}
-                        alt={t(`${testimonial.id}.imageAlt`)}
-                        // alt='testimonial'
+                        alt={testimonial.image_alt}
                         width={48}
                         height={48}
                         className="object-cover h-full"
@@ -122,9 +127,9 @@ export function Testimonials() {
                         {testimonial.author}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {t(`${testimonial.id}.role`)},{' '}
+                        {testimonial.role},{' '}
                         {/* 'my role' */}
-                        {t(`${testimonial.id}.company`)}
+                        {testimonial.company}
                         {/* 'my company' */}
                       </p>
                     </div>

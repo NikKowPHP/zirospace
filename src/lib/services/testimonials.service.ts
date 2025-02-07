@@ -3,6 +3,7 @@ import { ITestimonialRepository } from "../interfaces/testimonials.interface"
 import { Testimonial } from "@/domain/models/testimonial.model"
 import { testimonialRepositoryLocal } from "../repositories/testimonials.local.repository"
 import { Locale } from "@/i18n"
+import { testimonialRepository } from "../repositories/testimonials.repository"
 
 export class TestimonialService {
   private testimonialRepository: ITestimonialRepository
@@ -10,7 +11,7 @@ export class TestimonialService {
     if(process.env.MOCK_REPOSITORIES === 'true') {
       this.testimonialRepository = testimonialRepositoryLocal
     } else {
-      this.testimonialRepository = testimonialRepositoryLocal // TODO: implement postgres repo
+      this.testimonialRepository = testimonialRepository // TODO: implement postgres repo
     }
   }
 
