@@ -1,20 +1,48 @@
+// Update with your config settings.
+
 /**
- * Update with your config settings.
- *
- * @type { import("knex").Knex.Config }
+ * @type { Object.<string, import("knex").Knex.Config> }
  */
 module.exports = {
 
   development: {
     client: 'sqlite3',
     connection: {
-      filename: './src/lib/data/sql/sqlite.db' // Path to your sqlite.db file
+      filename: './src/lib/data/sql/sqlite.db'
     },
-    migrations: {
-      directory: './docker/db/migrations' // Path to your migrations directory
-    },
-    useNullAsDefault: true // Required for SQLite to prevent errors with default values
+    useNullAsDefault: true
   },
 
-  // You can add configurations for other environments (staging, production) here if needed
+  staging: {
+    client: 'postgresql',
+    connection: {
+      database: 'my_db',
+      user:     'username',
+      password: 'password'
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    }
+  },
+
+  production: {
+    client: 'postgresql',
+    connection: {
+      database: 'my_db',
+      user:     'username',
+      password: 'password'
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    }
+  }
+
 };
