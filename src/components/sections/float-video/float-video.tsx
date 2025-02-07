@@ -21,8 +21,10 @@ export const FloatVideo = () => {
       playlist: videoId, 
     },
   }
+  const isDev = process.env.NEXT_PUBLIC_MOCK_REPOSITORIES
 
-  return (
+  console.log('isDev', isDev)
+  return !isDev ? (
     <Suspense
       fallback={
         <div className="fixed bottom-[50px] right-5 min-h-[200px]">
@@ -43,5 +45,5 @@ export const FloatVideo = () => {
         </div>
       </section>
     </Suspense>
-  )
+  ) : null
 }

@@ -3,9 +3,15 @@ import { CaseStudySliderDTO } from '../dto/case-study-slider.dto';
 
 export class CaseStudySliderMapper {
   static toDomain(dto: CaseStudySliderDTO): CaseStudySlider {
+    const images = dto.images
+      ? typeof dto.images === 'string'
+        ? JSON.parse(dto.images)
+        : dto.images
+      : [];
+
     return {
       id: dto.id,
-      images: dto.images.map(image => ({
+      images: images.map((image: { id: string; image: string; alt: string; }) => ({
         id: image.id,
         image: image.image,
         alt: image.alt,

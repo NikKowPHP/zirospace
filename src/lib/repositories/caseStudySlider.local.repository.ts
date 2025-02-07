@@ -9,17 +9,34 @@ const db = new Database(dbPath);
 
 export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlider, string> implements ICaseStudySliderRepository{
   constructor() {
-    super("case_studies_sliders", db);
+    super("case_study_sliders", db);
   }
 
   getCaseStudiesSliders = async (): Promise<CaseStudySlider[]> => {
-    const result = await this.list()
-    console.log(result)
-    return result
+    const sliders = await this.list()
+
+    return Promise.all(sliders.map(async (slider) => {
+      const images = await this.getImagesForSlider(slider.id);
+      return {
+        ...slider,
+        images: images,
+      };
+    }));
   }
 
-  
-  
+  private async getImagesForSlider(sliderId: string): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM case_study_slider_images WHERE slider_id = ?`;
+      this.db.all(query, [sliderId], (err, rows: any[]) => {
+        if (err) {
+          console.error(`Error fetching images for slider ${sliderId}:`, err);
+          reject(err);
+          return;
+        }
+        resolve(rows);
+      });
+    });
+  }
 }
 
 // export singleton

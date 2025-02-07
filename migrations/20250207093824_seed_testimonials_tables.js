@@ -23,7 +23,7 @@ exports.up = async function(knex) {
       role: 'Software Engineer',
       company: 'Acme Corp',
       quote: 'This is an example testimonial in English.',
-      image: 'https://i.postimg.cc/T1nrzdwP/BCJ9upw-V2-ARbexiidm-P5w0okz-LE.avif',
+      image: '/images/testimonials/testimonial.webp',
       image_alt: 'John Doe'
     },
     {
@@ -32,7 +32,7 @@ exports.up = async function(knex) {
       role: 'Product Manager',
       company: 'Beta Inc',
       quote: 'Another inspiring testimonial in English.',
-      image: 'https://i.postimg.cc/T1nrzdwP/BCJ9upw-V2-ARbexiidm-P5w0okz-LE.avif',
+      image: '/images/testimonials/testimonial.webp',
       image_alt: 'Jane Smith'
     }
   ]);
@@ -44,7 +44,7 @@ exports.up = async function(knex) {
       role: 'Inżynier Oprogramowania',
       company: 'Gamma Sp. z o.o.',
       quote: 'To jest przykładowa opinia po polsku.',
-      image: 'https://i.postimg.cc/T1nrzdwP/BCJ9upw-V2-ARbexiidm-P5w0okz-LE.avif',
+      image: '/images/testimonials/testimonial.webp',
       image_alt: 'Jan Kowalski'
     },
     {
@@ -53,7 +53,7 @@ exports.up = async function(knex) {
       role: 'Menadżer Produktu',
       company: 'Delta S.A.',
       quote: 'Kolejna inspirująca opinia po polsku.',
-      image: 'https://i.postimg.cc/T1nrzdwP/BCJ9upw-V2-ARbexiidm-P5w0okz-LE.avif',
+      image: '/images/testimonials/testimonial.webp',
       image_alt: 'Anna Nowak'
     }
   ]);
