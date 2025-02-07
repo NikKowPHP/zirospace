@@ -41,3 +41,7 @@ export class CaseStudyService {
 
 // export singleton
 export const caseStudyService = new CaseStudyService()
+
+export const getCaseStudyService = async () => {
+  return new CaseStudyService()
+}

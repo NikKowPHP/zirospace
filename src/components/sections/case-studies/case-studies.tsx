@@ -3,7 +3,7 @@ import { CaseStudyCard } from '@/components/ui/case-study/case-study-card'
 import { type Locale } from '@/i18n'
 import { CaseStudy } from '@/domain/models/case-study.model'
 import { CaseStudiesLoader } from '@/components/sections/case-studies/case-studies-loader'
-import { caseStudyService } from '@/lib/services/caseStudy.service';
+import { getCaseStudyService } from '@/lib/services/case-study.service';
 import { getTranslations } from 'next-intl/server';
 import {  CaseStudySlider as CaseStudySliderType} from '@/domain/models/case-study-slider.model';
 import dynamic from 'next/dynamic';
@@ -23,6 +23,7 @@ interface CaseStudiesProps {
 
 
 export async function CaseStudies({ locale }: CaseStudiesProps) {
+  const caseStudyService = await getCaseStudyService()
   const caseStudies = await caseStudyService.getCaseStudies(locale)
   const caseStudySliders = await caseStudyService.getCaseStudiesSliders()
   const t = await getTranslations('caseStudiesSection')
