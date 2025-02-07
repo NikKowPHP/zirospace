@@ -2,8 +2,10 @@ import { SqlLiteAdapter} from '@/lib/repositories/adapters/sqllite.adapter';
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model';
 import { ICaseStudySliderRepository } from '../interfaces/caseStudySliderRepository.interface';
 import { Database } from 'sqlite3';
+import { getDatabaseFilePath } from '@/lib/config/database.config';
 
-const db = new Database('sqlite.db');
+const dbPath = getDatabaseFilePath();
+const db = new Database(dbPath);
 
 export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlider, string> implements ICaseStudySliderRepository{
   constructor() {

@@ -5,11 +5,10 @@ import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import { ICaseStudyRepository } from '../interfaces/caseStudyRepository.interface';
 import { SqlLiteAdapter } from '@/lib/repositories/adapters/sqllite.adapter';
 import { Database } from 'sqlite3';
+import { getDatabaseFilePath } from '@/lib/config/database.config';
 
-// const pool = new Pool({
-//     connectionString: process.env.DATABASE_URL,
-// });
-const db = new Database(process.env.DATABASE_URL || 'sqlite.db');
+const dbPath = getDatabaseFilePath();
+const db = new Database(dbPath);
 
 export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> implements ICaseStudyRepository {
   constructor() {

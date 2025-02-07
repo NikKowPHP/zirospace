@@ -2,12 +2,12 @@ import { Locale } from "@/i18n"
 import { CaseStudyRepository } from "../repositories/caseStudy.repository"
 import { CaseStudy } from "@/domain/models/case-study.model"
 // import { mockCaseStudyRepository } from "../__mocks__/caseStudyRepository.mock"
-import { caseStudyRepositoryLocal } from "../__mocks__/caseStudyRepository.local"
+import { caseStudyRepositoryLocal } from "../repositories/caseStudyRepository.local"
 import { ICaseStudyRepository } from "../interfaces/caseStudyRepository.interface"
 import { CaseStudySlider } from "@/domain/models/case-study-slider.model"
 import { ICaseStudySliderRepository } from "../interfaces/caseStudySliderRepository.interface"
-import { mockCaseStudySliderRepository } from "../__mocks__/caseStudySliderRepository.mock"
 import { caseStudySliderRepository } from "../repositories/caseStudySlider.repository"
+import { caseStudySliderRepositoryLocal } from "../repositories/caseStudySlider.local.repository"
 
 const caseStudyRepository = new CaseStudyRepository()
 
@@ -19,7 +19,7 @@ export class CaseStudyService {
   constructor() {
     if(process.env.MOCK_REPOSITORIES === 'true') {
       this.caseStudyRepository = caseStudyRepositoryLocal
-      this.caseStudySliderRepository = mockCaseStudySliderRepository
+      this.caseStudySliderRepository = caseStudySliderRepositoryLocal
     } else {
       this.caseStudyRepository = caseStudyRepository
       this.caseStudySliderRepository = caseStudySliderRepository
