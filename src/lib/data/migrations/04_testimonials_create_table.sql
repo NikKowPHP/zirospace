@@ -1,4 +1,4 @@
-CREATE TABLE public.testimonials_en (
+CREATE TABLE testimonials_en (
     id VARCHAR(255) PRIMARY KEY,
     author VARCHAR(255),
     role VARCHAR(255),
@@ -6,11 +6,11 @@ CREATE TABLE public.testimonials_en (
     quote TEXT,
     image VARCHAR(255),
     image_alt VARCHAR(255),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE public.testimonials_pl (
+CREATE TABLE testimonials_pl (
     id VARCHAR(255) PRIMARY KEY,
     author VARCHAR(255),
     role VARCHAR(255),
@@ -18,11 +18,11 @@ CREATE TABLE public.testimonials_pl (
     quote TEXT,
     image VARCHAR(255),
     image_alt VARCHAR(255),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO public.testimonials_en (
+INSERT INTO testimonials_en (
     id, author, role, company, quote, image, image_alt
 ) VALUES (
     'testimonial-en-1',
@@ -34,7 +34,7 @@ INSERT INTO public.testimonials_en (
     'John Doe'
 );
 
-INSERT INTO public.testimonials_en (
+INSERT INTO testimonials_en (
     id, author, role, company, quote, image, image_alt
 ) VALUES (
     'testimonial-en-2',
@@ -46,7 +46,7 @@ INSERT INTO public.testimonials_en (
     'Jane Smith'
 );
 
-INSERT INTO public.testimonials_pl (
+INSERT INTO testimonials_pl (
     id, author, role, company, quote, image, image_alt
 ) VALUES (
     'testimonial-pl-1',
@@ -58,7 +58,7 @@ INSERT INTO public.testimonials_pl (
     'Jan Kowalski'
 );
 
-INSERT INTO public.testimonials_pl (
+INSERT INTO testimonials_pl (
     id, author, role, company, quote, image, image_alt
 ) VALUES (
     'testimonial-pl-2',
