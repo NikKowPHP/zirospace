@@ -25,8 +25,8 @@ export class TestimonialMapper {
       quote: domain.quote,
       image: domain.image,
       image_alt: domain.image_alt,
-      created_at: domain.createdAt.toISOString(),
-      updated_at: domain.updatedAt.toISOString(),
+      created_at: domain.createdAt ? domain.createdAt.toISOString() : new Date().toISOString(),
+      updated_at: domain.updatedAt ? domain.updatedAt.toISOString() : new Date().toISOString(),
     };
   }
 }
