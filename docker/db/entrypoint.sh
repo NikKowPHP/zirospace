@@ -2,22 +2,6 @@
 set -e
 
 
-# Define database connection variables
-DB_HOST=${POSTGRES_HOST:-"localhost"}
-DB_USER=${POSTGRES_USER:-"postgres"}
-DB_PASSWORD=${POSTGRES_PASSWORD:-"password"}
-DB_NAME=${POSTGRES_DB:-"mydb"}
-PSQL="psql -h ${DB_HOST} -U ${DB_USER} -d postgres"
-
-
-
-# Drop and recreate database on each run
-echo "Dropping database if it exists: $DB_NAME"
-$PSQL -c "DROP DATABASE IF EXISTS $DB_NAME;"
-
-echo "Creating database: $DB_NAME"
-$PSQL -c "CREATE DATABASE $DB_NAME;"
-
 
 # Wait for PostgreSQL to start (self-check)
 until PGPASSWORD="$POSTGRES_PASSWORD" psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c '\q'; do
