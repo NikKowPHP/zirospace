@@ -13,8 +13,8 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
     super("case_study_sliders", db);
   }
 
-  getCaseStudiesSliders = async (locale: string): Promise<CaseStudySlider[]> => {
-    const sliders = await this.list(locale)
+  getCaseStudiesSliders = async (): Promise<CaseStudySlider[]> => {
+    const sliders = await this.list()
     console.log('sliders in repository ', sliders)
 
     return Promise.all(sliders.map(async (slider) => {
@@ -26,9 +26,9 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
     }));
   }
 
-  async createCaseStudySlider(caseStudySlider: Omit<CaseStudySlider, 'id'>, locale: string): Promise<CaseStudySlider> {
+  async createCaseStudySlider(caseStudySlider: Omit<CaseStudySlider, 'id'>): Promise<CaseStudySlider> {
     try {
-      const tableName = `case_study_sliders_${locale}`;
+      const tableName = this.tableName;
       const id = `slider-${Date.now()}`; // Generate a simple ID
       const query = `
         INSERT INTO "${tableName}" (id, theme, created_at, updated_at)
@@ -82,14 +82,14 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
         updatedAt: new Date(),
       };
     } catch (error: any) {
-      console.error(`Error creating case study slider in locale ${locale}:`, error);
+      console.error(`Error creating case study slider:`, error);
       throw new Error(`Failed to create case study slider: ${error.message}`);
     }
   }
 
-  async updateCaseStudySlider(id: string, caseStudySlider: Partial<CaseStudySlider>, locale: string): Promise<CaseStudySlider | null> {
+  async updateCaseStudySlider(id: string, caseStudySlider: Partial<CaseStudySlider>): Promise<CaseStudySlider | null> {
     try {
-      const tableName = `case_study_sliders_${locale}`;
+      const tableName = this.tableName;
       const updates: string[] = [];
       const params: any[] = [];
 
@@ -101,7 +101,7 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
       }
 
       if (updates.length === 0) {
-        return this.getCaseStudySliderById(id, locale);
+        return this.getCaseStudySliderById(id);
       }
 
       params.push(id);
@@ -125,16 +125,16 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
         });
       });
 
-      return this.getCaseStudySliderById(id, locale);
+      return this.getCaseStudySliderById(id);
     } catch (error: any) {
-      console.error(`Error updating case study slider with id ${id} in locale ${locale}:`, error);
+      console.error(`Error updating case study slider with id ${id}:`, error);
       throw new Error(`Failed to update case study slider: ${error.message}`);
     }
   }
 
-  async deleteCaseStudySlider(id: string, locale: string): Promise<void> {
+  async deleteCaseStudySlider(id: string): Promise<void> {
     try {
-      const tableName = `case_study_sliders_${locale}`;
+      const tableName = this.tableName;
       const query = `DELETE FROM "${tableName}" WHERE id = ?`;
 
       await new Promise<void>((resolve, reject) => {
@@ -147,14 +147,14 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
         });
       });
     } catch (error: any) {
-      console.error(`Error deleting case study slider with id ${id} in locale ${locale}:`, error);
+      console.error(`Error deleting case study slider with id ${id}:`, error);
       throw new Error(`Failed to delete case study slider: ${error.message}`);
     }
   }
 
-  async getCaseStudySliderById(id: string, locale: string): Promise<CaseStudySlider | null> {
+  async getCaseStudySliderById(id: string): Promise<CaseStudySlider | null> {
     try {
-      const tableName = `case_study_sliders_${locale}`;
+      const tableName = this.tableName;
       const query = `SELECT * FROM "${tableName}" WHERE id = ?;`;
 
       const result = await new Promise<any>((resolve, reject) => {
@@ -178,13 +178,13 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
         images: images,
       };
     } catch (error: any) {
-      console.error(`Error fetching case study slider with id ${id} from locale ${locale}:`, error);
+      console.error(`Error fetching case study slider with id ${id}:`, error);
       throw new Error(`Failed to fetch case study slider: ${error.message}`);
     }
   }
 
-  async list(locale?: string): Promise<CaseStudySlider[]> {
-    const tableName = locale ? `case_study_sliders_${locale}` : this.tableName;
+  async list(): Promise<CaseStudySlider[]> {
+    const tableName = this.tableName;
     console.log('table name in list ', tableName)
     return new Promise((resolve, reject) => {
       const query = `

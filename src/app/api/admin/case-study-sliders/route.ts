@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       mappedData: CaseStudySliderMapper.toPersistence(data)
     })
 
-    const newCaseStudySlider = await caseStudySliderService.createCaseStudySlider(CaseStudySliderMapper.toDomain(data), locale)
+    const newCaseStudySlider = await caseStudySliderService.createCaseStudySlider(CaseStudySliderMapper.toDomain(data))
 
     // Revalidate cache
     revalidateTag(CACHE_TAGS.CASE_STUDIES)
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
 
     console.log('Processing case study slider retrieval:', { locale })
 
-    const caseStudySliders = await caseStudySliderService.getCaseStudySliders(locale);
+    const caseStudySliders = await caseStudySliderService.getCaseStudySliders();
 
     return NextResponse.json(caseStudySliders.map(CaseStudySliderMapper.toPersistence));
   } catch (error) {

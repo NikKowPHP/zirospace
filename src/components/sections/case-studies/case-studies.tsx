@@ -6,6 +6,7 @@ import { CaseStudiesLoader } from '@/components/sections/case-studies/case-studi
 import { getCaseStudyService } from '@/lib/services/case-study.service';
 import { getTranslations } from 'next-intl/server';
 import {  CaseStudySlider as CaseStudySliderType} from '@/domain/models/case-study-slider.model';
+import { caseStudySliderService } from '@/lib/services/case-study-slider.service';
 import dynamic from 'next/dynamic';
 
 // Dynamically import the client slider (disable SSR)
@@ -25,7 +26,7 @@ interface CaseStudiesProps {
 export async function CaseStudies({ locale }: CaseStudiesProps) {
   const caseStudyService = await getCaseStudyService()
   const caseStudies = await caseStudyService.getCaseStudies(locale)
-  const caseStudySliders = await caseStudyService.getCaseStudiesSliders()
+  const caseStudySliders = await caseStudySliderService.getCaseStudySliders()
   const t = await getTranslations('caseStudiesSection')
 
   return (

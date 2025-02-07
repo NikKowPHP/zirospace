@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
-import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
-import { testimonialService } from '@/lib/services/testimonials.service'
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
 import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
 
@@ -16,7 +14,7 @@ export async function DELETE(
 
     console.log('Processing case study slider deletion:', { id, locale })
 
-    await caseStudySliderService.deleteCaseStudySlider(id, locale)
+    await caseStudySliderService.deleteCaseStudySlider(id)
 
     // Revalidate cache
     revalidateTag(CACHE_TAGS.CASE_STUDIES)
@@ -48,7 +46,7 @@ export async function PUT(
       mappedData: CaseStudySliderMapper.toPersistence(data)
     })
 
-    const updatedCaseStudySlider = await caseStudySliderService.updateCaseStudySlider(id, CaseStudySliderMapper.toDomain(data), locale)
+    const updatedCaseStudySlider = await caseStudySliderService.updateCaseStudySlider(id, CaseStudySliderMapper.toDomain(data))
 
     if (!updatedCaseStudySlider) {
       return NextResponse.json(

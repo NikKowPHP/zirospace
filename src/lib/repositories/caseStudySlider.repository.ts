@@ -15,9 +15,9 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
   }
 
   getCaseStudiesSliders = unstable_cache(
-    async (locale: string): Promise<CaseStudySlider[]> => {
+    async (): Promise<CaseStudySlider[]> => {
       const { data, error } = await this.supabaseClient
-        .from(`case_studies_sliders_${locale}`)
+        .from(`case_studies_sliders`)
         .select('*')
         .order('created_at', { ascending: false })
 
@@ -35,9 +35,9 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
     }
   )
 
-  async createCaseStudySlider(caseStudySlider: CaseStudySlider, locale: string): Promise<CaseStudySlider> {
+  async createCaseStudySlider(caseStudySlider: CaseStudySlider): Promise<CaseStudySlider> {
     const { data, error } = await this.supabaseClient
-      .from(`case_studies_sliders_${locale}`)
+      .from(`case_studies_sliders`)
       .insert([CaseStudySliderMapper.toPersistence(caseStudySlider)])
       .select()
       
@@ -49,9 +49,9 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
     return CaseStudySliderMapper.toDomain(data[0] as CaseStudySliderDTO)
   }
 
-  async updateCaseStudySlider(id: string, caseStudySlider: Partial<CaseStudySlider>, locale: string): Promise<CaseStudySlider | null> {
+  async updateCaseStudySlider(id: string, caseStudySlider: Partial<CaseStudySlider>): Promise<CaseStudySlider | null> {
     const { data, error } = await this.supabaseClient
-      .from(`case_studies_sliders_${locale}`)
+      .from(`case_studies_sliders`)
       .update(CaseStudySliderMapper.toPersistence(caseStudySlider))
       .eq('id', id)
       .select()
@@ -68,9 +68,9 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
     return CaseStudySliderMapper.toDomain(data[0] as CaseStudySliderDTO)
   }
 
-  async deleteCaseStudySlider(id: string, locale: string): Promise<void> {
+  async deleteCaseStudySlider(id: string): Promise<void> {
     const { error } = await this.supabaseClient
-      .from(`case_studies_sliders_${locale}`)
+      .from(`case_studies_sliders`)
       .delete()
       .eq('id', id)
 
