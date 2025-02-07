@@ -4,7 +4,7 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
 import { testimonialService } from '@/lib/services/testimonials.service'
 import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
-import { caseStudyService } from '@/lib/services/case-study-slider.service'
+import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
 
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()

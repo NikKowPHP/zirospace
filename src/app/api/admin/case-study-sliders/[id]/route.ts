@@ -3,6 +3,8 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
 import { testimonialService } from '@/lib/services/testimonials.service'
+import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
+import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
 
 export async function DELETE(
   request: NextRequest,
@@ -12,26 +14,19 @@ export async function DELETE(
     const { id } = params
     const { locale } = await request.json()
 
-    console.log('Processing testimonial deletion:', { id, locale })
+    console.log('Processing case study slider deletion:', { id, locale })
 
-    const success = await testimonialService.deleteTestimonial(id, locale)
-
-    if (!success) {
-      return NextResponse.json(
-        { error: 'Failed to delete testimonial', details: 'Testimonial not found' },
-        { status: 404 }
-      )
-    }
+    await caseStudySliderService.deleteCaseStudySlider(id, locale)
 
     // Revalidate cache
-    revalidateTag(CACHE_TAGS.TESTIMONIALS)
+    revalidateTag(CACHE_TAGS.CASE_STUDIES)
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting testimonial:', error)
+    console.error('Error deleting case study slider:', error)
     return NextResponse.json(
       { 
-        error: 'Failed to delete testimonial',
+        error: 'Failed to delete case study slider',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
@@ -47,29 +42,29 @@ export async function PUT(
     const { id } = params
     const { data, locale } = await request.json()
     
-    console.log('Processing testimonial update:', {
+    console.log('Processing case study slider update:', {
       id,
       locale,
-      mappedData: TestimonialMapper.toPersistence(data)
+      mappedData: CaseStudySliderMapper.toPersistence(data)
     })
 
-    const updatedTestimonial = await testimonialService.updateTestimonial(id, TestimonialMapper.toDomain(data), locale)
+    const updatedCaseStudySlider = await caseStudySliderService.updateCaseStudySlider(id, CaseStudySliderMapper.toDomain(data), locale)
 
-    if (!updatedTestimonial) {
+    if (!updatedCaseStudySlider) {
       return NextResponse.json(
-        { error: 'Testimonial not found', details: 'No testimonial exists with the provided ID' },
+        { error: 'Case study slider not found', details: 'No case study slider exists with the provided ID' },
         { status: 404 }
       )
     }
 
     // Revalidate cache
-    revalidateTag(CACHE_TAGS.TESTIMONIALS)
+    revalidateTag(CACHE_TAGS.CASE_STUDIES)
 
-    return NextResponse.json(TestimonialMapper.toPersistence(updatedTestimonial))
+    return NextResponse.json(CaseStudySliderMapper.toPersistence(updatedCaseStudySlider))
   } catch (error) {
-    console.error('Error updating testimonial:', error)
+    console.error('Error updating case study slider:', error)
     return NextResponse.json(
-      { error: 'Failed to update testimonial', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to update case study slider', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
