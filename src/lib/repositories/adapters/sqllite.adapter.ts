@@ -5,7 +5,7 @@ export interface BaseEntity<ID> {
   id: ID;
 }
 
-export class PostgresDBRepository<T extends BaseEntity<ID>, ID> {
+export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
   private tableName: string;
   private db: Database;
 
