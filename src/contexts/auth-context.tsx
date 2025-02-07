@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 
 const isAdminRoute = (path: string) => {
-  const adminRoutes = ['/admin', '/admin/login', '/admin/dashboard', '/admin/case-studies']
+  const adminRoutes = ['/admin', '/admin/login', '/admin/sections/dashboard', '/admin/sections/case-studies']
   return adminRoutes.some(route => path.startsWith(route))
 }
 
@@ -60,7 +60,7 @@ const isAdminRoute = (path: string) => {
 
         if (isMock || (event === 'SIGNED_IN' && !isAdminRoute(currentPath))) {
           console.log('redirecting to admin dashboard')
-          router.replace('/admin/dashboard')
+          router.replace('/admin/sections/dashboard')
         } else if (event === 'SIGNED_OUT') {
           router.replace('/admin/login')
         }
@@ -78,7 +78,7 @@ const isAdminRoute = (path: string) => {
       setUser(user)
       setSession(session)
       if (user) {
-        router.push('/admin/dashboard')
+        router.push('/admin/sections/dashboard')
       }
     } catch (error) {
       const message = error instanceof AuthError 
