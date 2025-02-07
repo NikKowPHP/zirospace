@@ -14,6 +14,7 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
 
   getCaseStudiesSliders = async (): Promise<CaseStudySlider[]> => {
     const sliders = await this.list()
+    console.log('sliders in repository ', sliders)
 
     return Promise.all(sliders.map(async (slider) => {
       const images = await this.getImagesForSlider(slider.id);

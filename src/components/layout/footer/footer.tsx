@@ -45,8 +45,8 @@ export function Footer() {
           {/* Right Column - Links */}
           <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-12  mt-12 border border-red-500">
             <div className="flex flex-col gap-4">
-              {footerConfig.mainNav.map((item) => (
-                <div>
+              {footerConfig.mainNav.map((item, index) => (
+                <div key={index}>
                   <Link href={item.href} className="font-medium text-gray-900 text-[14px] whitespace-nowrap hover:opacity-80 transition-opacity">
                     {item.title}
                   </Link>
@@ -54,8 +54,8 @@ export function Footer() {
               ))}
             </div>
             <div className="flex flex-col gap-4">
-              {footerConfig.socialLinks.map((item) => (
-                <div>
+              {footerConfig.socialLinks.map((item, index) => (
+                <div key={index}>
                   <Link href={item.href} className="font-medium text-gray-900 text-[14px] whitespace-nowrap hover:opacity-80 transition-opacity">
                     {item.title}
                   </Link>

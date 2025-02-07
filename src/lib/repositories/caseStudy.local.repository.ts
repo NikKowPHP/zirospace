@@ -23,6 +23,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
 
   async list(locale?: Locale): Promise<CaseStudy[]> {
     const tableName = locale ? `case_studies_${locale}` : this.tableName;
+    console.log('table name in list ', tableName)
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM "${tableName}";

@@ -46,14 +46,14 @@ const ProcessItem = ({ t, index, item }: { t: any; index: number; item: any }) =
     <div key={index} className="p-[36px] rounded-xl border border-red-500 bg-gray-100 shadow-sm flex flex-col gap-[16px] ">
       <h4 className='text-[16px] leading-[1.2]'>0{index + 1}</h4>
       <h2 className="text-lg text-black">{t(`${item.title}`)}</h2>
-      <p className=" text-gray-600">
+      <div className=" text-gray-600">
         <ul className="flex flex-col gap-[16px]">
         {item.list.map((listItem: any, index: number) => (
           <li key={index} className="text-gray-600 list-disc ml-[16px]">{t(`${listItem}`)}</li>
         ))}
         </ul> 
 
-      </p>
+      </div>
     </div>
   )
 }
