@@ -2,6 +2,7 @@ import { Locale } from '@/i18n';
 
 export const CACHE_TAGS = {
   CASE_STUDIES: 'case-studies',
+  TESTIMONIALS: 'testimonials',
 } as const;
 
 export const CACHE_TIMES = {
