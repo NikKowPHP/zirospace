@@ -3,7 +3,7 @@ import { Locale } from '@/i18n'
 import { CaseStudy } from '@/domain/models/case-study.model'
 import { CaseStudyDTO } from '@/infrastructure/dto/case-study.dto'
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
-import { PostgresDBRepository } from '@/lib/repositories/db/postgresdb.repository';
+import { PostgresDBRepository } from '@/lib/repositories/db/sqllite.adapter';
 import { ICaseStudyRepository } from '../interfaces/caseStudyRepository.interface';
 import { logger } from '../utils/logger';
 
