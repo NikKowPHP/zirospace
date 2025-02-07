@@ -22,6 +22,7 @@ interface AdminContextType {
   updateTestimonial: (id: string, data: Partial<Testimonial>, locale: Locale) => Promise<void>
   deleteTestimonial: (id: string, locale: Locale) => Promise<void>
   clearError: () => void
+  getTestimonials: (locale: Locale) => Promise<void>
 }
 
 interface AdminProviderProps {
@@ -324,6 +325,23 @@ export function AdminProvider({
 
   const clearError = () => setError(null)
 
+  const getTestimonials = async (locale: Locale) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/admin/testimonials?locale=${locale}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch testimonials');
+      }
+      const data = await response.json();
+      setTestimonials(prev => ({ ...prev, [locale]: data }));
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch testimonials');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AdminContext.Provider value={{
       caseStudies,
@@ -340,7 +358,8 @@ export function AdminProvider({
       createTestimonial,
       updateTestimonial,
       deleteTestimonial,
-      clearError
+      clearError,
+      getTestimonials
     }}>
       {children}
     </AdminContext.Provider>

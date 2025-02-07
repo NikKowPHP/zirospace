@@ -1,7 +1,7 @@
 import { CaseStudyList } from './case-study-list'
 import { Suspense } from 'react'
 import { AdminProvider } from '@/contexts/admin-context'
-import { caseStudyService } from '@/lib/services/caseStudy.service'
+import { caseStudyService } from '@/lib/services/case-study.service'
 
 export default async function CaseStudiesAdminPage() {
   const [enCaseStudies, plCaseStudies] = await Promise.all([

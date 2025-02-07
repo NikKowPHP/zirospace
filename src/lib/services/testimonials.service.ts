@@ -38,3 +38,7 @@ export class TestimonialService {
 
 // export singleton
 export const testimonialService = new TestimonialService()
+
+export const getTestimonialService = async () => {
+  return new TestimonialService()
+}
