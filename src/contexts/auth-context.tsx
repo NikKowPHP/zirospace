@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 
 const isAdminRoute = (path: string) => {
-  const adminRoutes = ['/admin', '/admin/login', '/admin/sections/dashboard', '/admin/sections/case-studies']
+  const adminRoutes = ['/admin', '/admin/login', '/admin/sections/dashboard', '/admin/sections/case-studies', '/admin/sections/case-study-sliders', '/admin/sections/testimonials']
   return adminRoutes.some(route => path.startsWith(route))
 }
 
@@ -58,7 +58,7 @@ const isAdminRoute = (path: string) => {
         const currentPath = window.location.pathname
         console.log('is mocked', isMock)
 
-        if (isMock || (event === 'SIGNED_IN' && !isAdminRoute(currentPath))) {
+        if (isMock && !isAdminRoute(currentPath) || (event === 'SIGNED_IN' && !isAdminRoute(currentPath))) {
           console.log('redirecting to admin dashboard')
           router.replace('/admin/sections/dashboard')
         } else if (event === 'SIGNED_OUT') {

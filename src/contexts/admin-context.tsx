@@ -25,16 +25,14 @@ interface AdminContextType {
     locale: Locale
   ) => Promise<void>
   deleteCaseStudy: (id: string, locale: Locale) => Promise<void>
-  createCaseStudySlider: (
-    data: Partial<CaseStudySlider>,
-    locale: Locale
-  ) => Promise<void>
+
+  createCaseStudySlider: (data: Partial<CaseStudySlider>) => Promise<void>
   updateCaseStudySlider: (
     id: string,
-    data: Partial<CaseStudySlider>,
-    locale: Locale
+    data: Partial<CaseStudySlider>
   ) => Promise<void>
-  deleteCaseStudySlider: (id: string, locale: Locale) => Promise<void>
+  deleteCaseStudySlider: (id: string) => Promise<void>
+
   createTestimonial: (
     data: Partial<Testimonial>,
     locale: Locale
@@ -47,7 +45,7 @@ interface AdminContextType {
   deleteTestimonial: (id: string, locale: Locale) => Promise<void>
   clearError: () => void
   getTestimonials: (locale: Locale) => Promise<void>
-  getCaseStudySliders: (locale: Locale) => Promise<void>
+  getCaseStudySliders: () => Promise<void>
 }
 
 interface AdminProviderProps {
@@ -199,8 +197,7 @@ export function AdminProvider({
   }
 
   const createCaseStudySlider = async (
-    data: Partial<CaseStudySlider>,
-    locale: Locale
+    data: Partial<CaseStudySlider>
   ) => {
     setLoading(true)
     setError(null)
@@ -208,7 +205,7 @@ export function AdminProvider({
       const response = await fetch(`/api/admin/case-study-sliders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
+        body: JSON.stringify({ data }),
       })
 
       if (!response.ok) {
@@ -234,8 +231,7 @@ export function AdminProvider({
 
   const updateCaseStudySlider = async (
     id: string,
-    data: Partial<CaseStudySlider>,
-    locale: Locale
+    data: Partial<CaseStudySlider>
   ) => {
     setLoading(true)
     setError(null)
@@ -243,7 +239,7 @@ export function AdminProvider({
       const response = await fetch(`/api/admin/case-study-sliders/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
+        body: JSON.stringify({ data }),
       })
 
       if (!response.ok) {
@@ -269,14 +265,13 @@ export function AdminProvider({
     }
   }
 
-  const deleteCaseStudySlider = async (id: string, locale: Locale) => {
+  const deleteCaseStudySlider = async (id: string) => {
     setLoading(true)
     setError(null)
     try {
       const response = await fetch(`/api/admin/case-study-sliders/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ locale }),
       })
 
       if (!response.ok) {
@@ -418,18 +413,16 @@ export function AdminProvider({
     }
   }, [])
 
-  const getCaseStudySliders = useCallback(async (locale: Locale) => {
+  const getCaseStudySliders = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(
-        `/api/admin/case-study-sliders?locale=${locale}`
-      )
+      const response = await fetch(`/api/admin/case-study-sliders`)
       if (!response.ok) {
         throw new Error('Failed to fetch case study sliders')
       }
       const data = await response.json()
-      setCaseStudySliders((prev) => ({ ...prev, [locale]: data }))
+      setCaseStudySliders(data)
     } catch (error: any) {
       setError(error.message || 'Failed to fetch case study sliders')
     } finally {

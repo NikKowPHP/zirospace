@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
-import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
-import { testimonialService } from '@/lib/services/testimonials.service'
 import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
 
 export async function POST(request: NextRequest) {
-  const { data, locale } = await request.json()
+  const { data } = await request.json()
   
   try {
     console.log('Processing case study slider creation:', {
-      locale,
       mappedData: CaseStudySliderMapper.toPersistence(data)
     })
 
@@ -30,12 +27,9 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const locale = searchParams.get('locale') as string;
-
-    console.log('Processing case study slider retrieval:', { locale })
+    console.log('Processing case study slider retrieval:')
 
     const caseStudySliders = await caseStudySliderService.getCaseStudySliders();
 

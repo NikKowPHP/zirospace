@@ -1,15 +1,15 @@
 
 
 export interface CaseStudyImage {
-  readonly id: string;
-  readonly image: string;
-  readonly alt: string;
+  id: string;
+  image: string;
+  alt: string;
 }
 
 export interface CaseStudySlider {
   readonly id: string;
-  readonly images: readonly CaseStudyImage[];
-  readonly theme: string;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
+  images: CaseStudyImage[];
+  theme: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
