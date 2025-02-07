@@ -1,25 +1,17 @@
-import { Pool } from 'pg';
-import { Locale } from '@/i18n'
-import { CaseStudy } from '@/domain/models/case-study.model'
-import { CaseStudyDTO } from '@/infrastructure/dto/case-study.dto'
-import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
-import { PostgresDBRepository } from '@/lib/repositories/db/sqllite.adapter';
-import { ICaseStudyRepository } from '../interfaces/caseStudyRepository.interface';
-import { logger } from '../utils/logger';
+import { SqlLiteAdapter} from '@/lib/repositories/adapters/sqllite.adapter';
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model';
+import { ICaseStudySliderRepository } from '../interfaces/caseStudySliderRepository.interface';
+import { Database } from 'sqlite3';
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-});
+const db = new Database('sqlite.db');
 
-export class CaseStudySliderRepositoryLocal extends PostgresDBRepository<CaseStudySlider, string> implements ICaseStudySliderRepository {
+export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlider, string> implements ICaseStudySliderRepository{
   constructor() {
-    super("", pool); // Placeholder table name, we will specify it in methods
+    super("case_studies_sliders", db);
   }
 
   getCaseStudiesSliders = async (): Promise<CaseStudySlider[]> => {
-    const caseStudySliderDBRepository = new PostgresDBRepository<CaseStudySlider, string>(`case_studies_sliders`, pool);
-    const result = await caseStudySliderDBRepository.list()
+    const result = await this.list()
     console.log(result)
     return result
   }
