@@ -13,7 +13,9 @@
     "format": "prettier --write .",
     "analyze": "cross-env ANALYZE=true next build",
     "build:prod": "next build && next-bundle-analyzer",
-    "docker:proxy": "docker-compose -f docker-compose.proxy.yml up"
+    "docker:proxy": "docker-compose -f docker-compose.proxy.yml up",
+    "migrate:latest": "npx umzug up --config umzug.config.js",
+    "migrate:fresh": "npx umzug reset --config umzug.config.js && npx umzug up --config umzug.config.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -24,6 +26,7 @@
     "clsx": "^2.1.1",
     "compression": "^1.7.4",
     "critters": "^0.0.23",
+    "knex": "^3.1.0",
     "lucide-react": "^0.474.0",
     "next": "15.1.3",
     "next-intl": "^3.26.3",
@@ -48,6 +51,7 @@
     "supabase": "^2.2.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
+    "umzug": "^3.8.2",
     "webpack-bundle-analyzer": "^4.10.1"
   }
 }

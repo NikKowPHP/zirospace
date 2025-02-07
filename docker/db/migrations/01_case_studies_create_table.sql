@@ -4,8 +4,8 @@ CREATE TABLE case_studies_en (
     title VARCHAR(255) NOT NULL,
     subtitle VARCHAR(255),
     description TEXT,
-    tags TEXT, -- Changed from TEXT[] to TEXT, will store comma-separated tags
-    images TEXT, -- Changed from JSONB[] to TEXT, will store JSON array as string
+    tags TEXT, 
+    images TEXT,
     cta_text VARCHAR(255),
     cta_text_name VARCHAR(255),
     cta_url VARCHAR(255),
@@ -45,7 +45,7 @@ INSERT INTO case_studies_en (
     'Example Subtitle EN 1',
     'Example Description EN 1',
     'tag1,tag2', -- Comma-separated tags
-    '[{"alt": "simple", "url": "https://example.com/image.png"}]', -- JSON array as string
+    '[{"url": "https://example.com/image1.png", "alt": "Example Image 1 Alt Text"}, {"url": "https://example.com/image2.png", "alt": "Example Image 2 Alt Text"}]', -- JSON array as string, with more descriptive alt text
     'Learn More',
     'caseStudy.ctaText.viewCaseStudy',
     '/case-studies/example-case-study-en-1',
@@ -64,7 +64,7 @@ INSERT INTO case_studies_pl (
     'Example Subtitle PL 1',
     'Example Description PL 1',
     'tag1,tag2', -- Comma-separated tags
-    '[{"alt": "simple", "url": "https://example.com/image.png"}]', -- JSON array as string
+    '[{"url": "https://example.com/pl/image1.png", "alt": "Przykład Obraz 1 Alt Tekst"}, {"url": "https://example.com/pl/image2.png", "alt": "Przykład Obraz 2 Alt Tekst"}]', -- JSON array as string, with more descriptive alt text (Polish)
     'Dowiedz się więcej',
     'caseStudy.ctaText.viewCaseStudy',
     '/pl/case-studies/example-case-study-pl-1',

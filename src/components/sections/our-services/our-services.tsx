@@ -49,7 +49,6 @@ const ServiceItemList = async ({
   serviceItems: Promise<ServiceItemType[]>
 }) => {
   const items = await serviceItems
-  console.log(items)
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-[20px] justify-center mx-auto max-w-5xl">
       {items.map((item: ServiceItemType, index: number) => (

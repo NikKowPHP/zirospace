@@ -35,6 +35,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
           return;
         }
         const caseStudies = rows.map(CaseStudyMapper.toDomain);
+        console.log('case studies in repository ', caseStudies)
         resolve(caseStudies || []);
       });
     });

@@ -65,7 +65,6 @@ const ProcessItemList = async ({
   processItems: Promise<ProcessItemType[]>
 }) => {
   const items = await processItems
-  console.log(items)
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-[20px] max-w-5xl justify-center mx-auto">
       {items.map((item: any, index: number) => (
