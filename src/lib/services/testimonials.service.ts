@@ -15,23 +15,23 @@ export class TestimonialService {
     }
   }
 
-  getTestimonials = async (locale: Locale): Promise<Testimonial[]> => {
+  getTestimonials = async (locale: string): Promise<Testimonial[]> => {
     return this.testimonialRepository.getTestimonials(locale)
   }
 
-  getTestimonialById = async (id: string, locale: Locale): Promise<Testimonial | null> => {
+  getTestimonialById = async (id: string, locale: string): Promise<Testimonial | null> => {
     return this.testimonialRepository.getTestimonialById(id, locale)
   }
 
-  createTestimonial = async (testimonial: Omit<Testimonial, 'id'>, locale: Locale): Promise<Testimonial> => {
+  createTestimonial = async (testimonial: Omit<Testimonial, 'id'>, locale: string): Promise<Testimonial> => {
     return this.testimonialRepository.createTestimonial(testimonial, locale)
   }
 
-  updateTestimonial = async (id: string, testimonial: Partial<Testimonial>, locale: Locale): Promise<Testimonial | null> => {
+  updateTestimonial = async (id: string, testimonial: Partial<Testimonial>, locale: string): Promise<Testimonial | null> => {
     return this.testimonialRepository.updateTestimonial(id, testimonial, locale)
   }
 
-  deleteTestimonial = async (id: string, locale: Locale): Promise<boolean> => {
+  deleteTestimonial = async (id: string, locale: string): Promise<boolean> => {
     return this.testimonialRepository.deleteTestimonial(id, locale)
   }
 }

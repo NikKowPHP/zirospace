@@ -27,3 +27,22 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const locale = searchParams.get('locale') as string;
+
+    console.log('Processing testimonial retrieval:', { locale })
+
+    const testimonials = await testimonialService.getTestimonials(locale);
+
+    return NextResponse.json(testimonials.map(TestimonialMapper.toPersistence));
+  } catch (error) {
+    console.error('Error retrieving testimonials:', error)
+    return NextResponse.json(
+      { error: 'Failed to retrieve testimonials', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    )
+  }
+}

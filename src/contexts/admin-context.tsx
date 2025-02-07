@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { CaseStudy } from '@/domain/models/case-study.model'
 import { Locale } from '@/i18n'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
@@ -325,7 +325,7 @@ export function AdminProvider({
 
   const clearError = () => setError(null)
 
-  const getTestimonials = async (locale: Locale) => {
+  const getTestimonials = useCallback(async (locale: Locale) => {
     setLoading(true);
     setError(null);
     try {
@@ -340,7 +340,7 @@ export function AdminProvider({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return (
     <AdminContext.Provider value={{
