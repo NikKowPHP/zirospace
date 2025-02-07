@@ -25,10 +25,9 @@ export class CaseStudySliderMapper {
   static toPersistence(domain: Partial<CaseStudySlider>): Partial<CaseStudySliderDTO> {
     const id = domain.id  ? 
       domain.id.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        + '-' + Date.now()
-      : undefined
+      .replace(/^-+|-+$/g, '')
+      + '-' + Date.now()
+    : domain.id
 
     return {
       id,
@@ -38,6 +37,7 @@ export class CaseStudySliderMapper {
         alt: image.alt,
       })),
       theme: domain.theme,
+      updated_at: domain.updatedAt?.toISOString(),
     }
   }
 } 

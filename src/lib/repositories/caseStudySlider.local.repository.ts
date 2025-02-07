@@ -52,28 +52,28 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
       });
 
       // Create the images
-      // await Promise.all(caseStudySlider.images.map(async (image) => {
-      //   const imageQuery = `
-      //     INSERT INTO case_study_slider_images (id, slider_id, image, alt)
-      //     VALUES (?, ?, ?, ?)
-      //   `;
-      //   const imageParams = [
-      //     image.id,
-      //     id,
-      //     image.image,
-      //     image.alt
-      //   ];
+      await Promise.all(caseStudySlider.images.map(async (image) => {
+        const imageQuery = `
+          INSERT INTO case_study_slider_images (id, slider_id, image, alt)
+          VALUES (?, ?, ?, ?)
+        `;
+        const imageParams = [
+          image.id,
+          id,
+          image.image,
+          image.alt
+        ];
 
-      //   await new Promise<void>((resolve, reject) => {
-      //     db.run(imageQuery, imageParams, function (err: Error | null) {
-      //       if (err) {
-      //         reject(err);
-      //         return;
-      //       }
-      //       resolve();
-      //     });
-      //   });
-      // }));
+        await new Promise<void>((resolve, reject) => {
+          db.run(imageQuery, imageParams, function (err: Error | null) {
+            if (err) {
+              reject(err);
+              return;
+            }
+            resolve();
+          });
+        });
+      }));
 
       return {
         id,
@@ -93,8 +93,10 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
       const updates: string[] = [];
       const params: any[] = [];
 
+      console.log('id in update ', id)
+
       for (const key in caseStudySlider) {
-        if (caseStudySlider.hasOwnProperty(key) && key !== 'id' && key !== 'images') {
+        if (caseStudySlider.hasOwnProperty(key) && key !== 'id' && key !== 'images' && key !== 'createdAt' && key !== 'updatedAt') {
           updates.push(`${key} = ?`);
           params.push((caseStudySlider as any)[key]);
         }
@@ -111,10 +113,11 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
         SET ${updates.join(', ')}, updated_at = ?
         WHERE id = ?
       `;
+      console.log('query in update ', query)
 
       params.unshift(new Date().toISOString());
       updates.push(`updated_at = ?`);
-
+      console.log('params in update ', params)
       await new Promise<void>((resolve, reject) => {
         this.db.run(query, params, function (err: Error | null) {
           if (err) {
@@ -124,6 +127,30 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
           resolve();
         });
       });
+
+      // Update the images
+      await Promise.all((caseStudySlider.images || []).map(async (image) => {
+        const imageQuery = `
+          UPDATE case_study_slider_images
+          SET image = ?, alt = ?
+          WHERE id = ?
+        `;
+        const imageParams = [
+          image.image,
+          image.alt,
+          image.id
+        ];
+
+        await new Promise<void>((resolve, reject) => {
+          db.run(imageQuery, imageParams, function (err: Error | null) {
+            if (err) {
+              reject(err);
+              return;
+            }
+            resolve();
+          });
+        });
+      }));
 
       return this.getCaseStudySliderById(id);
     } catch (error: any) {

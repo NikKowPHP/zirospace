@@ -37,12 +37,11 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params
-    const { data, locale } = await request.json()
+    const { id } = await params
+    const { data } = await request.json()
     
     console.log('Processing case study slider update:', {
       id,
-      locale,
       mappedData: CaseStudySliderMapper.toPersistence(data)
     })
 

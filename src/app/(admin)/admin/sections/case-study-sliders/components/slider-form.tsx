@@ -31,7 +31,8 @@ export function CaseStudySliderForm({
     setImages(newImages);
   };
 
-  const handleAddImage = () => {
+  const handleAddImage = (e: React.MouseEvent) => {
+    e.preventDefault();
     setImages([...images, { id: Date.now().toString(), image: '', alt: '' }]);
   };
 
