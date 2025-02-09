@@ -240,5 +240,8 @@
       "quote": "Our design now truly stands out in the market.",
       "imageAlt": "Client portrait"
     }
+  },
+  "blog": {
+    "latest-articles": "Latest Articles"
   }
 } 
