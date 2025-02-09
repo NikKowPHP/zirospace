@@ -49,8 +49,9 @@ export async function middleware(request: NextRequest) {
 
     // Validate route pattern for case studies
     const isCaseStudyRoute = /^case-studies(\/[a-z0-9-]+)?$/.test(pathWithoutLocale);
+    const isBlogRoute = /^blog(\/[a-z0-9-]+)?$/.test(pathWithoutLocale);
     
-    if (pathWithoutLocale && !isCaseStudyRoute) {
+    if (pathWithoutLocale && !isCaseStudyRoute && !isBlogRoute) {
       const locale = pathname.split('/')[1];
       return NextResponse.redirect(new URL(`/${locale}/404`, request.url));
     }
