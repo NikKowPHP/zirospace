@@ -4,9 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { Button } from '@/components/ui/button/button'
-
-// Import the mock blogPosts array
 import { blogPosts } from '@/lib/data/blog-posts.mock.data'
+import { sanitizeHTML } from '@/lib/utils/htmlSanitaizer'
 
 interface PageProps {
   params: {
@@ -40,8 +39,10 @@ export default function BlogPostPage({ params }: PageProps) {
       </header>
 
       <div
-        className="blog-post-content text-gray-700"
-        dangerouslySetInnerHTML={{ __html: post.contentHtml }}
+        className="blog-post-content  max-w-none text-gray-700"
+        dangerouslySetInnerHTML={{ 
+          __html: sanitizeHTML(post.contentHtml.trim()) 
+        }}
       />
     </article>
   )
