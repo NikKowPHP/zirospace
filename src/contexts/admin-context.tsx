@@ -458,11 +458,15 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/admin/blog-posts/${id}`, {
+      console.log('updateBlogPost', {data, locale})
+      const response = await fetch(`/api/admin/blog-post?id=${id}&locale=${locale}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
+        body: JSON.stringify({ data }),
       })
+
+      console.log('response', response)
+      debugger
 
       if (!response.ok) {
         const errorData = await response

@@ -5,6 +5,7 @@ import { IBlogPostRepository } from '@/lib/interfaces/blog-post.interface';
 import { getDatabaseFilePath } from '@/lib/config/database.config';
 import { Database } from 'sqlite3';
 import { SqlLiteAdapter } from './adapters/sqllite.adapter';
+import { BlogPostDTO } from '@/infrastructure/dto/blog-post.dto';
 const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);
 
@@ -103,17 +104,20 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
     }
   }
 
-  async updateBlogPost(id: string, blogPost: Partial<BlogPost>, locale: string): Promise<BlogPost | null> {
+  async updateBlogPost(id: string, blogPost: BlogPost, locale: string): Promise<BlogPost | null> {
     try {
       const updates: string[] = [];
       const params: any[] = [];
 
-      for (const key in blogPost) {
-        if (blogPost.hasOwnProperty(key) && key !== 'id') {
-          updates.push(`${key} = ?`);
-          params.push((blogPost as any)[key]);
+      // Convert to persistence DTO
+      const persistenceBlogPost = BlogPostMapper.toPersistence(blogPost )
+
+      for (const key in persistenceBlogPost) {
+        if (persistenceBlogPost.hasOwnProperty(key)) {
+            updates.push(`${key} = ?`);
+            params.push(persistenceBlogPost[key as keyof BlogPostDTO]);
         }
-      }
+    }
 
       if (updates.length === 0) {
         return this.getBlogPostBySlug(blogPost.slug || '', locale);
