@@ -2,7 +2,7 @@ import { type Locale } from '@/i18n'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
-
+import { blogPosts } from '@/lib/data/blog-posts.mock.data'
 interface PageProps {
   params: {
     locale: Locale

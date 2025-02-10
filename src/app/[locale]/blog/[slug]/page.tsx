@@ -1,12 +1,8 @@
 import { notFound } from 'next/navigation'
 import { type Locale } from '@/i18n'
 import Image from 'next/image'
-import Link from 'next/link'
-import { Suspense } from 'react'
-import { Button } from '@/components/ui/button/button'
 import { blogPosts } from '@/lib/data/blog-posts.mock.data'
-import { sanitizeHTML } from '@/lib/utils/htmlSanitaizer'
-
+import styles from './blog-post.module.css'
 interface PageProps {
   params: {
     slug: string
@@ -34,14 +30,14 @@ export default function BlogPostPage({ params }: PageProps) {
           alt={post.imageAlt || 'Blog Post Image'}
           width={600}
           height={400}
-          className="mb-4 rounded"
+          className="mb-4 rounded w-full"
         />
       </header>
 
       <div
-        className="blog-post-content  max-w-none text-gray-700"
+         className={styles.blogPostContent}
         dangerouslySetInnerHTML={{ 
-          __html: sanitizeHTML(post.contentHtml.trim()) 
+          __html: post.contentHtml.trim() 
         }}
       />
     </article>
