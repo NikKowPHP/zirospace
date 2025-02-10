@@ -31,8 +31,13 @@ async function testQueries() {
         const testimonialsPlResults = await knex('testimonials_pl').select('*');
         console.log('testimonials_pl:', testimonialsPlResults);
 
+        const blogPostsEnResults = await knex('blog_posts_en').select('*');
+        console.log('blog_posts_en:', blogPostsEnResults);
 
-    } catch (error) {
+        const blogPostsPlResults = await knex('blog_posts_pl').select('*');
+        console.log('blog_posts_pl:', blogPostsPlResults);
+
+
         console.error('Error querying database:', error);
     } finally {
         knex.destroy();

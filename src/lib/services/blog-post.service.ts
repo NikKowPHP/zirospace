@@ -34,15 +34,25 @@ export class BlogPostService implements IBlogPostService {
 
   createBlogPost = async (blogPost: Omit<BlogPost, 'id'>, locale: string): Promise<BlogPost> => {
     blogPost.createdAt = new Date().toISOString()
-    return this.blogPostRepository.createBlogPost(blogPost, locale)
+    const trimmedBlogPost = this.trimBlogPost(blogPost)
+    return this.blogPostRepository.createBlogPost(trimmedBlogPost, locale)
   }
 
   updateBlogPost = async (id: string, blogPost: Partial<BlogPost>, locale: string): Promise<BlogPost | null> => {
-    return this.blogPostRepository.updateBlogPost(id, blogPost, locale)
+    const trimmedBlogPost = this.trimBlogPost(blogPost)
+
+    return this.blogPostRepository.updateBlogPost(id, trimmedBlogPost, locale)
   }
 
   deleteBlogPost = async (id: string, locale: string): Promise<boolean> => {
     return this.blogPostRepository.deleteBlogPost(id, locale)
+  }
+  private trimBlogPost = (blogPost: Partial<BlogPost>): Partial<BlogPost> => {
+    return  Object.fromEntries(
+      Object.entries(blogPost)
+        .filter(([_, value]) => value !== null && value !== undefined)
+        .map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
+    );
   }
 }
 

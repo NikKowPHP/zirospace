@@ -23,6 +23,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
   async getBlogPostBySlug(slug: string, locale: string): Promise<BlogPost | null> {
     try {
       const query = `SELECT * FROM blog_posts_${locale} WHERE slug = ?`;
+      console.log('query with slug', query, slug)
       const result = await new Promise<any>((resolve, reject) => {
         this.db.get(query, [slug], (err, row) => {
           if (err) {
