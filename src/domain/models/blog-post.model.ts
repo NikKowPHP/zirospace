@@ -1,5 +1,5 @@
 export interface BlogPost {
-  id: number;
+  id: string;
   slug: string;
   title: string;
   imageurl: string;
