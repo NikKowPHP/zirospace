@@ -4,33 +4,13 @@ import { useEffect, useState } from 'react'
 import { useAdmin } from '@/contexts/admin-context'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Locale } from '@/i18n'
-import { BlogPostForm } from './components/blog-post-form'
+import { useRouter } from 'next/navigation'
 
 export function BlogPostList() {
-  const { blogPosts, createBlogPost, updateBlogPost, deleteBlogPost, error, loading } = useAdmin()
+  const { blogPosts, deleteBlogPost, error, loading } = useAdmin()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
-  const [editingPost, setEditingPost] = useState<BlogPost | null>(null)
-  const [isCreating, setIsCreating] = useState(false)
+  const router = useRouter()
   
-  const handleCreate = async (data: Partial<BlogPost>) => {
-    try {
-      await createBlogPost(data, activeLocale)
-      setIsCreating(false)
-    } catch (error) {
-      console.error('Failed to create blog post:', error)
-    }
-  }
-
-  const handleUpdate = async (data: Partial<BlogPost>) => {
-    if (!editingPost) return
-    try {
-      await updateBlogPost(editingPost.id, data, activeLocale)
-      setEditingPost(null)
-    } catch (error) {
-      console.error('Failed to update blog post:', error)
-    }
-  }
-
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this blog post?')) {
       try {
@@ -75,33 +55,13 @@ export function BlogPostList() {
           </button>
         </div>
         <button
-          onClick={() => setIsCreating(true)}
+          onClick={() => router.push(`/admin/sections/blog-posts/create`)}
           className="px-6 py-3 text-white bg-primary rounded-full hover:bg-primary/90 transition-colors"
           disabled={loading}
         >
           Add Blog Post
         </button>
       </div>
-
-      {(isCreating || editingPost) && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-primary p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-[32px] font-medium tracking-[-0.02em] text-gray-900 mb-8">
-              {editingPost ? 'Edit Blog Post' : 'New Blog Post'}
-            </h3>
-            <BlogPostForm
-              post={editingPost ?? undefined}
-              locale={activeLocale}
-              onSubmit={editingPost ? handleUpdate : handleCreate}
-              onCancel={() => {
-                setEditingPost(null)
-                setIsCreating(false)
-              }}
-              loading={loading}
-            />
-          </div>
-        </div>
-      )}
 
       <div className="overflow-hidden bg-white rounded-primary shadow">
         <table className="min-w-full divide-y divide-gray-200">
@@ -149,14 +109,14 @@ export function BlogPostList() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
                   <button
-                    onClick={() => setEditingPost(post)}
+                    onClick={() => router.push(`/admin/sections/blog-posts/edit/${post.id}`)}
                     className="text-primary hover:text-primary/90 disabled:opacity-50"
                     disabled={loading}
                   >
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(post.id)}
+                    onClick={() => handleDelete(post.id.toString())}
                     className="text-red-600 hover:text-red-900 disabled:opacity-50"
                     disabled={loading}
                   >
