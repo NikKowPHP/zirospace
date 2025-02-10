@@ -13,15 +13,15 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, number> im
     super("blog_posts", db);
   }
 
-  async getBlogPosts(): Promise<BlogPost[]> {
-    const blogPosts = await this.list()
+  async getBlogPosts(locale: string): Promise<BlogPost[]> {
+    const blogPosts = await this.list(locale)
     console.log('blogPosts in repository ', blogPosts)
     return blogPosts
   }
 
-  async getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  async getBlogPostBySlug(slug: string, locale: string): Promise<BlogPost | null> {
     try {
-      const query = `SELECT * FROM blog_posts WHERE slug = ?`;
+      const query = `SELECT * FROM blog_posts_${locale} WHERE slug = ?`;
       const result = await new Promise<any>((resolve, reject) => {
         this.db.get(query, [slug], (err, row) => {
           if (err) {
@@ -43,10 +43,10 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, number> im
     }
   }
 
-  async createBlogPost(blogPost: Omit<BlogPost, 'id'>): Promise<BlogPost> {
+  async createBlogPost(blogPost: Omit<BlogPost, 'id'>, locale: string ): Promise<BlogPost> {
     try {
       const query = `
-        INSERT INTO blog_posts (title, slug, imageurl, createdAt, imageAlt, excerpt, contentHtml)
+        INSERT INTO blog_posts_${locale} (title, slug, imageurl, createdAt, imageAlt, excerpt, contentHtml)
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
       const params = [
@@ -79,7 +79,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, number> im
     }
   }
 
-  async updateBlogPost(id: string, blogPost: Partial<BlogPost>): Promise<BlogPost | null> {
+  async updateBlogPost(id: string, blogPost: Partial<BlogPost>, locale: string): Promise<BlogPost | null> {
     try {
       const updates: string[] = [];
       const params: any[] = [];
@@ -92,13 +92,13 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, number> im
       }
 
       if (updates.length === 0) {
-        return this.getBlogPostBySlug(blogPost.slug || '');
+        return this.getBlogPostBySlug(blogPost.slug || '', locale);
       }
 
       params.push(id);
 
       const query = `
-        UPDATE blog_posts
+        UPDATE blog_posts_${locale}
         SET ${updates.join(', ')}
         WHERE id = ?
       `;
@@ -113,16 +113,16 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, number> im
         });
       });
 
-      return this.getBlogPostBySlug(blogPost.slug || '');
+      return this.getBlogPostBySlug(blogPost.slug || '', locale);
     } catch (error: any) {
       console.error(`Error updating blog post with id ${id}:`, error);
       throw new Error(`Failed to update blog post: ${error.message}`);
     }
   }
 
-  async deleteBlogPost(id: string): Promise<boolean> {
+  async deleteBlogPost(id: string, locale: string): Promise<boolean> {
     try {
-      const query = `DELETE FROM blog_posts WHERE id = ?`;
+      const query = `DELETE FROM blog_posts_${locale} WHERE id = ?`;
 
       await new Promise<void>((resolve, reject) => {
         this.db.run(query, [id], function (err: Error | null) {
@@ -141,9 +141,10 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, number> im
     }
   }
 
-  async list(): Promise<BlogPost[]> {
+  async list(locale: string): Promise<BlogPost[]> {
     return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM blog_posts`;
+      const query = `SELECT * FROM blog_posts_${locale}`;
+      
 
       this.db.all(query, [], (err, rows: any[]) => {
         if (err) {

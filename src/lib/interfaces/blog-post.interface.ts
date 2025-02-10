@@ -1,9 +1,9 @@
 import { BlogPost } from "@/domain/models/blog-post.model"
 
 export interface IBlogPostRepository {
-  getBlogPosts: () => Promise<BlogPost[]>
-  getBlogPostBySlug: (slug: string) => Promise<BlogPost | null>
-  createBlogPost: (blogPost: Omit<BlogPost, 'id'>) => Promise<BlogPost>
-  updateBlogPost: (id: string, blogPost: Partial<BlogPost>) => Promise<BlogPost | null>
-  deleteBlogPost: (id: string) => Promise<boolean>
+  getBlogPosts: (locale: string) => Promise<BlogPost[]>
+  getBlogPostBySlug: (slug: string, locale: string) => Promise<BlogPost | null>
+  createBlogPost: (blogPost: Omit<BlogPost, 'id'>, locale: string) => Promise<BlogPost>
+  updateBlogPost: (id: string, blogPost: Partial<BlogPost>, locale: string) => Promise<BlogPost | null>
+  deleteBlogPost: (id: string, locale: string) => Promise<boolean>
 }
