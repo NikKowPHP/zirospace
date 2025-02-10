@@ -12,7 +12,7 @@ export function Footer() {
       itemScope
       itemType="https://schema.org/Organization"
     >
-      <div className="px-6">
+      <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Left Column */}
           <div className="lg:col-span-6 space-y-6">
