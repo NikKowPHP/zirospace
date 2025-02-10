@@ -4,6 +4,7 @@ export const CACHE_TAGS = {
   CASE_STUDIES: 'case-studies',
   TESTIMONIALS: 'testimonials',
   CASE_STUDY_SLIDERS: 'case-study-sliders',
+  BLOG_POSTS: 'blog-posts',
 } as const;
 
 export const CACHE_TIMES = {
