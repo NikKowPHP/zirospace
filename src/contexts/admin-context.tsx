@@ -241,6 +241,7 @@ export function AdminProvider({
       }
 
       const newCaseStudySlider = await response.json()
+      console.log('newCaseStudySlider', newCaseStudySlider)
       setCaseStudySliders((prev) => [...prev, newCaseStudySlider])
     } catch (err) {
       setError(
@@ -261,10 +262,11 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
+      console.log('updateCaseStudySlider', { id, data })
       const response = await fetch(`/api/admin/case-study-sliders/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data }),
+        body: JSON.stringify({ data, id }),
       })
 
       if (!response.ok) {
@@ -294,9 +296,11 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
+      console.log('deleting case study slider', id)
       const response = await fetch(`/api/admin/case-study-sliders/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
       })
 
       if (!response.ok) {

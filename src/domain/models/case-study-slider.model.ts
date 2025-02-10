@@ -9,7 +9,6 @@ export interface CaseStudyImage {
 export interface CaseStudySlider {
   readonly id: string;
   images: CaseStudyImage[];
-  theme: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

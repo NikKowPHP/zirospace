@@ -27,20 +27,19 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
   }
 
   async createCaseStudySlider(caseStudySlider: Omit<CaseStudySlider, 'id'>): Promise<CaseStudySlider> {
+    const id = `slider-${Date.now()}`; // Generate a simple ID
     try {
       const tableName = this.tableName;
-      const id = `slider-${Date.now()}`; // Generate a simple ID
       const query = `
         INSERT INTO "${tableName}" (id, theme, created_at, updated_at)
         VALUES (?, ?, ?, ?)
       `;
       const params = [
         id,
-        caseStudySlider.theme,
         new Date().toISOString(),
         new Date().toISOString()
       ];
-
+      console.log('params in create ', params)
       await new Promise<void>((resolve, reject) => {
         this.db.run(query, params, function (err: Error | null) {
           if (err) {
@@ -76,8 +75,8 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
       }));
 
       return {
-        id,
         ...caseStudySlider,
+        id,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -94,7 +93,7 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
       const params: any[] = [];
 
       console.log('id in update ', id)
-
+      console.log('caseStudySlider in update ', caseStudySlider)
       for (const key in caseStudySlider) {
         if (caseStudySlider.hasOwnProperty(key) && key !== 'id' && key !== 'images' && key !== 'createdAt' && key !== 'updatedAt') {
           updates.push(`${key} = ?`);

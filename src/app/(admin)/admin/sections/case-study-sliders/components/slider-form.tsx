@@ -17,12 +17,11 @@ export function CaseStudySliderForm({
   onCancel,
   loading
 }: CaseStudySliderFormProps) {
-  const [theme, setTheme] = useState(caseStudySlider?.theme || '')
   const [images, setImages] = useState<CaseStudyImage[]>((caseStudySlider?.images || []) as CaseStudyImage[]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await onSubmit({ theme, images })
+    await onSubmit({ images })
   }
 
   const handleImageChange = (index: number, field: keyof CaseStudyImage, value: string) => {
@@ -44,19 +43,7 @@ export function CaseStudySliderForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="theme" className="block text-sm font-medium text-gray-700">
-          Theme
-        </label>
-        <input
-          type="text"
-          id="theme"
-          className="mt-1 block w-full rounded-primary border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-          value={theme}
-          onChange={(e) => setTheme(e.target.value)}
-          required
-        />
-      </div>
+      
 
       <div>
         <label className="block text-sm font-medium text-gray-700">
@@ -75,7 +62,7 @@ export function CaseStudySliderForm({
                 Image URL
               </label>
               <input
-                type="url"
+                type="string"
                 id={`image-${index}-image`}
                 className="mt-1 block w-full rounded-primary border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
                 value={image.image}

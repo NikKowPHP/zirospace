@@ -6,7 +6,8 @@ import { caseStudySliderService } from '@/lib/services/case-study-slider.service
 
 export async function POST(request: NextRequest) {
   const { data } = await request.json()
-  
+  console.log('data in router ', data)
+
   try {
     console.log('Processing case study slider creation:', {
       mappedData: CaseStudySliderMapper.toPersistence(data)
@@ -14,8 +15,10 @@ export async function POST(request: NextRequest) {
 
     const newCaseStudySlider = await caseStudySliderService.createCaseStudySlider(CaseStudySliderMapper.toDomain(data))
 
+
+    console.log('newCaseStudySlider in router ', newCaseStudySlider)
     // Revalidate cache
-    revalidateTag(CACHE_TAGS.CASE_STUDIES)
+    revalidateTag(CACHE_TAGS.CASE_STUDY_SLIDERS)
 
     return NextResponse.json(CaseStudySliderMapper.toPersistence(newCaseStudySlider))
   } catch (error) {

@@ -16,7 +16,6 @@ export class CaseStudySliderMapper {
         image: image.image,
         alt: image.alt,
       })),
-      theme: dto.theme,
       createdAt: new Date(dto.created_at),
       updatedAt: new Date(dto.updated_at),
     };
@@ -36,7 +35,6 @@ export class CaseStudySliderMapper {
         image: image.image,
         alt: image.alt,
       })),
-      theme: domain.theme,
       updated_at: domain.updatedAt?.toISOString(),
     }
   }

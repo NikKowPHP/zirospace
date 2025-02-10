@@ -3,21 +3,26 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
 import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
+import { logger } from '@/lib/utils/logger'
+
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params
-    const { locale } = await request.json()
+    const { id } = await request.json()
+    console.log('deleting case study slider', id)
 
-    console.log('Processing case study slider deletion:', { id, locale })
+    if (!id) {
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 })
+    }
+
+    console.log('Processing case study slider deletion:', { id })
 
     await caseStudySliderService.deleteCaseStudySlider(id)
 
     // Revalidate cache
-    revalidateTag(CACHE_TAGS.CASE_STUDIES)
+    revalidateTag(CACHE_TAGS.CASE_STUDY_SLIDERS)
 
     return NextResponse.json({ success: true })
   } catch (error) {
@@ -32,30 +37,39 @@ export async function DELETE(
   }
 } 
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest) {
   try {
-    const { id } = await params
-    const { data } = await request.json()
-    
+    const { data, id } = await request.json()
+    console.log('updating case study slider', id, data)
+    if (!id) {
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 })
+    }
+    data.id = id
+    data.updatedAt = new Date()
+
+    logger.log(`Updating case study slider: ${id} with data: ${JSON.stringify(data)}`)
     console.log('Processing case study slider update:', {
       id,
       mappedData: CaseStudySliderMapper.toPersistence(data)
     })
 
-    const updatedCaseStudySlider = await caseStudySliderService.updateCaseStudySlider(id, CaseStudySliderMapper.toDomain(data))
+    const updatedCaseStudySlider = await caseStudySliderService.updateCaseStudySlider(
+      id,
+      CaseStudySliderMapper.toDomain(data)
+    )
 
     if (!updatedCaseStudySlider) {
       return NextResponse.json(
-        { error: 'Case study slider not found', details: 'No case study slider exists with the provided ID' },
+        {
+          error: 'Case study slider not found',
+          details: 'No case study slider exists with the provided ID'
+        },
         { status: 404 }
       )
     }
 
     // Revalidate cache
-    revalidateTag(CACHE_TAGS.CASE_STUDIES)
+    revalidateTag(CACHE_TAGS.CASE_STUDY_SLIDERS)
 
     return NextResponse.json(CaseStudySliderMapper.toPersistence(updatedCaseStudySlider))
   } catch (error) {

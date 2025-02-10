@@ -5,7 +5,6 @@ export interface CaseStudySliderDTO {
     image: string;
     alt: string;
   }[];
-  theme: string;
   created_at: string;
   updated_at: string;
 } 

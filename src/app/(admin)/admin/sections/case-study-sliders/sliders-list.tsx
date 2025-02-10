@@ -35,6 +35,7 @@ export function CaseStudySliderList() {
   const handleUpdate = async (data: Partial<CaseStudySlider>) => {
     if (!editingCaseStudySlider) return
     try {
+      console.log('editing case study slider id with data', {id: editingCaseStudySlider.id, data})
       await updateCaseStudySlider(editingCaseStudySlider.id, data)
       setEditingCaseStudySlider(null)
     } catch (error) {
@@ -45,6 +46,7 @@ export function CaseStudySliderList() {
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this case study slider?')) {
       try {
+        console.log('deleting case study slider', id)
         await deleteCaseStudySlider(id)
       } catch (error) {
         console.error('Failed to delete case study slider:', error)
@@ -99,7 +101,7 @@ export function CaseStudySliderList() {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Theme
+                Slider ID
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
@@ -112,7 +114,7 @@ export function CaseStudySliderList() {
                 <tr key={slider.id} className={loading ? 'opacity-50' : ''}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
-                      {slider.theme}
+                      {slider.id}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
