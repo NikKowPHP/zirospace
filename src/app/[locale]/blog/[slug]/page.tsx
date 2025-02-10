@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
 import { type Locale } from '@/i18n'
 import Image from 'next/image'
-import { blogPosts } from '@/lib/data/blog-posts.mock.data'
 import styles from './blog-post.module.css'
+import { blogPostService } from '@/lib/services/blog-post.service'
 interface PageProps {
   params: {
     slug: string
@@ -10,11 +10,13 @@ interface PageProps {
   }
 }
 
-export default function BlogPostPage({ params }: PageProps) {
-  const { slug, locale } = params
+
+
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug, locale } = await params
 
   // Find the blog post with the matching slug
-  const post = blogPosts.find((post) => post.slug === slug)
+  const post = await blogPostService.getBlogPostBySlug(slug, locale)
 
   // If the post doesn't exist, return a 404
   if (!post) {
