@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { LayoutDashboard, Images, SlidersHorizontal, MessageCircle } from 'lucide-react'
+import { LayoutDashboard, Images, SlidersHorizontal, MessageCircle, FileText } from 'lucide-react'
 
 export default async function AdminLayout({
   children,
@@ -54,6 +54,14 @@ export default async function AdminLayout({
           >
             <MessageCircle className="w-5 h-5" />
             <span className="font-medium">Testimonials</span>
+          </Link>
+
+          <Link 
+            href="/admin/sections/blog-posts" 
+            className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <FileText className="w-5 h-5" />
+            <span className="font-medium">Blog Posts</span>
           </Link>
         </nav>
       </aside>
