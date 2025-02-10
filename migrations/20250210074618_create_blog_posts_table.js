@@ -3,7 +3,6 @@
  * @returns { Promise<void> }
  */
 exports.up = function(knex) {
-  // ... existing code ...
   return knex.schema.createTable('blog_posts_en', (table) => {
     table.increments('id').primary();
     table.string('slug').notNullable().unique();
@@ -31,7 +30,6 @@ exports.up = function(knex) {
  * @returns { Promise<void> }
  */
 exports.down = function(knex) {
-  // ... existing code ...
   return knex.schema.dropTableIfExists('blog_posts_en')
   .dropTableIfExists('blog_posts_pl');
 };
