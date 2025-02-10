@@ -50,7 +50,7 @@ interface AdminContextType {
   updateBlogPost: (
     id: string,
     data: Partial<BlogPost>,
-    locale: Locale
+    locale: string
   ) => Promise<void>
   deleteBlogPost: (id: string, locale: Locale) => Promise<void>
 
@@ -58,6 +58,7 @@ interface AdminContextType {
   getTestimonials: (locale: Locale) => Promise<void>
   getCaseStudySliders: () => Promise<void>
   getBlogPosts: (locale: Locale) => Promise<void>
+  getBlogPost: (id: string, locale: string) => Promise<BlogPost | null>
 }
 
 interface AdminProviderProps {
@@ -86,7 +87,7 @@ export function AdminProvider({
   const [testimonials, setTestimonials] = useState<
     Record<Locale, Testimonial[]>
   >(initialTestimonials || { en: [], pl: [] })
-  const [blogPosts, setBlogPosts] = useState<Record<Locale, BlogPost[]>>(
+  const [blogPosts, setBlogPosts] = useState<Record<string, BlogPost[]>>(
     initialBlogPosts || { en: [], pl: [] }
   )
   const [loading, setLoading] = useState(false)
@@ -452,7 +453,7 @@ export function AdminProvider({
   const updateBlogPost = async (
     id: string,
     data: Partial<BlogPost>,
-    locale: Locale
+    locale: string
   ) => {
     setLoading(true)
     setError(null)
@@ -569,6 +570,23 @@ export function AdminProvider({
     }
   }, [])
 
+  const getBlogPost = useCallback(async (id: string, locale: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/blog-post?id=${id}&locale=${locale}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch blog post')
+      }
+      const data = await response.json()
+      return data
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch blog post')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   return (
     <AdminContext.Provider
       value={{
@@ -594,6 +612,7 @@ export function AdminProvider({
         getTestimonials,
         getCaseStudySliders,
         getBlogPosts,
+        getBlogPost,
       }}
     >
       {children}

@@ -28,6 +28,10 @@ export class BlogPostService implements IBlogPostService {
     return this.blogPostRepository.getBlogPostBySlug(slug, locale)
   }
 
+  getBlogPostById = async (id: string, locale: string): Promise<BlogPost | null> => {
+    return this.blogPostRepository.getBlogPostById(id, locale)
+  }
+
   createBlogPost = async (blogPost: Omit<BlogPost, 'id'>, locale: string): Promise<BlogPost> => {
     return this.blogPostRepository.createBlogPost(blogPost, locale)
   }

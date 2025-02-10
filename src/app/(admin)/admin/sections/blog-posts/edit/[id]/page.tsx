@@ -2,31 +2,57 @@
 
 import { Locale } from '@/i18n'
 import { useAdmin } from '@/contexts/admin-context'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { BlogPostForm } from '../../components/blog-post-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BlogPost } from '@/domain/models/blog-post.model'
 
-export default function NewBlogPostPage() {
-  const { createBlogPost, loading } = useAdmin()
-  const router = useRouter()
-  const [activeLocale, setActiveLocale] = useState<Locale>('en')
+interface Props {
+  params: { id: string }
+}
 
-  const handleCreate = async (data: Partial<BlogPost>) => {
+export default function EditBlogPostPage({params}: Props) {
+  const { updateBlogPost, loading, getBlogPost  } = useAdmin()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const locale = searchParams.get('locale') || 'en';
+  const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
+  const [id, setId] = useState<string>('')
+
+  useEffect(() => {
+    const { id } = params
+    if (id) {
+      console.log('setting locale and id', {locale, id})
+      setId(id)
+    }
+  
+    getBlogPost(id, locale).then(post => setBlogPost(post || null))
+  }, [params, getBlogPost, locale])
+
+  const handleUpdate = async (data: Partial<BlogPost>) => {
+    if (!blogPost) return;
     try {
-      await createBlogPost(data, activeLocale)
+      await updateBlogPost(id, data, locale)
       router.push('/admin/sections/blog-posts')
     } catch (error) {
-      console.error('Failed to create blog post:', error)
+      console.error('Failed to update blog post:', error)
     }
+  }
+
+  if(!blogPost && loading) {
+    return <div>Loading...</div>
+  }
+  if(!blogPost) {
+    return <div>Blog post not found</div>
   }
 
   return (
     <div>
-      <h1>New Blog Post</h1>
+      <h1>Edit Blog Post</h1>
       <BlogPostForm
-        locale={activeLocale}
-        onSubmit={handleCreate}
+        post={blogPost}
+        locale={locale as Locale}
+        onSubmit={handleUpdate}
         onCancel={() => router.push('/admin/sections/blog-posts')}
         loading={loading}
       />

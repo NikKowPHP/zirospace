@@ -8,7 +8,7 @@ import { SqlLiteAdapter } from './adapters/sqllite.adapter';
 const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);
 
-export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, number> implements IBlogPostRepository {
+export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> implements IBlogPostRepository {
   constructor() {
     super("blog_posts", db);
   }
@@ -43,6 +43,30 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, number> im
     }
   }
 
+  async getBlogPostById(id: string, locale: string): Promise<BlogPost | null> {
+    try {
+      const query = `SELECT * FROM blog_posts_${locale} WHERE id = ?`;
+      const result = await new Promise<any>((resolve, reject) => {
+        this.db.get(query, [id], (err, row) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(row);
+        });
+      });
+
+      if (!result) {
+        return null;
+      }
+
+      return BlogPostMapper.toDomain(result);
+    } catch (error: any) {
+      console.error(`Error fetching blog post with id ${id}:`, error);
+      throw new Error(`Failed to fetch blog post: ${error.message}`);
+    }
+  }
+
   async createBlogPost(blogPost: Omit<BlogPost, 'id'>, locale: string ): Promise<BlogPost> {
     try {
       const query = `
@@ -70,7 +94,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, number> im
       });
 
       return {
-        id: Date.now(), // Mock ID generation
+        id: Date.now().toString(), // Mock ID generation
         ...blogPost,
       };
     } catch (error: any) {

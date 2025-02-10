@@ -10,7 +10,7 @@ export function BlogPostList() {
   const { blogPosts, deleteBlogPost, error, loading } = useAdmin()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const router = useRouter()
-  
+
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this blog post?')) {
       try {
@@ -21,7 +21,9 @@ export function BlogPostList() {
     }
   }
 
-  useEffect(() => { console.log(blogPosts) }, [blogPosts])
+  useEffect(() => {
+    console.log(blogPosts)
+  }, [blogPosts])
 
   return (
     <div className="space-y-8">
@@ -36,8 +38,8 @@ export function BlogPostList() {
           <button
             onClick={() => setActiveLocale('en')}
             className={`px-6 py-3 rounded-full transition-colors ${
-              activeLocale === 'en' 
-                ? 'bg-primary text-white' 
+              activeLocale === 'en'
+                ? 'bg-primary text-white'
                 : 'bg-secondary text-gray-700 hover:bg-secondary/80'
             }`}
           >
@@ -46,8 +48,8 @@ export function BlogPostList() {
           <button
             onClick={() => setActiveLocale('pl')}
             className={`px-6 py-3 rounded-full transition-colors ${
-              activeLocale === 'pl' 
-                ? 'bg-primary text-white' 
+              activeLocale === 'pl'
+                ? 'bg-primary text-white'
                 : 'bg-secondary text-gray-700 hover:bg-secondary/80'
             }`}
           >
@@ -93,14 +95,10 @@ export function BlogPostList() {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">
-                    {post.slug}
-                  </div>
+                  <div className="text-sm text-gray-500">{post.slug}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">
-                    /blog/{post.slug}
-                  </div>
+                  <div className="text-sm text-gray-500">/blog/{post.slug}</div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="text-sm text-gray-500 line-clamp-2">
@@ -109,7 +107,11 @@ export function BlogPostList() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
                   <button
-                    onClick={() => router.push(`/admin/sections/blog-posts/edit/${post.id}`)}
+                    onClick={() =>
+                      router.push(
+                        `/admin/sections/blog-posts/edit/${post.id}?locale=${activeLocale}`
+                      )
+                    }
                     className="text-primary hover:text-primary/90 disabled:opacity-50"
                     disabled={loading}
                   >
@@ -130,4 +132,4 @@ export function BlogPostList() {
       </div>
     </div>
   )
-} 
+}
