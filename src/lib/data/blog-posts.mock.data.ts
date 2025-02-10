@@ -1,4 +1,6 @@
-export const blogPosts = [
+import { BlogPost } from "@/domain/models/blog-post.model";
+
+export const blogPosts: BlogPost[] = [
     {
       id: 1,
       slug: 'first-post',
