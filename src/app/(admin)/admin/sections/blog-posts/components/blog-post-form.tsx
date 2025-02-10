@@ -8,6 +8,9 @@ import { Label } from '@/components/ui/label/label'
 import { Textarea } from '@/components/ui/textarea/textarea'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Locale } from '@/i18n'
+import React from 'react'
+import { useQuill } from 'react-quilljs'
+import 'quill/dist/quill.snow.css'
 
 interface BlogPostFormProps {
   post?: BlogPost
@@ -32,6 +35,18 @@ export function BlogPostForm({
     defaultValues: post,
   })
   const [content, setContent] = useState(post?.contentHtml || '')
+  const { quill, quillRef } = useQuill({ theme: 'snow' })
+
+  React.useEffect(() => {
+    if (quill) {
+      quill.on('text-change', () => {
+        setContent(quill.root.innerHTML)
+      })
+      if (post?.contentHtml) {
+        quill.clipboard.dangerouslyPasteHTML(post.contentHtml)
+      }
+    }
+  }, [quill, post?.contentHtml])
 
   const submitHandler = async (data: Partial<BlogPost>) => {
     await onSubmit({ ...data, contentHtml: content })
@@ -102,12 +117,9 @@ export function BlogPostForm({
 
       <div>
         <Label htmlFor="contentHtml">Content</Label>
-        <Textarea
-          id="contentHtml"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="w-full"
-        />
+        <div style={{ width: '100%', height: 300 }}>
+          <div ref={quillRef} />
+        </div>
       </div>
 
       <div className="flex justify-end space-x-4">
