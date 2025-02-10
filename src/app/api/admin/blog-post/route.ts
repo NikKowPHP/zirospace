@@ -4,16 +4,17 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import { getBlogPostService } from '@/lib/services/blog-post.service'
 import { logger } from '@/lib/utils/logger'
+import { BlogPostMapper } from '@/infrastructure/mappers/blog-post.mapper'
 
 const blogPostService = await getBlogPostService()
 
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
-  
+  console.log('Processing blog post creation', data)
   try {
-    console.log('Processing case study creation:', {
+    console.log('Processing blog post creation:', {
       locale,
-      mappedData: CaseStudyMapper.toPersistence(data)
+      mappedData: BlogPostMapper.toPersistence(data)
     })
 
     const newBlogPost = await blogPostService.createBlogPost(data, locale)
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating case study:', error)
     return NextResponse.json(
-      { error: 'Failed to create case study', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to create blog post', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

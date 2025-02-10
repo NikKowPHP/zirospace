@@ -12,6 +12,7 @@ import { Locale } from '@/i18n'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { BlogPost } from '@/domain/models/blog-post.model'
+import { logger } from '@/lib/utils/logger'
 
 interface AdminContextType {
   caseStudies: Record<Locale, CaseStudy[]>
@@ -422,7 +423,7 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/admin/blog-posts`, {
+      const response = await fetch(`/api/admin/blog-post`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ data, locale }),
@@ -444,6 +445,7 @@ export function AdminProvider({
       setError(
         err instanceof Error ? err.message : 'Failed to create blog post'
       )
+      logger.error(`Failed to create blog post ${err}`)
       throw err
     } finally {
       setLoading(false)
@@ -465,8 +467,6 @@ export function AdminProvider({
         body: JSON.stringify({ data }),
       })
 
-      console.log('response', response)
-      debugger
 
       if (!response.ok) {
         const errorData = await response

@@ -71,7 +71,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
   async createBlogPost(blogPost: Omit<BlogPost, 'id'>, locale: string ): Promise<BlogPost> {
     try {
       const query = `
-        INSERT INTO blog_posts_${locale} (title, slug, imageurl, createdAt, imageAlt, excerpt, contentHtml)
+        INSERT INTO blog_posts_${locale} (title, slug, image_url, created_at, image_alt, excerpt, content_html)
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
       const params = [

@@ -33,6 +33,7 @@ export class BlogPostService implements IBlogPostService {
   }
 
   createBlogPost = async (blogPost: Omit<BlogPost, 'id'>, locale: string): Promise<BlogPost> => {
+    blogPost.createdAt = new Date().toISOString()
     return this.blogPostRepository.createBlogPost(blogPost, locale)
   }
 
