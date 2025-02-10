@@ -11,11 +11,13 @@ import { CaseStudy } from '@/domain/models/case-study.model'
 import { Locale } from '@/i18n'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
+import { BlogPost } from '@/domain/models/blog-post.model'
 
 interface AdminContextType {
   caseStudies: Record<Locale, CaseStudy[]>
   caseStudySliders: CaseStudySlider[]
   testimonials: Record<Locale, Testimonial[]>
+  blogPosts: Record<Locale, BlogPost[]>
   loading: boolean
   error: string | null
   createCaseStudy: (data: Partial<CaseStudy>, locale: Locale) => Promise<void>
@@ -43,9 +45,19 @@ interface AdminContextType {
     locale: Locale
   ) => Promise<void>
   deleteTestimonial: (id: string, locale: Locale) => Promise<void>
+
+  createBlogPost: (data: Partial<BlogPost>, locale: Locale) => Promise<void>
+  updateBlogPost: (
+    id: string,
+    data: Partial<BlogPost>,
+    locale: Locale
+  ) => Promise<void>
+  deleteBlogPost: (id: string, locale: Locale) => Promise<void>
+
   clearError: () => void
   getTestimonials: (locale: Locale) => Promise<void>
   getCaseStudySliders: () => Promise<void>
+  getBlogPosts: (locale: Locale) => Promise<void>
 }
 
 interface AdminProviderProps {
@@ -53,6 +65,7 @@ interface AdminProviderProps {
   initialCaseStudies?: Record<Locale, CaseStudy[]>
   initialCaseStudySliders?: CaseStudySlider[]
   initialTestimonials?: Record<Locale, Testimonial[]>
+  initialBlogPosts?: Record<Locale, BlogPost[]>
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined)
@@ -62,6 +75,7 @@ export function AdminProvider({
   initialCaseStudies,
   initialCaseStudySliders,
   initialTestimonials,
+  initialBlogPosts,
 }: AdminProviderProps) {
   const [caseStudies, setCaseStudies] = useState<Record<Locale, CaseStudy[]>>(
     initialCaseStudies || { en: [], pl: [] }
@@ -72,6 +86,9 @@ export function AdminProvider({
   const [testimonials, setTestimonials] = useState<
     Record<Locale, Testimonial[]>
   >(initialTestimonials || { en: [], pl: [] })
+  const [blogPosts, setBlogPosts] = useState<Record<Locale, BlogPost[]>>(
+    initialBlogPosts || { en: [], pl: [] }
+  )
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -93,6 +110,12 @@ export function AdminProvider({
       setTestimonials(initialTestimonials)
     }
   }, [initialTestimonials])
+
+  useEffect(() => {
+    if (initialBlogPosts) {
+      setBlogPosts(initialBlogPosts)
+    }
+  }, [initialBlogPosts])
 
   const createCaseStudy = async (data: Partial<CaseStudy>, locale: Locale) => {
     setLoading(true)
@@ -394,6 +417,105 @@ export function AdminProvider({
     }
   }
 
+  const createBlogPost = async (data: Partial<BlogPost>, locale: Locale) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/blog-posts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data, locale }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: 'Failed to create blog post' }))
+        throw new Error(errorData.error || 'Failed to create blog post')
+      }
+
+      const newBlogPost = await response.json()
+      setBlogPosts((prev) => ({
+        ...prev,
+        [locale]: [...prev[locale], newBlogPost],
+      }))
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to create blog post'
+      )
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const updateBlogPost = async (
+    id: string,
+    data: Partial<BlogPost>,
+    locale: Locale
+  ) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/blog-posts/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data, locale }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: 'Failed to update blog post' }))
+        throw new Error(errorData.error || 'Failed to update blog post')
+      }
+
+      const updatedBlogPost = await response.json()
+      setBlogPosts((prev) => ({
+        ...prev,
+        [locale]: prev[locale].map((cs) =>
+          cs.id === id ? updatedBlogPost : cs
+        ),
+      }))
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to update blog post'
+      )
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const deleteBlogPost = async (id: string, locale: Locale) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/blog-posts/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ locale }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to delete blog post')
+      }
+
+      setBlogPosts((prev) => ({
+        ...prev,
+        [locale]: prev[locale].filter((cs) => cs.id !== id),
+      }))
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to delete blog post'
+      )
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const clearError = () => setError(null)
 
   const getTestimonials = useCallback(async (locale: Locale) => {
@@ -430,12 +552,30 @@ export function AdminProvider({
     }
   }, [])
 
+  const getBlogPosts = useCallback(async (locale: Locale) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/blog-posts?locale=${locale}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch blog posts')
+      }
+      const data = await response.json()
+      setBlogPosts((prev) => ({ ...prev, [locale]: data }))
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch blog posts')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   return (
     <AdminContext.Provider
       value={{
         caseStudies,
         caseStudySliders,
         testimonials,
+        blogPosts,
         loading,
         error,
         createCaseStudy,
@@ -447,9 +587,13 @@ export function AdminProvider({
         createTestimonial,
         updateTestimonial,
         deleteTestimonial,
+        createBlogPost,
+        updateBlogPost,
+        deleteBlogPost,
         clearError,
         getTestimonials,
         getCaseStudySliders,
+        getBlogPosts,
       }}
     >
       {children}
