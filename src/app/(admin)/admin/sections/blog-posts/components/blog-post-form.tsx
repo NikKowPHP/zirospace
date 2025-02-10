@@ -35,21 +35,34 @@ export function BlogPostForm({
     defaultValues: post,
   })
   const [content, setContent] = useState(post?.contentHtml || '')
-  const { quill, quillRef } = useQuill({ theme: 'snow' })
+  const [excerpt, setExcerpt] = useState(post?.excerpt || '')
+  const { quill: quillContent, quillRef: quillRefContent } = useQuill({ theme: 'snow' })
+  const { quill: quillExcerpt, quillRef: quillRefExcerpt } = useQuill({ theme: 'snow' })
 
   React.useEffect(() => {
-    if (quill) {
-      quill.on('text-change', () => {
-        setContent(quill.root.innerHTML)
+    if (quillContent) {
+      quillContent.on('text-change', () => {
+        setContent(quillContent.root.innerHTML)
       })
       if (post?.contentHtml) {
-        quill.clipboard.dangerouslyPasteHTML(post.contentHtml)
+        quillContent.clipboard.dangerouslyPasteHTML(post.contentHtml)
       }
     }
-  }, [quill, post?.contentHtml])
+  }, [quillContent, post?.contentHtml])
+
+  React.useEffect(() => {
+    if (quillExcerpt) {
+      quillExcerpt.on('text-change', () => {
+        setExcerpt(quillExcerpt.root.innerHTML)
+      })
+      if (post?.excerpt) {
+        quillExcerpt.clipboard.dangerouslyPasteHTML(post.excerpt)
+      }
+    }
+  }, [quillExcerpt, post?.excerpt])
 
   const submitHandler = async (data: Partial<BlogPost>) => {
-    await onSubmit({ ...data, contentHtml: content })
+    await onSubmit({ ...data, contentHtml: content, excerpt: excerpt })
   }
 
   return (
@@ -105,24 +118,22 @@ export function BlogPostForm({
 
       <div>
         <Label htmlFor="excerpt">Excerpt</Label>
-        <Textarea
-          id="excerpt"
-          {...register('excerpt', { required: 'Excerpt is required' })}
-          className="w-full"
-        />
+        <div style={{ width: '100%', height: 100 }}>
+          <div ref={quillRefExcerpt} />
+        </div>
         {errors.excerpt && (
           <p className="text-red-600">{errors.excerpt.message}</p>
         )}
       </div>
 
-      <div>
+      <div className="pt-20">
         <Label htmlFor="contentHtml">Content</Label>
-        <div style={{ width: '100%', height: 300 }}>
-          <div ref={quillRef} />
+        <div style={{ width: '100%', height: 500 }}>
+          <div ref={quillRefContent} />
         </div>
       </div>
 
-      <div className="flex justify-end space-x-4">
+      <div className="flex justify-end pt-20">
         <Button variant="secondary" onClick={onCancel} disabled={loading}>
           Cancel
         </Button>
