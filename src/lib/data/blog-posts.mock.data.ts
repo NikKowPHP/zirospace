@@ -2,7 +2,7 @@ import { BlogPost } from "@/domain/models/blog-post.model";
 
 export const blogPosts: BlogPost[] = [
     {
-      id: 1,
+      id: 'blog-post-1',
       slug: 'first-post',
       title: 'First Blog Post',
       imageurl: '/images/case-studies/gsense/gsense.avif',
@@ -54,7 +54,7 @@ export const blogPosts: BlogPost[] = [
       `,
     },
     {
-      id: 2,
+      id: 'blog-post-2',
       slug: 'second-post',
       title: 'Second Blog Post: Deep Dive into Next.js',
       imageurl: '/images/case-studies/gsense/gsense.avif',
@@ -64,7 +64,7 @@ export const blogPosts: BlogPost[] = [
       contentHtml: '<p>In this post, we delve into the advanced features of Next.js, including server-side rendering, static site generation, and API routes. We will also cover performance optimization techniques and deployment strategies.</p><img src="/images/case-studies/gsense/gsense.avif" alt="Next.js" /><p>Learn how to leverage Next.js to create fast, scalable, and SEO-friendly web applications.</p>',
     },
     {
-      id: 3,
+      id: 'blog-post-3',
       slug: 'third-post',
       title: 'Third Blog Post: The Future of Web Development',
       imageurl: '/images/case-studies/gsense/gsense.avif',
