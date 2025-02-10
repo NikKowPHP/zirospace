@@ -496,10 +496,10 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/admin/blog-posts/${id}`, {
+      console.log('perfoming delete', id, locale)
+      const response = await fetch(`/api/admin/blog-post?id=${id}&locale=${locale}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ locale }),
       })
 
       if (!response.ok) {

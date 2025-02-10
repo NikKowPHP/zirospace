@@ -80,3 +80,29 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to update blog post' }, { status: 500 })
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams
+    const id = searchParams.get('id')
+    const locale = searchParams.get('locale')
+
+    if (!id || !locale) {
+      return NextResponse.json({ error: 'ID and locale are required' }, { status: 400 })
+    }
+
+    logger.log(`Deleting blog post: ${id} for locale: ${locale}`)
+    const deletedBlogPost = await blogPostService.deleteBlogPost(id, locale)
+    if (!deletedBlogPost) {
+      return NextResponse.json({ error: 'Blog post not found' }, { status: 404 })
+    }
+
+    // Revalidate cache
+    revalidateTag(CACHE_TAGS.BLOG_POSTS)
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    logger.error(`Error deleting blog post: ${error}`)
+    return NextResponse.json({ error: 'Failed to delete blog post' }, { status: 500 })
+  }
+}

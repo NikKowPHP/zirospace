@@ -153,6 +153,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
     try {
       const query = `DELETE FROM blog_posts_${locale} WHERE id = ?`;
 
+      console.log('query with id', query, id)
       await new Promise<void>((resolve, reject) => {
         this.db.run(query, [id], function (err: Error | null) {
           if (err) {
