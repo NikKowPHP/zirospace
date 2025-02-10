@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 import { locales, type Locale } from '@/i18n'
 import { ClientWrapper } from './client-wrapper'
+import { PageProvider } from '@/contexts/page-context'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -40,14 +41,16 @@ export async function generateMetadata({
       },
     },
     title: {
-      default: locale === 'en' ? 
-        'ZIRO Agency | Professional Web Design & Development' : 
-        'ZIRO Agency | Profesjonalne Projektowanie i Rozwój Stron',
+      default:
+        locale === 'en'
+          ? 'ZIRO Agency | Professional Web Design & Development'
+          : 'ZIRO Agency | Profesjonalne Projektowanie i Rozwój Stron',
       template: '%s | ZIRO Agency',
     },
-    description: locale === 'en' ? 
-      'Expert web design and development services for businesses. Custom solutions, responsive design, and modern web applications.' :
-      'Profesjonalne usługi projektowania i tworzenia stron internetowych dla firm. Rozwiązania na zamówienie, responsywny design i nowoczesne aplikacje.',
+    description:
+      locale === 'en'
+        ? 'Expert web design and development services for businesses. Custom solutions, responsive design, and modern web applications.'
+        : 'Profesjonalne usługi projektowania i tworzenia stron internetowych dla firm. Rozwiązania na zamówienie, responsywny design i nowoczesne aplikacje.',
   }
 }
 
@@ -73,12 +76,13 @@ export default async function LocaleLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className={inter.variable}>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ClientWrapper>
-            <main className='relative'>{children}</main>
-          </ClientWrapper>
+          <PageProvider>
+            <ClientWrapper>
+              <main className="relative">{children}</main>
+            </ClientWrapper>
+          </PageProvider>
         </NextIntlClientProvider>
       </body>
     </html>
   )
 }
-
