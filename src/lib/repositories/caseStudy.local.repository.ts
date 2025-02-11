@@ -89,7 +89,8 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
           caseStudy.slug, caseStudy.title, caseStudy.subtitle,
           caseStudy.description, JSON.stringify(caseStudy.tags), JSON.stringify(caseStudy.images),
           caseStudy.ctaText, caseStudy.ctaTextName, caseStudy.ctaUrl,
-          caseStudy.createdAt.toISOString(), caseStudy.updatedAt.toISOString(),
+          caseStudy.createdAt ? caseStudy.createdAt.toISOString() : null, 
+          caseStudy.updatedAt ? caseStudy.updatedAt.toISOString() : null,
           caseStudy.color, caseStudy.backgroundColor, caseStudy.theme
         ],
         function (err: Error | null) {
@@ -132,7 +133,8 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
           caseStudy.slug, caseStudy.title, caseStudy.subtitle,
           caseStudy.description, JSON.stringify(caseStudy.tags), JSON.stringify(caseStudy.images),
           caseStudy.ctaText, caseStudy.ctaTextName, caseStudy.ctaUrl,
-          caseStudy.createdAt.toISOString(), caseStudy.updatedAt.toISOString(),
+          caseStudy.createdAt ? caseStudy.createdAt.toISOString() : null,
+          caseStudy.updatedAt ? caseStudy.updatedAt.toISOString() : null,
           caseStudy.color, caseStudy.backgroundColor, caseStudy.theme,
           id
         ],

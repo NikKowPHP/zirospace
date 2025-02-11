@@ -11,8 +11,6 @@ export interface CaseStudy {
   readonly description: string;
   readonly tags: readonly string[];
   readonly images: readonly Image[];
-  readonly ctaText: string;
-  readonly ctaTextName: string;
   readonly ctaUrl: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;

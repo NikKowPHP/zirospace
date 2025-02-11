@@ -26,8 +26,6 @@ export class CaseStudyMapper {
         url: image.url,
         alt: image.alt,
       })),
-      ctaText: dto.cta_text,
-      ctaTextName: 'caseStudy.ctaText.viewCaseStudy',
       ctaUrl: dto.cta_url,
       color: dto.color,
       backgroundColor: dto.background_color,
@@ -67,8 +65,6 @@ export class CaseStudyMapper {
             alt: image.alt,
           }))
         : undefined,
-      cta_text: domain.ctaText,
-      cta_text_name: domain.ctaTextName,
       cta_url: domain.ctaUrl,
       color: domain.color,
       background_color: domain.backgroundColor,

@@ -9,8 +9,6 @@ export interface CaseStudyDTO {
     url: string;
     alt: string;
   }[];
-  cta_text: string;
-  cta_text_name: string;
   cta_url: string;
   color: string;
   background_color: string;
