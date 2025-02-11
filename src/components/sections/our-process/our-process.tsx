@@ -44,7 +44,7 @@ const ProcessTitleSubtitle = ({ t }: { t: any }) => {
 const ProcessItem = ({ t, index, item }: { t: any; index: number; item: any }) => {
   return (
     <div key={index} className="p-[36px] rounded-xl border border-red-500 bg-gray-100 shadow-sm flex flex-col gap-[16px] ">
-      <h4 className='text-[16px] leading-[1.2]'>0{index + 1}</h4>
+      <h4 className='text-[16px] leading-[1.2] text-primary'>0{index + 1}</h4>
       <h2 className="text-lg text-black">{t(`${item.title}`)}</h2>
       <div className=" text-gray-600">
         <ul className="flex flex-col gap-[16px]">
@@ -66,7 +66,7 @@ const ProcessItemList = async ({
 }) => {
   const items = await processItems
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-[20px] max-w-5xl justify-center mx-auto">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-[10px] sm:gap-[20px] max-w-5xl justify-center mx-auto">
       {items.map((item: any, index: number) => (
         <ProcessItem t={t} index={index} item={item} key={index} />
       ))}

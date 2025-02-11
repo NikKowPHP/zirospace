@@ -83,9 +83,9 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
   return (
     <section className="py-[100px] relative border border-gray-700 ">
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex flex-col items-center mb-10 sm:mb-12">
+        <div className="flex flex-col items-center mb-10 sm:mb-12 gap-[12px]">
 
-          <h2 className="text-[36px] font-medium sm:text-[48px] font-medium mb-4 sm:mb-8">
+          <h2 className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-primary">
             {t('title')}
           </h2>
           <h3 className='text-gray-500 text-[18px] sm:text-[20px]'>

@@ -50,7 +50,7 @@ const ServiceItemList = async ({
 }) => {
   const items = await serviceItems
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 sm:gap-[20px] justify-center mx-auto max-w-5xl">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-[10px] sm:gap-[20px] justify-center mx-auto max-w-5xl">
       {items.map((item: ServiceItemType, index: number) => (
         <ServiceItem t={t} index={index} item={item} key={index} />
       ))}
