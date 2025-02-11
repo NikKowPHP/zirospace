@@ -6,8 +6,6 @@ CREATE TABLE case_studies_en (
     description TEXT,
     tags TEXT, 
     images TEXT,
-    cta_text VARCHAR(255),
-    cta_text_name VARCHAR(255),
     cta_url VARCHAR(255),
     created_at TEXT DEFAULT CURRENT_TIMESTAMP, -- Changed from TIMESTAMP WITH TIME ZONE to TEXT DEFAULT CURRENT_TIMESTAMP
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP, -- Changed from TIMESTAMP WITH TIME ZONE to TEXT DEFAULT CURRENT_TIMESTAMP
@@ -25,8 +23,6 @@ CREATE TABLE case_studies_pl (
     description TEXT,
     tags TEXT, -- Changed from TEXT[] to TEXT, will store comma-separated tags
     images TEXT, -- Changed from JSONB[] to TEXT, will store JSON array as string
-    cta_text VARCHAR(255),
-    cta_text_name VARCHAR(255),
     cta_url VARCHAR(255),
     created_at TEXT DEFAULT CURRENT_TIMESTAMP, -- Changed from TIMESTAMP WITH TIME ZONE to TEXT DEFAULT CURRENT_TIMESTAMP
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP, -- Changed from TIMESTAMP WITH TIME ZONE to TEXT DEFAULT CURRENT_TIMESTAMP
@@ -37,7 +33,7 @@ CREATE TABLE case_studies_pl (
 );
 
 INSERT INTO case_studies_en (
-    id, slug, title, subtitle, description, tags, images, cta_text, cta_text_name, cta_url, color, background_color, theme, order_index
+    id, slug, title, subtitle, description, tags, images, cta_url, color, background_color, theme, order_index
 ) VALUES (
     'example-case-study-en-1',
     'example-case-study-en-1',
@@ -46,8 +42,6 @@ INSERT INTO case_studies_en (
     'Example Description EN 1',
     'tag1,tag2', -- Comma-separated tags
     '[{"url": "https://example.com/image1.png", "alt": "Example Image 1 Alt Text"}, {"url": "https://example.com/image2.png", "alt": "Example Image 2 Alt Text"}]', -- JSON array as string, with more descriptive alt text
-    'Learn More',
-    'caseStudy.ctaText.viewCaseStudy',
     '/case-studies/example-case-study-en-1',
     '#FFFFFF',
     '#F0F0F0',
@@ -56,7 +50,7 @@ INSERT INTO case_studies_en (
 );
 
 INSERT INTO case_studies_pl (
-    id, slug, title, subtitle, description, tags, images, cta_text, cta_text_name, cta_url, color, background_color, theme, order_index
+    id, slug, title, subtitle, description, tags, images, cta_url, color, background_color, theme, order_index
 ) VALUES (
     'example-case-study-pl-1',
     'example-case-study-pl-1',
@@ -65,8 +59,6 @@ INSERT INTO case_studies_pl (
     'Example Description PL 1',
     'tag1,tag2', -- Comma-separated tags
     '[{"url": "https://example.com/pl/image1.png", "alt": "Przykład Obraz 1 Alt Tekst"}, {"url": "https://example.com/pl/image2.png", "alt": "Przykład Obraz 2 Alt Tekst"}]', -- JSON array as string, with more descriptive alt text (Polish)
-    'Dowiedz się więcej',
-    'caseStudy.ctaText.viewCaseStudy',
     '/pl/case-studies/example-case-study-pl-1',
     '#FFFFFF',
     '#F0F0F0',
