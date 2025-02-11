@@ -41,7 +41,6 @@ export function CaseStudyList() {
     }
   }
 
-  useEffect(() => { console.log(caseStudies) }, [caseStudies])
 
   return (
     <div className="space-y-8">

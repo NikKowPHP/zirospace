@@ -117,65 +117,50 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
 
   async updateCaseStudy(id: string, caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> {
     const tableName = `case_studies_${locale}`;
+    console.log(' update case study in repository', { caseStudy: caseStudy, id: id });
     const dto = CaseStudyMapper.toPersistence(caseStudy);
+    console.log('dto in update', dto);
 
     return new Promise((resolve, reject) => {
-        // Use transaction to prevent database locks
-        this.db.serialize(() => {
-            this.db.run("BEGIN TRANSACTION");
+      // Construct the SET part of the SQL query
+      const updates = Object.keys(dto)
+        .filter(key => dto[key as keyof CaseStudyDTO] !== undefined)
+        .map(key => `"${key}" = ?`) // Use ? for values
+        .join(', ');
 
-            try {
-                const updates = Object.keys(dto)
-                    .filter(key => dto[key as keyof CaseStudyDTO] !== undefined)
-                    .map(key => `"${key}" = ?`)
-                    .join(', ');
-                const values = Object.values(dto).filter(value => value !== undefined);
+      const values = Object.values(dto).filter(value => value !== undefined);
+      console.log(' updates in update with values', updates, values);
 
-                const updateQuery = `
-                    UPDATE "${tableName}"
-                    SET ${updates}
-                    WHERE id = ?
-                `;
+      const query = `
+        UPDATE "${tableName}"
+        SET ${updates}
+        WHERE id = ?
+      `;
 
-                this.db.run(updateQuery, [...values, id], function (err) {
-                    if (err) {
-                        return db.run("ROLLBACK", () => {
-                            console.error(`Error updating entity in table "${tableName}" with id ${id}:`, err);
-                            reject(new Error(`Database error updating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
-                        });
-                    }
-
-                    // Retrieve updated entity within the same transaction
-                    const selectQuery = `SELECT * FROM "${tableName}" WHERE id = ?`;
-                    db.get(selectQuery, [id], (err, row: any) => {
-                        if (err) {
-                            return db.run("ROLLBACK", () => {
-                                console.error(`Error retrieving updated entity from table "${tableName}":`, err);
-                                reject(new Error(`Database error retrieving updated entity from table "${tableName}": ${err.message || 'Unknown error'}`));
-                            });
-                        }
-
-                        if (!row) {
-                            return db.run("ROLLBACK", () => {
-                                reject(new Error(`Failed to retrieve updated entity from table "${tableName}"`));
-                            });
-                        }
-
-                        db.run("COMMIT", () => {
-                            const updatedCaseStudy = CaseStudyMapper.toDomain(row as CaseStudyDTO);
-                            resolve(updatedCaseStudy);
-                        });
-                    });
-                });
-            } catch (error) {
-                this.db.run("ROLLBACK", () => {
-                    reject(error);
-                });
-            }
+      this.db.run(query, [...values, id], function (err) { // Pass values and id
+        if (err) {
+          console.error(`Error updating entity in table "${tableName}":`, err);
+          reject(new Error(`Database error updating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
+          return;
+        }
+        // After successful update, retrieve the updated entity
+        const selectQuery = `SELECT * FROM "${tableName}" WHERE id = ?`;
+        db.get(selectQuery, [id], (err, row: any) => {
+          if (err) {
+            console.error(`Error retrieving updated entity from table "${tableName}":`, err);
+            reject(new Error(`Database error retrieving updated entity from table "${tableName}": ${err.message || 'Unknown error'}`));
+            return;
+          }
+          if (!row) {
+            reject(new Error(`Failed to retrieve updated entity from table "${tableName}"`));
+            return;
+          }
+          const createdCaseStudy = CaseStudyMapper.toDomain(row as CaseStudyDTO);
+          resolve(createdCaseStudy);
         });
+      });
     });
   }
-
   deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {
     const tableName = `case_studies_${locale}`;
   }

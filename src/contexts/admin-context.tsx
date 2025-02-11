@@ -160,7 +160,7 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      console.log('update data', data)
+      console.log('update data', { data, id})
       const response = await fetch(`/api/admin/case-studies/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

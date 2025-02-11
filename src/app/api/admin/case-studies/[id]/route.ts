@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { caseStudyService } from '@/lib/services/case-study.service'
+import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 
 export async function DELETE(
   request: NextRequest,
@@ -42,7 +43,7 @@ export async function PUT(
     console.log('Processing case study update:', {
       id,
       locale,
-      mappedData: data
+      mappedToPersistance:CaseStudyMapper.toPersistence(data),
     })
 
     const updatedCaseStudy = await caseStudyService.updateCaseStudy(
@@ -50,6 +51,8 @@ export async function PUT(
       data,
       locale
     )
+
+    console.log('updatedCaseStudy in router after response ', updatedCaseStudy)
 
     // Revalidate cache
     revalidateTag(CACHE_TAGS.CASE_STUDIES)
