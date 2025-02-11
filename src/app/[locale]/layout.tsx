@@ -1,16 +1,21 @@
 import { NextIntlClientProvider } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
 import '@/styles/globals.css'
 import { locales, type Locale } from '@/i18n'
 import { ClientWrapper } from './client-wrapper'
 import { PageProvider } from '@/contexts/page-context'
+import { Analytics } from '@/components/analytics/analytics'
 
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
 })
+
+// Your GA Measurement ID
+const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -74,6 +79,24 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        {/* Google Analytics Script */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              page_path: window.location.pathname,
+              cookie_flags: 'SameSite=None;Secure'
+            });
+          `}
+        </Script>
+      </head>
       <body className={inter.variable}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <PageProvider>
@@ -82,6 +105,7 @@ export default async function LocaleLayout({
             </ClientWrapper>
           </PageProvider>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   )

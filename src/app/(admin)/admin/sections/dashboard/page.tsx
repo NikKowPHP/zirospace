@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button/button"
+import { AnalyticsDashboard } from "@/components/analytics/analyticsDashboard"
 
 export default function AdminDashboard() {
   return (
@@ -10,6 +11,12 @@ export default function AdminDashboard() {
         <h1 className="text-[32px] font-medium tracking-[-0.02em] text-gray-900">
           Admin Dashboard
         </h1>
+      </div>
+
+      {/* Analytics Dashboard */}
+      <div className="mb-8">
+        <h2 className="text-xl font-medium text-gray-900 mb-4">Analytics Overview</h2>
+        <AnalyticsDashboard />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
