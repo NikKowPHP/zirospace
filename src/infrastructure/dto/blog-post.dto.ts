@@ -8,4 +8,5 @@ export interface BlogPostDTO {
   image_alt?: string;
   excerpt: string;
   content_html: string;
+  is_pinned: boolean;
 }

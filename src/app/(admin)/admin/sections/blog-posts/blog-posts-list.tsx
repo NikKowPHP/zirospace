@@ -7,9 +7,16 @@ import { Locale } from '@/i18n'
 import { useRouter } from 'next/navigation'
 
 export function BlogPostList() {
-  const { blogPosts, deleteBlogPost, error, loading } = useAdmin()
+  const { blogPosts, deleteBlogPost, error, loading, updateBlogPost } = useAdmin()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const router = useRouter()
+  const [pinnedPostId, setPinnedPostId] = useState<string | null>(null)
+
+  useEffect(() => {
+    // Find the currently pinned post on component mount
+    const pinnedPost = blogPosts[activeLocale]?.find(post => post.isPinned);
+    setPinnedPostId(pinnedPost?.id || null);
+  }, [blogPosts, activeLocale]);
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this blog post?')) {
@@ -20,6 +27,20 @@ export function BlogPostList() {
       }
     }
   }
+
+  const handlePin = async (postId: string) => {
+    try {
+      // Unpin the currently pinned post if there is one
+      if (pinnedPostId) {
+        await updateBlogPost(pinnedPostId, { isPinned: false }, activeLocale);
+      }
+      // Pin the selected post
+      await updateBlogPost(postId, { isPinned: true }, activeLocale);
+      setPinnedPostId(postId);
+    } catch (error) {
+      console.error('Failed to pin/unpin blog post:', error);
+    }
+  };
 
   useEffect(() => {
     console.log(blogPosts)
@@ -81,6 +102,9 @@ export function BlogPostList() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Excerpt
               </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Pinned
+              </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
               </th>
@@ -104,6 +128,17 @@ export function BlogPostList() {
                   <div className="text-sm text-gray-500 line-clamp-2">
                     {post.excerpt}
                   </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <input
+                    type="radio"
+                    name="pinned-post"
+                    value={post.id}
+                    checked={post.isPinned}
+                    onChange={() => handlePin(post.id)}
+                    disabled={loading}
+                    className="cursor-pointer"
+                  />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
                   <button

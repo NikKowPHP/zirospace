@@ -11,6 +11,7 @@ exports.up = function(knex) {
     table.string('image_alt');
     table.text('excerpt').notNullable();
     table.text('content_html').notNullable();
+    table.boolean('is_pinned').defaultTo(false);
     table.timestamps(true, true);
   })
   .createTable('blog_posts_pl', (table) => {
@@ -21,6 +22,7 @@ exports.up = function(knex) {
     table.string('image_alt');
     table.text('excerpt').notNullable();
     table.text('content_html').notNullable();
+    table.boolean('is_pinned').defaultTo(false);
     table.timestamps(true, true);
   });
 };
@@ -30,6 +32,12 @@ exports.up = function(knex) {
  * @returns { Promise<void> }
  */
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('blog_posts_en')
+  return knex.schema.table('blog_posts_en', (table) => {
+    table.dropColumn('is_pinned');
+  })
+  .table('blog_posts_pl', (table) => {
+    table.dropColumn('is_pinned');
+  })
+  .dropTableIfExists('blog_posts_en')
   .dropTableIfExists('blog_posts_pl');
 };

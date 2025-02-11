@@ -7,4 +7,5 @@ export interface BlogPost {
   imageAlt?: string;
   excerpt: string;
   contentHtml: string;
+  isPinned: boolean;
 }

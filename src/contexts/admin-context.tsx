@@ -54,6 +54,7 @@ interface AdminContextType {
     locale: string
   ) => Promise<void>
   deleteBlogPost: (id: string, locale: Locale) => Promise<void>
+  pinBlogPost: (id: string, locale: Locale) => Promise<void>
 
   clearError: () => void
   getTestimonials: (locale: Locale) => Promise<void>
@@ -471,19 +472,16 @@ export function AdminProvider({
         body: JSON.stringify({ data }),
       })
 
-
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to update blog post' }))
+        const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to update blog post')
       }
 
       const updatedBlogPost = await response.json()
       setBlogPosts((prev) => ({
         ...prev,
-        [locale]: prev[locale].map((cs) =>
-          cs.id === id ? updatedBlogPost : cs
+        [locale]: prev[locale].map((bp) =>
+          bp.id === id ? updatedBlogPost : bp
         ),
       }))
     } catch (err) {
@@ -518,6 +516,37 @@ export function AdminProvider({
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to delete blog post'
+      )
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const pinBlogPost = async (id: string, locale: Locale) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/blog-post/pin?id=${id}&locale=${locale}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to pin blog post')
+      }
+
+      const updatedBlogPost = await response.json()
+      setBlogPosts((prev) => ({
+        ...prev,
+        [locale]: prev[locale].map((bp) =>
+          bp.id === id ? updatedBlogPost : bp
+        ),
+      }))
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to pin blog post'
       )
       throw err
     } finally {
@@ -616,6 +645,7 @@ export function AdminProvider({
         createBlogPost,
         updateBlogPost,
         deleteBlogPost,
+        pinBlogPost,
         clearError,
         getTestimonials,
         getCaseStudySliders,

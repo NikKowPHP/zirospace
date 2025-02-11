@@ -53,6 +53,7 @@ exports.up = async function(knex) {
         <h2>Conclusion</h2>
         <p>Thank you for reading our first blog post! We hope you found it informative and helpful. Stay tuned for more articles on web development.</p>
       `,
+      is_pinned: true,
     },
     {
       slug: 'second-post',
@@ -61,6 +62,7 @@ exports.up = async function(knex) {
       image_alt: 'Second Blog Post',
       excerpt: '<p><em>Excerpt:</em> A detailed exploration of Next.js features and best practices for building modern web applications.</p>',
       content_html: '<p>In this post, we delve into the advanced features of Next.js, including server-side rendering, static site generation, and API routes. We will also cover performance optimization techniques and deployment strategies.</p><img src="/images/case-studies/gsense/gsense.avif" alt="Next.js" /><p>Learn how to leverage Next.js to create fast, scalable, and SEO-friendly web applications.</p>',
+      is_pinned: false,
     },
     {
       slug: 'third-post',
@@ -69,6 +71,7 @@ exports.up = async function(knex) {
       image_alt: 'Third Blog Post',
       excerpt: '<p><em>Excerpt:</em> An overview of the emerging trends and technologies that are shaping the future of web development.</p>',
       content_html: '<p>This post explores the latest trends in web development, such as WebAssembly, serverless computing, and progressive web apps. We will discuss how these technologies are transforming the way we build and deploy web applications.</p><img src="/images/case-studies/gsense/gsense.avif" alt="Web Development Trends" /><p>Stay ahead of the curve by understanding the technologies that will define the future of the web.</p>',
+      is_pinned: false,
     },
   ];
 
@@ -122,6 +125,7 @@ exports.up = async function(knex) {
         <h2>Wniosek</h2>
         <p>Dziękujemy za przeczytanie naszego pierwszego postu na blogu! Mamy nadzieję, że był on pouczający i pomocny. Bądźcie czujni na kolejne artykuły o tworzeniu stron internetowych.</p>
       `,
+      is_pinned: false,
     },
     {
       slug: 'drugi-post',
@@ -130,6 +134,7 @@ exports.up = async function(knex) {
       image_alt: 'Drugi Post na Blogu',
       excerpt: '<p><em>Fragment:</em> Szczegółowa eksploracja funkcji Next.js i najlepszych praktyk dotyczących budowania nowoczesnych aplikacji internetowych.</p>',
       content_html: '<p>W tym poście zagłębiamy się w zaawansowane funkcje Next.js, w tym renderowanie po stronie serwera, generowanie statycznych stron i trasy API. Omówimy również techniki optymalizacji wydajności i strategie wdrażania.</p><img src="/images/case-studies/gsense/gsense.avif" alt="Next.js" /><p>Dowiedz się, jak wykorzystać Next.js do tworzenia szybkich, skalowalnych i przyjaznych dla SEO aplikacji internetowych.</p>',
+      is_pinned: false,
     },
     {
       slug: 'trzeci-post',
@@ -138,6 +143,7 @@ exports.up = async function(knex) {
       image_alt: 'Trzeci Post na Blogu',
       excerpt: '<p><em>Fragment:</em> Przegląd pojawiających się trendów i technologii, które kształtują przyszłość tworzenia stron internetowych.</p>',
       content_html: '<p>Ten post bada najnowsze trendy w tworzeniu stron internetowych, takie jak WebAssembly, przetwarzanie bezserwerowe i progresywne aplikacje internetowe. Omówimy, w jaki sposób te technologie zmieniają sposób, w jaki budujemy i wdrażamy aplikacje internetowe.</p><img src="/images/case-studies/gsense/gsense.avif" alt="Trendy w Tworzeniu Stron Internetowych" /><p>Wyprzedź konkurencję, rozumiejąc technologie, które zdefiniują przyszłość sieci.</p>',
+      is_pinned: false,
     },
   ];
 

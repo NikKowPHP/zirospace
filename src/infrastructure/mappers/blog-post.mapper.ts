@@ -12,6 +12,7 @@ export class BlogPostMapper {
       imageAlt: dto.image_alt,
       excerpt: dto.excerpt,
       contentHtml: dto.content_html,
+      isPinned: Boolean(dto.is_pinned),
     };
   }
 
@@ -26,6 +27,7 @@ export class BlogPostMapper {
       image_alt: domain.imageAlt,
       excerpt: domain.excerpt,
       content_html: domain.contentHtml,
+      is_pinned: Boolean(domain.isPinned), 
     };
   }
 }

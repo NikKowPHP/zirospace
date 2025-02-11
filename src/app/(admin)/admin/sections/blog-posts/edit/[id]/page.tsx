@@ -32,6 +32,7 @@ export default function EditBlogPostPage({params}: Props) {
   const handleUpdate = async (data: Partial<BlogPost>) => {
     if (!blogPost) return;
     try {
+      console.log('data to be updated ', data)
       await updateBlogPost(id, data, locale)
       router.push('/admin/sections/blog-posts')
     } catch (error) {

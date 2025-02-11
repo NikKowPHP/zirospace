@@ -105,23 +105,29 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
     }
   }
 
-  async updateBlogPost(id: string, blogPost: BlogPost, locale: string): Promise<BlogPost | null> {
+  async updateBlogPost(id: string, blogPost: Partial<BlogPost>, locale: string): Promise<BlogPost | null> {
     try {
       const updates: string[] = [];
       const params: any[] = [];
 
-      // Convert to persistence DTO
-      const persistenceBlogPost = BlogPostMapper.toPersistence(blogPost )
+      // Convert to persistence DTO and only include the fields that are being updated
+      const persistenceBlogPost = BlogPostMapper.toPersistence({
+        ...await this.getBlogPostById(id, locale), // Get existing post
+        ...blogPost // Merge with updates
+      } as BlogPost);
 
-      for (const key in persistenceBlogPost) {
-        if (persistenceBlogPost.hasOwnProperty(key)) {
-            updates.push(`${key} = ?`);
-            params.push(persistenceBlogPost[key as keyof BlogPostDTO]);
+      // Remove id from the persistence object to prevent update
+      delete persistenceBlogPost.id;
+
+      for (const [key, value] of Object.entries(persistenceBlogPost)) {
+        if (value !== undefined) {
+          updates.push(`${key} = ?`);
+          params.push(value);
         }
-    }
+      }
 
       if (updates.length === 0) {
-        return this.getBlogPostBySlug(blogPost.slug || '', locale);
+        return this.getBlogPostById(id, locale);
       }
 
       params.push(id);
@@ -142,7 +148,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
         });
       });
 
-      return this.getBlogPostBySlug(blogPost.slug || '', locale);
+      return this.getBlogPostById(id, locale);
     } catch (error: any) {
       console.error(`Error updating blog post with id ${id}:`, error);
       throw new Error(`Failed to update blog post: ${error.message}`);
