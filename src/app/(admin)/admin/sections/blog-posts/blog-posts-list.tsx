@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useAdmin } from '@/contexts/admin-context'
-import { BlogPost } from '@/domain/models/blog-post.model'
 import { Locale } from '@/i18n'
 import { useRouter } from 'next/navigation'
 

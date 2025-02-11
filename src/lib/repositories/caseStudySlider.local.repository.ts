@@ -88,37 +88,13 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
 
   async updateCaseStudySlider(id: string, caseStudySlider: Partial<CaseStudySlider>): Promise<CaseStudySlider | null> {
     try {
-      const tableName = this.tableName;
-      const updates: string[] = [];
-      const params: any[] = [];
-
-      console.log('id in update ', id)
-      console.log('caseStudySlider in update ', caseStudySlider)
-      for (const key in caseStudySlider) {
-        if (caseStudySlider.hasOwnProperty(key) && key !== 'id' && key !== 'images' && key !== 'createdAt' && key !== 'updatedAt') {
-          updates.push(`${key} = ?`);
-          params.push((caseStudySlider as any)[key]);
-        }
-      }
-
-      if (updates.length === 0) {
-        return this.getCaseStudySliderById(id);
-      }
-
-      params.push(id);
-
-      const query = `
-        UPDATE "${tableName}"
-        SET ${updates.join(', ')}, updated_at = ?
-        WHERE id = ?
+      const deleteImagesQuery = `
+        DELETE FROM case_study_slider_images
+        WHERE slider_id = ?
       `;
-      console.log('query in update ', query)
-
-      params.unshift(new Date().toISOString());
-      updates.push(`updated_at = ?`);
-      console.log('params in update ', params)
+      
       await new Promise<void>((resolve, reject) => {
-        this.db.run(query, params, function (err: Error | null) {
+        this.db.run(deleteImagesQuery, [id], function (err: Error | null) {
           if (err) {
             reject(err);
             return;
@@ -126,31 +102,50 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
           resolve();
         });
       });
-
-      // Update the images
-      await Promise.all((caseStudySlider.images || []).map(async (image) => {
-        const imageQuery = `
-          UPDATE case_study_slider_images
-          SET image = ?, alt = ?
-          WHERE id = ?
+  
+      if (caseStudySlider.images && caseStudySlider.images.length > 0) {
+        const insertImageQuery = `
+          INSERT INTO case_study_slider_images (id, slider_id, image, alt)
+          VALUES (?, ?, ?, ?)
         `;
-        const imageParams = [
-          image.image,
-          image.alt,
-          image.id
-        ];
-
-        await new Promise<void>((resolve, reject) => {
-          db.run(imageQuery, imageParams, function (err: Error | null) {
-            if (err) {
-              reject(err);
-              return;
-            }
-            resolve();
+  
+        await Promise.all(caseStudySlider.images.map(async (image) => {
+          const imageParams = [
+            image.id,
+            id,
+            image.image,
+            image.alt
+          ];
+  
+          return new Promise<void>((resolve, reject) => {
+            this.db.run(insertImageQuery, imageParams, function (err: Error | null) {
+              if (err) {
+                reject(err);
+                return;
+              }
+              resolve();
+            });
           });
+        }));
+      }
+  
+      // Update the slider's updated_at timestamp
+      const updateSliderQuery = `
+        UPDATE "${this.tableName}"
+        SET updated_at = ?
+        WHERE id = ?
+      `;
+  
+      await new Promise<void>((resolve, reject) => {
+        this.db.run(updateSliderQuery, [new Date().toISOString(), id], function (err: Error | null) {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve();
         });
-      }));
-
+      });
+  
       return this.getCaseStudySliderById(id);
     } catch (error: any) {
       console.error(`Error updating case study slider with id ${id}:`, error);
