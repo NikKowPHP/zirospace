@@ -96,6 +96,7 @@ export function CaseStudyForm({
   const [theme, setTheme] = useState<CaseStudy['theme']>(study?.theme || 'dark')
   const [backgroundColor, setBackgroundColor] = useState(study?.backgroundColor || '#FFFFFF')
   const [color, setColor] = useState(study?.color || '#000000')
+  const [subtitle, setSubtitle] = useState(study?.subtitle || '')
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value
@@ -171,12 +172,11 @@ export function CaseStudyForm({
       description: formData.get('description') as string,
       tags: tags,
       images: images.filter((img) => img.url && img.alt),
-      ctaText: formData.get('ctaText') as string,
-      ctaTextName: 'caseStudy.ctaText.viewCaseStudy',
       ctaUrl: formData.get('ctaUrl') as string,
       theme: theme,
       backgroundColor: backgroundColor,
       color: color,
+      subtitle: subtitle,
     })
   }
 
@@ -203,6 +203,23 @@ export function CaseStudyForm({
           value={title}
           onChange={handleTitleChange}
           required
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="subtitle"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Subtitle ({locale})
+        </label>
+        <input
+          type="text"
+          name="subtitle"
+          id="subtitle"
+          value={subtitle}
+          onChange={(e) => setSubtitle(e.target.value)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
         />
       </div>
@@ -361,22 +378,6 @@ export function CaseStudyForm({
           </div>
         </div>
 
-        <div>
-          <label
-            htmlFor="ctaText"
-            className="block text-sm font-medium text-gray-700"
-          >
-            CTA Text
-          </label>
-          <input
-            type="text"
-            name="ctaText"
-            id="ctaText"
-            defaultValue={study?.ctaText}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-          />
-        </div>
 
         <div>
           <label
