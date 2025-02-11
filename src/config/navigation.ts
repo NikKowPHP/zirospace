@@ -19,8 +19,11 @@ export const navigationConfig = {
     {
       title: 'FAQs',
       href: 'faqs',
+    },
+    {
+      title: 'blog',
+      href: '/blog',
     }
-
   ],
   languages: [
     {

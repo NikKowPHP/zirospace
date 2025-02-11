@@ -42,23 +42,37 @@ export function Navbar() {
             itemScope 
             itemType="https://schema.org/SiteNavigationElement"
           >
-            {navigationConfig.mainNav.map((item) => (
-              <Button
-                key={item.href}
-                onClick={() => {
-                  const element = document.getElementById(item.href)
-                  element?.scrollIntoView({ behavior: 'smooth' })
-                }}
-                variant='navbar'
-                className={cn(
-                  'text-[16px] font-medium transition-colors',
-                  pathname === item.href ? 'text-gray-900' : 'text-gray-900'
-                )}
-                aria-label={t(item.title)}
-              >
-                {t(item.title)}
-              </Button>
-            ))}
+            {navigationConfig.mainNav.map((item) =>
+               item.title === 'blog' ? ( // Conditionally render Link for 'blog'
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'text-[16px] font-medium transition-colors',
+                    pathname === item.href ? 'text-gray-900' : 'text-gray-900'
+                  )}
+                  aria-label={t(item.title)}
+                >
+                  {t(item.title)}
+                </Link>
+              ) : ( // Render Button with scrollIntoView for other items
+                <Button
+                  key={item.href}
+                  onClick={() => {
+                    const element = document.getElementById(item.href)
+                    element?.scrollIntoView({ behavior: 'smooth' })
+                  }}
+                  variant='navbar'
+                  className={cn(
+                    'text-[16px] font-medium transition-colors',
+                    pathname === item.href ? 'text-gray-900' : 'text-gray-900'
+                  )}
+                  aria-label={t(item.title)}
+                >
+                  {t(item.title)}
+                </Button>
+              )
+            )}
           </nav>
 
           <Button

@@ -22,14 +22,8 @@ export class CaseStudySliderMapper {
   }
 
   static toPersistence(domain: Partial<CaseStudySlider>): Partial<CaseStudySliderDTO> {
-    const id = domain.id  ? 
-      domain.id.toLowerCase()
-      .replace(/^-+|-+$/g, '')
-      + '-' + Date.now()
-    : domain.id
-
     return {
-      id,
+      id: domain.id,
       images: domain.images?.map(image => ({
         id: image.id,
         image: image.image,
