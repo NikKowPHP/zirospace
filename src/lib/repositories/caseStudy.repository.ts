@@ -11,7 +11,7 @@ export class CaseStudyRepository {
   private supabaseClient: SupabaseClient
 
   constructor() {
-      this.supabaseClient = supabase
+    this.supabaseClient = supabase
   }
 
   getCaseStudies = unstable_cache(
@@ -57,6 +57,49 @@ export class CaseStudyRepository {
         tags: [CACHE_TAGS.CASE_STUDIES],
       }
     )()
+  }
+
+  createCaseStudy = async (caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+    const { data, error } = await this.supabaseClient
+      .from(`case_studies_${locale}`)
+      .insert(CaseStudyMapper.toPersistence(caseStudy))
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error creating case study:', error)
+      throw error
+    }
+
+    return CaseStudyMapper.toDomain(data as CaseStudyDTO)
+  }
+
+  updateCaseStudy = async (id: string, caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+    const { data, error } = await this.supabaseClient
+      .from(`case_studies_${locale}`)
+      .update(CaseStudyMapper.toPersistence(caseStudy))
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error updating case study:', error)
+      throw error
+    }
+
+    return CaseStudyMapper.toDomain(data as CaseStudyDTO)
+  }
+
+  deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {
+    const { error } = await this.supabaseClient
+      .from(`case_studies_${locale}`)
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('Error deleting case study:', error)
+      throw error
+    }
   }
 }
 

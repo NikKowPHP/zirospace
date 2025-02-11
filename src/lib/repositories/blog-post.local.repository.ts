@@ -117,7 +117,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
       } as BlogPost);
 
       // Remove id from the persistence object to prevent update
-      delete persistenceBlogPost.id;
+      // delete persistenceBlogPost.id;
 
       for (const [key, value] of Object.entries(persistenceBlogPost)) {
         if (value !== undefined) {

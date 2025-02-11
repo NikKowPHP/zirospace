@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
+import { caseStudyService } from '@/lib/services/case-study.service'
 
 export async function DELETE(
   request: NextRequest,
@@ -14,19 +15,7 @@ export async function DELETE(
 
     console.log('Processing case study deletion:', { id, locale })
 
-    const { error } = await supabaseAdmin!
-      .from(`case_studies_${locale}`)
-      .delete()
-      .match({ id })
-
-    if (error) {
-      console.error('Supabase delete error:', {
-        code: error.code,
-        message: error.message,
-        details: error.details
-      })
-      throw error
-    }
+    await caseStudyService.deleteCaseStudy(id, locale)
 
     // Revalidate cache
     revalidateTag(CACHE_TAGS.CASE_STUDIES)
@@ -58,30 +47,11 @@ export async function PUT(
       mappedData: CaseStudyMapper.toPersistence(data)
     })
 
-    const { data: updatedCaseStudy, error } = await supabaseAdmin!
-      .from(`case_studies_${locale}`)
-      .update(CaseStudyMapper.toPersistence(data))
-      .eq('id', id)
-      .select()
-      .single()
-
-    if (error) {
-      console.error('Supabase error:', {
-        code: error.code,
-        message: error.message,
-        details: error.details
-      })
-      
-      // Handle case when no rows are found
-      if (error.code === 'PGRST116') {
-        return NextResponse.json(
-          { error: 'Case study not found', details: 'No case study exists with the provided ID' },
-          { status: 404 }
-        )
-      }
-      
-      throw error
-    }
+    const updatedCaseStudy = await caseStudyService.updateCaseStudy(
+      id,
+      CaseStudyMapper.toPersistence(data),
+      locale
+    )
 
     // Revalidate cache
     revalidateTag(CACHE_TAGS.CASE_STUDIES)

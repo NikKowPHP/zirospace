@@ -70,6 +70,111 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
       throw new Error(`Database error reading entity from table "case_studies_${locale}": ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
+
+  createCaseStudy = async (caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+    const tableName = `case_studies_${locale}`;
+    return new Promise((resolve, reject) => {
+      const query = `
+        INSERT INTO "${tableName}" (
+          slug, title, subtitle, description, tags, images,
+          ctaText, ctaTextName, ctaUrl, createdAt, updatedAt,
+          color, backgroundColor, theme
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        RETURNING *;
+      `;
+
+      this.db.run(
+        query,
+        [
+          caseStudy.slug, caseStudy.title, caseStudy.subtitle,
+          caseStudy.description, JSON.stringify(caseStudy.tags), JSON.stringify(caseStudy.images),
+          caseStudy.ctaText, caseStudy.ctaTextName, caseStudy.ctaUrl,
+          caseStudy.createdAt.toISOString(), caseStudy.updatedAt.toISOString(),
+          caseStudy.color, caseStudy.backgroundColor, caseStudy.theme
+        ],
+        function (err: Error | null) {
+          if (err) {
+            console.error(`Error creating entity in table "${tableName}":`, err);
+            reject(new Error(`Database error creating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
+            return;
+          }
+
+          db.get(`SELECT * FROM "${tableName}" WHERE id = ?`, [this.lastID], (err, row: any) => {
+            if (err) {
+              console.error(`Error retrieving created entity from table "${tableName}":`, err);
+              reject(new Error(`Database error retrieving created entity from table "${tableName}": ${err.message || 'Unknown error'}`));
+              return;
+            }
+            const createdCaseStudy = CaseStudyMapper.toDomain(row);
+            resolve(createdCaseStudy);
+          });
+        }
+      );
+    });
+  }
+
+  updateCaseStudy = async (id: string, caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+    const tableName = `case_studies_${locale}`;
+    return new Promise((resolve, reject) => {
+      const query = `
+        UPDATE "${tableName}" SET
+          slug = ?, title = ?, subtitle = ?, description = ?,
+          tags = ?, images = ?, ctaText = ?, ctaTextName = ?,
+          ctaUrl = ?, createdAt = ?, updatedAt = ?, color = ?,
+          backgroundColor = ?, theme = ?
+        WHERE id = ?
+        RETURNING *;
+      `;
+
+      this.db.run(
+        query,
+        [
+          caseStudy.slug, caseStudy.title, caseStudy.subtitle,
+          caseStudy.description, JSON.stringify(caseStudy.tags), JSON.stringify(caseStudy.images),
+          caseStudy.ctaText, caseStudy.ctaTextName, caseStudy.ctaUrl,
+          caseStudy.createdAt.toISOString(), caseStudy.updatedAt.toISOString(),
+          caseStudy.color, caseStudy.backgroundColor, caseStudy.theme,
+          id
+        ],
+        function (err: Error | null) {
+          if (err) {
+            console.error(`Error updating entity in table "${tableName}":`, err);
+            reject(new Error(`Database error updating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
+            return;
+          }
+
+          db.get(`SELECT * FROM "${tableName}" WHERE id = ?`, [id], (err, row: any) => {
+            if (err) {
+              console.error(`Error retrieving updated entity from table "${tableName}":`, err);
+              reject(new Error(`Database error retrieving updated entity from table "${tableName}": ${err.message || 'Unknown error'}`));
+              return;
+            }
+            const updatedCaseStudy = CaseStudyMapper.toDomain(row);
+            resolve(updatedCaseStudy);
+          });
+        }
+      );
+    });
+  }
+
+  deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {
+    const tableName = `case_studies_${locale}`;
+    return new Promise((resolve, reject) => {
+      const query = `
+        DELETE FROM "${tableName}"
+        WHERE id = ?;
+      `;
+
+      this.db.run(query, [id], (err: Error | null) => {
+        if (err) {
+          console.error(`Error deleting entity from table "${tableName}":`, err);
+          reject(new Error(`Database error deleting entity from table "${tableName}": ${err.message || 'Unknown error'}`));
+          return;
+        }
+        resolve();
+      });
+    });
+  }
 }
 
 // export singleton

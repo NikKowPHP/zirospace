@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
+import { caseStudyService } from '@/lib/services/case-study.service'
 
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
@@ -13,20 +14,10 @@ export async function POST(request: NextRequest) {
       mappedData: CaseStudyMapper.toPersistence(data)
     })
 
-    const { data: newCaseStudy, error } = await supabaseAdmin!
-      .from(`case_studies_${locale}`)
-      .insert(CaseStudyMapper.toPersistence(data))
-      .select()
-      .single()
-
-    if (error) {
-      console.error('Supabase error:', {
-        code: error.code,
-        message: error.message,
-        details: error.details
-      })
-      throw error
-    }
+    const newCaseStudy = await caseStudyService.createCaseStudy(
+      CaseStudyMapper.toPersistence(data),
+      locale
+    )
 
     // Revalidate cache
     revalidateTag(CACHE_TAGS.CASE_STUDIES)

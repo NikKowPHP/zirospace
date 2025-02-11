@@ -28,6 +28,17 @@ export class CaseStudyService {
     return this.caseStudyRepository.getCaseStudyBySlug(slug, locale)
   }
 
+  createCaseStudy = async (caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+    return this.caseStudyRepository.createCaseStudy(caseStudy, locale)
+  }
+
+  updateCaseStudy = async (id: string, caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+    return this.caseStudyRepository.updateCaseStudy(id, caseStudy, locale)
+  }
+
+  deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {
+    return this.caseStudyRepository.deleteCaseStudy(id, locale)
+  }
 }
 
 // export singleton

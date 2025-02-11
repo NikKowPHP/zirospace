@@ -93,7 +93,9 @@ export function CaseStudyForm({
   const [slug, setSlug] = useState(study?.slug || '')
   const [imageErrors, setImageErrors] = useState<Record<number, string | null>>({})
 
-
+  const [theme, setTheme] = useState<CaseStudy['theme']>(study?.theme || 'dark')
+  const [backgroundColor, setBackgroundColor] = useState(study?.backgroundColor || '#FFFFFF')
+  const [color, setColor] = useState(study?.color || '#000000')
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value
@@ -172,6 +174,9 @@ export function CaseStudyForm({
       ctaText: formData.get('ctaText') as string,
       ctaTextName: 'caseStudy.ctaText.viewCaseStudy',
       ctaUrl: formData.get('ctaUrl') as string,
+      theme: theme,
+      backgroundColor: backgroundColor,
+      color: color,
     })
   }
 
@@ -256,7 +261,7 @@ export function CaseStudyForm({
             <div key={index} className="flex gap-4 mb-4">
               <div className="flex-1">
                 <input
-                  type="url"
+                  type="text"
                   value={image.url}
                   onChange={(e) => handleImageChange(index, 'url', e.target.value)}
                   placeholder="Image URL (direct link recommended)"
@@ -373,19 +378,58 @@ export function CaseStudyForm({
           />
         </div>
 
-        {/* <div>
-          <label htmlFor="ctaTextName" className="block text-sm font-medium text-gray-700">
-            CTA Text Name
+        <div>
+          <label
+            htmlFor="theme"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Theme
+          </label>
+          <select
+            name="theme"
+            id="theme"
+            value={theme}
+            onChange={(e) => setTheme(e.target.value )}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          >
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="backgroundColor"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Background Color
           </label>
           <input
-            type="text"
-            name="ctaTextName"
-            id="ctaTextName"
-            defaultValue={study?.ctaTextName}
-            required
+            type="color"
+            name="backgroundColor"
+            id="backgroundColor"
+            value={backgroundColor}
+            onChange={(e) => setBackgroundColor(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           />
-        </div> */}
+        </div>
+
+        <div>
+          <label
+            htmlFor="color"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Color
+          </label>
+          <input
+            type="color"
+            name="color"
+            id="color"
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          />
+        </div>
 
         <div>
           <label
@@ -395,7 +439,7 @@ export function CaseStudyForm({
             CTA URL
           </label>
           <input
-            type="url"
+            type="text"
             name="ctaUrl"
             id="ctaUrl"
             defaultValue={study?.ctaUrl}
