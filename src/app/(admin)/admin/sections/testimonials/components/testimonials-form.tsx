@@ -89,7 +89,7 @@ export function TestimonialForm({
           Image URL
         </label>
         <input
-          type="url"
+          type="text"
           id="image"
           className="mt-1 block w-full rounded-primary border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           value={image}

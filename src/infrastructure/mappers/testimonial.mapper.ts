@@ -16,17 +16,39 @@ export class TestimonialMapper {
     };
   }
 
-  static toPersistence(domain: Testimonial): TestimonialDTO {
-    return {
-      id: domain.id,
-      author: domain.author,
-      role: domain.role,
-      company: domain.company,
-      quote: domain.quote,
-      image: domain.image,
-      image_alt: domain.image_alt,
-      created_at: domain.createdAt ? domain.createdAt.toISOString() : new Date().toISOString(),
-      updated_at: domain.updatedAt ? domain.updatedAt.toISOString() : new Date().toISOString(),
+  static toPersistence(domain: Partial<Testimonial>): Partial<TestimonialDTO> {
+    const dto: Partial<TestimonialDTO> = {
+      ...(domain.id && { id: domain.id }),
+      ...(domain.author && { author: domain.author }),
+      ...(domain.role && { role: domain.role }),
+      ...(domain.company && { company: domain.company }),
+      ...(domain.quote && { quote: domain.quote }),
+      ...(domain.image && { image: domain.image }),
+      ...(domain.image_alt && { image_alt: domain.image_alt }),
     };
+
+    // Only add timestamps if they exist and are valid
+    if (domain.createdAt) {
+      try {
+        dto.created_at = new Date(domain.createdAt).toISOString();
+      } catch (error) {
+        console.warn('Invalid createdAt date, using current date');
+        dto.created_at = new Date().toISOString();
+      }
+    }
+
+    if (domain.updatedAt) {
+      try {
+        dto.updated_at = new Date(domain.updatedAt).toISOString();
+      } catch (error) {
+        console.warn('Invalid updatedAt date, using current date');
+        dto.updated_at = new Date().toISOString();
+      }
+    } else {
+      // Always set updated_at on updates
+      dto.updated_at = new Date().toISOString();
+    }
+
+    return dto;
   }
 }

@@ -46,6 +46,7 @@ export async function PUT(
   try {
     const { id } = params
     const { data, locale } = await request.json()
+
     
     console.log('Processing testimonial update:', {
       id,

@@ -1,4 +1,3 @@
-
 import { SqlLiteAdapter } from '@/lib/repositories/adapters/sqllite.adapter';
 import { Database } from 'sqlite3';
 import { getDatabaseFilePath } from '@/lib/config/database.config';
@@ -92,14 +91,17 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
   async updateTestimonial(id: string, testimonial: Partial<Testimonial>, locale: string): Promise<Testimonial | null> {
     try {
       const tableName = `testimonials_${locale}`;
+      const dto = TestimonialMapper.toPersistence(testimonial);
+
       // Construct the SET part of the SQL query dynamically based on provided fields
       const updates: string[] = [];
       const params: any[] = [];
 
-      for (const key in testimonial) {
-        if (testimonial.hasOwnProperty(key) && key !== 'id') {
-          updates.push(`${key} = ?`);
-          params.push((testimonial as any)[key]);
+      // Use the mapped DTO values instead of the original testimonial
+      for (const key in dto) {
+        if (dto.hasOwnProperty(key) && key !== 'id') {
+          updates.push(`"${key}" = ?`);
+          params.push(dto[key as keyof TestimonialDTO]); // Use dto values instead of testimonial values
         }
       }
 
@@ -107,16 +109,21 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
         return this.getTestimonialById(id, locale);
       }
 
-      params.push(id); // Add the id to the parameters for the WHERE clause
+      // Add updated_at to the updates
+      updates.push(`"updated_at" = ?`);
+      params.push(new Date().toISOString());
+      
+      // Add the id for the WHERE clause
+      params.push(id);
 
       const query = `
         UPDATE "${tableName}"
-        SET ${updates.join(', ')}, updated_at = ?
+        SET ${updates.join(', ')}
         WHERE id = ?
       `;
 
-      params.unshift(new Date().toISOString());
-      updates.push(`updated_at = ?`);
+      console.log('Update query:', query);
+      console.log('Update params:', params);
 
       await new Promise<void>((resolve, reject) => {
         this.db.run(query, params, function (err: Error | null) {
@@ -128,7 +135,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
         });
       });
 
-      return this.getTestimonialById(id, locale); // Fetch and return the updated testimonial
+      return this.getTestimonialById(id, locale);
     } catch (error: any) {
       console.error(`Error updating testimonial with id ${id} in locale ${locale}:`, error);
       throw new Error(`Failed to update testimonial: ${error.message}`);
