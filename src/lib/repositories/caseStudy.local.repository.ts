@@ -23,7 +23,6 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
 
   async list(locale?: Locale): Promise<CaseStudy[]> {
     const tableName = locale ? `case_studies_${locale}` : this.tableName;
-    console.log('table name in list ', tableName)
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM "${tableName}";
@@ -36,7 +35,6 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
           return;
         }
         const caseStudies = rows.map(CaseStudyMapper.toDomain);
-        console.log('case studies in repository ', caseStudies)
         resolve(caseStudies || []);
       });
     });
@@ -73,109 +71,113 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
 
   createCaseStudy = async (caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
     const tableName = `case_studies_${locale}`;
+    const dto = CaseStudyMapper.toPersistence(caseStudy);
+
     return new Promise((resolve, reject) => {
+      const columns = Object.keys(dto)
+        .filter(key => dto[key as keyof CaseStudyDTO] !== undefined)
+        .map(key => `"${key}"`)
+        .join(', ');
+      const placeholders = Object.keys(dto)
+        .filter(key => dto[key as keyof CaseStudyDTO] !== undefined)
+        .map(() => '?')
+        .join(', ');
+      const values = Object.values(dto).filter(value => value !== undefined);
+
       const query = `
-        INSERT INTO "${tableName}" (
-          slug, title, subtitle, description, tags, images,
-          ctaText, ctaTextName, ctaUrl, createdAt, updatedAt,
-          color, backgroundColor, theme
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        RETURNING *;
+        INSERT INTO "${tableName}" (${columns})
+        VALUES (${placeholders})
       `;
 
-      this.db.run(
-        query,
-        [
-          caseStudy.slug, caseStudy.title, caseStudy.subtitle,
-          caseStudy.description, JSON.stringify(caseStudy.tags), JSON.stringify(caseStudy.images),
-          caseStudy.ctaText, caseStudy.ctaTextName, caseStudy.ctaUrl,
-          caseStudy.createdAt ? caseStudy.createdAt.toISOString() : null, 
-          caseStudy.updatedAt ? caseStudy.updatedAt.toISOString() : null,
-          caseStudy.color, caseStudy.backgroundColor, caseStudy.theme
-        ],
-        function (err: Error | null) {
+      this.db.run(query, values, function (err) {
+        if (err) {
+          console.error(`Error creating entity in table "${tableName}":`, err);
+          reject(new Error(`Database error creating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
+          return;
+        }
+        // After successful insertion, retrieve the created entity
+        const id = caseStudy.id;
+        const selectQuery = `SELECT * FROM "${tableName}" WHERE id = ?`;
+        db.get(selectQuery, [id], (err, row: any) => {
           if (err) {
-            console.error(`Error creating entity in table "${tableName}":`, err);
-            reject(new Error(`Database error creating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
+            console.error(`Error retrieving created entity from table "${tableName}":`, err);
+            reject(new Error(`Database error retrieving created entity from table "${tableName}": ${err.message || 'Unknown error'}`));
             return;
           }
-
-          db.get(`SELECT * FROM "${tableName}" WHERE id = ?`, [this.lastID], (err, row: any) => {
-            if (err) {
-              console.error(`Error retrieving created entity from table "${tableName}":`, err);
-              reject(new Error(`Database error retrieving created entity from table "${tableName}": ${err.message || 'Unknown error'}`));
-              return;
-            }
-            const createdCaseStudy = CaseStudyMapper.toDomain(row);
-            resolve(createdCaseStudy);
-          });
-        }
-      );
+          if (!row) {
+            reject(new Error(`Failed to retrieve created entity from table "${tableName}"`));
+            return;
+          }
+          const createdCaseStudy = CaseStudyMapper.toDomain(row as CaseStudyDTO);
+          resolve(createdCaseStudy);
+        });
+      });
     });
   }
 
-  updateCaseStudy = async (id: string, caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+  async updateCaseStudy(id: string, caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> {
     const tableName = `case_studies_${locale}`;
+    const dto = CaseStudyMapper.toPersistence(caseStudy);
+
     return new Promise((resolve, reject) => {
-      const query = `
-        UPDATE "${tableName}" SET
-          slug = ?, title = ?, subtitle = ?, description = ?,
-          tags = ?, images = ?, ctaText = ?, ctaTextName = ?,
-          ctaUrl = ?, createdAt = ?, updatedAt = ?, color = ?,
-          backgroundColor = ?, theme = ?
-        WHERE id = ?
-        RETURNING *;
-      `;
+        // Use transaction to prevent database locks
+        this.db.serialize(() => {
+            this.db.run("BEGIN TRANSACTION");
 
-      this.db.run(
-        query,
-        [
-          caseStudy.slug, caseStudy.title, caseStudy.subtitle,
-          caseStudy.description, JSON.stringify(caseStudy.tags), JSON.stringify(caseStudy.images),
-          caseStudy.ctaText, caseStudy.ctaTextName, caseStudy.ctaUrl,
-          caseStudy.createdAt ? caseStudy.createdAt.toISOString() : null,
-          caseStudy.updatedAt ? caseStudy.updatedAt.toISOString() : null,
-          caseStudy.color, caseStudy.backgroundColor, caseStudy.theme,
-          id
-        ],
-        function (err: Error | null) {
-          if (err) {
-            console.error(`Error updating entity in table "${tableName}":`, err);
-            reject(new Error(`Database error updating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
-            return;
-          }
+            try {
+                const updates = Object.keys(dto)
+                    .filter(key => dto[key as keyof CaseStudyDTO] !== undefined)
+                    .map(key => `"${key}" = ?`)
+                    .join(', ');
+                const values = Object.values(dto).filter(value => value !== undefined);
 
-          db.get(`SELECT * FROM "${tableName}" WHERE id = ?`, [id], (err, row: any) => {
-            if (err) {
-              console.error(`Error retrieving updated entity from table "${tableName}":`, err);
-              reject(new Error(`Database error retrieving updated entity from table "${tableName}": ${err.message || 'Unknown error'}`));
-              return;
+                const updateQuery = `
+                    UPDATE "${tableName}"
+                    SET ${updates}
+                    WHERE id = ?
+                `;
+
+                this.db.run(updateQuery, [...values, id], function (err) {
+                    if (err) {
+                        return db.run("ROLLBACK", () => {
+                            console.error(`Error updating entity in table "${tableName}" with id ${id}:`, err);
+                            reject(new Error(`Database error updating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
+                        });
+                    }
+
+                    // Retrieve updated entity within the same transaction
+                    const selectQuery = `SELECT * FROM "${tableName}" WHERE id = ?`;
+                    db.get(selectQuery, [id], (err, row: any) => {
+                        if (err) {
+                            return db.run("ROLLBACK", () => {
+                                console.error(`Error retrieving updated entity from table "${tableName}":`, err);
+                                reject(new Error(`Database error retrieving updated entity from table "${tableName}": ${err.message || 'Unknown error'}`));
+                            });
+                        }
+
+                        if (!row) {
+                            return db.run("ROLLBACK", () => {
+                                reject(new Error(`Failed to retrieve updated entity from table "${tableName}"`));
+                            });
+                        }
+
+                        db.run("COMMIT", () => {
+                            const updatedCaseStudy = CaseStudyMapper.toDomain(row as CaseStudyDTO);
+                            resolve(updatedCaseStudy);
+                        });
+                    });
+                });
+            } catch (error) {
+                this.db.run("ROLLBACK", () => {
+                    reject(error);
+                });
             }
-            const updatedCaseStudy = CaseStudyMapper.toDomain(row);
-            resolve(updatedCaseStudy);
-          });
-        }
-      );
+        });
     });
   }
 
   deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {
     const tableName = `case_studies_${locale}`;
-    return new Promise((resolve, reject) => {
-      const query = `
-        DELETE FROM "${tableName}"
-        WHERE id = ?;
-      `;
-
-      this.db.run(query, [id], (err: Error | null) => {
-        if (err) {
-          console.error(`Error deleting entity from table "${tableName}":`, err);
-          reject(new Error(`Database error deleting entity from table "${tableName}": ${err.message || 'Unknown error'}`));
-          return;
-        }
-        resolve();
-      });
-    });
   }
 }
 

@@ -167,6 +167,7 @@ export function CaseStudyForm({
     console.log(formData.get('slug'))
 
     await onSubmit({
+      id: study?.id || '',
       title: formData.get('title') as string,
       slug: formData.get('slug') as string,
       description: formData.get('description') as string,

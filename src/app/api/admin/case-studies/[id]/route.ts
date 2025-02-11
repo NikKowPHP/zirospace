@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/lib/supabase'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
-import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import { caseStudyService } from '@/lib/services/case-study.service'
 
 export async function DELETE(
@@ -44,19 +42,19 @@ export async function PUT(
     console.log('Processing case study update:', {
       id,
       locale,
-      mappedData: CaseStudyMapper.toPersistence(data)
+      mappedData: data
     })
 
     const updatedCaseStudy = await caseStudyService.updateCaseStudy(
       id,
-      CaseStudyMapper.toPersistence(data),
+      data,
       locale
     )
 
     // Revalidate cache
     revalidateTag(CACHE_TAGS.CASE_STUDIES)
 
-    return NextResponse.json(CaseStudyMapper.toDomain(updatedCaseStudy))
+    return NextResponse.json(updatedCaseStudy)
   } catch (error) {
     console.error('Error updating case study:', error)
     return NextResponse.json(

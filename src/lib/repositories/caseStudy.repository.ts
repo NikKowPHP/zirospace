@@ -74,7 +74,7 @@ export class CaseStudyRepository {
     return CaseStudyMapper.toDomain(data as CaseStudyDTO)
   }
 
-  updateCaseStudy = async (id: string, caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+  updateCaseStudy = async (id: string, caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
     const { data, error } = await this.supabaseClient
       .from(`case_studies_${locale}`)
       .update(CaseStudyMapper.toPersistence(caseStudy))

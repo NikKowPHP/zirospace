@@ -159,7 +159,6 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
 
   async list(locale?: string): Promise<Testimonial[]> {
     const tableName = locale ? `testimonials_${locale}` : this.tableName;
-    console.log('table name in list ', tableName)
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM "${tableName}";
@@ -172,7 +171,6 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
           return;
         }
         const testimonials = rows.map(TestimonialMapper.toDomain);
-        console.log('testimonials in repository ', testimonials)
         resolve(testimonials || []);
       });
     });

@@ -15,7 +15,6 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
 
   getCaseStudiesSliders = async (): Promise<CaseStudySlider[]> => {
     const sliders = await this.list()
-    console.log('sliders in repository ', sliders)
 
     return Promise.all(sliders.map(async (slider) => {
       const images = await this.getImagesForSlider(slider.id);
@@ -206,7 +205,6 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
 
   async list(): Promise<CaseStudySlider[]> {
     const tableName = this.tableName;
-    console.log('table name in list ', tableName)
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM "${tableName}";
@@ -225,7 +223,6 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
           createdAt: new Date(row.created_at),
           updatedAt: new Date(row.updated_at),
         }));
-        console.log('case study sliders in repository ', caseStudySliders)
         resolve(caseStudySliders || []);
       });
     });

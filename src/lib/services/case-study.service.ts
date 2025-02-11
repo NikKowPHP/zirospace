@@ -4,6 +4,8 @@ import { CaseStudy } from "@/domain/models/case-study.model"
 // import { mockCaseStudyRepository } from "../__mocks__/caseStudyRepository.mock"
 import { caseStudyRepositoryLocal } from "../repositories/caseStudy.local.repository"
 import { ICaseStudyRepository } from "../interfaces/caseStudyRepository.interface"
+import { CaseStudyDTO } from "@/infrastructure/dto/case-study.dto"
+import { CaseStudyMapper } from "@/infrastructure/mappers/case-study.mapper"
 
 
 const caseStudyRepository = new CaseStudyRepository()
@@ -32,8 +34,8 @@ export class CaseStudyService {
     return this.caseStudyRepository.createCaseStudy(caseStudy, locale)
   }
 
-  updateCaseStudy = async (id: string, caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
-    return this.caseStudyRepository.updateCaseStudy(id, caseStudy, locale)
+  updateCaseStudy = async (id: string, caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
+    return this.caseStudyRepository.updateCaseStudy(id, caseStudy, locale);
   }
 
   deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {

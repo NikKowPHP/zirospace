@@ -4,10 +4,21 @@ import { CaseStudyDTO } from '../dto/case-study.dto';
 export class CaseStudyMapper {
   static toDomain(dto: CaseStudyDTO): CaseStudy {
     // Parse images if they are stored as a JSON string
-    const images =
-      typeof dto.images === 'string'
-        ? JSON.parse(dto.images)
-        : dto.images;
+    let images = dto.images;
+
+    if (typeof dto.images === 'string') {
+      try {
+        images = JSON.parse(dto.images);
+      } catch (error) {
+        console.error("Error parsing images JSON:", error);
+        images = []; // or handle the error as needed
+      }
+    }
+
+    // If images is still not an array, default to an empty array
+    if (!Array.isArray(images)) {
+      images = [];
+    }
 
     // Optionally, handle the tags field if necessary:
     const tags =
@@ -36,16 +47,12 @@ export class CaseStudyMapper {
   }
 
   static toPersistence(domain: Partial<CaseStudy>): Partial<CaseStudyDTO> {
-    const id = domain.id || (domain.title
-      ? domain.title.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '') + '-' + Date.now()
-      : undefined);
-
+  
+    console.log('domain in toPersistence', domain)
     const isDevelopment = process.env.NODE_ENV === 'development';
 
     return {
-      id,
+      id: domain.id,
       slug: domain.slug,
       title: domain.title,
       subtitle: domain.subtitle,

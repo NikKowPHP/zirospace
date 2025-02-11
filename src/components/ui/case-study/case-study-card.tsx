@@ -99,12 +99,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
   
   // Use a default translation key if the custom one fails
   const ctaText = () => {
-    try {
-      return t(caseStudy.ctaTextName)
-    } catch (error) {
-      console.error(error)
       return t('caseStudy.ctaText.viewCaseStudy')
-    }
   }
 
   return (
