@@ -163,6 +163,25 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
   }
   deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {
     const tableName = `case_studies_${locale}`;
+    return new Promise((resolve, reject) => {
+      const query = `
+        DELETE FROM "${tableName}"
+        WHERE id = ?
+      `;
+
+      console.log('deletion query', query, id)
+
+      this.db.run(query, [id], function (err) {
+        if (err) {
+          console.error(`Error deleting entity from table "${tableName}" with id ${id}:`, err);
+          reject(new Error(`Database error deleting entity from table "${tableName}": ${err.message || 'Unknown error'}`));
+          return;
+        }
+
+        // If no error, it means the deletion was successful
+        resolve();
+      });
+    });
   }
 }
 

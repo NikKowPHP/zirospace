@@ -196,6 +196,7 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
+      console.log('deleting case study', id, locale)
       const response = await fetch(`/api/admin/case-studies/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
