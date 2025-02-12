@@ -6,17 +6,18 @@ import { Tag } from '@/components/ui/tag/tag'
 import { cn } from '@/lib/utils/cn'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
+import Link from 'next/link'
 import { type Image as ImageType } from '@/domain/models/case-study.model'
 import { type CaseStudy } from '@/domain/models/case-study.model'
 import { Locale } from '@/i18n'
-import {ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 
 interface CaseStudyCardProps {
   caseStudy: CaseStudy
   locale: Locale
 }
 
-// Separate image component for better performance
+// Optimized image component with proper loading strategies
 const CaseStudyImage = memo(function CaseStudyImage({
   url,
   alt,
@@ -32,11 +33,16 @@ const CaseStudyImage = memo(function CaseStudyImage({
         'relative h-full w-full rounded-b-[24px] sm:rounded-primary sm:rounded-[18px] overflow-hidden',
         isFirst ? 'col-span-2 row-span-2' : ''
       )}
+      itemProp="image"
+      itemScope
+      itemType="https://schema.org/ImageObject"
     >
+      <meta itemProp="contentUrl" content={url} />
+      <meta itemProp="caption" content={alt} />
       <Image
         src={url}
         alt={alt}
-        loading={isFirst ? 'eager' : 'lazy'}
+        loading={'lazy'}
         fill
         className="object-cover"
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -47,7 +53,7 @@ const CaseStudyImage = memo(function CaseStudyImage({
   )
 })
 
-// Separate tags component to prevent unnecessary re-renders
+// Optimized tags component with semantic markup
 const CaseStudyTags = memo(function CaseStudyTags({
   tags,
   theme,
@@ -56,10 +62,14 @@ const CaseStudyTags = memo(function CaseStudyTags({
   theme: string
 }) {
   return (
-    <div className="flex flex-wrap  ">
+    <div 
+      className="flex flex-wrap"
+      itemProp="keywords"
+      aria-label="Project tags"
+    >
       {tags.map((tag, index) => (
-        <div key={tag} className="flex items-center ">
-          <span key={tag}>
+        <div key={tag} className="flex items-center">
+          <span>
             <Tag
               variant={theme === 'dark' ? 'dark' : 'primary'}
               className="px-8 text-sm sm:text-base"
@@ -67,10 +77,9 @@ const CaseStudyTags = memo(function CaseStudyTags({
               {tag}
             </Tag>
           </span>
-
           {index !== tags.length - 1 && (
             <span
-              className=" select-none mx-1 text-[10px] text-blue-500"
+              className="select-none mx-1 text-[10px] text-blue-500"
               aria-hidden="true"
             >
               •
@@ -82,113 +91,137 @@ const CaseStudyTags = memo(function CaseStudyTags({
   )
 })
 
-// Main component with performance optimizations
+// Main component with enhanced SEO and accessibility
 export const CaseStudyCard = memo(function CaseStudyCard({
   caseStudy,
   locale,
 }: CaseStudyCardProps) {
   const t = useTranslations()
+  const ctaText = t('caseStudy.ctaText.viewCaseStudy')
+  const caseStudyUrl = `/${locale}/case-studies/${caseStudy.slug}`
 
-
-
-  // Use a default translation key if the custom one fails
-  const ctaText = () => {
-    return t('caseStudy.ctaText.viewCaseStudy')
+  // JSON-LD for the case study
+  const caseStudyJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": caseStudy.title,
+    "headline": caseStudy.subtitle,
+    "description": caseStudy.description,
+    "keywords": caseStudy.tags.join(", "),
+    "image": caseStudy.images[0].url,
+    "url": `https://ziro.space${caseStudyUrl}`,
+    "datePublished": caseStudy.createdAt,
+    "author": {
+      "@type": "Organization",
+      "name": "ZIRO Healthcare Solutions"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ZIRO Healthcare Solutions",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://ziro.space/images/ziro.avif"
+      }
+    }
   }
 
   return (
-    <article
-      className={`flex flex-col  rounded-[24px] sm:rounded-[32px]  shadow-sm h-full`}
-      style={{
-        color: caseStudy.color,
-        backgroundColor: caseStudy.backgroundColor,
-      }}
-      itemScope
-      itemType="https://schema.org/CreativeWork"
-    >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8    h-full">
-        <div className="flex flex-col   h-full p-[20px] sm:p-[40px] gap-[20px]">
-          {/* Title */}
-          <h2
-            className=" text-blue-500 text-[16px] sm:text-[18px] lg:text-[20px] font-medium tracking-[-0.02em] "
-            itemProp="name"
-          >
-            {caseStudy.title}
-          </h2>
-
-          {/* Subtitle */}
-          <h3
-            className="text-[24px] sm:text-[26px] lg:text-[48px] font-bold text-gray-600 max-w-xl sm:max-w-2xl  sm:max-w-sm leading-[1.2] "
-            style={{
-              color: caseStudy.color,
-            }}
-            itemProp="name"
-          >
-            {caseStudy.subtitle}
-          </h3>
-
-          {/* Description */}
-          <p
-            className="text-[16px]  sm:text-[24px] text-gray-400  line-clamp-4 overflow-hidden leading-[1.2] "
-            itemProp="description"
-          >
-            {caseStudy.description}
-          </p>
-
-          <div className="lg:flex-1">
-            {/* Tags */}
-            <CaseStudyTags
-              theme={caseStudy.theme}
-              tags={caseStudy.tags as string[]}
-            />
-
-            <meta itemProp="keywords" content={caseStudy.tags.join(', ')} />
-          </div>
-
-          {/* Desktop/Tablet CTA Button */}
-          <div className=" mt-auto ">
-            <Button
-              size="sm"
-              href={`/${locale}/case-studies/${caseStudy.slug}`}
-            >
-              {ctaText()}
-              <ArrowUpRight className="" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Images Grid */}
-        <div className="w-full aspect-[6/3] sm:h-full sm:w-full   ">
-          {caseStudy.images
-            .slice(0, 1)
-            .map((image: ImageType, index: number) => (
-              <CaseStudyImage
-                key={image.url}
-                url={image.url}
-                alt={image.alt}
-                isFirst={index === 0}
-              />
-            ))}
-        </div>
-        {/* Mobile CTA Button */}
-        {/* <div
-          className={cn(
-            'lg:hidden lg:pt-10 sm:py-4 md:px-[20px] sm:px-[20px] sm:pb-10',
-            isIOS ? 'pb-[40px]' : ''
-          )}
+    <>
+      <article
+        className={`flex flex-col rounded-[24px] sm:rounded-[32px] shadow-sm h-full`}
+        style={{
+          color: caseStudy.color,
+          backgroundColor: caseStudy.backgroundColor,
+        }}
+        itemScope
+        itemType="https://schema.org/CreativeWork"
+        role="article"
+      >
+        <Link 
+          href={caseStudyUrl}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full"
+          aria-label={`Read case study: ${caseStudy.title}`}
         >
-          <Button
-            size="xl"
-            href={`/${locale}/case-studies/${caseStudy.slug}`}
-            className="w-full"
+          <div className="flex flex-col h-full p-[20px] sm:p-[40px] gap-[20px]">
+            {/* Title with proper heading hierarchy */}
+            <header>
+              <h2
+                className="text-blue-500 text-[16px] sm:text-[18px] lg:text-[20px] font-medium tracking-[-0.02em]"
+                itemProp="name"
+              >
+                {caseStudy.title}
+              </h2>
+
+              <h3
+                className="text-[24px] sm:text-[26px] lg:text-[48px] font-bold text-gray-600 max-w-xl sm:max-w-2xl sm:max-w-sm leading-[1.2]"
+                style={{ color: caseStudy.color }}
+                itemProp="alternativeHeadline"
+              >
+                {caseStudy.subtitle}
+              </h3>
+            </header>
+
+            {/* Description with proper semantic markup */}
+            <div 
+              className="text-[16px] sm:text-[24px] text-gray-400 line-clamp-4 overflow-hidden leading-[1.2]"
+              itemProp="description"
+            >
+              <p>{caseStudy.description}</p>
+            </div>
+
+            <div className="lg:flex-1">
+              <CaseStudyTags
+                theme={caseStudy.theme}
+                tags={caseStudy.tags as string[]}
+              />
+            </div>
+
+            {/* Desktop/Tablet CTA Button */}
+            <div className="mt-auto">
+              <Button
+                size="sm"
+                href={caseStudyUrl}
+                aria-label={`View ${caseStudy.title} case study details`}
+                className="group"
+              >
+                {ctaText}
+                <ArrowUpRight className="transition-transform group-hover:translate-x-1" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Images Grid with semantic markup */}
+          <div 
+            className="w-full aspect-[6/3] sm:h-full sm:w-full"
+            role="img"
+            aria-label={`${caseStudy.title} preview image`}
           >
-            {ctaText()}
-          </Button>
-        </div> */}
-      </div>
-    </article>
+            {caseStudy.images
+              .slice(0, 1)
+              .map((image: ImageType, index: number) => (
+                <CaseStudyImage
+                  key={image.url}
+                  url={image.url}
+                  alt={image.alt}
+                  isFirst={index === 0}
+                />
+              ))}
+          </div>
+        </Link>
+
+        {/* Add metadata */}
+        <meta itemProp="datePublished" content={caseStudy.createdAt.toISOString()} />
+        <meta itemProp="author" content="ZIRO Healthcare Solutions" />
+        <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
+      </article>
+
+      {/* Add JSON-LD structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(caseStudyJsonLd) }}
+      />
+    </>
   )
 })
 
-// Add display name for better debugging
 CaseStudyCard.displayName = 'CaseStudyCard'
