@@ -12,7 +12,7 @@ import { Locale } from '@/i18n'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { BlogPost } from '@/domain/models/blog-post.model'
-import { logger } from '@/lib/utils/logger'
+import logger from '@/lib/logger'
 
 interface AdminContextType {
   caseStudies: Record<Locale, CaseStudy[]>
