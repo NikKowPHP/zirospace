@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { getBlogPostService } from '@/lib/services/blog-post.service'
 import { BlogPost } from '@/domain/models/blog-post.model'
+import { Suspense } from 'react'
 
 interface PageProps {
   params: {
@@ -22,14 +23,9 @@ export default async function BlogPage({ params }: PageProps) {
   console.log('blogPosts', blogPosts);
   
   return (
-    <div className="mx-auto py-8 border border-red-500 py-[100px]">
-      <h1 className="text-[28px] font-bold text-center mb-[64px]">{t('latest-articles')}</h1>
-      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[32px]">
-        {blogPosts.map((post) => (
-          <BlogPostItem key={post.slug} post={post} locale={locale} />
-        ))}
-      </ul>
-    </div>
+    <Suspense  fallback={<div className=' min-h-[500px]'>Loading...</div>}>
+      <BlogPageContent blogPosts={blogPosts} locale={locale} t={t} />
+    </Suspense>
   )
 }
 
@@ -50,4 +46,18 @@ const BlogPostItem = ({
       </div>
     </Link>
   </li>
+}
+
+const BlogPageContent = ({blogPosts, locale, t}: {blogPosts: BlogPost[], locale: Locale, t: any}) => {
+  return(
+  
+  <div className="mx-auto py-8 border border-red-500 py-[100px]">
+  <h1 className="text-[28px] font-bold text-center mb-[64px]">{t('latest-articles')}</h1>
+  <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[32px]">
+    {blogPosts.map((post) => (
+      <BlogPostItem key={post.slug} post={post} locale={locale} />
+    ))}
+  </ul>
+</div>
+  )
 }

@@ -9,6 +9,7 @@ import { supabase } from '../supabase'
 
 export class CaseStudyRepository {
   private supabaseClient: SupabaseClient
+  private tableName: string = 'zirospace_case_studies'
 
   constructor() {
     this.supabaseClient = supabase
@@ -17,7 +18,7 @@ export class CaseStudyRepository {
   getCaseStudies = unstable_cache(
     async (locale: Locale): Promise<CaseStudy[]> => {
       const { data, error } = await this.supabaseClient
-        .from(`case_studies_${locale}`)
+        .from(`${this.tableName}_${locale}`)
         .select('*')
         .order('created_at', { ascending: false })
 
@@ -39,7 +40,7 @@ export class CaseStudyRepository {
     return unstable_cache(
       async () => {
         const { data, error } = await this.supabaseClient
-          .from(`case_studies_${locale}`)
+          .from(`${this.tableName}_${locale}`)
           .select('*')
           .eq('slug', slug)
           .single()
@@ -61,7 +62,7 @@ export class CaseStudyRepository {
 
   createCaseStudy = async (caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
     const { data, error } = await this.supabaseClient
-      .from(`case_studies_${locale}`)
+      .from(`${this.tableName}_${locale}`)
       .insert(CaseStudyMapper.toPersistence(caseStudy))
       .select()
       .single()
@@ -76,7 +77,7 @@ export class CaseStudyRepository {
 
   updateCaseStudy = async (id: string, caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
     const { data, error } = await this.supabaseClient
-      .from(`case_studies_${locale}`)
+      .from(`${this.tableName}_${locale}`)
       .update(CaseStudyMapper.toPersistence(caseStudy))
       .eq('id', id)
       .select()
@@ -92,7 +93,7 @@ export class CaseStudyRepository {
 
   deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {
     const { error } = await this.supabaseClient
-      .from(`case_studies_${locale}`)
+      .from(`${this.tableName}_${locale}`)
       .delete()
       .eq('id', id)
 

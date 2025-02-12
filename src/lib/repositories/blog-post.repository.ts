@@ -9,17 +9,18 @@ import { IBlogPostRepository } from '@/lib/interfaces/blog-post.interface'
 
 export class BlogPostRepository implements IBlogPostRepository {
   private supabaseClient: SupabaseClient
+  private tableName: string = 'zirospace_blog_posts'
 
   constructor() {
     this.supabaseClient = supabase
   }
 
   getBlogPosts = unstable_cache(
-    async (): Promise<BlogPost[]> => {
+    async (locale: string): Promise<BlogPost[]> => {
       const { data, error } = await this.supabaseClient
-        .from('blog_posts')
+        .from(`${this.tableName}_${locale}`)
         .select('*')
-        .order('createdAt', { ascending: false })
+        .order('created_at', { ascending: false })
 
       if (error) {
         console.error('Error fetching blog posts:', error)
@@ -35,9 +36,9 @@ export class BlogPostRepository implements IBlogPostRepository {
     }
   )
 
-  getBlogPostBySlug = async (slug: string): Promise<BlogPost | null> => {
+  getBlogPostBySlug = async (slug: string, locale: string): Promise<BlogPost | null> => {
     const { data, error } = await this.supabaseClient
-      .from('blog_posts')
+      .from(`${this.tableName}_${locale}`)
       .select('*')
       .eq('slug', slug)
       .single()
@@ -54,18 +55,22 @@ export class BlogPostRepository implements IBlogPostRepository {
     return BlogPostMapper.toDomain(data as BlogPostDTO)
   }
 
-  createBlogPost = async (blogPost: Omit<BlogPost, 'id'>): Promise<BlogPost> => {
+  createBlogPost = async (
+    blogPost: Omit<BlogPost, 'id'>,
+    locale: string
+  ): Promise<BlogPost> => {
     const { data, error } = await this.supabaseClient
-      .from('blog_posts')
+      .from(`${this.tableName}_${locale}`)
       .insert([
         {
           title: blogPost.title,
           slug: blogPost.slug,
-          imageurl: blogPost.imageurl,
-          createdAt: blogPost.createdAt,
-          imageAlt: blogPost.imageAlt,
+          image_url: blogPost.imageurl,
+          image_alt: blogPost.imageAlt,
           excerpt: blogPost.excerpt,
-          contentHtml: blogPost.contentHtml,
+          content_html: blogPost.contentHtml,
+          is_pinned: blogPost.isPinned || false,
+          created_at: blogPost.createdAt,
         },
       ])
       .select()
@@ -79,17 +84,21 @@ export class BlogPostRepository implements IBlogPostRepository {
     return BlogPostMapper.toDomain(data as BlogPostDTO)
   }
 
-  updateBlogPost = async (id: string, blogPost: Partial<BlogPost>): Promise<BlogPost | null> => {
+  updateBlogPost = async (
+    id: string,
+    blogPost: Partial<BlogPost>,
+    locale: string
+  ): Promise<BlogPost | null> => {
     const { data, error } = await this.supabaseClient
-      .from('blog_posts')
+      .from(`${this.tableName}_${locale}`)
       .update({
         title: blogPost.title,
         slug: blogPost.slug,
-        imageurl: blogPost.imageurl,
-        createdAt: blogPost.createdAt,
-        imageAlt: blogPost.imageAlt,
+        image_url: blogPost.imageurl,
+        image_alt: blogPost.imageAlt,
         excerpt: blogPost.excerpt,
-        contentHtml: blogPost.contentHtml,
+        content_html: blogPost.contentHtml,
+        is_pinned: blogPost.isPinned,
       })
       .eq('id', id)
       .select()
@@ -107,9 +116,9 @@ export class BlogPostRepository implements IBlogPostRepository {
     return BlogPostMapper.toDomain(data as BlogPostDTO)
   }
 
-  deleteBlogPost = async (id: string): Promise<boolean> => {
+  deleteBlogPost = async (id: string, locale: string): Promise<boolean> => {
     const { error } = await this.supabaseClient
-      .from('blog_posts')
+      .from(`${this.tableName}_${locale}`)
       .delete()
       .eq('id', id)
 

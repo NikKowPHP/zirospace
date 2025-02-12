@@ -9,14 +9,14 @@ import { ITestimonialRepository } from '../interfaces/testimonials.interface'
 
 export class TestimonialRepository implements ITestimonialRepository {
   private supabaseClient: SupabaseClient
-
+  private tableName: string = 'zirospace_testimonials'
   constructor() {
     this.supabaseClient = supabase
   }
 
   getTestimonials = unstable_cache(
     async (locale: string): Promise<Testimonial[]> => {
-      const tableName = `testimonials_${locale}`
+      const tableName = `${this.tableName}_${locale}`
       const { data, error } = await this.supabaseClient
         .from(tableName)
         .select('*')
@@ -37,7 +37,7 @@ export class TestimonialRepository implements ITestimonialRepository {
   )
 
   getTestimonialById = async (id: string, locale: string): Promise<Testimonial | null> => {
-    const tableName = `testimonials_${locale}`
+    const tableName = `${this.tableName}_${locale}`
     const { data, error } = await this.supabaseClient
       .from(tableName)
       .select('*')
@@ -57,7 +57,7 @@ export class TestimonialRepository implements ITestimonialRepository {
   }
 
   createTestimonial = async (testimonial: Omit<Testimonial, 'id'>, locale: string): Promise<Testimonial> => {
-    const tableName = `testimonials_${locale}`
+    const tableName = `${this.tableName}_${locale}`
     const { data, error } = await this.supabaseClient
       .from(tableName)
       .insert([
@@ -82,7 +82,7 @@ export class TestimonialRepository implements ITestimonialRepository {
   }
 
   updateTestimonial = async (id: string, testimonial: Partial<Testimonial>, locale: string): Promise<Testimonial | null> => {
-    const tableName = `testimonials_${locale}`
+    const tableName = `${this.tableName}_${locale}`
     const { data, error } = await this.supabaseClient
       .from(tableName)
       .update({
@@ -111,7 +111,7 @@ export class TestimonialRepository implements ITestimonialRepository {
   }
 
   deleteTestimonial = async (id: string, locale: string): Promise<boolean> => {
-    const tableName = `testimonials_${locale}`
+    const tableName = `${this.tableName}_${locale}`
     const { error } = await this.supabaseClient
       .from(tableName)
       .delete()

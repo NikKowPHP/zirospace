@@ -9,7 +9,7 @@ import { ICaseStudySliderRepository } from '../interfaces/caseStudySliderReposit
 
 export class CaseStudySliderRepository implements ICaseStudySliderRepository {
   private supabaseClient: SupabaseClient
-
+  private tableName: string = 'zirospace_case_study_sliders'
   constructor() {
       this.supabaseClient = supabase
   }
@@ -17,7 +17,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
   getCaseStudiesSliders = unstable_cache(
     async (): Promise<CaseStudySlider[]> => {
       const { data, error } = await this.supabaseClient
-        .from(`case_studies_sliders`)
+        .from(this.tableName)
         .select('*')
         .order('created_at', { ascending: false })
 
@@ -37,7 +37,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
 
   async createCaseStudySlider(caseStudySlider: CaseStudySlider): Promise<CaseStudySlider> {
     const { data, error } = await this.supabaseClient
-      .from(`case_studies_sliders`)
+      .from(this.tableName)
       .insert([CaseStudySliderMapper.toPersistence(caseStudySlider)])
       .select()
       
@@ -51,7 +51,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
 
   async updateCaseStudySlider(id: string, caseStudySlider: Partial<CaseStudySlider>): Promise<CaseStudySlider | null> {
     const { data, error } = await this.supabaseClient
-      .from(`case_studies_sliders`)
+      .from(this.tableName)
       .update(CaseStudySliderMapper.toPersistence(caseStudySlider))
       .eq('id', id)
       .select()
@@ -70,7 +70,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
 
   async deleteCaseStudySlider(id: string): Promise<void> {
     const { error } = await this.supabaseClient
-      .from(`case_studies_sliders`)
+      .from(this.tableName)
       .delete()
       .eq('id', id)
 
