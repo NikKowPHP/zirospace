@@ -2,13 +2,15 @@ import type { Metadata } from 'next'
 import { Analytics } from "@vercel/analytics/react"
 import { Suspense } from 'react'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ziro.agency';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://ziro.agency'),
+  metadataBase: new URL(`https://${siteUrl}`),
   title: {
-    default: 'ZIRO | Web Design & Development Agency',
-    template: '%s | ZIRO - Professional Web Solutions'
+    default: 'ZIRO | Digital Health Solutions & Development',
+    template: '%s | ZIRO - Healthcare Technology Solutions'
   },
-  description: 'Professional web design and development agency specializing in creating modern, high-performance websites and digital solutions for businesses.',
+  description: 'Transforming healthcare through user-centric digital solutions. Specializing in medical software development, health tech UI/UX, and digital health product design.',
   icons: {
     icon: [
       {
@@ -27,31 +29,42 @@ export const metadata: Metadata = {
       {
         rel: 'mask-icon',
         url: '/safari-pinned-tab.svg',
-        color: '#000000', // Replace with your brand color
+        color: '#000000',
       }
     ]
   },
-  keywords: ['web design', 'web development', 'website design', 'professional web agency', 'digital solutions', 'responsive web design', 'custom web development'],
+  keywords: [
+    'digital health solutions',
+    'healthcare software development',
+    'medical app design',
+    'health tech UI/UX',
+    'digital health products',
+    'healthcare technology',
+    'medical software solutions',
+    'health app development',
+    'patient experience design',
+    'healthcare UX research'
+  ],
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://ziro.agency',
+    url: `https://${siteUrl}`,
     siteName: 'ZIRO',
-    title: 'ZIRO - Professional Web Design & Development Agency',
-    description: 'Transform your digital presence with our expert web design and development services.',
+    title: 'ZIRO - Digital Health Solutions & Development',
+    description: 'Empowering healthcare through innovative digital solutions. We create user-centric medical software and health tech products that enhance patient care and clinical workflows.',
     images: [
       {
         url: '/images/ziro.avif',
         width: 1200,
         height: 630,
-        alt: 'ZIRO Web Design and Development'
+        alt: 'ZIRO Digital Health Solutions'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ZIRO - Web Design & Development Agency',
-    description: 'Professional web design and development services',
+    title: 'ZIRO - Digital Health Solutions & Development',
+    description: 'Creating innovative digital health solutions for better healthcare delivery and patient experience.',
     images: ['/images/ziro.avif']
   },
   robots: {
@@ -66,7 +79,6 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // todo: add google verification code
     google: 'your-google-verification-code',
   },
   manifest: '/manifest.json',
@@ -74,10 +86,11 @@ export const metadata: Metadata = {
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebDesignCompany",
-  "name": "ZIRO Agency",
-  "url": "https://ziro.agency",
-  "logo": "https://ziro.agency/images/ziro.avif",
+  "@type": "HealthcareBusiness",
+  "name": "ZIRO",
+  "url": `https://${siteUrl}`,
+  "logo": `/images/ziro.avif`,
+  "description": "Digital health solutions provider specializing in medical software development and healthcare technology.",
   "sameAs": [
     "https://twitter.com/ziroagency",
     "https://linkedin.com/company/ziroagency"
@@ -85,7 +98,20 @@ const jsonLd = {
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "Poland"
-  }
+  },
+  "knowsAbout": [
+    "Digital Health Solutions",
+    "Healthcare Software Development",
+    "Medical UX Design",
+    "Health Technology",
+    "Patient Experience Design"
+  ],
+  "serviceType": [
+    "Healthcare Software Development",
+    "Digital Health Product Design",
+    "Medical UX/UI Design",
+    "Health Tech Solutions"
+  ]
 }
 
 export default function RootLayout({
@@ -96,7 +122,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href="https://ziro.agency" />
+        <link rel="canonical" href={`https://${siteUrl}`} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

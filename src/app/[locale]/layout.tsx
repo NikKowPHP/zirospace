@@ -48,14 +48,36 @@ export async function generateMetadata({
     title: {
       default:
         locale === 'en'
-          ? 'ZIRO Agency | Professional Web Design & Development'
-          : 'ZIRO Agency | Profesjonalne Projektowanie i Rozwój Stron',
-      template: '%s | ZIRO Agency',
+          ? 'ZIRO | Digital Health Solutions & Development'
+          : 'ZIRO | Rozwiązania Cyfrowe dla Służby Zdrowia',
+      template: '%s | ZIRO Healthcare Technology',
     },
     description:
       locale === 'en'
-        ? 'Expert web design and development services for businesses. Custom solutions, responsive design, and modern web applications.'
-        : 'Profesjonalne usługi projektowania i tworzenia stron internetowych dla firm. Rozwiązania na zamówienie, responsywny design i nowoczesne aplikacje.',
+        ? 'Transforming healthcare through innovative digital solutions. We specialize in medical software development, health tech UI/UX, and patient-centric digital products.'
+        : 'Transformacja ochrony zdrowia poprzez innowacyjne rozwiązania cyfrowe. Specjalizujemy się w tworzeniu oprogramowania medycznego, projektowaniu UI/UX dla sektora zdrowia i rozwiązaniach zorientowanych na pacjenta.',
+    keywords:
+      locale === 'en'
+        ? [
+            'digital health solutions',
+            'healthcare software development',
+            'medical app design',
+            'health tech UI/UX',
+            'patient experience design',
+            'clinical workflow solutions',
+            'healthcare technology',
+            'medical software systems'
+          ]
+        : [
+            'rozwiązania cyfrowe dla zdrowia',
+            'rozwój oprogramowania medycznego',
+            'projektowanie aplikacji medycznych',
+            'technologia medyczna',
+            'doświadczenie pacjenta',
+            'systemy dla służby zdrowia',
+            'informatyka medyczna',
+            'rozwiązania dla klinik'
+          ],
   }
 }
 
