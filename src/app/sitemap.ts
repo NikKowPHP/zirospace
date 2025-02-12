@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { locales } from '@/i18n'
 import { blogPostService } from '@/lib/services/blog-post.service'
+import { caseStudyService } from '@/lib/services/case-study.service'
 
 type ChangeFrequency = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never'
 
@@ -41,6 +42,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Flatten the blog URLs array
   const flattenedBlogUrls = blogUrls.flat()
 
+  // Get all case study pages for each locale
+  const caseStudyUrls = await Promise.all(
+    locales.map(async (locale) => {
+      const caseStudies = await caseStudyService.getCaseStudies(locale)
+      return caseStudies.map(study => ({
+        url: `${baseUrl}/${locale}/case-studies/${study.slug}`,
+        lastModified: study.createdAt,
+        changeFrequency: 'weekly' as ChangeFrequency,
+        priority: 0.7,
+      }))
+    })
+  )
+
+  // Flatten the case study URLs array
+  const flattenedCaseStudyUrls = caseStudyUrls.flat()
+
   // Healthcare-specific routes
   const healthcareRoutes = locales.flatMap(locale => [
     {
@@ -60,6 +77,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...localizedUrls,
     ...flattenedBlogUrls,
+    ...flattenedCaseStudyUrls,
     ...healthcareRoutes
   ]
 }
