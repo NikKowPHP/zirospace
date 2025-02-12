@@ -32,8 +32,11 @@ const healthcareJsonLd = {
     "height": "180"
   },
   "sameAs": [
-    "https://twitter.com/ziroagency",
-    "https://linkedin.com/company/ziroagency"
+    "https://twitter.com/ziro",
+    "https://linkedin.com/company/ziros",
+    "https://www.instagram.com/ziro.space/",
+    "https://www.nikhil.health/",
+    "https://x.com/NikhilSing69944",
   ],
   "description": "Digital health solutions provider specializing in medical software development and healthcare technology innovation.",
   "areaServed": {
@@ -172,7 +175,7 @@ export async function generateMetadata({ params }: { params: { locale: Locale } 
 
   return {
     alternates: {
-      canonical: `https://ziro.agency/${locale}`,
+      canonical: `https://ziro.space/${locale}`,
       languages: {
         'en-US': '/en',
         'pl-PL': '/pl',

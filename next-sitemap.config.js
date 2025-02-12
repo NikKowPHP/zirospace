@@ -1,5 +1,5 @@
 module.exports = {
-  siteUrl: 'https://ziro.agency',
+  siteUrl: 'https://ziro.space',
   generateRobotsTxt: true,
   sitemapSize: 7000,
   changefreq: 'daily',
@@ -7,7 +7,7 @@ module.exports = {
   exclude: ['/server-sitemap.xml'],
   robotsTxtOptions: {
     additionalSitemaps: [
-      'https://ziro.agency/server-sitemap.xml',
+      'https://ziro.space/server-sitemap.xml',
     ],
   },
 } 

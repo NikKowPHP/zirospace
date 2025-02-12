@@ -11,7 +11,7 @@ const withAnalyzer = withBundleAnalyzer({
 const config = {
   // Image optimization
   images: {
-    domains: ['localhost', 'ziro.agency', 'drive.google.com', 'i.ibb.co', 'i.postimg.cc', 'i.ytimg.com'],
+    domains: ['localhost', 'ziro.space', 'drive.google.com', 'i.ibb.co', 'i.postimg.cc', 'i.ytimg.com'],
     deviceSizes: PERFORMANCE_CONFIG.images.deviceSizes,
     imageSizes: PERFORMANCE_CONFIG.images.imageSizes,
     minimumCacheTTL: PERFORMANCE_CONFIG.images.minimumCacheTTL,

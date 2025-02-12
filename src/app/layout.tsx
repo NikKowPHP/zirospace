@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Analytics } from "@vercel/analytics/react"
 import { Suspense } from 'react'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ziro.agency';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ziro.space';
 
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${siteUrl}`),
@@ -92,8 +92,11 @@ const jsonLd = {
   "logo": `/images/ziro.avif`,
   "description": "Digital health solutions provider specializing in medical software development and healthcare technology.",
   "sameAs": [
-    "https://twitter.com/ziroagency",
-    "https://linkedin.com/company/ziroagency"
+    "https://twitter.com/ziro",
+    "https://linkedin.com/company/ziros",
+    "https://www.instagram.com/ziro.space/",
+    "https://www.nikhil.health/",
+    "https://x.com/NikhilSing69944"
   ],
   "address": {
     "@type": "PostalAddress",

@@ -39,7 +39,7 @@ export async function generateMetadata({
 
   return {
     alternates: {
-      canonical: `https://ziro.agency/${locale}`,
+      canonical: `https://ziro.space/${locale}`,
       languages: {
         'en-US': '/en',
         'pl-PL': '/pl',
