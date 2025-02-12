@@ -29,7 +29,7 @@ export function Tag({
           // Outline variant (gray)
           'border border-gray-200 text-gray-600': variant === 'outline',
 
-          'bg-[#171717] text-white border border-gray': variant === 'dark',
+          'bg-[#171717] text-white ': variant === 'dark',
         },
 
         // Sizes

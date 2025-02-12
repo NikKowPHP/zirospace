@@ -14,7 +14,7 @@ export function Navbar() {
 
   return (
     <header 
-      className="sticky top-6 md:top-10  mx-auto border border-red-500    px-[10px]  max-w-full rounded-full left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm "
+      className="sticky top-6 md:top-10  mx-auto   px-[10px]  max-w-full rounded-full left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm "
       itemScope 
       itemType="https://schema.org/WPHeader"
     >
