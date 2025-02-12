@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button/button"
-import { AnalyticsDashboard } from "@/components/analytics/analyticsDashboard"
+// import { AnalyticsDashboard } from "@/components/analytics/analyticsDashboard"
 
 export default function AdminDashboard() {
   return (
@@ -14,10 +14,10 @@ export default function AdminDashboard() {
       </div>
 
       {/* Analytics Dashboard */}
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <h2 className="text-xl font-medium text-gray-900 mb-4">Analytics Overview</h2>
         <AnalyticsDashboard />
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link 
