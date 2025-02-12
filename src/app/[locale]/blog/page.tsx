@@ -12,45 +12,178 @@ interface PageProps {
   }
 }
 
+// Blog JSON-LD
+const blogJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "@id": "https://ziro.space/blog/#blog",
+  "name": "ZIRO Healthcare Technology Blog",
+  "description": "Expert insights on healthcare technology, medical software development, and digital health solutions.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "ZIRO Healthcare Solutions",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ziro.space/images/ziro.avif"
+    }
+  }
+}
+
+// Blog Posts List JSON-LD
+const createBlogListJsonLd = (posts: BlogPost[]) => ({
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "itemListElement": posts.map((post, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "item": {
+      "@type": "BlogPosting",
+      "headline": post.title,
+      "image": post.imageurl,
+      "datePublished": post.createdAt,
+      "author": {
+        "@type": "Organization",
+        "name": "ZIRO Healthcare Solutions"
+      },
+      "url": `https://ziro.space/blog/${post.slug}`
+    }
+  }))
+})
+
+// Breadcrumb JSON-LD
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "Home",
+    "item": "https://ziro.space"
+  }, {
+    "@type": "ListItem",
+    "position": 2,
+    "name": "Blog",
+    "item": "https://ziro.space/blog"
+  }]
+}
+
 const blogPostService = await getBlogPostService();
 
 export default async function BlogPage({ params }: PageProps) {
   const { locale } = await params;
-  
   const t = await getTranslations('blog');
-  
   const blogPosts = await blogPostService.getBlogPosts(locale);
   
   return (
-    <div className="mx-auto py-8  py-[100px]">
-      <h1 className="text-[28px] font-bold text-center mb-[64px]">{t('latest-articles')}</h1>
-      <Suspense fallback={<div className="min-h-[500px]">Loading posts...</div>}>
-        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[32px]">
-          {blogPosts.map((post) => (
-            <BlogPostItem key={post.slug} post={post} locale={locale} />
-          ))}
-        </ul>
-      </Suspense>
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(createBlogListJsonLd(blogPosts)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <div 
+        className="mx-auto py-8 py-[100px]"
+        itemScope 
+        itemType="https://schema.org/Blog"
+      >
+        <meta itemProp="name" content="ZIRO Healthcare Technology Blog" />
+        <meta
+          itemProp="description"
+          content="Latest insights and articles about healthcare technology, medical software development, and digital health solutions."
+        />
+        <meta itemProp="inLanguage" content={locale} />
+        
+        <h1 className="text-[28px] font-bold text-center mb-[64px]">
+          {t('latest-articles')}
+        </h1>
+        
+        <Suspense 
+          fallback={
+            <div className="min-h-[500px]">
+              <span className="sr-only">Loading healthcare articles...</span>
+              Loading posts...
+            </div>
+          }
+        >
+          <ul 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[32px]"
+            itemScope 
+            itemType="https://schema.org/ItemList"
+          >
+            {blogPosts.map((post, index) => (
+              <BlogPostItem 
+                key={post.slug} 
+                post={post} 
+                locale={locale}
+                position={index + 1}
+              />
+            ))}
+          </ul>
+        </Suspense>
+      </div>
+    </>
   )
 }
 
 const BlogPostItem = ({
   post,
   locale,
+  position
 }: {
   post: BlogPost
   locale: Locale
+  position: number
 }) => {
-  return <li  className=" rounded-xl ">
-    <Link href={`/${locale}/blog/${post.slug}`} className="flex flex-col gap-[8px] relative">
-      {post.imageurl && <Image className='w-full h-auto rounded-xl' src={post.imageurl} alt={post.imageAlt!} width={350} height={300} />}
-      <h2 className="text-xl font-semibold  text-center text-[22px]">{post.title}</h2>
-      <div className='absolute top-8  left-8 px-[10px] py-[5px] bg-white rounded-full'>
-        {new Date(post.createdAt).toLocaleDateString()}
-
-      </div>
-    </Link>
-  </li>
+  return (
+    <li 
+      className="rounded-xl"
+      itemScope 
+      itemType="https://schema.org/BlogPosting"
+      itemProp="itemListElement"
+    >
+      <Link 
+        href={`/${locale}/blog/${post.slug}`} 
+        className="flex flex-col gap-[8px] relative"
+        itemProp="url"
+      >
+        {post.imageurl && (
+          <div itemProp="image">
+            <Image 
+              className='w-full h-auto rounded-xl' 
+              src={post.imageurl} 
+              alt={post.imageAlt || post.title}
+              width={350} 
+              height={300}
+              loading="lazy"
+            />
+          </div>
+        )}
+        <h2 
+          className="text-xl font-semibold text-center text-[22px]"
+          itemProp="headline"
+        >
+          {post.title}
+        </h2>
+        <div 
+          className='absolute top-8 left-8 px-[10px] py-[5px] bg-white rounded-full'
+          itemProp="datePublished"
+        >
+          {new Date(post.createdAt).toLocaleDateString(locale, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </div>
+        <meta itemProp="position" content={String(position)} />
+      </Link>
+    </li>
+  )
 }
 
