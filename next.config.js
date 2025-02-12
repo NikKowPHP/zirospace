@@ -1,16 +1,14 @@
-import createNextIntlPlugin from 'next-intl/plugin';
-import withBundleAnalyzer from '@next/bundle-analyzer';
-import { PERFORMANCE_CONFIG } from './src/config/performance';
-import { NextConfig } from 'next';
+const createNextIntlPlugin = require('next-intl/plugin');
+const withBundleAnalyzer = require('@next/bundle-analyzer');
+const { PERFORMANCE_CONFIG } = require('./src/config/performance');
 
 const withNextIntl = createNextIntlPlugin();
-
 const withAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
   openAnalyzer: false,
 });
 
-const config: NextConfig = {
+const config = {
   // Image optimization
   images: {
     domains: ['localhost', 'ziro.agency', 'drive.google.com', 'i.ibb.co', 'i.postimg.cc'],
@@ -26,11 +24,8 @@ const config: NextConfig = {
 
   // Experimental features
   experimental: {
-    // Enable optimizations
     optimizeCss: true,
     scrollRestoration: true,
-    
-    // Configure turbo with proper rules (updated syntax)
     turbo: {
       rules: {
         '*.png': ['file-loader'],
@@ -42,15 +37,12 @@ const config: NextConfig = {
         '@': './src',
       },
     },
-    
     optimizePackageImports: [
       '@heroicons/react',
       '@iconify/react',
       'clsx',
       'tailwind-merge',
     ],
-    
-    // Modern bundling
     webpackBuildWorker: true,
   },
 
@@ -99,22 +91,10 @@ const config: NextConfig = {
       {
         source: '/:path*',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-XSS-Protection', value: '1; mode=block' },
         ],
       },
     ];
@@ -131,10 +111,8 @@ const config: NextConfig = {
     ];
   },
 
-  // Power by header removal
+  // Powered by header removal & React strict mode
   poweredByHeader: false,
-
-  // React strict mode
   reactStrictMode: true,
 };
 
@@ -146,5 +124,5 @@ try {
   require('child_process').execSync('npm install critters');
 }
 
-// Apply plugins
-export default withNextIntl(withAnalyzer(config));
+// Export your configuration using CommonJS
+module.exports = withNextIntl(withAnalyzer(config));
