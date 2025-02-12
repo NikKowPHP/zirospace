@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-
+import logger from '@/lib/logger'
 const YouTube = dynamic(
   () => import('react-youtube').then(mod => mod),
   { ssr: false, loading: () => <div className="w-[200px] h-[150px] bg-gray-100 animate-pulse" /> }
@@ -54,7 +54,7 @@ export const FloatVideo = () => {
             videoId={videoId}
             opts={opts}
             className="w-full h-full"
-            onError={(e) => console.error('YouTube player error:', e)}
+            onError={(e) => logger.log('YouTube player error:', e)}
           />
         )}
       </div>

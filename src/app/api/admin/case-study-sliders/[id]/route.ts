@@ -3,8 +3,7 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
 import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
-import { logger } from '@/lib/utils/logger'
-
+import logger from '@/lib/logger'
 
 export async function DELETE(
   request: NextRequest,
@@ -26,7 +25,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting case study slider:', error)
+    logger.log('Error deleting case study slider:', error)
     return NextResponse.json(
       { 
         error: 'Failed to delete case study slider',
@@ -73,7 +72,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(CaseStudySliderMapper.toPersistence(updatedCaseStudySlider))
   } catch (error) {
-    console.error('Error updating case study slider:', error)
+    logger.log('Error updating case study slider:', error)
     return NextResponse.json(
       { error: 'Failed to update case study slider', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

@@ -6,7 +6,7 @@ import { CaseStudyDTO } from '@/infrastructure/dto/case-study.dto'
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import { CACHE_TAGS, CACHE_TIMES } from '@/lib/utils/cache'
 import { supabase } from '../supabase'
-
+import logger from '@/lib/logger'
 export class CaseStudyRepository {
   private supabaseClient: SupabaseClient
   private tableName: string = 'zirospace_case_studies'
@@ -23,7 +23,7 @@ export class CaseStudyRepository {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('Error fetching case studies:', error)
+        logger.log('Error fetching case studies:', error)
         return []
       }
 
@@ -46,7 +46,7 @@ export class CaseStudyRepository {
           .single()
 
         if (error) {
-          console.error('Error fetching case study:', error)
+          logger.log('Error fetching case study:', error)
           return null
         }
 
@@ -68,7 +68,7 @@ export class CaseStudyRepository {
       .single()
 
     if (error) {
-      console.error('Error creating case study:', error)
+      logger.log('Error creating case study:', error)
       throw error
     }
 
@@ -84,7 +84,7 @@ export class CaseStudyRepository {
       .single()
 
     if (error) {
-      console.error('Error updating case study:', error)
+      logger.log('Error updating case study:', error)
       throw error
     }
 
@@ -98,7 +98,7 @@ export class CaseStudyRepository {
       .eq('id', id)
 
     if (error) {
-      console.error('Error deleting case study:', error)
+      logger.log('Error deleting case study:', error)
       throw error
     }
   }

@@ -3,7 +3,7 @@ import { CaseStudySlider } from '@/domain/models/case-study-slider.model';
 import { ICaseStudySliderRepository } from '../interfaces/caseStudySliderRepository.interface';
 import { Database } from 'sqlite3';
 import { getDatabaseFilePath } from '@/lib/config/database.config';
-
+import logger from '@/lib/logger'
 const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);
 
@@ -78,7 +78,7 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
         updatedAt: new Date(),
       };
     } catch (error: any) {
-      console.error(`Error creating case study slider:`, error);
+      logger.log(`Error creating case study slider:`, error);
       throw new Error(`Failed to create case study slider: ${error.message}`);
     }
   }
@@ -145,7 +145,7 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
   
       return this.getCaseStudySliderById(id);
     } catch (error: any) {
-      console.error(`Error updating case study slider with id ${id}:`, error);
+      logger.log(`Error updating case study slider with id ${id}:`, error);
       throw new Error(`Failed to update case study slider: ${error.message}`);
     }
   }
@@ -165,7 +165,7 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
         });
       });
     } catch (error: any) {
-      console.error(`Error deleting case study slider with id ${id}:`, error);
+      logger.log(`Error deleting case study slider with id ${id}:`, error);
       throw new Error(`Failed to delete case study slider: ${error.message}`);
     }
   }
@@ -196,7 +196,7 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
         images: images,
       };
     } catch (error: any) {
-      console.error(`Error fetching case study slider with id ${id}:`, error);
+      logger.log(`Error fetching case study slider with id ${id}:`, error);
       throw new Error(`Failed to fetch case study slider: ${error.message}`);
     }
   }
@@ -210,7 +210,7 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
 
       this.db.all(query, [], (err, rows: any[]) => {
         if (err) {
-          console.error(`Error listing entities from table "${tableName}":`, err);
+          logger.log(`Error listing entities from table "${tableName}":`, err);
           reject(new Error(`Database error listing entities from table "${tableName}": ${err.message || 'Unknown error'}`));
           return;
         }
@@ -231,7 +231,7 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
       const query = `SELECT * FROM case_study_slider_images WHERE slider_id = ?`;
       this.db.all(query, [sliderId], (err, rows: any[]) => {
         if (err) {
-          console.error(`Error fetching images for slider ${sliderId}:`, err);
+          logger.log(`Error fetching images for slider ${sliderId}:`, err);
           reject(err);
           return;
         }

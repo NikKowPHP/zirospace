@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useAuth } from '@/contexts/auth-context'
+import logger from '@/lib/logger'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -15,7 +16,7 @@ export default function LoginPage() {
       // Navigation is handled in the AuthContext
     } catch (error) {
       // Error handling is managed by the context
-      console.error('Login failed:', error)
+      logger.log('Login failed:', error)
     }
   }
 

@@ -7,7 +7,7 @@ import { locales, type Locale } from '@/i18n'
 import { ClientWrapper } from './client-wrapper'
 import { PageProvider } from '@/contexts/page-context'
 import { Analytics } from '@/components/analytics/analytics'
-
+import logger from '@/lib/logger'
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -95,7 +95,7 @@ export default async function LocaleLayout({
   try {
     messages = (await import(`@/messages/${locale}.json`)).default
   } catch (error) {
-    console.error(error)
+    logger.log(error)
     notFound()
   }
 

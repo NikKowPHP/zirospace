@@ -6,7 +6,7 @@ import { BlogPostDTO } from '@/infrastructure/dto/blog-post.dto'
 import { BlogPostMapper } from '@/infrastructure/mappers/blog-post.mapper'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { IBlogPostRepository } from '@/lib/interfaces/blog-post.interface'
-
+import logger from '@/lib/logger'
 export class BlogPostRepository implements IBlogPostRepository {
   private supabaseClient: SupabaseClient
   private tableName: string = 'zirospace_blog_posts'
@@ -23,7 +23,7 @@ export class BlogPostRepository implements IBlogPostRepository {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('Error fetching blog posts:', error)
+        logger.log('Error fetching blog posts:', error)
         return []
       }
 
@@ -44,7 +44,7 @@ export class BlogPostRepository implements IBlogPostRepository {
       .single()
 
     if (error) {
-      console.error('Error fetching blog post by slug:', error)
+      logger.log('Error fetching blog post by slug:', error)
       return null
     }
 
@@ -77,7 +77,7 @@ export class BlogPostRepository implements IBlogPostRepository {
       .single()
 
     if (error) {
-      console.error('Error creating blog post:', error)
+      logger.log('Error creating blog post:', error)
       throw new Error('Failed to create blog post')
     }
 
@@ -105,7 +105,7 @@ export class BlogPostRepository implements IBlogPostRepository {
       .single()
 
     if (error) {
-      console.error('Error updating blog post:', error)
+      logger.log('Error updating blog post:', error)
       return null
     }
 
@@ -123,7 +123,7 @@ export class BlogPostRepository implements IBlogPostRepository {
       .eq('id', id)
 
     if (error) {
-      console.error('Error deleting blog post:', error)
+      logger.log('Error deleting blog post:', error)
       return false
     }
 

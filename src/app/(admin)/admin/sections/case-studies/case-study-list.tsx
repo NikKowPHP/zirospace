@@ -5,6 +5,7 @@ import { useAdmin } from '@/contexts/admin-context'
 import { CaseStudy } from '@/domain/models/case-study.model'
 import { Locale } from '@/i18n'
 import { CaseStudyForm } from './components/case-study-form'
+import logger from '@/lib/logger'
 
 export function CaseStudyList() {
   const { caseStudies, createCaseStudy, updateCaseStudy, deleteCaseStudy, error, loading } = useAdmin()
@@ -17,7 +18,7 @@ export function CaseStudyList() {
       await createCaseStudy(data, activeLocale)
       setIsCreating(false)
     } catch (error) {
-      console.error('Failed to create case study:', error)
+      logger.log('Failed to create case study:', error)
     }
   }
 
@@ -27,7 +28,7 @@ export function CaseStudyList() {
       await updateCaseStudy(editingStudy.id, data, activeLocale)
       setEditingStudy(null)
     } catch (error) {
-      console.error('Failed to update case study:', error)
+      logger.log('Failed to update case study:', error)
     }
   }
 
@@ -36,7 +37,7 @@ export function CaseStudyList() {
       try {
         await deleteCaseStudy(id, activeLocale)
       } catch (error) {
-        console.error('Failed to delete case study:', error)
+        logger.log('Failed to delete case study:', error)
       }
     }
   }

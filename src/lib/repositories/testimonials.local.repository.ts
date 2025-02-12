@@ -5,7 +5,7 @@ import { ITestimonialRepository } from '../interfaces/testimonials.interface';
 import { Testimonial } from '@/domain/models/testimonial.model';
 import { TestimonialDTO } from '@/infrastructure/dto/testimonial.dto';
 import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper';
-
+import logger from '@/lib/logger'
 const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);
 
@@ -40,7 +40,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
 
       return TestimonialMapper.toDomain(result.rows[0] as TestimonialDTO);
     } catch (error: any) {
-      console.error(`Error fetching testimonial with id ${id} from locale ${locale}:`, error);
+      logger.log(`Error fetching testimonial with id ${id} from locale ${locale}:`, error);
       throw new Error(`Failed to fetch testimonial: ${error.message}`);
     }
   }
@@ -82,7 +82,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
         updatedAt: new Date(),
       };
     } catch (error: any) {
-      console.error(`Error creating testimonial in locale ${locale}:`, error);
+      logger.log(`Error creating testimonial in locale ${locale}:`, error);
       throw new Error(`Failed to create testimonial: ${error.message}`);
     }
   }
@@ -136,7 +136,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
 
       return this.getTestimonialById(id, locale);
     } catch (error: any) {
-      console.error(`Error updating testimonial with id ${id} in locale ${locale}:`, error);
+      logger.log(`Error updating testimonial with id ${id} in locale ${locale}:`, error);
       throw new Error(`Failed to update testimonial: ${error.message}`);
     }
   }
@@ -158,7 +158,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
 
       return true;
     } catch (error: any) {
-      console.error(`Error deleting testimonial with id ${id} in locale ${locale}:`, error);
+      logger.log(`Error deleting testimonial with id ${id} in locale ${locale}:`, error);
       throw new Error(`Failed to delete testimonial: ${error.message}`);
     }
   }
@@ -172,7 +172,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
 
       this.db.all(query, [], (err, rows: any[]) => {
         if (err) {
-          console.error(`Error listing entities from table "${tableName}":`, err);
+          logger.log(`Error listing entities from table "${tableName}":`, err);
           reject(new Error(`Database error listing entities from table "${tableName}": ${err.message || 'Unknown error'}`));
           return;
         }

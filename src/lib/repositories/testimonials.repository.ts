@@ -6,7 +6,7 @@ import { TestimonialDTO } from '@/infrastructure/dto/testimonial.dto'
 import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { ITestimonialRepository } from '../interfaces/testimonials.interface'
-
+import logger from '@/lib/logger'
 export class TestimonialRepository implements ITestimonialRepository {
   private supabaseClient: SupabaseClient
   private tableName: string = 'zirospace_testimonials'
@@ -23,7 +23,7 @@ export class TestimonialRepository implements ITestimonialRepository {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('Error fetching testimonials:', error)
+        logger.log('Error fetching testimonials:', error)
         return []
       }
 
@@ -45,7 +45,7 @@ export class TestimonialRepository implements ITestimonialRepository {
       .single()
 
     if (error) {
-      console.error('Error fetching testimonial by ID:', error)
+      logger.log('Error fetching testimonial by ID:', error)
       return null
     }
 
@@ -74,7 +74,7 @@ export class TestimonialRepository implements ITestimonialRepository {
       .single()
 
     if (error) {
-      console.error('Error creating testimonial:', error)
+      logger.log('Error creating testimonial:', error)
       throw new Error('Failed to create testimonial')
     }
 
@@ -99,7 +99,7 @@ export class TestimonialRepository implements ITestimonialRepository {
       .single()
 
     if (error) {
-      console.error('Error updating testimonial:', error)
+      logger.log('Error updating testimonial:', error)
       return null
     }
 
@@ -118,7 +118,7 @@ export class TestimonialRepository implements ITestimonialRepository {
       .eq('id', id)
 
     if (error) {
-      console.error('Error deleting testimonial:', error)
+      logger.log('Error deleting testimonial:', error)
       return false
     }
 

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
-
+import logger from '@/lib/logger'
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif']
 const MAX_SIZE = 5 * 1024 * 1024 // 5MB
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       url: `/images/case-studies/${folderName}/${filename}` 
     })
   } catch (error) {
-    console.error('Error uploading image:', error)
+    logger.log('Error uploading image:', error)
     return NextResponse.json(
       { error: 'Failed to upload file' },
       { status: 500 }

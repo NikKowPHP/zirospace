@@ -3,7 +3,7 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
-
+import logger from '@/lib/logger'
 export async function POST(request: NextRequest) {
   const { data } = await request.json()
   console.log('data in router ', data)
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(CaseStudySliderMapper.toPersistence(newCaseStudySlider))
   } catch (error) {
-    console.error('Error creating case study slider:', error)
+    logger.log('Error creating case study slider:', error)
     return NextResponse.json(
       { error: 'Failed to create case study slider', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
@@ -38,7 +38,7 @@ export async function GET() {
 
     return NextResponse.json(caseStudySliders.map(CaseStudySliderMapper.toPersistence));
   } catch (error) {
-    console.error('Error retrieving case study sliders:', error)
+    logger.log('Error retrieving case study sliders:', error)
     return NextResponse.json(
       { error: 'Failed to retrieve case study sliders', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

@@ -6,7 +6,7 @@ import { ICaseStudyRepository } from '../interfaces/caseStudyRepository.interfac
 import { SqlLiteAdapter } from '@/lib/repositories/adapters/sqllite.adapter';
 import { Database } from 'sqlite3';
 import { getDatabaseFilePath } from '@/lib/config/database.config';
-
+import logger from '@/lib/logger'
 const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);
 
@@ -29,7 +29,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
 
       this.db.all(query, [], (err, rows: any[]) => {
         if (err) {
-          console.error(`Error listing entities from table "${tableName}":`, err);
+          logger.log(`Error listing entities from table "${tableName}":`, err);
           reject(new Error(`Database error listing entities from table "${tableName}": ${err.message || 'Unknown error'}`));
           return;
         }
@@ -63,7 +63,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
       }
       return CaseStudyMapper.toDomain(result.rows[0] as CaseStudyDTO);
     } catch (error: unknown) {
-      console.error(`Error reading entity from table "case_studies_${locale}" with slug ${slug}:`, error);
+      logger.log(`Error reading entity from table "case_studies_${locale}" with slug ${slug}:`, error);
       throw new Error(`Database error reading entity from table "case_studies_${locale}": ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -90,7 +90,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
 
       this.db.run(query, values, function (err) {
         if (err) {
-          console.error(`Error creating entity in table "${tableName}":`, err);
+          logger.log(`Error creating entity in table "${tableName}":`, err);
           reject(new Error(`Database error creating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
           return;
         }
@@ -99,7 +99,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
         const selectQuery = `SELECT * FROM "${tableName}" WHERE id = ?`;
         db.get(selectQuery, [id], (err, row: any) => {
           if (err) {
-            console.error(`Error retrieving created entity from table "${tableName}":`, err);
+            logger.log(`Error retrieving created entity from table "${tableName}":`, err);
             reject(new Error(`Database error retrieving created entity from table "${tableName}": ${err.message || 'Unknown error'}`));
             return;
           }
@@ -138,7 +138,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
 
       this.db.run(query, [...values, id], function (err) { // Pass values and id
         if (err) {
-          console.error(`Error updating entity in table "${tableName}":`, err);
+          logger.log(`Error updating entity in table "${tableName}":`, err);
           reject(new Error(`Database error updating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
           return;
         }
@@ -146,7 +146,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
         const selectQuery = `SELECT * FROM "${tableName}" WHERE id = ?`;
         db.get(selectQuery, [id], (err, row: any) => {
           if (err) {
-            console.error(`Error retrieving updated entity from table "${tableName}":`, err);
+            logger.log(`Error retrieving updated entity from table "${tableName}":`, err);
             reject(new Error(`Database error retrieving updated entity from table "${tableName}": ${err.message || 'Unknown error'}`));
             return;
           }
@@ -172,7 +172,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
 
       this.db.run(query, [id], function (err) {
         if (err) {
-          console.error(`Error deleting entity from table "${tableName}" with id ${id}:`, err);
+          logger.log(`Error deleting entity from table "${tableName}" with id ${id}:`, err);
           reject(new Error(`Database error deleting entity from table "${tableName}": ${err.message || 'Unknown error'}`));
           return;
         }

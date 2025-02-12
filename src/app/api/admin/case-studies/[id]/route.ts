@@ -3,7 +3,7 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { caseStudyService } from '@/lib/services/case-study.service'
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
-
+import logger from '@/lib/logger'
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }>  }
@@ -21,7 +21,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting case study:', error)
+    logger.log('Error deleting case study:', error)
     return NextResponse.json(
       { 
         error: 'Failed to delete case study',
@@ -59,7 +59,7 @@ export async function PUT(
 
     return NextResponse.json(updatedCaseStudy)
   } catch (error) {
-    console.error('Error updating case study:', error)
+    logger.log('Error updating case study:', error)
     return NextResponse.json(
       { error: 'Failed to update case study', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

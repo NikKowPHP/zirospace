@@ -1,9 +1,9 @@
 import { IAuthService } from '@/domain/services/auth.service'
 import { Session, User, AuthChangeEvent, Subscription } from '@supabase/supabase-js'
-
+import logger from '@/lib/logger'
 export class MockAuthService implements IAuthService {
   async login(email: string, password: string): Promise<{ user: User | null; session: Session | null }> {
-    console.error('login (mocked)', email, password)
+    logger.log('login (mocked)', email, password)
     return {
       user: {
         id: 'mock-user-id',
@@ -31,7 +31,7 @@ export class MockAuthService implements IAuthService {
   }
 
   async logout(): Promise<void> {
-    console.error('logout (mocked)')
+    logger.log('logout (mocked)')
     return;
   }
 

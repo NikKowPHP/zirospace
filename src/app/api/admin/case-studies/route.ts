@@ -3,7 +3,7 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import { caseStudyService } from '@/lib/services/case-study.service'
-
+import logger from '@/lib/logger'
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
   
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newCaseStudy)
   } catch (error) {
-    console.error('Error creating case study:', error)
+    logger.log('Error creating case study:', error)
     return NextResponse.json(
       { error: 'Failed to create case study', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { BlogPostForm } from '../../components/blog-post-form'
 import { useEffect, useState } from 'react'
 import { BlogPost } from '@/domain/models/blog-post.model'
+import logger from '@/lib/logger'
 
 interface Props {
   params: { id: string }
@@ -34,7 +35,7 @@ export default function EditBlogPostPage({params}: Props) {
       await updateBlogPost(id, data, locale)
       router.push('/admin/sections/blog-posts')
     } catch (error) {
-      console.error('Failed to update blog post:', error)
+      logger.log('Failed to update blog post:', error)
     }
   }
 

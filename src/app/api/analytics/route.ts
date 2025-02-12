@@ -1,5 +1,5 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
-
+import logger from '@/lib/logger'
 const analyticsDataClient = new BetaAnalyticsDataClient({
   credentials: {
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
@@ -29,7 +29,7 @@ export async function GET() {
 
     return Response.json({ data: response });
   } catch (error) {
-    console.error('Error fetching GA data:', error);
+    logger.log('Error fetching GA data:', error);
     return Response.json({ error: 'Failed to fetch analytics data' }, { status: 500 });
   }
 }

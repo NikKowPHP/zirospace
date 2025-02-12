@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useAdmin } from '@/contexts/admin-context'
 import { Locale } from '@/i18n'
 import { useRouter } from 'next/navigation'
+import logger from '@/lib/logger'
 
 export function BlogPostList() {
   const { blogPosts, deleteBlogPost, error, loading, updateBlogPost } = useAdmin()
@@ -22,7 +23,7 @@ export function BlogPostList() {
       try {
         await deleteBlogPost(id, activeLocale)
       } catch (error) {
-        console.error('Failed to delete blog post:', error)
+        logger.log('Failed to delete blog post:', error)
       }
     }
   }
@@ -37,7 +38,7 @@ export function BlogPostList() {
       await updateBlogPost(postId, { isPinned: true }, activeLocale);
       setPinnedPostId(postId);
     } catch (error) {
-      console.error('Failed to pin/unpin blog post:', error);
+      logger.log('Failed to pin/unpin blog post:', error);
     }
   };
 

@@ -4,6 +4,8 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
 import { testimonialService } from '@/lib/services/testimonials.service'
 
+import logger from '@/lib/logger'
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -28,7 +30,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting testimonial:', error)
+    logger.log('Error deleting testimonial:', error)
     return NextResponse.json(
       { 
         error: 'Failed to delete testimonial',
@@ -68,7 +70,7 @@ export async function PUT(
 
     return NextResponse.json(TestimonialMapper.toPersistence(updatedTestimonial))
   } catch (error) {
-    console.error('Error updating testimonial:', error)
+    logger.log('Error updating testimonial:', error)
     return NextResponse.json(
       { error: 'Failed to update testimonial', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

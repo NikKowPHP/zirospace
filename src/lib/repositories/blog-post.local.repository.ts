@@ -1,7 +1,7 @@
 import { BlogPost } from '@/domain/models/blog-post.model';
 import { BlogPostMapper } from '@/infrastructure/mappers/blog-post.mapper';
 import { IBlogPostRepository } from '@/lib/interfaces/blog-post.interface';
-
+import logger from '@/lib/logger'
 import { getDatabaseFilePath } from '@/lib/config/database.config';
 import { Database } from 'sqlite3';
 import { SqlLiteAdapter } from './adapters/sqllite.adapter';
@@ -38,7 +38,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
 
       return BlogPostMapper.toDomain(result);
     } catch (error: any) {
-      console.error(`Error fetching blog post with slug ${slug}:`, error);
+      logger.log(`Error fetching blog post with slug ${slug}:`, error);
       throw new Error(`Failed to fetch blog post: ${error.message}`);
     }
   }
@@ -62,7 +62,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
 
       return BlogPostMapper.toDomain(result);
     } catch (error: any) {
-      console.error(`Error fetching blog post with id ${id}:`, error);
+      logger.log(`Error fetching blog post with id ${id}:`, error);
       throw new Error(`Failed to fetch blog post: ${error.message}`);
     }
   }
@@ -98,7 +98,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
         ...blogPost,
       };
     } catch (error: any) {
-      console.error(`Error creating blog post:`, error);
+      logger.log(`Error creating blog post:`, error);
       throw new Error(`Failed to create blog post: ${error.message}`);
     }
   }
@@ -148,7 +148,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
 
       return this.getBlogPostById(id, locale);
     } catch (error: any) {
-      console.error(`Error updating blog post with id ${id}:`, error);
+      logger.log(`Error updating blog post with id ${id}:`, error);
       throw new Error(`Failed to update blog post: ${error.message}`);
     }
   }
@@ -170,7 +170,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
 
       return true;
     } catch (error: any) {
-      console.error(`Error deleting blog post with id ${id}:`, error);
+      logger.log(`Error deleting blog post with id ${id}:`, error);
       throw new Error(`Failed to delete blog post: ${error.message}`);
     }
   }
@@ -182,7 +182,7 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
 
       this.db.all(query, [], (err, rows: any[]) => {
         if (err) {
-          console.error(`Error listing blog posts:`, err);
+          logger.log(`Error listing blog posts:`, err);
           reject(new Error(`Database error listing blog posts: ${err.message || 'Unknown error'}`));
           return;
         }

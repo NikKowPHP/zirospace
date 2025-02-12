@@ -5,6 +5,8 @@ import { useAdmin } from '@/contexts/admin-context'
 import { CaseStudySliderForm } from './components/slider-form'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 
+import logger from '@/lib/logger'
+
 export function CaseStudySliderList() {
   const { 
     caseStudySliders, 
@@ -27,7 +29,7 @@ export function CaseStudySliderList() {
       await createCaseStudySlider(data)
       setIsCreating(false)
     } catch (error) {
-      console.error('Failed to create case study slider:', error)
+      logger.log('Failed to create case study slider:', error)
     }
   }
 
@@ -37,7 +39,7 @@ export function CaseStudySliderList() {
       await updateCaseStudySlider(editingCaseStudySlider.id, data)
       setEditingCaseStudySlider(null)
     } catch (error) {
-      console.error('Failed to update case study slider:', error)
+      logger.log('Failed to update case study slider:', error)
     }
   }
 
@@ -47,7 +49,7 @@ export function CaseStudySliderList() {
         console.log('deleting case study slider', id)
         await deleteCaseStudySlider(id)
       } catch (error) {
-        console.error('Failed to delete case study slider:', error)
+        logger.log('Failed to delete case study slider:', error)
       }
     }
   }

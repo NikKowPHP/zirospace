@@ -5,6 +5,7 @@ import { useAdmin } from '@/contexts/admin-context'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { Locale } from '@/i18n'
 import { TestimonialForm } from './components/testimonials-form'
+import logger from '@/lib/logger'
 
 export function TestimonialList() {
   const { testimonials, createTestimonial, updateTestimonial, deleteTestimonial, error, loading, getTestimonials } = useAdmin()
@@ -21,7 +22,7 @@ export function TestimonialList() {
       await createTestimonial(data, activeLocale)
       setIsCreating(false)
     } catch (error) {
-      console.error('Failed to create testimonial:', error)
+      logger.log('Failed to create testimonial:', error)
     }
   }
 
@@ -31,7 +32,7 @@ export function TestimonialList() {
       await updateTestimonial(editingTestimonial.id, data, activeLocale)
       setEditingTestimonial(null)
     } catch (error) {
-      console.error('Failed to update testimonial:', error)
+      logger.log('Failed to update testimonial:', error)
     }
   }
 
@@ -40,7 +41,7 @@ export function TestimonialList() {
       try {
         await deleteTestimonial(id, activeLocale)
       } catch (error) {
-        console.error('Failed to delete testimonial:', error)
+        logger.log('Failed to delete testimonial:', error)
       }
     }
   }

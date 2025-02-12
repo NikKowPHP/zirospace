@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { getBlogPostService } from '@/lib/services/blog-post.service'
-import { logger } from '@/lib/utils/logger'
 import { BlogPostMapper } from '@/infrastructure/mappers/blog-post.mapper'
-
+import logger from '@/lib/logger'
 const blogPostService = await getBlogPostService()
 
 export async function POST(request: NextRequest) {
@@ -23,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newBlogPost)
   } catch (error) {
-    console.error('Error creating case study:', error)
+    logger.log('Error creating case study:', error)
     return NextResponse.json(
       { error: 'Failed to create blog post', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

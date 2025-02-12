@@ -6,7 +6,7 @@ import { CaseStudySliderDTO } from '@/infrastructure/dto/case-study-slider.dto'
 import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { ICaseStudySliderRepository } from '../interfaces/caseStudySliderRepository.interface'
-
+import logger from '@/lib/logger'
 export class CaseStudySliderRepository implements ICaseStudySliderRepository {
   private supabaseClient: SupabaseClient
   private tableName: string = 'zirospace_case_study_sliders'
@@ -22,7 +22,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('Error fetching case studies:', error)
+        logger.log('Error fetching case studies:', error)
         return []
       }
 
@@ -42,7 +42,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
       .select()
       
     if (error) {
-      console.error('Error creating case study slider:', error)
+      logger.log('Error creating case study slider:', error)
       throw new Error(`Failed to create case study slider: ${error.message}`)
     }
 
@@ -57,7 +57,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
       .select()
 
     if (error) {
-      console.error('Error updating case study slider:', error)
+      logger.log('Error updating case study slider:', error)
       return null
     }
 
@@ -75,7 +75,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
       .eq('id', id)
 
     if (error) {
-      console.error('Error deleting case study slider:', error)
+      logger.log('Error deleting case study slider:', error)
       throw new Error(`Failed to delete case study slider: ${error.message}`)
     }
   }

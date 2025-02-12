@@ -1,5 +1,5 @@
 import { Database } from 'sqlite3';
-
+import logger from '@/lib/logger'
 export interface BaseEntity<ID> {
   id: ID;
 }
@@ -33,7 +33,7 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
 
       this.db.get(query, values, (err, row: T) => {
         if (err) {
-          console.error(`Error creating entity in table "${this.tableName}":`, err);
+          logger.log(`Error creating entity in table "${this.tableName}":`, err);
           reject(new Error(`Database error creating entity in table "${this.tableName}": ${err.message || 'Unknown error'}`));
           return;
         }
@@ -61,7 +61,7 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
 
       this.db.get(query, [id], (err, row: T) => {
         if (err) {
-          console.error(`Error reading entity from table "${this.tableName}" with ID ${id}:`, err);
+          logger.log(`Error reading entity from table "${this.tableName}" with ID ${id}:`, err);
           reject(new Error(`Database error reading entity from table "${this.tableName}": ${err.message || 'Unknown error'}`));
           return;
         }
@@ -93,7 +93,7 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
 
       this.db.get(query, [...values, id], (err, row: T) => {
         if (err) {
-          console.error(`Error updating entity in table "${this.tableName}" with ID ${id}:`, err);
+          logger.log(`Error updating entity in table "${this.tableName}" with ID ${id}:`, err);
           reject(new Error(`Database error updating entity in table "${this.tableName}": ${err.message || 'Unknown error'}`));
           return;
         }
@@ -118,7 +118,7 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
 
       this.db.get(query, [id], (err, row: { id: ID }) => {
         if (err) {
-          console.error(`Error deleting entity from table "${this.tableName}" with ID ${id}:`, err);
+          logger.log(`Error deleting entity from table "${this.tableName}" with ID ${id}:`, err);
           reject(new Error(`Database error deleting entity from table "${this.tableName}": ${err.message || 'Unknown error'}`));
           return;
         }
@@ -140,7 +140,7 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
 
       this.db.all(query, args, (err, rows: T[]) => {
         if (err) {
-          console.error(`Error listing entities from table "${this.tableName}":`, err);
+          logger.log(`Error listing entities from table "${this.tableName}":`, err);
           reject(new Error(`Database error listing entities from table "${this.tableName}": ${err.message || 'Unknown error'}`));
           return;
         }

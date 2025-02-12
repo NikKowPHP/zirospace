@@ -1,6 +1,6 @@
 import { CaseStudy } from '@/domain/models/case-study.model';
 import { CaseStudyDTO } from '../dto/case-study.dto';
-
+import logger from '@/lib/logger'
 export class CaseStudyMapper {
   static toDomain(dto: CaseStudyDTO): CaseStudy {
     // Parse images if they are stored as a JSON string
@@ -10,7 +10,7 @@ export class CaseStudyMapper {
       try {
         images = JSON.parse(dto.images);
       } catch (error) {
-        console.error("Error parsing images JSON:", error);
+        logger.log("Error parsing images JSON:", error);
         images = []; // or handle the error as needed
       }
     }

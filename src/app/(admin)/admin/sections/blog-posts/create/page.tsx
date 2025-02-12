@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { BlogPostForm } from '../components/blog-post-form'
 import { useState } from 'react'
 import { BlogPost } from '@/domain/models/blog-post.model'
+import logger from '@/lib/logger'
 
 export default function NewBlogPostPage() {
   const { createBlogPost, loading } = useAdmin()
@@ -17,7 +18,7 @@ export default function NewBlogPostPage() {
       await createBlogPost(data, activeLocale)
       router.push('/admin/sections/blog-posts')
     } catch (error) {
-      console.error('Failed to create blog post:', error)
+      logger.log('Failed to create blog post:', error)
     }
   }
 

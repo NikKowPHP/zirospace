@@ -3,7 +3,7 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
 import { testimonialService } from '@/lib/services/testimonials.service'
-
+import logger from '@/lib/logger'
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
   
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(TestimonialMapper.toPersistence(newTestimonial))
   } catch (error) {
-    console.error('Error creating testimonial:', error)
+    logger.log('Error creating testimonial:', error)
     return NextResponse.json(
       { error: 'Failed to create testimonial', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(testimonials.map(TestimonialMapper.toPersistence));
   } catch (error) {
-    console.error('Error retrieving testimonials:', error)
+    logger.log('Error retrieving testimonials:', error)
     return NextResponse.json(
       { error: 'Failed to retrieve testimonials', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
