@@ -71,27 +71,3 @@ export function HeroButtons() {
   )
 }
 
-// Add JSON-LD for the CTA section
-export const CTAJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Action",
-  "name": "Healthcare Technology Consultation",
-  "potentialAction": [
-    {
-      "@type": "ViewAction",
-      "name": "Learn More",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://ziro.space/#pricing"
-      }
-    },
-    {
-      "@type": "CommunicateAction",
-      "name": "Book a Call",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://calendly.com/ziro-nikhil/30min"
-      }
-    }
-  ]
-}
