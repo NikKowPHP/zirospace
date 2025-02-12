@@ -17,7 +17,6 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
 
   getCaseStudies = async (locale: Locale): Promise<CaseStudy[]> => {
     const result = await this.list(locale)
-    console.log(result)
     return result
   }
 

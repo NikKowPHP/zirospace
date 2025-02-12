@@ -45,7 +45,6 @@ export function TestimonialList() {
     }
   }
 
-  useEffect(() => { console.log(testimonials) }, [testimonials])
 
   return (
     <div className="space-y-8">

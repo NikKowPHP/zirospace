@@ -22,7 +22,6 @@ export default function EditBlogPostPage({params}: Props) {
   useEffect(() => {
     const { id } = params
     if (id) {
-      console.log('setting locale and id', {locale, id})
       setId(id)
     }
   
@@ -32,7 +31,6 @@ export default function EditBlogPostPage({params}: Props) {
   const handleUpdate = async (data: Partial<BlogPost>) => {
     if (!blogPost) return;
     try {
-      console.log('data to be updated ', data)
       await updateBlogPost(id, data, locale)
       router.push('/admin/sections/blog-posts')
     } catch (error) {

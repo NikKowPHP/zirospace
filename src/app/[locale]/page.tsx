@@ -12,8 +12,9 @@ import {
   Faq,
   StayInformed,
   FloatVideo,
+  TestimonialsSection
 } from '@/helpers/componentsLoad'
-import TestimonialsSection from '@/components/sections/testimonials/testimonials.server'
+
 
 
 

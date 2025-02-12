@@ -37,7 +37,6 @@ export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlid
         new Date().toISOString(),
         new Date().toISOString()
       ];
-      console.log('params in create ', params)
       await new Promise<void>((resolve, reject) => {
         this.db.run(query, params, function (err: Error | null) {
           if (err) {

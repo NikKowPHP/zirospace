@@ -15,7 +15,6 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
 
   async getBlogPosts(locale: string): Promise<BlogPost[]> {
     const blogPosts = await this.list(locale)
-    console.log('blogPosts in repository ', blogPosts)
     return blogPosts
   }
 

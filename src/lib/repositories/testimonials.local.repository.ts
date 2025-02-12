@@ -16,7 +16,6 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
 
   async getTestimonials(locale: string): Promise<Testimonial[]> {
     const result = await this.list(locale)
-    console.log(result)
     return result
   }
 

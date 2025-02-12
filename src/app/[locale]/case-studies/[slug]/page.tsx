@@ -58,10 +58,8 @@ function CaseStudyError() {
 }
 
 // Main component with updated type
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page({ params }: PageProps) {
   const resolvedParams = await params;
-  const resolvedSearchParams = await searchParams;
-  console.log('searchParams', resolvedSearchParams);
   const { slug, locale } = resolvedParams;
   return (
     <Suspense fallback={<CaseStudyLoading />}>

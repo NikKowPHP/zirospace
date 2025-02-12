@@ -25,7 +25,6 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
       if (containerRef.current) {
         const hasHorizontalScroll = 
           containerRef.current.scrollWidth > containerRef.current.clientWidth
-        console.log(hasHorizontalScroll)
         setHasOverflow(hasHorizontalScroll)
       }
     }

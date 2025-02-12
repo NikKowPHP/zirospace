@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Analytics } from "@vercel/analytics/react"
+import { Suspense } from 'react'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ziro.agency'),
@@ -102,7 +103,10 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <Suspense>
           {children}
+
+        </Suspense>
         <Analytics mode="production" debug={false} />
       </body>
     </html>

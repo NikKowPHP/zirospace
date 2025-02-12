@@ -34,7 +34,6 @@ export function CaseStudySliderList() {
   const handleUpdate = async (data: Partial<CaseStudySlider>) => {
     if (!editingCaseStudySlider) return
     try {
-      console.log('editing case study slider id with data', {id: editingCaseStudySlider.id, data})
       await updateCaseStudySlider(editingCaseStudySlider.id, data)
       setEditingCaseStudySlider(null)
     } catch (error) {
@@ -53,7 +52,6 @@ export function CaseStudySliderList() {
     }
   }
 
-  useEffect(() => { console.log(caseStudySliders) }, [caseStudySliders])
 
   return (
     <div className="space-y-8">

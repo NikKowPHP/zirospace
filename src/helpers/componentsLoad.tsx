@@ -106,3 +106,11 @@ export  const FloatVideo = dynamic(
     ssr: true,
   }
 )
+
+export const TestimonialsSection = dynamic(
+  () => import('@/components/sections/testimonials/testimonials.server'),
+  {
+    ssr: true,
+  }
+)
+

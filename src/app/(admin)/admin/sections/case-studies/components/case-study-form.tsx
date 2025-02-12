@@ -164,7 +164,6 @@ export function CaseStudyForm({
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
 
-    console.log(formData.get('slug'))
 
     await onSubmit({
       id: study?.id || '',

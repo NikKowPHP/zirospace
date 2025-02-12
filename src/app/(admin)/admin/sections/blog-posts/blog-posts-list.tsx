@@ -41,9 +41,6 @@ export function BlogPostList() {
     }
   };
 
-  useEffect(() => {
-    console.log(blogPosts)
-  }, [blogPosts])
 
   return (
     <div className="space-y-8">
