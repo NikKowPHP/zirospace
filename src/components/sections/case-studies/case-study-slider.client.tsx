@@ -103,7 +103,7 @@ export function CaseStudySliderClient({ caseStudySlider }: CaseStudySliderProps)
           {caseStudySlider.images.map((image: CaseStudyImage) => (
             <div 
               key={image.id} 
-              className="flex-none w-[700px] max-h-[415px]"
+              className="flex-none w-[700px]  aspect-[6/4] max-h-[415px]"
             >
               <Image 
                 src={image.image} 

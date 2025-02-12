@@ -105,7 +105,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
 
   return (
     <article
-      className={`flex flex-col border border-gray-700 rounded-[24px] sm:rounded-[32px] border border-gray-200 shadow-sm h-full`}
+      className={`flex flex-col  rounded-[24px] sm:rounded-[32px] border border-gray-200 shadow-sm h-full`}
       style={{
         color: caseStudy.color,
         backgroundColor: caseStudy.backgroundColor,
@@ -165,7 +165,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
         </div>
 
         {/* Images Grid */}
-        <div className="w-full h-[250px] sm:h-full sm:w-full   ">
+        <div className="w-full aspect-[6/3] sm:h-full sm:w-full   ">
           {caseStudy.images
             .slice(0, 1)
             .map((image: ImageType, index: number) => (
