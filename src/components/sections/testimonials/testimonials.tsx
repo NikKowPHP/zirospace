@@ -80,7 +80,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
   };
 
   return (
-    <section className="py-[100px] relative border border-gray-700 ">
+    <section className="py-[100px] relative   ">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex flex-col items-center mb-10 sm:mb-12 gap-[12px]">
 

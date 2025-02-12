@@ -13,7 +13,7 @@ export const WhyUs = async () => {
       }
     >
 
-     <section className="flex flex-col border border-gray-500 items-center text-center   py-[100px] "
+     <section className="flex flex-col   items-center text-center   py-[100px] "
      itemScope
      itemType="https://schema.org/WebPageElement"
    >

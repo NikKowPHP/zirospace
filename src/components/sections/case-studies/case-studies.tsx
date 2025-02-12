@@ -30,7 +30,7 @@ export async function CaseStudies({ locale }: CaseStudiesProps) {
   const t = await getTranslations('caseStudiesSection')
 
   return (
-    <section id="work" className="relative overflow-hidden bg-white border border-gray-700 py-[100px]">
+    <section id="work" className="relative overflow-hidden bg-white   py-[100px]">
       <CaseStudiesTitleSubtitle t={t} />
       <Suspense fallback={<CaseStudiesLoader />}>
         <CaseStudyList caseStudies={caseStudies} locale={locale} />
@@ -68,7 +68,7 @@ const CaseStudyList = memo(function CaseStudyList({
   locale: Locale
 }) {
   return (
-    <div className="relative mx-auto border border-red-500 flex flex-col gap-16 max-w-5xl">
+    <div className="relative mx-auto  flex flex-col gap-16 max-w-5xl">
       {caseStudies.map((caseStudy) => (
         <CaseStudyCard key={caseStudy.id} caseStudy={caseStudy} locale={locale} />
       ))}

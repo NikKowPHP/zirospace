@@ -8,7 +8,7 @@ export function Footer() {
 
   return (
     <footer
-      className="bg-gray-50 w-full  border border-red-500  rounded-primary-lg py-12 px-2 sm:py-18  sm:px-20"
+      className="bg-gray-50 w-full   rounded-primary-lg py-12 px-2 sm:py-18  sm:px-20"
       itemScope
       itemType="https://schema.org/Organization"
     >
@@ -43,7 +43,7 @@ export function Footer() {
           </div>
 
           {/* Right Column - Links */}
-          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-12  mt-12 border border-red-500">
+          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-12  mt-12 ">
             <div className="flex flex-col gap-4">
               {footerConfig.mainNav.map((item, index) => (
                 <div key={index}>
