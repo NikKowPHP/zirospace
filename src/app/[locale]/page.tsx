@@ -14,75 +14,54 @@ import {
   FloatVideo,
   TestimonialsSection
 } from '@/helpers/componentsLoad'
+import { companyConfig } from '@/config/company'
 
 interface HomePageProps {
   params: Promise<{ locale: Locale }>
 }
 
-const healthcareJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://ziro.space/#organization",
-  "name": "ZIRO Healthcare Solutions",
-  "url": "https://ziro.space",
-  "logo": {
-    "@type": "ImageObject",
-    "url": "https://ziro.space/images/ziro.avif",
-    "width": "180",
-    "height": "180"
+// Centralize JSON-LD data
+const jsonLdData = {
+  organization: {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${companyConfig.url}/#organization`,
+    "name": companyConfig.name,
+    "url": companyConfig.url,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${companyConfig.url}/images/ziro.avif`,
+      "width": "180",
+      "height": "180"
+    },
+    "sameAs": Object.values(companyConfig.social),
+    "description": companyConfig.description,
+    "areaServed": {
+      "@type": "Country",
+      "name": "Poland"
+    },
+    "knowsAbout": companyConfig.expertise
   },
-  "sameAs": [
-    "https://twitter.com/ziro",
-    "https://linkedin.com/company/ziros",
-    "https://www.instagram.com/ziro.space/",
-    "https://www.nikhil.health/",
-    "https://x.com/NikhilSing69944",
-  ],
-  "description": "Digital health solutions provider specializing in medical software development and healthcare technology innovation.",
-  "areaServed": {
-    "@type": "Country",
-    "name": "Poland"
+  service: {
+    "@context": "https://schema.org",
+    "@type": "MedicalBusiness",
+    "name": `${companyConfig.name} Services`,
+    "serviceType": companyConfig.services,
+    "audience": {
+      "@type": "Audience",
+      "audienceType": companyConfig.audience
+    }
   },
-  "knowsAbout": [
-    "Healthcare Software Development",
-    "Medical Technology",
-    "Digital Health Solutions",
-    "Patient Experience Design",
-    "Clinical Workflow Optimization"
-  ]
-}
-
-const healthcareServiceJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "MedicalBusiness",
-  "name": "ZIRO Healthcare Technology Services",
-  "serviceType": [
-    "Healthcare Software Development",
-    "Medical UX/UI Design",
-    "Digital Health Solutions",
-    "Clinical Workflow Systems"
-  ],
-  "audience": {
-    "@type": "Audience",
-    "audienceType": [
-      "Healthcare Providers",
-      "Medical Clinics",
-      "Hospitals",
-      "Healthcare Professionals"
-    ]
+  breadcrumb: {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": companyConfig.url
+    }]
   }
-}
-
-// Breadcrumb JSON-LD
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [{
-    "@type": "ListItem",
-    "position": 1,
-    "name": "Home",
-    "item": "https://ziro.space"
-  }]
 }
 
 export default async function HomePage({ params }: HomePageProps) {
@@ -95,77 +74,63 @@ export default async function HomePage({ params }: HomePageProps) {
         itemScope
         itemType="https://schema.org/WebPage"
       >
-        <meta itemProp="name" content="ZIRO Healthcare Technology Solutions" />
-        <meta
-          itemProp="description"
-          content="Innovative digital health solutions and medical software development for modern healthcare providers."
-        />
-        <meta
-          itemProp="keywords"
-          content="healthcare technology, medical software, digital health solutions, patient experience design, clinical workflow systems, healthcare UX/UI, medical app development"
-        />
-        <meta itemProp="image" content="/images/ziro.avif" />
-        <meta itemProp="datePublished" content="2024-01-01" />
-        <meta itemProp="dateModified" content={new Date().toISOString().split('T')[0]} />
-        <meta itemProp="author" content="ZIRO Healthcare Solutions" />
-        <meta itemProp="inLanguage" content={locale} />
+        {/* Priority Content for LCP */}
+        <HeroSection />
 
+        {/* Deferred Content */}
         <div className="relative">
-          <HeroSection />
-
           <Suspense fallback={<div className="min-h-[300px]" />}>
             <SubheroSection />
           </Suspense>
 
-          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
-            <OurProcess />
+          {/* Group related sections */}
+          <Suspense fallback={<div className="min-h-[700px]" />}>
+            <div>
+              <OurProcess />
+              <OurServices />
+            </div>
           </Suspense>
 
-          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
-            <OurServices />
-          </Suspense>
-          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
+          {/* Defer less critical sections */}
+          <Suspense fallback={<div className="min-h-[300px]" />}>
             <TestimonialsSection locale={locale} />
           </Suspense>
 
-          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
+          <Suspense fallback={<div className="min-h-[300px]" />}>
             <CaseStudies locale={locale} />
           </Suspense>
 
-          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
-            <WhyUs />
+          {/* Group remaining sections */}
+          <Suspense fallback={<div className="min-h-[900px]" />}>
+            <div>
+              <WhyUs />
+              <Philosophy />
+              <Faq />
+              <StayInformed />
+            </div>
           </Suspense>
 
-          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
-            <Philosophy />
-          </Suspense>
-
-          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
-            <Faq />
-          </Suspense>
-
-          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
-            <StayInformed />
-          </Suspense>
-
-          <Suspense fallback={<div className="" />}>
+          {/* Load floating video last */}
+          <Suspense fallback={null}>
             <FloatVideo />
           </Suspense>
         </div>
+
+        {/* Metadata */}
+        <meta itemProp="name" content={companyConfig.name} />
+        <meta itemProp="description" content={companyConfig.description} />
+        <meta itemProp="image" content="/images/ziro.avif" />
+        <meta itemProp="dateModified" content={new Date().toISOString().split('T')[0]} />
       </div>
 
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(healthcareJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(healthcareServiceJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
+      {/* Structured Data */}
+      {Object.values(jsonLdData).map((data, index) => (
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+        />
+      ))}
     </>
   )
 }
