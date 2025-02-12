@@ -87,18 +87,6 @@ export default async function HomePage({ params }: HomePageProps) {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(healthcareJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(healthcareServiceJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
       <div
         className="relative overflow-hidden min-h-screen bg-white"
         itemScope
@@ -120,97 +108,108 @@ export default async function HomePage({ params }: HomePageProps) {
         <meta itemProp="inLanguage" content={locale} />
 
         <div className="relative">
-          <Suspense
-            fallback={
-              <div className="flex items-center justify-center min-h-[200px]">
-                <span className="sr-only">Loading healthcare solutions...</span>
-                Loading...
-              </div>
-            }
-          >
-            <HeroSection />
-          </Suspense>
+          <HeroSection />
 
-          <Suspense
-            fallback={
-              <div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />
-            }
-          >
+          <Suspense fallback={<div className="min-h-[300px]" />}>
             <SubheroSection />
           </Suspense>
 
-          <Suspense
-            fallback={
-              <div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />
-            }
-          >
+          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
             <OurProcess />
           </Suspense>
 
-          <Suspense
-            fallback={
-              <div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />
-            }
-          >
+          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
             <OurServices />
           </Suspense>
-          <Suspense
-            fallback={
-              <div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />
-            }
-          >
+          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
             <TestimonialsSection locale={locale} />
           </Suspense>
 
-          <Suspense
-            fallback={
-              <div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />
-            }
-          >
+          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
             <CaseStudies locale={locale} />
           </Suspense>
 
-          <Suspense
-            fallback={
-              <div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />
-            }
-          >
+          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
             <WhyUs />
           </Suspense>
 
-          <Suspense
-            fallback={
-              <div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />
-            }
-          >
+          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
             <Philosophy />
           </Suspense>
 
-          <Suspense
-            fallback={
-              <div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />
-            }
-          >
+          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
             <Faq />
           </Suspense>
 
-          <Suspense
-            fallback={
-              <div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />
-            }
-          >
+          <Suspense fallback={<div className="min-h-[300px] sm:min-h-[350px] lg:min-h-[400px]" />}>
             <StayInformed />
           </Suspense>
 
-          <Suspense
-            fallback={
-              <div className="" />
-            }
-          >
+          <Suspense fallback={<div className="" />}>
             <FloatVideo />
           </Suspense>
         </div>
       </div>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(healthcareJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(healthcareServiceJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
     </>
   )
+}
+
+export async function generateMetadata({ params }: { params: { locale: Locale } }) {
+  const { locale } = params
+
+  return {
+    alternates: {
+      canonical: `https://ziro.agency/${locale}`,
+      languages: {
+        'en-US': '/en',
+        'pl-PL': '/pl',
+      },
+    },
+    title: {
+      default:
+        locale === 'en'
+          ? 'ZIRO | Digital Health Solutions & Development'
+          : 'ZIRO | Rozwiązania Cyfrowe dla Służby Zdrowia',
+      template: '%s | ZIRO Healthcare Technology',
+    },
+    description:
+      locale === 'en'
+        ? 'Transforming healthcare through innovative digital solutions. We specialize in medical software development, health tech UI/UX, and patient-centric digital products.'
+        : 'Transformacja ochrony zdrowia poprzez innowacyjne rozwiązania cyfrowe. Specjalizujemy się w tworzeniu oprogramowania medycznego, projektowaniu UI/UX dla sektora zdrowia i rozwiązaniach zorientowanych na pacjenta.',
+    keywords:
+      locale === 'en'
+        ? [
+            'digital health solutions',
+            'healthcare software development',
+            'medical app design',
+            'health tech UI/UX',
+            'patient experience design',
+            'clinical workflow solutions',
+            'healthcare technology',
+            'medical software systems',
+          ]
+        : [
+            'rozwiązania cyfrowe dla zdrowia',
+            'rozwój oprogramowania medycznego',
+            'projektowanie aplikacji medycznych',
+            'technologia medyczna',
+            'doświadczenie pacjenta',
+            'systemy dla służby zdrowia',
+            'informatyka medyczna',
+            'rozwiązania dla klinik',
+          ],
+  }
 }
