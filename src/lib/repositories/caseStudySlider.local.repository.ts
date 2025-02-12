@@ -3,7 +3,6 @@ import { CaseStudySlider } from '@/domain/models/case-study-slider.model';
 import { ICaseStudySliderRepository } from '../interfaces/caseStudySliderRepository.interface';
 import { Database } from 'sqlite3';
 import { getDatabaseFilePath } from '@/lib/config/database.config';
-import { Locale } from '@/i18n';
 
 const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);

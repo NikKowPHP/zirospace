@@ -24,6 +24,30 @@ export default function NewBlogPostPage() {
   return (
     <div>
       <h1>New Blog Post</h1>
+
+      <div className="flex space-x-4 mb-4">
+        <button
+          onClick={() => setActiveLocale('en')}
+          className={`px-6 py-3 rounded-full transition-colors ${
+            activeLocale === 'en'
+              ? 'bg-primary text-white'
+              : 'bg-secondary text-gray-700 hover:bg-secondary/80'
+          }`}
+        >
+          English
+        </button>
+        <button
+          onClick={() => setActiveLocale('pl')}
+          className={`px-6 py-3 rounded-full transition-colors ${
+            activeLocale === 'pl'
+              ? 'bg-primary text-white'
+              : 'bg-secondary text-gray-700 hover:bg-secondary/80'
+          }`}
+        >
+          Polish
+        </button>
+      </div>
+
       <BlogPostForm
         locale={activeLocale}
         onSubmit={handleCreate}

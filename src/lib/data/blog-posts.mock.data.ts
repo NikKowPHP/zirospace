@@ -52,6 +52,7 @@ export const blogPosts: BlogPost[] = [
         <h2>Conclusion</h2>
         <p>Thank you for reading our first blog post! We hope you found it informative and helpful. Stay tuned for more articles on web development.</p>
       `,
+      isPinned:true
     },
     {
       id: 'blog-post-2',
@@ -62,6 +63,7 @@ export const blogPosts: BlogPost[] = [
       imageAlt: 'Second Blog Post',
       excerpt: '<p><em>Excerpt:</em> A detailed exploration of Next.js features and best practices for building modern web applications.</p>',
       contentHtml: '<p>In this post, we delve into the advanced features of Next.js, including server-side rendering, static site generation, and API routes. We will also cover performance optimization techniques and deployment strategies.</p><img src="/images/case-studies/gsense/gsense.avif" alt="Next.js" /><p>Learn how to leverage Next.js to create fast, scalable, and SEO-friendly web applications.</p>',
+      isPinned:false
     },
     {
       id: 'blog-post-3',
@@ -72,5 +74,6 @@ export const blogPosts: BlogPost[] = [
       imageAlt: 'Third Blog Post',
       excerpt: '<p><em>Excerpt:</em> An overview of the emerging trends and technologies that are shaping the future of web development.</p>',
       contentHtml: '<p>This post explores the latest trends in web development, such as WebAssembly, serverless computing, and progressive web apps. We will discuss how these technologies are transforming the way we build and deploy web applications.</p><img src="/images/case-studies/gsense/gsense.avif" alt="Web Development Trends" /><p>Stay ahead of the curve by understanding the technologies that will define the future of the web.</p>',
+      isPinned:false
     },
   ]

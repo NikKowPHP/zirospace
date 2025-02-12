@@ -1,6 +1,6 @@
 'use client'
 
-import { memo, useEffect, useState } from 'react'
+import { memo } from 'react'
 import { Button } from '@/components/ui/button/button'
 import { Tag } from '@/components/ui/tag/tag'
 import { cn } from '@/lib/utils/cn'
@@ -9,7 +9,7 @@ import Image from 'next/image'
 import { type Image as ImageType } from '@/domain/models/case-study.model'
 import { type CaseStudy } from '@/domain/models/case-study.model'
 import { Locale } from '@/i18n'
-import { ArrowBigRightIcon, ArrowUpRight } from 'lucide-react'
+import {ArrowUpRight } from 'lucide-react'
 
 interface CaseStudyCardProps {
   caseStudy: CaseStudy
@@ -88,15 +88,8 @@ export const CaseStudyCard = memo(function CaseStudyCard({
   locale,
 }: CaseStudyCardProps) {
   const t = useTranslations()
-  const [isIOS, setIsIOS] = useState(false)
 
-  useEffect(() => {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    console.log(isIOS)
-    if (isIOS) {
-      setIsIOS(true)
-    }
-  }, [])
+
 
   // Use a default translation key if the custom one fails
   const ctaText = () => {

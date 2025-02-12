@@ -3,7 +3,6 @@ import { type Locale } from '@/i18n'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { Button } from '@/components/ui/button/button'
 import { caseStudyService } from '@/lib/services/case-study.service'
 
 interface PageProps {
@@ -154,7 +153,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
               </div>
             </div>
 
-            <div className=" mb-[50px]">
+            {/* <div className=" mb-[50px]">
               <Button
                 href={caseStudy.ctaUrl}
                 variant="primary"
@@ -165,7 +164,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                 {caseStudy.ctaText}
                 <span className="ml-2">→</span>
               </Button>
-            </div>
+            </div> */}
 
 
           </div>

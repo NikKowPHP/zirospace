@@ -59,7 +59,7 @@ export class CaseStudyRepository {
     )()
   }
 
-  createCaseStudy = async (caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+  createCaseStudy = async (caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
     const { data, error } = await this.supabaseClient
       .from(`case_studies_${locale}`)
       .insert(CaseStudyMapper.toPersistence(caseStudy))

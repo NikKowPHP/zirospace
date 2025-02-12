@@ -1,11 +1,8 @@
 import { Locale } from "@/i18n"
 import { CaseStudyRepository } from "../repositories/caseStudy.repository"
 import { CaseStudy } from "@/domain/models/case-study.model"
-// import { mockCaseStudyRepository } from "../__mocks__/caseStudyRepository.mock"
 import { caseStudyRepositoryLocal } from "../repositories/caseStudy.local.repository"
 import { ICaseStudyRepository } from "../interfaces/caseStudyRepository.interface"
-import { CaseStudyDTO } from "@/infrastructure/dto/case-study.dto"
-import { CaseStudyMapper } from "@/infrastructure/mappers/case-study.mapper"
 
 
 const caseStudyRepository = new CaseStudyRepository()
@@ -30,7 +27,7 @@ export class CaseStudyService {
     return this.caseStudyRepository.getCaseStudyBySlug(slug, locale)
   }
 
-  createCaseStudy = async (caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+  createCaseStudy = async (caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
     return this.caseStudyRepository.createCaseStudy(caseStudy, locale)
   }
 

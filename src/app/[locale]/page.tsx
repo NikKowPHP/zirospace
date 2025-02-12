@@ -6,7 +6,6 @@ import {
   SubheroSection,
   OurProcess,
   OurServices,
-  Testimonials,
   CaseStudies,
   WhyUs,
   Philosophy,

@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
-import { Textarea } from '@/components/ui/textarea/textarea'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Locale } from '@/i18n'
 import React from 'react'
@@ -22,7 +21,6 @@ interface BlogPostFormProps {
 
 export function BlogPostForm({
   post,
-  locale,
   onSubmit,
   onCancel,
   loading,

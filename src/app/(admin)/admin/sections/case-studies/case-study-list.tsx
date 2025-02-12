@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import {  useState } from 'react'
 import { useAdmin } from '@/contexts/admin-context'
 import { CaseStudy } from '@/domain/models/case-study.model'
 import { Locale } from '@/i18n'

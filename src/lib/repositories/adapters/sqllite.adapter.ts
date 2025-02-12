@@ -1,4 +1,3 @@
-import sqlite3 from 'sqlite3';
 import { Database } from 'sqlite3';
 
 export interface BaseEntity<ID> {
@@ -133,13 +132,13 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
    * @returns {Promise<T[]>} - An array of all entities in the table.
    * @throws {Error} - If there's a database error during listing.
    */
-  async list(): Promise<T[]> {
+  async list(...args: any[]): Promise<T[]> {
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM "${this.tableName}";
       `;
 
-      this.db.all(query, [], (err, rows: T[]) => {
+      this.db.all(query, args, (err, rows: T[]) => {
         if (err) {
           console.error(`Error listing entities from table "${this.tableName}":`, err);
           reject(new Error(`Database error listing entities from table "${this.tableName}": ${err.message || 'Unknown error'}`));

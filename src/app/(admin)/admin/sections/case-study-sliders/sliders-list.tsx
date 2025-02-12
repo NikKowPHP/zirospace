@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useAdmin } from '@/contexts/admin-context'
-import { Locale } from '@/i18n'
 import { CaseStudySliderForm } from './components/slider-form'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 

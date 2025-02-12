@@ -5,7 +5,6 @@ import { IBlogPostRepository } from '@/lib/interfaces/blog-post.interface';
 import { getDatabaseFilePath } from '@/lib/config/database.config';
 import { Database } from 'sqlite3';
 import { SqlLiteAdapter } from './adapters/sqllite.adapter';
-import { BlogPostDTO } from '@/infrastructure/dto/blog-post.dto';
 const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);
 

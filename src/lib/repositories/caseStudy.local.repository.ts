@@ -69,7 +69,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
     }
   }
 
-  createCaseStudy = async (caseStudy: CaseStudy, locale: Locale): Promise<CaseStudy> => {
+  createCaseStudy = async (caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
     const tableName = `case_studies_${locale}`;
     const dto = CaseStudyMapper.toPersistence(caseStudy);
 

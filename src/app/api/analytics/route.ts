@@ -1,4 +1,3 @@
-import { google } from '@google-analytics/data/build/protos/protos';
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
 const analyticsDataClient = new BetaAnalyticsDataClient({

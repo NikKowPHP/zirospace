@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
-import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import { getBlogPostService } from '@/lib/services/blog-post.service'
 import { logger } from '@/lib/utils/logger'
 import { BlogPostMapper } from '@/infrastructure/mappers/blog-post.mapper'

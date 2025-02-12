@@ -15,7 +15,6 @@ interface TestimonialFormProps {
 
 export function TestimonialForm({
   testimonial,
-  locale,
   onSubmit,
   onCancel,
   loading
