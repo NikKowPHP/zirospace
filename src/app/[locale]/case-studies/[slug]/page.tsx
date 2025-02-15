@@ -90,12 +90,6 @@ function CaseStudyError() {
         <p className="text-gray-600 mb-8">
           We couldn&apos;t load the case study. Please try again later.
         </p>
-        <Link
-          href="/case-studies"
-          className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition"
-        >
-          Back to Case Studies
-        </Link>
       </div>
     </div>
   )
@@ -188,15 +182,13 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
           itemType="https://schema.org/Article"
         >
           {/* Breadcrumb navigation */}
-          <nav aria-label="Breadcrumb" className="mb-4">
+          {/* <nav aria-label="Breadcrumb" className="mb-4">
             <ol className="flex space-x-2 text-sm text-gray-500">
               <li><Link href={`/${locale}`}>Home</Link></li>
               <li>/</li>
-              <li><Link href={`/${locale}/case-studies`}>Case Studies</Link></li>
-              <li>/</li>
               <li aria-current="page">{caseStudy.title}</li>
             </ol>
-          </nav>
+          </nav> */}
 
           {/* Hero Section */}
           <header className="container mx-auto pt-32 pb-[50px]">

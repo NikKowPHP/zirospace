@@ -25,6 +25,7 @@ export class CaseStudyMapper {
       typeof dto.tags === 'string'
         ? (dto.tags as string).split(',').map((tag: string) => tag.trim())
         : dto.tags ? [...dto.tags] : [];
+    logger.log('tags' , tags);
 
     return {
       id: dto.id,
@@ -50,6 +51,7 @@ export class CaseStudyMapper {
   
     console.log('domain in toPersistence', domain)
     const isDevelopment = process.env.NODE_ENV === 'development';
+    logger.log('domain tags to proceed', domain.tags);
 
     return {
       id: domain.id,
@@ -59,9 +61,9 @@ export class CaseStudyMapper {
       description: domain.description,
       // Ensure tags are persisted in the desired format
       tags: domain.tags
-        ? isDevelopment
+        // ? isDevelopment
           ? (domain.tags.join(',') as any)
-          : [...domain.tags]
+          // : [...domain.tags]
         : undefined,
       // Convert images array to JSON string if needed before persistence
       images: domain.images
