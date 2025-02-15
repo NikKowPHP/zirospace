@@ -107,7 +107,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
     "headline": caseStudy.subtitle,
     "description": caseStudy.description,
     "keywords": caseStudy.tags.join(", "),
-    "image": caseStudy.images[0].url,
+    // "image": caseStudy.images.length > 0 && caseStudy.images[0]?.url ? caseStudy.images[0].url : '',
     "url": `https://ziro.space${caseStudyUrl}`,
     "datePublished": caseStudy.createdAt,
     "author": {
@@ -209,9 +209,9 @@ export const CaseStudyCard = memo(function CaseStudyCard({
         </Link>
 
         {/* Add metadata */}
-        <meta itemProp="datePublished" content={caseStudy.createdAt.toISOString()} />
-        <meta itemProp="author" content="ZIRO Healthcare Solutions" />
-        <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
+        <meta itemProp="datePublished" content={new Date(caseStudy.createdAt).toString()} />
+        <meta itemProp="author" content="ZIRO " />
+        <meta itemProp="publisher" content="ZIRO " />
       </article>
 
       {/* Add JSON-LD structured data */}

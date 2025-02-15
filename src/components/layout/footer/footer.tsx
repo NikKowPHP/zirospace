@@ -90,7 +90,7 @@ export function Footer() {
                   {t('description')}
                 </p>
                 <p className="text-sm text-gray-500">
-                  <span itemProp="name">ZIRO Healthcare Solutions</span>
+                  <span itemProp="name">ZIRO</span>
                 </p>
               </div>
 
@@ -113,9 +113,9 @@ export function Footer() {
             >
               {/* Main Navigation */}
               <div className="flex flex-col gap-4">
-                <h2 className="font-medium text-gray-900 text-sm mb-2">
-                  {t('navigation')}
-                </h2>
+                {/* <h2 className="font-medium text-gray-900 text-sm mb-2">
+                  {t('navigation.')}
+                </h2> */}
                 {footerConfig.mainNav.map((item, index) => (
                   <Link
                     key={index}
