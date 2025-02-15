@@ -17,7 +17,7 @@ export function TestimonialForm({
   testimonial,
   onSubmit,
   onCancel,
-  loading
+  loading,
 }: TestimonialFormProps) {
   const [author, setAuthor] = useState(testimonial?.author || '')
   const [role, setRole] = useState(testimonial?.role || '')
@@ -34,75 +34,93 @@ export function TestimonialForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="author" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="author"
+          className="block text-sm font-medium text-gray-700"
+        >
           Author
         </label>
         <input
           type="text"
           id="author"
-          className="mt-1 block w-full rounded-primary border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          className="mt-1 block w-full border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
           required
         />
       </div>
       <div>
-        <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="role"
+          className="block text-sm font-medium text-gray-700"
+        >
           Role
         </label>
         <input
           type="text"
           id="role"
-          className="mt-1 block w-full rounded-primary border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          className="mt-1 block w-full border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           value={role}
           onChange={(e) => setRole(e.target.value)}
         />
       </div>
       <div>
-        <label htmlFor="company" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="company"
+          className="block text-sm font-medium text-gray-700"
+        >
           Company
         </label>
         <input
           type="text"
           id="company"
-          className="mt-1 block w-full rounded-primary border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          className="mt-1 block w-full   border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           value={company}
           onChange={(e) => setCompany(e.target.value)}
         />
       </div>
       <div>
-        <label htmlFor="quote" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="quote"
+          className="block text-sm font-medium text-gray-700"
+        >
           Quote
         </label>
         <textarea
           id="quote"
           rows={3}
-          className="mt-1 block w-full rounded-primary border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          className="mt-1 block w-full   border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           value={quote}
           onChange={(e) => setQuote(e.target.value)}
           required
         />
       </div>
       <div>
-        <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="image"
+          className="block text-sm font-medium text-gray-700"
+        >
           Image URL
         </label>
         <input
           type="text"
           id="image"
-          className="mt-1 block w-full rounded-primary border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          className="mt-1 block w-full   border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           value={image}
           onChange={(e) => setImage(e.target.value)}
         />
       </div>
       <div>
-        <label htmlFor="image_alt" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="image_alt"
+          className="block text-sm font-medium text-gray-700"
+        >
           Image Alt Text
         </label>
         <input
           type="text"
           id="image_alt"
-          className="mt-1 block w-full rounded-primary border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          className="mt-1 block w-full   border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           value={image_alt}
           onChange={(e) => setImageAlt(e.target.value)}
         />

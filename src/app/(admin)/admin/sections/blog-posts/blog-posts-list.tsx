@@ -7,16 +7,17 @@ import { useRouter } from 'next/navigation'
 import logger from '@/lib/logger'
 
 export function BlogPostList() {
-  const { blogPosts, deleteBlogPost, error, loading, updateBlogPost } = useAdmin()
+  const { blogPosts, deleteBlogPost, error, loading, updateBlogPost } =
+    useAdmin()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const router = useRouter()
   const [pinnedPostId, setPinnedPostId] = useState<string | null>(null)
 
   useEffect(() => {
     // Find the currently pinned post on component mount
-    const pinnedPost = blogPosts[activeLocale]?.find(post => post.isPinned);
-    setPinnedPostId(pinnedPost?.id || null);
-  }, [blogPosts, activeLocale]);
+    const pinnedPost = blogPosts[activeLocale]?.find((post) => post.isPinned)
+    setPinnedPostId(pinnedPost?.id || null)
+  }, [blogPosts, activeLocale])
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this blog post?')) {
@@ -32,24 +33,19 @@ export function BlogPostList() {
     try {
       // Unpin the currently pinned post if there is one
       if (pinnedPostId) {
-        await updateBlogPost(pinnedPostId, { isPinned: false }, activeLocale);
+        await updateBlogPost(pinnedPostId, { isPinned: false }, activeLocale)
       }
       // Pin the selected post
-      await updateBlogPost(postId, { isPinned: true }, activeLocale);
-      setPinnedPostId(postId);
+      await updateBlogPost(postId, { isPinned: true }, activeLocale)
+      setPinnedPostId(postId)
     } catch (error) {
-      logger.log('Failed to pin/unpin blog post:', error);
+      logger.log('Failed to pin/unpin blog post:', error)
     }
-  };
-
+  }
 
   return (
     <div className="space-y-8">
-      {error && (
-        <div className="p-4 bg-red-50 text-red-600 rounded-primary">
-          {error}
-        </div>
-      )}
+      {error && <div className="p-4 bg-red-50 text-red-600  ">{error}</div>}
 
       <div className="flex justify-between items-center">
         <div className="flex space-x-4">
@@ -83,7 +79,7 @@ export function BlogPostList() {
         </button>
       </div>
 
-      <div className="overflow-hidden bg-white rounded-primary shadow">
+      <div className="overflow-hidden bg-white   shadow">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>

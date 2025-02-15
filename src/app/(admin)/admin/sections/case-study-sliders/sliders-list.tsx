@@ -8,22 +8,23 @@ import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import logger from '@/lib/logger'
 
 export function CaseStudySliderList() {
-  const { 
-    caseStudySliders, 
-    createCaseStudySlider, 
-    updateCaseStudySlider, 
-    deleteCaseStudySlider, 
-    error, 
-    loading, 
-    getCaseStudySliders 
+  const {
+    caseStudySliders,
+    createCaseStudySlider,
+    updateCaseStudySlider,
+    deleteCaseStudySlider,
+    error,
+    loading,
+    getCaseStudySliders,
   } = useAdmin()
-  const [editingCaseStudySlider, setEditingCaseStudySlider] = useState<CaseStudySlider | null>(null)
+  const [editingCaseStudySlider, setEditingCaseStudySlider] =
+    useState<CaseStudySlider | null>(null)
   const [isCreating, setIsCreating] = useState(false)
 
   useEffect(() => {
-    getCaseStudySliders();
-  }, [ getCaseStudySliders]);
-  
+    getCaseStudySliders()
+  }, [getCaseStudySliders])
+
   const handleCreate = async (data: Partial<CaseStudySlider>) => {
     try {
       await createCaseStudySlider(data)
@@ -54,19 +55,12 @@ export function CaseStudySliderList() {
     }
   }
 
-
   return (
     <div className="space-y-8">
-      {error && (
-        <div className="p-4 bg-red-50 text-red-600 rounded-primary">
-          {error}
-        </div>
-      )}
+      {error && <div className="p-4 bg-red-50 text-red-600  ">{error}</div>}
 
       <div className="flex justify-between items-center">
-        <div className="flex space-x-4">
-        
-        </div>
+        <div className="flex space-x-4"></div>
         <button
           onClick={() => setIsCreating(true)}
           className="px-6 py-3 text-white bg-primary rounded-full hover:bg-primary/90 transition-colors"
@@ -78,9 +72,11 @@ export function CaseStudySliderList() {
 
       {(isCreating || editingCaseStudySlider) && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-primary p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white   p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-[32px] font-medium tracking-[-0.02em] text-gray-900 mb-8">
-              {editingCaseStudySlider ? 'Edit Case Study Slider' : 'New Case Study Slider'}
+              {editingCaseStudySlider
+                ? 'Edit Case Study Slider'
+                : 'New Case Study Slider'}
             </h3>
             <CaseStudySliderForm
               caseStudySlider={editingCaseStudySlider ?? undefined}
@@ -95,7 +91,7 @@ export function CaseStudySliderList() {
         </div>
       )}
 
-      <div className="overflow-hidden bg-white rounded-primary shadow">
+      <div className="overflow-hidden bg-white   shadow">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -136,7 +132,10 @@ export function CaseStudySliderList() {
               ))
             ) : (
               <tr>
-                <td colSpan={2} className="px-6 py-4 whitespace-nowrap text-center">
+                <td
+                  colSpan={2}
+                  className="px-6 py-4 whitespace-nowrap text-center"
+                >
                   No case study sliders found.
                 </td>
               </tr>
