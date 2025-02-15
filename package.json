@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/next": "^8.0.7",
     "@types/node": "^20",
     "@types/quill": "^2.0.14",
     "@types/react": "^19",
