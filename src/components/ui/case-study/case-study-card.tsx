@@ -2,7 +2,7 @@
 
 import { memo } from 'react'
 import { Button } from '@/components/ui/button/button'
-// import { Tag } from '@/components/ui/tag/tag'
+import { Tag } from '@/components/ui/tag/tag'
 import { cn } from '@/lib/utils/cn'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
@@ -53,42 +53,42 @@ const CaseStudyImage = memo(function CaseStudyImage({
 })
 
 // Optimized tags component with semantic markup
-// const CaseStudyTags = memo(function CaseStudyTags({
-//   tags,
-//   theme,
-// }: {
-//   tags: string[]
-//   theme: string
-// }) {
-//   return (
-//     <div 
-//       className="flex flex-wrap"
-//       itemProp="keywords"
-//       aria-label="Project tags"
-//     >
-//       {tags.map((tag, index) => (
-//         <div key={tag} className="flex items-center">
-//           <span>
-//             <Tag
-//               variant={theme === 'dark' ? 'dark' : 'primary'}
-//               className="px-8 text-sm sm:text-base"
-//             >
-//               {tag}
-//             </Tag>
-//           </span>
-//           {index !== tags.length - 1 && (
-//             <span
-//               className="select-none mx-1 text-[10px] text-blue-500"
-//               aria-hidden="true"
-//             >
-//               •
-//             </span>
-//           )}
-//         </div>
-//       ))}
-//     </div>
-//   )
-// })
+const CaseStudyTags = memo(function CaseStudyTags({
+  tags,
+  theme,
+}: {
+  tags: string[]
+  theme: string
+}) {
+  return (
+    <div 
+      className="flex flex-wrap"
+      itemProp="keywords"
+      aria-label="Project tags"
+    >
+      {tags.map((tag, index) => (
+        <div key={tag} className="flex items-center">
+          <span>
+            <Tag
+              variant={theme === 'dark' ? 'dark' : 'primary'}
+              className="px-8 text-sm sm:text-base"
+            >
+              {tag}
+            </Tag>
+          </span>
+          {index !== tags.length - 1 && (
+            <span
+              className="select-none mx-1 text-[10px] text-blue-500"
+              aria-hidden="true"
+            >
+              •
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+})
 
 // Main component with enhanced SEO and accessibility
 export const CaseStudyCard = memo(function CaseStudyCard({
@@ -98,6 +98,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
   const t = useTranslations()
   const ctaText = t('caseStudy.ctaText.viewCaseStudy')
   const caseStudyUrl = `/${locale}/case-studies/${caseStudy.slug}`
+  console.log('caseStudy.tags', caseStudy.tags)
 
   // JSON-LD for the case study
   const caseStudyJsonLd = {
@@ -106,7 +107,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
     "name": caseStudy.title,
     "headline": caseStudy.subtitle,
     "description": caseStudy.description,
-    "keywords": caseStudy.tags.join(", "),
+    // "keywords":  caseStudy.tags ? caseStudy.tags.join(", ") : '',
     // "image": caseStudy.images.length > 0 && caseStudy.images[0]?.url ? caseStudy.images[0].url : '',
     "url": `https://ziro.space${caseStudyUrl}`,
     "datePublished": caseStudy.createdAt,
@@ -168,12 +169,12 @@ export const CaseStudyCard = memo(function CaseStudyCard({
               <p>{caseStudy.description}</p>
             </div>
 
-            {/* <div className="lg:flex-1">
+            <div className="lg:flex-1">
               <CaseStudyTags
                 theme={caseStudy.theme}
                 tags={caseStudy.tags as string[]}
               />
-            </div> */}
+            </div>
 
             {/* Desktop/Tablet CTA Button */}
             <div className="mt-auto">
@@ -224,3 +225,4 @@ export const CaseStudyCard = memo(function CaseStudyCard({
 })
 
 CaseStudyCard.displayName = 'CaseStudyCard'
+

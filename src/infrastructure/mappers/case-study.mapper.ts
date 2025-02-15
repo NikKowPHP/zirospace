@@ -21,10 +21,10 @@ export class CaseStudyMapper {
     }
 
     // Optionally, handle the tags field if necessary:
-    // const tags =
-    //   typeof dto.tags === 'string'
-    //     ? (dto.tags as string).split(',').map((tag: string) => tag.trim())
-    //     : dto.tags ? [...dto.tags] : [];
+    const tags =
+      typeof dto.tags === 'string'
+        ? (dto.tags as string).split(',').map((tag: string) => tag.trim())
+        : dto.tags ? [...dto.tags] : [];
     logger.log('tags' , dto.tags);
 
     return {
@@ -33,7 +33,7 @@ export class CaseStudyMapper {
       subtitle: dto.subtitle,
       description: dto.description,
       slug: dto.slug,
-      tags:dto.tags,
+      tags:tags,
       images: images.map((image: { url: string; alt: string }) => ({
         url: image.url,
         alt: image.alt,
