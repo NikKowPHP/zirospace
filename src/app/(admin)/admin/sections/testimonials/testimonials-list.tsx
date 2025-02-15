@@ -15,7 +15,7 @@ export function TestimonialList() {
 
   useEffect(() => {
     getTestimonials(activeLocale);
-  }, [activeLocale, getTestimonials]);
+  }, [activeLocale ]);
   
   const handleCreate = async (data: Partial<Testimonial>) => {
     try {

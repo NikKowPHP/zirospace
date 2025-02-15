@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     const id = crypto.randomUUID()
     data.id = id;
-    const newCaseStudySlider = await caseStudySliderService.createCaseStudySlider(CaseStudySliderMapper.toDomain(data))
+    const newCaseStudySlider = await caseStudySliderService.createCaseStudySlider(data)
 
 
     console.log('newCaseStudySlider in router ', newCaseStudySlider)
