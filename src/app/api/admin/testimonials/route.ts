@@ -12,6 +12,8 @@ export async function POST(request: NextRequest) {
       locale,
       mappedData: TestimonialMapper.toPersistence(data)
     })
+    const id = crypto.randomUUID()
+    data.id = id;
 
     const newTestimonial = await testimonialService.createTestimonial(TestimonialMapper.toDomain(data), locale)
 
