@@ -97,7 +97,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         }}
       />
       <article 
-        className="blog-post py-8 py-[100px] max-w-full mx-auto flex flex-col gap-[35px]"
+        className="blog-post py-8 py-[100px] max-w-4xl mx-auto flex flex-col gap-[35px]"
         itemScope
         itemType="https://schema.org/Article"
       >
