@@ -140,10 +140,10 @@ export default async function BlogPostPage({ params }: PageProps) {
             </p>
           )}
           
-          <div className=" max-h-2/3 flex items-center justify-center border border-red-500">
+          <div className="  w-full flex items-center justify-center">
 
 
-          <div itemProp="image " className='max-w-1/2'>
+          <div itemProp="image " className=''>
             <Image
               src={post.imageurl}
               alt={post.imageAlt || post.title}
