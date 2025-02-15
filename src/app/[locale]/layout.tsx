@@ -6,7 +6,6 @@ import '@/styles/globals.css'
 import { locales, type Locale } from '@/i18n'
 import { ClientWrapper } from './client-wrapper'
 import { PageProvider } from '@/contexts/page-context'
-import { Analytics } from '@/components/analytics/analytics'
 import logger from '@/lib/logger'
 const inter = Inter({
   subsets: ['latin'],
@@ -127,7 +126,6 @@ export default async function LocaleLayout({
             </ClientWrapper>
           </PageProvider>
         </NextIntlClientProvider>
-        <Analytics />
       </body>
     </html>
   )
