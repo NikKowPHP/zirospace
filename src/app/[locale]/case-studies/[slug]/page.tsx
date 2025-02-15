@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: { slug: string; loc
       publishedTime: caseStudy.createdAt,
       images: [
         {
-          url: caseStudy.images[0].url,
+          url: caseStudy.images.length > 0 ?  caseStudy.images[0].url : 'http',
           width: 1200,
           height: 630,
           alt: caseStudy.images[0].alt,
