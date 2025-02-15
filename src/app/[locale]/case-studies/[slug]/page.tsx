@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import { type Locale } from '@/i18n'
 import Image from 'next/image'
-import Link from 'next/link'
 import { Suspense } from 'react'
 import { caseStudyService } from '@/lib/services/case-study.service'
 import logger from '@/lib/logger'
