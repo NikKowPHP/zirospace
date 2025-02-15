@@ -133,8 +133,10 @@ export default async function BlogPostPage({ params }: PageProps) {
             <p 
               className="text-xl text-gray-600 text-center max-w-2xl mx-auto"
               itemProp="abstract"
+              dangerouslySetInnerHTML={{ 
+                __html: post.excerpt.trim() 
+              }}
             >
-              {post.excerpt}
             </p>
           )}
           
