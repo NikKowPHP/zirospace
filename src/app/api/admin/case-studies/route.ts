@@ -12,7 +12,11 @@ export async function POST(request: NextRequest) {
       locale,
       mappedData: CaseStudyMapper.toPersistence(data)
     })
+        // generate id 
+        const id = crypto.randomUUID()
+        data.id = id;
 
+    
     const newCaseStudy = await caseStudyService.createCaseStudy(
       CaseStudyMapper.toPersistence(data),
       locale
