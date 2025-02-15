@@ -97,11 +97,11 @@ export function CaseStudyForm({
   const [backgroundColor, setBackgroundColor] = useState(study?.backgroundColor || '#FFFFFF')
   const [color, setColor] = useState(study?.color || '#000000')
   const [subtitle, setSubtitle] = useState(study?.subtitle || '')
+  const [ctaUrl, setCtaUrl] = useState(study?.ctaUrl || '')
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value
     setTitle(newTitle)
-   
   }
 
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,7 +164,6 @@ export function CaseStudyForm({
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
 
-
     await onSubmit({
       id: study?.id || '',
       title: formData.get('title') as string,
@@ -172,7 +171,7 @@ export function CaseStudyForm({
       description: formData.get('description') as string,
       tags: tags,
       images: images.filter((img) => img.url && img.alt),
-      ctaUrl: formData.get('ctaUrl') as string,
+      ctaUrl: ctaUrl,
       theme: theme,
       backgroundColor: backgroundColor,
       color: color,
@@ -443,7 +442,8 @@ export function CaseStudyForm({
             type="text"
             name="ctaUrl"
             id="ctaUrl"
-            defaultValue={study?.ctaUrl}
+            value={ctaUrl}
+            onChange={(e) => setCtaUrl(e.target.value)}
             required
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           />
