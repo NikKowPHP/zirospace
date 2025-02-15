@@ -109,7 +109,7 @@ export default async function Page({ params }: PageProps) {
 async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale }) {
   try {
     const caseStudy = await caseStudyService.getCaseStudyBySlug(slug, locale)
-    if (!caseStudy) notFound()
+    if (!caseStudy) return notFound()
 
     const [heroImage, ...otherImages] = caseStudy.images
 
