@@ -58,18 +58,11 @@ export class TestimonialRepository implements ITestimonialRepository {
 
   createTestimonial = async (testimonial: Omit<Testimonial, 'id'>, locale: string): Promise<Testimonial> => {
     const tableName = `${this.tableName}_${locale}`
+    logger.log('testimonial data ', testimonial)
+
     const { data, error } = await this.supabaseClient
       .from(tableName)
-      .insert([
-        {
-          author: testimonial.author,
-          role: testimonial.role,
-          company: testimonial.company,
-          quote: testimonial.quote,
-          image: testimonial.image,
-          image_alt: testimonial.image_alt,
-        },
-      ])
+      .insert(TestimonialMapper.toPersistence(testimonial))
       .select()
       .single()
 
