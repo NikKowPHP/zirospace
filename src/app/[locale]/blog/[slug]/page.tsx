@@ -97,7 +97,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         }}
       />
       <article 
-        className="blog-post py-8 py-[100px] max-w-5xl mx-auto flex flex-col gap-[35px]"
+        className="blog-post py-8 py-[100px] max-w-full mx-auto flex flex-col gap-[35px]"
         itemScope
         itemType="https://schema.org/Article"
       >
@@ -140,15 +140,18 @@ export default async function BlogPostPage({ params }: PageProps) {
             </p>
           )}
           
-          <div itemProp="image">
+          <div className=" max-h-2/3 flex items-center justify-center border border-red-500">
+
+
+          <div itemProp="image " className='max-w-1/2'>
             <Image
               src={post.imageurl}
               alt={post.imageAlt || post.title}
-              width={600}
-              height={400}
-              className="mb-4 rounded w-full"
-              priority // Load hero image immediately
+              width={400}
+              height={200}
+              className="mb-4 rounded object-cover"
             />
+          </div>
           </div>
         </header>
 

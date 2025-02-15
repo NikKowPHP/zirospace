@@ -176,7 +176,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
     return (
       <>
         <article 
-          className="bg-white pt-28 mb-[50px] xl:px-[10px] container relative mx-auto md:px-4 sm:px-6 lg:px-8"
+          className="bg-white pt-28 mb-[50px] relative "
           itemScope 
           itemType="https://schema.org/Article"
         >
@@ -190,7 +190,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
           </nav> */}
 
           {/* Hero Section */}
-          <header className="container mx-auto pt-32 pb-[50px]">
+          <header className=" pt-32 pb-[50px]">
             <div className="max-w-[90rem] mx-auto">
               <div className="relative w-full aspect-[16/9] mb-16">
                 <Image
