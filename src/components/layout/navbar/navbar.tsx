@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button/button'
 import { navigationConfig } from '@/config/navigation'
 import { cn } from '@/lib/utils/cn'
@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl'
 export function Navbar() {
   const pathname = usePathname()
   const t = useTranslations('navigation')
+  const router = useRouter();
 
   return (
     <header 
@@ -43,35 +44,39 @@ export function Navbar() {
             itemType="https://schema.org/SiteNavigationElement"
           >
             {navigationConfig.mainNav.map((item) =>
-               item.title === 'blog' ? ( // Conditionally render Link for 'blog'
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    'text-[16px] font-medium transition-colors',
-                    pathname === item.href ? 'text-gray-900' : 'text-gray-900'
-                  )}
-                  aria-label={t(item.title)}
-                >
-                  {t(item.title)}
-                </Link>
-              ) : ( // Render Button with scrollIntoView for other items
-                <Button
-                  key={item.href}
-                  onClick={() => {
-                    const element = document.getElementById(item.href)
-                    element?.scrollIntoView({ behavior: 'smooth' })
-                  }}
-                  variant='navbar'
-                  className={cn(
-                    'text-[16px] font-medium transition-colors',
-                    pathname === item.href ? 'text-gray-900' : 'text-gray-900'
-                  )}
-                  aria-label={t(item.title)}
-                >
-                  {t(item.title)}
-                </Button>
-              )
+             <Button
+             variant='navbar'
+             key={item.href}
+             className={cn(
+               'text-[16px] font-medium transition-colors',
+               pathname === item.href ? 'text-gray-900' : 'text-gray-900'
+             )}
+             aria-label={t(item.title)}
+             onClick={(e) => {
+
+              console.log('item route and pathname', item.isRoute, pathname)
+        
+               if (!item.isRoute && pathname.includes('/blog')) {
+                 e.preventDefault()      
+                 debugger
+
+                 router.push('/')
+                 setTimeout(() => {
+                   const element = document.getElementById(item.href)
+                   element?.scrollIntoView({ behavior: 'smooth' })
+                 }, 100) // Small delay to ensure the page has loaded
+               } else if (!item.isRoute && !pathname.includes('/blog')) {
+                 e.preventDefault()
+                 const element = document.getElementById(item.href)
+                 element?.scrollIntoView({ behavior: 'smooth' })
+               } else if (item.isRoute) {
+                debugger
+                router.push(item.href);
+               }
+             }}
+           >
+             {t(item.title)}
+           </Button>
             )}
           </nav>
 
