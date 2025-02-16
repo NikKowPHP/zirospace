@@ -14,6 +14,7 @@ export const OurServices = async () => {
       }
     >
       <section
+      id='our-services'
         className=" py-[100px] "
         itemScope
         itemType="https://schema.org/WebPageElement"

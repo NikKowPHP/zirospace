@@ -2,11 +2,11 @@ export const footerConfig = {
   mainNav: [
     {
       title: 'process',
-      href: 'process',
+      href: 'our-process',
     },
     {
       title: 'services',
-      href: 'services',
+      href: 'our-services',
     },
     {
       title: 'why Ziro?',

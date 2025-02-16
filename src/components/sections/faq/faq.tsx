@@ -60,6 +60,7 @@ export function Faq() {
 
   return (
     <section
+    id='faqs'
       className="py-12 md:container sm:py-16 mt-10 lg:py-24 lg:mb-10"
       itemScope
       itemType="https://schema.org/FAQPage"

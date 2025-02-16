@@ -1,10 +1,35 @@
+'use client'
+
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { footerConfig } from '@/config/footer'
+import { usePathname, useRouter } from 'next/navigation'
 
 export function Footer() {
   const t = useTranslations('footer')
+  const pathname = usePathname()
+  const router = useRouter()
+
+  // Helper function to scroll to an element by id
+  const scrollElement = (id: string) => {
+    const element = document.getElementById(id)
+    element?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  // Handler for footer links
+  const handleFooterLink = (item: { title: string; href: string }) => {
+    // If the current page is not the homepage, redirect first
+    if (pathname !== '/') {
+      router.push('/')
+      // Delay scrolling to allow the homepage sections to render
+      setTimeout(() => {
+        scrollElement(item.href)
+      }, 100)
+    } else {
+      scrollElement(item.href)
+    }
+  }
 
   // Organization JSON-LD
   const organizationJsonLd = {
@@ -108,22 +133,22 @@ export function Footer() {
 
             {/* Navigation Links */}
             <nav 
-              className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-12 mt-12"
+              className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-2 sm:items-center gap-12 mt-12"
               aria-label="Footer Navigation"
             >
               {/* Main Navigation */}
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 justify-start  items-start">
                 {/* <h2 className="font-medium text-gray-900 text-sm mb-2">
                   {t('navigation.')}
                 </h2> */}
                 {footerConfig.mainNav.map((item, index) => (
-                  <Link
+                  <button
                     key={index}
-                    href={item.href}
                     className="text-gray-600 text-[14px] hover:text-primary transition-colors"
+                    onClick={() => handleFooterLink(item)}
                   >
                     {item.title}
-                  </Link>
+                  </button>
                 ))}
               </div>
 

@@ -2,12 +2,12 @@ export const navigationConfig = {
   mainNav: [
     {
       title: 'process',
-      href: 'process',
+      href: 'our-process',
       isRoute: false,
     },
     {
       title: 'services',
-      href: 'services',
+      href: 'our-services',
       isRoute: false,
     },
     {
