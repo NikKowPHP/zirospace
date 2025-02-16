@@ -230,7 +230,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                     {new Date(caseStudy.createdAt as unknown as string).getFullYear()}
                   </p>
                 </div>
-                <div>
+                {/* <div>
                   <h2 className="text-lg font-medium mb-4">Industry</h2>
                   <div className="flex flex-wrap gap-2" itemProp="keywords">
                     {caseStudy.tags.map((tag) => (
@@ -239,8 +239,8 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                       </span>
                     ))}
                   </div>
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <h2 className="text-lg font-medium mb-4">Project Direction</h2>
                   <div className="space-y-1">
                     {caseStudy.tags.map((tag) => (
@@ -249,7 +249,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                       </p>
                     ))}
                   </div>
-                </div>
+                </div> */}
               </div>
 
               {/* <div className=" mb-[50px]">

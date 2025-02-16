@@ -3,6 +3,7 @@ import { type Locale } from '@/i18n'
 import Image from 'next/image'
 import styles from './blog-post.module.css'
 import { blogPostService } from '@/lib/services/blog-post.service'
+import { BlogPost } from '@/domain/models/blog-post.model'
 
 interface PageProps {
   params: {
@@ -12,7 +13,7 @@ interface PageProps {
 }
 
 // Create Article JSON-LD
-const createArticleJsonLd = (post: any, locale: string) => ({
+const createArticleJsonLd = (post: BlogPost, locale: string) => ({
   "@context": "https://schema.org",
   "@type": "Article",
   "@id": `https://ziro.space/${locale}/blog/${post.slug}#article`,
@@ -41,7 +42,7 @@ const createArticleJsonLd = (post: any, locale: string) => ({
 })
 
 // Create Breadcrumb JSON-LD
-const createBreadcrumbJsonLd = (post: any, locale: string) => ({
+const createBreadcrumbJsonLd = (post: BlogPost, locale: string) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
@@ -143,15 +144,28 @@ export default async function BlogPostPage({ params }: PageProps) {
           <div className="  w-full flex items-center justify-center">
 
 
-          <div itemProp="image " className=''>
+          {/* <div itemProp="image " className='  w-full aspect-[16/9]'>
             <Image
               src={post.imageurl}
               alt={post.imageAlt || post.title}
-              width={400}
-              height={200}
+              fill
               className="mb-4 rounded object-cover"
             />
-          </div>
+          </div> */}
+
+
+          <div itemProp='image' className="max-w-full mx-auto">
+              <div className="relative w-full aspect-[16/9] h-[400px] sm:h-[400px] mb-16">
+                <Image
+                  src={post.imageurl}
+                  alt={post.imageAlt || post.title}
+                  fill
+                  className="object-cover rounded-primary-lg"
+                  priority
+                  itemProp="image"
+                />
+              </div>
+            </div>
           </div>
         </header>
 
