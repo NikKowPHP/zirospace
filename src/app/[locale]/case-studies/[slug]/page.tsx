@@ -197,6 +197,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                   src={heroImage.url}
                   alt={heroImage.alt}
                   fill
+                  quality={100} 
                   className="object-cover rounded-primary-lg"
                   priority
                   itemProp="image"
@@ -285,6 +286,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                             src={image.url}
                             alt={image.alt}
                             fill
+                            quality={100}
                             className="object-cover rounded-primary-lg"
                           />
                         </div>
@@ -295,6 +297,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                               src={otherImages[index + 1].url}
                               alt={otherImages[index + 1].alt}
                               fill
+                              quality={100}
                               className="object-cover rounded-primary-lg"
                             />
                           </div>
@@ -314,6 +317,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                           src={image.url}
                           alt={image.alt}
                           fill
+                          quality={100}
                           className="object-cover rounded-primary-lg"
                         />
                       </div>
@@ -326,6 +330,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                           src={image.url}
                           alt={image.alt}
                           fill
+                          quality={100}
                           className="object-cover rounded-primary-lg"
                         />
                       </div>

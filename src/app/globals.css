@@ -57,7 +57,7 @@ body {
 }
 
 .blog-post-content ol {
-  list-style-type: decimal;
+  list-style-type: disc;
   margin-left: 2rem;
   margin-bottom: 1rem;
 }

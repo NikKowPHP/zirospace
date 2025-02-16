@@ -58,19 +58,17 @@ export function Navbar() {
         
                if (!item.isRoute && pathname.includes('/blog')) {
                  e.preventDefault()      
-                 debugger
 
                  router.push('/')
                  setTimeout(() => {
                    const element = document.getElementById(item.href)
                    element?.scrollIntoView({ behavior: 'smooth' })
-                 }, 100) // Small delay to ensure the page has loaded
+                 }, 500) // Small delay to ensure the page has loaded
                } else if (!item.isRoute && !pathname.includes('/blog')) {
                  e.preventDefault()
                  const element = document.getElementById(item.href)
                  element?.scrollIntoView({ behavior: 'smooth' })
                } else if (item.isRoute) {
-                debugger
                 router.push(item.href);
                }
              }}

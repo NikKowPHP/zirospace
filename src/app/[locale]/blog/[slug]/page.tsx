@@ -163,6 +163,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   className="object-cover rounded-primary-lg"
                   priority
                   itemProp="image"
+                  quality={100}
                 />
               </div>
             </div>
