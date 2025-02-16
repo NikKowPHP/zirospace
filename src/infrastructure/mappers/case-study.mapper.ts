@@ -52,6 +52,8 @@ export class CaseStudyMapper {
     console.log('domain in toPersistence', domain)
     const isDevelopment = process.env.NODE_ENV === 'development';
     logger.log('domain tags to proceed', domain.tags);
+    const tags = domain.tags ? [...domain.tags] : [];
+
 
     return {
       id: domain.id,
@@ -59,12 +61,8 @@ export class CaseStudyMapper {
       title: domain.title,
       subtitle: domain.subtitle,
       description: domain.description,
-      // Ensure tags are persisted in the desired format
-      tags: domain.tags
-        // ? isDevelopment
-          ? (domain.tags.join(',') as any)
-          // : [...domain.tags]
-        : undefined,
+      // Ensure tags are persisted in the desired format - now always an array
+      tags: tags,
       // Convert images array to JSON string if needed before persistence
       images: domain.images
         ? isDevelopment

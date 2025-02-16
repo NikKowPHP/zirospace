@@ -9,7 +9,7 @@ export interface CaseStudy {
   readonly title: string;
   readonly subtitle: string;
   readonly description: string;
-  readonly tags: readonly string[];
+  tags: readonly string[];
   readonly images: readonly Image[];
   readonly ctaUrl: string;
   readonly createdAt: Date;
