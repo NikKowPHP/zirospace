@@ -30,7 +30,7 @@ const CaseStudyImage = memo(function CaseStudyImage({
   return (
     <div
       className={cn(
-        'relative h-full w-full rounded-b-[24px] sm:rounded-primary sm:rounded-[18px] overflow-hidden',
+        'relative h-full w-full rounded-b-[32px]  lg:rounded-b-none lg:rounded-r-[32px]   overflow-hidden',
         isFirst ? 'col-span-2 row-span-2' : ''
       )}
       itemProp="image"
