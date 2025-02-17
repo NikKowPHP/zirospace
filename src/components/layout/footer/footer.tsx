@@ -101,7 +101,7 @@ export function Footer() {
                   className="text-sm text-gray-600 hover:text-primary transition-colors"
                   itemProp="email"
                 >
-                  contact@ziro.space
+                  nikhil@ziro.space
                 </Link>
               </div>
             </div>
