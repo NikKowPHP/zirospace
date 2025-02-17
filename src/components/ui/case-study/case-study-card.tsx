@@ -30,7 +30,7 @@ const CaseStudyImage = memo(function CaseStudyImage({
   return (
     <div
       className={cn(
-        'relative h-full w-full rounded-b-[24px] sm:rounded-primary sm:rounded-[18px] overflow-hidden',
+        'relative h-full w-full rounded-b-[32px]  lg:rounded-b-none lg:rounded-r-[32px]   overflow-hidden',
         isFirst ? 'col-span-2 row-span-2' : ''
       )}
       itemProp="image"
@@ -98,6 +98,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
   const t = useTranslations()
   const ctaText = t('caseStudy.ctaText.viewCaseStudy')
   const caseStudyUrl = `/${locale}/case-studies/${caseStudy.slug}`
+  console.log('caseStudy.tags', caseStudy.tags)
 
   // JSON-LD for the case study
   const caseStudyJsonLd = {
@@ -106,8 +107,8 @@ export const CaseStudyCard = memo(function CaseStudyCard({
     "name": caseStudy.title,
     "headline": caseStudy.subtitle,
     "description": caseStudy.description,
-    "keywords": caseStudy.tags.join(", "),
-    "image": caseStudy.images[0].url,
+    // "keywords":  caseStudy.tags ? caseStudy.tags.join(", ") : '',
+    // "image": caseStudy.images.length > 0 && caseStudy.images[0]?.url ? caseStudy.images[0].url : '',
     "url": `https://ziro.space${caseStudyUrl}`,
     "datePublished": caseStudy.createdAt,
     "author": {
@@ -209,9 +210,9 @@ export const CaseStudyCard = memo(function CaseStudyCard({
         </Link>
 
         {/* Add metadata */}
-        <meta itemProp="datePublished" content={caseStudy.createdAt.toISOString()} />
-        <meta itemProp="author" content="ZIRO Healthcare Solutions" />
-        <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
+        <meta itemProp="datePublished" content={new Date(caseStudy.createdAt).toString()} />
+        <meta itemProp="author" content="ZIRO " />
+        <meta itemProp="publisher" content="ZIRO " />
       </article>
 
       {/* Add JSON-LD structured data */}
@@ -224,3 +225,4 @@ export const CaseStudyCard = memo(function CaseStudyCard({
 })
 
 CaseStudyCard.displayName = 'CaseStudyCard'
+

@@ -10,7 +10,7 @@ import {
   WhyUs,
   Philosophy,
   Faq,
-  StayInformed,
+  // StayInformed,
   FloatVideo,
   TestimonialsSection
 } from '@/helpers/componentsLoad'
@@ -91,13 +91,14 @@ export default async function HomePage({ params }: HomePageProps) {
             </div>
           </Suspense>
 
-          {/* Defer less critical sections */}
-          <Suspense fallback={<div className="min-h-[300px]" />}>
-            <TestimonialsSection locale={locale} />
-          </Suspense>
 
           <Suspense fallback={<div className="min-h-[300px]" />}>
             <CaseStudies locale={locale} />
+          </Suspense>
+
+          {/* Defer less critical sections */}
+          <Suspense fallback={<div className="min-h-[300px]" />}>
+            <TestimonialsSection locale={locale} />
           </Suspense>
 
           {/* Group remaining sections */}
@@ -106,7 +107,7 @@ export default async function HomePage({ params }: HomePageProps) {
               <WhyUs />
               <Philosophy />
               <Faq />
-              <StayInformed />
+              {/* <StayInformed /> */}
             </div>
           </Suspense>
 

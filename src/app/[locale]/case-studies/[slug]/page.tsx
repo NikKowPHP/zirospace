@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import { type Locale } from '@/i18n'
 import Image from 'next/image'
-import Link from 'next/link'
 import { Suspense } from 'react'
 import { caseStudyService } from '@/lib/services/case-study.service'
 import logger from '@/lib/logger'
@@ -41,7 +40,7 @@ export async function generateMetadata({ params }: { params: { slug: string; loc
       publishedTime: caseStudy.createdAt,
       images: [
         {
-          url: caseStudy.images[0].url,
+          url: caseStudy.images.length > 0 ?  caseStudy.images[0].url : 'http',
           width: 1200,
           height: 630,
           alt: caseStudy.images[0].alt,
@@ -90,12 +89,6 @@ function CaseStudyError() {
         <p className="text-gray-600 mb-8">
           We couldn&apos;t load the case study. Please try again later.
         </p>
-        <Link
-          href="/case-studies"
-          className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition"
-        >
-          Back to Case Studies
-        </Link>
       </div>
     </div>
   )
@@ -116,7 +109,7 @@ export default async function Page({ params }: PageProps) {
 async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale }) {
   try {
     const caseStudy = await caseStudyService.getCaseStudyBySlug(slug, locale)
-    if (!caseStudy) notFound()
+    if (!caseStudy) return notFound()
 
     const [heroImage, ...otherImages] = caseStudy.images
 
@@ -183,29 +176,28 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
     return (
       <>
         <article 
-          className="bg-white pt-28 mb-[50px] xl:px-[10px] container relative mx-auto md:px-4 sm:px-6 lg:px-8"
+          className="bg-white pt-28 mb-[50px] relative "
           itemScope 
           itemType="https://schema.org/Article"
         >
           {/* Breadcrumb navigation */}
-          <nav aria-label="Breadcrumb" className="mb-4">
+          {/* <nav aria-label="Breadcrumb" className="mb-4">
             <ol className="flex space-x-2 text-sm text-gray-500">
               <li><Link href={`/${locale}`}>Home</Link></li>
               <li>/</li>
-              <li><Link href={`/${locale}/case-studies`}>Case Studies</Link></li>
-              <li>/</li>
               <li aria-current="page">{caseStudy.title}</li>
             </ol>
-          </nav>
+          </nav> */}
 
           {/* Hero Section */}
-          <header className="container mx-auto pt-32 pb-[50px]">
+          <header className=" pt-32 pb-[50px]">
             <div className="max-w-[90rem] mx-auto">
               <div className="relative w-full aspect-[16/9] mb-16">
                 <Image
                   src={heroImage.url}
                   alt={heroImage.alt}
                   fill
+                  quality={100} 
                   className="object-cover rounded-primary-lg"
                   priority
                   itemProp="image"
@@ -239,7 +231,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                     {new Date(caseStudy.createdAt as unknown as string).getFullYear()}
                   </p>
                 </div>
-                <div>
+                {/* <div>
                   <h2 className="text-lg font-medium mb-4">Industry</h2>
                   <div className="flex flex-wrap gap-2" itemProp="keywords">
                     {caseStudy.tags.map((tag) => (
@@ -248,8 +240,8 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                       </span>
                     ))}
                   </div>
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <h2 className="text-lg font-medium mb-4">Project Direction</h2>
                   <div className="space-y-1">
                     {caseStudy.tags.map((tag) => (
@@ -258,7 +250,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                       </p>
                     ))}
                   </div>
-                </div>
+                </div> */}
               </div>
 
               {/* <div className=" mb-[50px]">
@@ -294,6 +286,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                             src={image.url}
                             alt={image.alt}
                             fill
+                            quality={100}
                             className="object-cover rounded-primary-lg"
                           />
                         </div>
@@ -304,6 +297,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                               src={otherImages[index + 1].url}
                               alt={otherImages[index + 1].alt}
                               fill
+                              quality={100}
                               className="object-cover rounded-primary-lg"
                             />
                           </div>
@@ -323,6 +317,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                           src={image.url}
                           alt={image.alt}
                           fill
+                          quality={100}
                           className="object-cover rounded-primary-lg"
                         />
                       </div>
@@ -335,6 +330,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                           src={image.url}
                           alt={image.alt}
                           fill
+                          quality={100}
                           className="object-cover rounded-primary-lg"
                         />
                       </div>

@@ -8,12 +8,14 @@ export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
   
   try {
+    const id = crypto.randomUUID()
+    data.id = id;
     console.log('Processing testimonial creation:', {
       locale,
       mappedData: TestimonialMapper.toPersistence(data)
     })
 
-    const newTestimonial = await testimonialService.createTestimonial(TestimonialMapper.toDomain(data), locale)
+    const newTestimonial = await testimonialService.createTestimonial(data, locale)
 
     // Revalidate cache
     revalidateTag(CACHE_TAGS.TESTIMONIALS)

@@ -13,7 +13,9 @@ export async function POST(request: NextRequest) {
       mappedData: CaseStudySliderMapper.toPersistence(data)
     })
 
-    const newCaseStudySlider = await caseStudySliderService.createCaseStudySlider(CaseStudySliderMapper.toDomain(data))
+    const id = crypto.randomUUID()
+    data.id = id;
+    const newCaseStudySlider = await caseStudySliderService.createCaseStudySlider(data)
 
 
     console.log('newCaseStudySlider in router ', newCaseStudySlider)

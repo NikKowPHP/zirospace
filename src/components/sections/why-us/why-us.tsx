@@ -13,7 +13,9 @@ export const WhyUs = async () => {
       }
     >
 
-     <section className="flex flex-col   items-center text-center   py-[100px] "
+     <section 
+    id='why-ziro' 
+     className="flex flex-col   items-center text-center   py-[100px] "
      itemScope
      itemType="https://schema.org/WebPageElement"
    >

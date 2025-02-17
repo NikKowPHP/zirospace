@@ -14,6 +14,8 @@ export async function POST(request: NextRequest) {
       locale,
       mappedData: BlogPostMapper.toPersistence(data)
     })
+    const id = crypto.randomUUID()
+    data.id = id;
 
     const newBlogPost = await blogPostService.createBlogPost(data, locale)
 

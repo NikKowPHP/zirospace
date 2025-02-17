@@ -108,7 +108,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
               >
                 <div className="space-y-6 flex flex-col h-full">
                   <p className="text-gray-900 text-lg leading-relaxed flex-1">
-                    &quot;{testimonial.quote}&quot;
+                    &quot;{(testimonial.quote).trim()}&quot;
                   </p>
 
                   <div className="flex items-center gap-4">

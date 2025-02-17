@@ -116,6 +116,25 @@ export class BlogPostRepository implements IBlogPostRepository {
     return BlogPostMapper.toDomain(data as BlogPostDTO)
   }
 
+  getBlogPostById = async (id: string, locale: string): Promise<BlogPost | null> => {
+    const { data, error } = await this.supabaseClient
+      .from(`${this.tableName}_${locale}`)
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if (error) {
+      logger.log('Error fetching blog post by id:', error)
+      return null
+    }
+
+    if (!data) {
+      return null
+    }
+
+    return BlogPostMapper.toDomain(data as BlogPostDTO)
+  }
+
   deleteBlogPost = async (id: string, locale: string): Promise<boolean> => {
     const { error } = await this.supabaseClient
       .from(`${this.tableName}_${locale}`)

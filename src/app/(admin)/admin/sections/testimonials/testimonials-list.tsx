@@ -8,15 +8,24 @@ import { TestimonialForm } from './components/testimonials-form'
 import logger from '@/lib/logger'
 
 export function TestimonialList() {
-  const { testimonials, createTestimonial, updateTestimonial, deleteTestimonial, error, loading, getTestimonials } = useAdmin()
+  const {
+    testimonials,
+    createTestimonial,
+    updateTestimonial,
+    deleteTestimonial,
+    error,
+    loading,
+    getTestimonials,
+  } = useAdmin()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
-  const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null)
+  const [editingTestimonial, setEditingTestimonial] =
+    useState<Testimonial | null>(null)
   const [isCreating, setIsCreating] = useState(false)
 
   useEffect(() => {
-    getTestimonials(activeLocale);
-  }, [activeLocale, getTestimonials]);
-  
+    getTestimonials(activeLocale)
+  }, [activeLocale])
+
   const handleCreate = async (data: Partial<Testimonial>) => {
     try {
       await createTestimonial(data, activeLocale)
@@ -46,22 +55,17 @@ export function TestimonialList() {
     }
   }
 
-
   return (
     <div className="space-y-8">
-      {error && (
-        <div className="p-4 bg-red-50 text-red-600 rounded-primary">
-          {error}
-        </div>
-      )}
+      {error && <div className="p-4 bg-red-50 text-red-600  ">{error}</div>}
 
       <div className="flex justify-between items-center">
         <div className="flex space-x-4">
           <button
             onClick={() => setActiveLocale('en')}
             className={`px-6 py-3 rounded-full transition-colors ${
-              activeLocale === 'en' 
-                ? 'bg-primary text-white' 
+              activeLocale === 'en'
+                ? 'bg-primary text-white'
                 : 'bg-secondary text-gray-700 hover:bg-secondary/80'
             }`}
           >
@@ -70,8 +74,8 @@ export function TestimonialList() {
           <button
             onClick={() => setActiveLocale('pl')}
             className={`px-6 py-3 rounded-full transition-colors ${
-              activeLocale === 'pl' 
-                ? 'bg-primary text-white' 
+              activeLocale === 'pl'
+                ? 'bg-primary text-white'
                 : 'bg-secondary text-gray-700 hover:bg-secondary/80'
             }`}
           >
@@ -89,7 +93,7 @@ export function TestimonialList() {
 
       {(isCreating || editingTestimonial) && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-primary p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white   p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-[32px] font-medium tracking-[-0.02em] text-gray-900 mb-8">
               {editingTestimonial ? 'Edit Testimonial' : 'New Testimonial'}
             </h3>
@@ -107,7 +111,7 @@ export function TestimonialList() {
         </div>
       )}
 
-      <div className="overflow-hidden bg-white rounded-primary shadow">
+      <div className="overflow-hidden bg-white   shadow">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>

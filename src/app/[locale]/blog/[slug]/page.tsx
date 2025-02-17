@@ -3,6 +3,7 @@ import { type Locale } from '@/i18n'
 import Image from 'next/image'
 import styles from './blog-post.module.css'
 import { blogPostService } from '@/lib/services/blog-post.service'
+import { BlogPost } from '@/domain/models/blog-post.model'
 
 interface PageProps {
   params: {
@@ -12,7 +13,7 @@ interface PageProps {
 }
 
 // Create Article JSON-LD
-const createArticleJsonLd = (post: any, locale: string) => ({
+const createArticleJsonLd = (post: BlogPost, locale: string) => ({
   "@context": "https://schema.org",
   "@type": "Article",
   "@id": `https://ziro.space/${locale}/blog/${post.slug}#article`,
@@ -41,7 +42,7 @@ const createArticleJsonLd = (post: any, locale: string) => ({
 })
 
 // Create Breadcrumb JSON-LD
-const createBreadcrumbJsonLd = (post: any, locale: string) => ({
+const createBreadcrumbJsonLd = (post: BlogPost, locale: string) => ({
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
@@ -97,7 +98,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         }}
       />
       <article 
-        className="blog-post py-8 py-[100px] max-w-5xl mx-auto flex flex-col gap-[35px]"
+        className="blog-post py-8 py-[100px] max-w-4xl mx-auto flex flex-col gap-[35px]"
         itemScope
         itemType="https://schema.org/Article"
       >
@@ -133,20 +134,39 @@ export default async function BlogPostPage({ params }: PageProps) {
             <p 
               className="text-xl text-gray-600 text-center max-w-2xl mx-auto"
               itemProp="abstract"
+              dangerouslySetInnerHTML={{ 
+                __html: post.excerpt.trim() 
+              }}
             >
-              {post.excerpt}
             </p>
           )}
           
-          <div itemProp="image">
+          <div className="  w-full flex items-center justify-center">
+
+
+          {/* <div itemProp="image " className='  w-full aspect-[16/9]'>
             <Image
               src={post.imageurl}
               alt={post.imageAlt || post.title}
-              width={600}
-              height={400}
-              className="mb-4 rounded w-full"
-              priority // Load hero image immediately
+              fill
+              className="mb-4 rounded object-cover"
             />
+          </div> */}
+
+
+          <div itemProp='image' className="max-w-full mx-auto">
+              <div className="relative w-full aspect-[16/9] h-[400px] sm:h-[400px] mb-16">
+                <Image
+                  src={post.imageurl}
+                  alt={post.imageAlt || post.title}
+                  fill
+                  className="object-cover rounded-primary-lg"
+                  priority
+                  itemProp="image"
+                  quality={100}
+                />
+              </div>
+            </div>
           </div>
         </header>
 
