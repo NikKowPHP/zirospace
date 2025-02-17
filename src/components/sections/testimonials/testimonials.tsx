@@ -104,7 +104,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
             {testimonials.map((testimonial: Testimonial) => (
               <div
                 key={testimonial.id}
-                className="flex-shrink-0 w-[300px] sm:w-[400px] sm:h-[180px] bg-gray-100 rounded-[32px] p-6"
+                className="flex-shrink-0 w-[300px] sm:w-[400px] sm:h-[250px] bg-gray-100 rounded-[32px] p-6"
               >
                 <div className="space-y-6 flex flex-col h-full">
                   <p className="text-gray-900 text-lg leading-relaxed flex-1">
