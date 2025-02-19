@@ -22,7 +22,14 @@
     "work": "Realizacje",
     "pricing": "Cennik",
     "bookCall": "Umów się na spotkanie",
-    "viewPricing": "Zobacz cennik"
+    "viewPricing": "Zobacz cennik",
+    "process": "Proces",
+    "services": "Usługi",
+    "whyZiro": "Dlaczego Ziro?",
+    "philosophy": "Filozofia",
+    "FAQs": "FAQ",
+    "blog": "Blog",
+    "learnMore": "Dowiedz się więcej"
   },
   "caseStudy": {
     "ctaText": {
@@ -117,7 +124,7 @@
     "alwaysOpen": "Jesteśmy zawsze otwarci na komunikację, umów się na 20-minutową konsultację z Nikhilem",
     "bookCall": "Umów rozmowę"
   },
- "testimonials": {
+  "testimonials": {
     "title": "Co mówią nasi klienci",
     "description": "Odkryj doświadczenia, które kształtują naszą historię. Prosto od tych, którzy inspirują naszą najlepszą pracę",
     "client1": {
@@ -149,8 +156,95 @@
       "company": "SearchMyTenders",
       "quote": "Nasz projekt teraz naprawdę wyróżnia się na rynku.",
       "imageAlt": "Portret klienta"
+    }
+  },
+  "caseStudiesSection": {
+    "title": "Nasze Projekty.",
+    "description": "Przewiń nasze najnowsze projekty"
+  },
+  "blog": {
+    "latest-articles": "Najnowsze artykuły"
+  },
+  "subHeroSection": {
+    "title": "Specjalizujemy się w cyfrowym zdrowiu skoncentrowanym na użytkowniku, aby wzmocnić jednostki i poprawić opiekę",
+    "subtitle": "Naszą misją jest upraszczanie interakcji w opiece zdrowotnej za pomocą intuicyjnych projektów i wpływowej technologii, zapewniając, że każdy czuje się wspierany i zaangażowany w swoją podróż zdrowotną"
+  },
+  "processSection": {
+    "title": "Nasz proces.",
+    "subtitle": "Niezawodny proces osiągania wyjątkowości.",
+    "items": {
+      "item1": {
+        "title": "Odkrywanie.",
+        "list": {
+          "item1": "Zdobądź wgląd w wyzwania, cele i grupy docelowe poprzez dyskusje i badania.",
+          "item2": "Dopasuj cele, aby przygotować grunt pod efektywną współpracę.",
+          "item3": "Zbieraj dane na temat trendów rynkowych i preferencji użytkowników, aby informować o projekcie."
+        }
+      },
+      "item2": {
+        "title": "Kreowanie.",
+        "list": {
+          "item1": "Eksploruj kreatywne koncepcje i strategie, aby sprostać wyzwaniom opieki zdrowotnej.",
+          "item2": "Generuj różnorodne pomysły mające na celu poprawę zaangażowania i satysfakcji użytkowników.",
+          "item3": "Udoskonal obiecujące pomysły, aby poprawić doświadczenia użytkowników."
+        }
+      },
+      "item3": {
+        "title": "Projektowanie i Udoskonalanie.",
+        "list": {
+          "item1": "Twórz szkielety i prototypy, które priorytetowo traktują intuicyjny design.",
+          "item2": "Rozwijaj atrakcyjne wizualnie doświadczenia cyfrowe, które rezonują z użytkownikami.",
+          "item3": "Upewnij się, że ostateczne projekty są dopracowane i zgodne z tożsamością marki."
+        }
+      },
+      "item4": {
+        "title": "Testowanie.",
+        "list": {
+          "item1": "Przeprowadź testy, aby zidentyfikować problemy i zapewnić jakość.",
+          "item2": "Zbieraj opinie od użytkowników i interesariuszy, aby udoskonalić projekt.",
+          "item3": "Wprowadzaj poprawki, aż rozwiązanie będzie gotowe do uruchomienia."
+        }
+      }
+    }
+  },
+  "servicesSection": {
+    "ourServicesTitle": "Nasze Usługi.",
+    "ourServicesSubtitle": "Twój Partner w Innowacyjnych Rozwiązaniach Cyfrowego Zdrowia",
+    "serviceCard1": {
+      "title": "UI/UX Design",
+      "subtitle": "Tworzenie Intuicyjnych Doświadczeń",
+      "description": "Twórz intuicyjne i angażujące interfejsy użytkownika, które poprawiają ogólne doświadczenia pacjentów i dostawców opieki zdrowotnej, zapewniając, że cyfrowe rozwiązania zdrowotne są przyjazne dla użytkownika i dostępne."
     },
-    "alwaysOpen": "Jesteśmy zawsze otwarci na komunikację, umów swoją 20-minutową konsultację z Nikhilem",
-    "bookCall": "Umów rozmowę"
+    "serviceCard2": {
+      "title": "Branding & Identity",
+      "subtitle": "Tworzenie Doskonałości Marki",
+      "description": "Rozwijaj wpływowe tożsamości marek, które rezonują z grupami docelowymi, skutecznie komunikując wartości i misję organizacji opieki zdrowotnej poprzez przemyślany design."
+    },
+    "serviceCard3": {
+      "title": "Produkt Cyfrowy",
+      "subtitle": "Przekształcanie Pomysłów w Rzeczywistość",
+      "description": "Projektuj i buduj innowacyjne cyfrowe produkty zdrowotne, od aplikacji mobilnych po platformy internetowe, które rozwiązują rzeczywiste wyzwania opieki zdrowotnej i poprawiają zaangażowanie i wyniki pacjentów."
+    }
+  },
+  "wyZiroSection": {
+    "title": "Dlaczego Wybrać Ziro?",
+    "description": "Ziro jest partnerem w innowacjach, oddanym tworzeniu wpływowych cyfrowych rozwiązań zdrowotnych, które poprawiają opiekę i zaangażowanie pacjentów. Współpracuj, aby przekształcić opiekę zdrowotną poprzez wyjątkowy design."
+  },
+  "ziroPhilosophy": {
+    "title": "Filozofia Ziro: Sztuka Bliskości",
+    "subtitle": "Oparta na idei",
+    "idea": "Bliskość Implikuje Separację",
+    "description1": "W Ziro wierzymy, że innowacje w cyfrowym zdrowiu wynikają z równoważenia bliskości i dystansu. Ściśle współpracując z klientami i użytkownikami, aby zrozumieć ich potrzeby, przy jednoczesnym zachowaniu pewnego dystansu, aby kwestionować założenia, tworzymy rozwiązania, które bezproblemowo integrują się z życiem pacjentów i dostawców opieki zdrowotnej.",
+    "description2": "Postrzegamy doskonałość jako ciągłą podróż, dążąc do \"blisko doskonałości\" poprzez iteracyjne procesy projektowe, które dostosowują się do ewoluujących potrzeb użytkowników i technologii. Nasza podstawowa filozofia podkreśla, że \"doskonałość w bliskości\" jest niezbędna do przekształcenia cyfrowego zdrowia i poprawy opieki i zaangażowania pacjentów."
+  },
+  "stayInformedSection": {
+    "title": "Bądź na bieżąco",
+    "subtitle": "Zapisz się do naszego newslettera, aby otrzymywać aktualizacje o naszych najnowszych projektach, spostrzeżeniach i wiadomościach z branży.",
+    "form": {
+      "firstName": "Imię",
+      "lastName": "Nazwisko",
+      "email": "Email",
+      "submit": "Wyślij"
+    }
   }
 } 
