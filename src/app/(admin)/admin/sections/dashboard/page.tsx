@@ -5,12 +5,23 @@ import { Button } from "@/components/ui/button/button"
 // import { AnalyticsDashboard } from "@/components/analytics/analyticsDashboard"
 
 export default function AdminDashboard() {
+  const handleRevalidate = async () => {
+    const response = await fetch('/api/admin/revalidate')
+    if (response.ok) {
+      console.log('Cache revalidated')
+    } else {
+      console.error('Failed to revalidate cache')
+    }
+  }
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-[32px] font-medium tracking-[-0.02em] text-gray-900">
           Admin Dashboard
         </h1>
+        <Button variant="primary" onClick={handleRevalidate}>
+          Revalidate Cache
+        </Button>
       </div>
 
       {/* Analytics Dashboard */}
