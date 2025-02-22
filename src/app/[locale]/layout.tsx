@@ -12,6 +12,7 @@ const inter = Inter({
   display: 'swap',
   variable: '--font-inter',
 })
+import { PostHogProvider } from '@/contexts/posthog-context'
 
 // Your GA Measurement ID
 const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID
@@ -120,11 +121,13 @@ export default async function LocaleLayout({
       </head>
       <body className={inter.variable}>
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <PostHogProvider>
           <PageProvider>
             <ClientWrapper>
               <main className="relative">{children}</main>
-            </ClientWrapper>
-          </PageProvider>
+              </ClientWrapper>
+            </PageProvider>
+          </PostHogProvider>
         </NextIntlClientProvider>
       </body>
     </html>
