@@ -27,6 +27,7 @@ export async function CaseStudies({ locale }: CaseStudiesProps) {
   const caseStudyService = await getCaseStudyService()
   const caseStudies = await caseStudyService.getCaseStudies(locale)
   const caseStudySliders = await caseStudySliderService.getCaseStudySliders()
+  console.log('caseStudies', caseStudies)
   const t = await getTranslations('caseStudiesSection')
 
   return (
