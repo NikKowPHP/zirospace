@@ -17,13 +17,14 @@ export class CaseStudyRepository {
 
   getCaseStudies = unstable_cache(
     async (locale: Locale): Promise<CaseStudy[]> => {
+      console.log('getCaseStudies locale and cache', locale)
       const { data, error } = await this.supabaseClient
         .from(`${this.tableName}_${locale}`)
         .select('*')
         .order('created_at', { ascending: false })
 
       if (error) {
-        logger.log('Error fetching case studies:', error)
+        console.log('Error fetching case studies:', error)
         return []
       }
 
