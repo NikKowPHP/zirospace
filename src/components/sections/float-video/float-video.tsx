@@ -27,6 +27,8 @@ export const FloatVideo = () => {
       autoplay: 1,
       mute: 1,
       controls: 0,
+      playlist: videoId,
+      loop: 1,
       modestbranding: 1,
       rel: 0
     },
