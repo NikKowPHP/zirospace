@@ -16,14 +16,17 @@ export class TestimonialRepository implements ITestimonialRepository {
 
   getTestimonials = unstable_cache(
     async (locale: string): Promise<Testimonial[]> => {
+      console.log('getTestimonials locale and cache', locale)
       const tableName = `${this.tableName}_${locale}`
       const { data, error } = await this.supabaseClient
         .from(tableName)
         .select('*')
         .order('created_at', { ascending: false })
 
+      console.log('getTestimonials data', data)
+
       if (error) {
-        logger.log('Error fetching testimonials:', error)
+        console.error('Error fetching testimonials:', error)
         return []
       }
 
