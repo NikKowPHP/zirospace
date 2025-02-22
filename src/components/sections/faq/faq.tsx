@@ -60,7 +60,7 @@ export function Faq() {
 
   return (
     <section
-    id='faqs'
+      id='faqs'
       className="py-12 md:container sm:py-16 mt-10 lg:py-24 lg:mb-10"
       itemScope
       itemType="https://schema.org/FAQPage"
@@ -69,14 +69,19 @@ export function Faq() {
         <h2 className="text-center text-black text-[36px] sm:text-[46px] lg:text-[56px] font-medium mb-8 sm:mb-12 lg:mb-16">
           {t('title')}
         </h2>
-        <div className="mx-auto flex flex-col gap-[12px] text-black">
+        <div className="mx-auto flex flex-col gap-[12px] text-black"
+          itemProp="mainEntity"
+          itemScope
+          itemType="https://schema.org/ItemList"
+        >
           {faqItems.map((item) => (
-            <FaqAccordion
-              key={item.id}
-              itemId={item.id}
-              isOpen={openId === item.id}
-              onToggle={() => setOpenId(openId === item.id ? null : item.id)}
-            />
+            <div key={item.id} itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <FaqAccordion
+                itemId={item.id}
+                isOpen={openId === item.id}
+                onToggle={() => setOpenId(openId === item.id ? null : item.id)}
+              />
+            </div>
           ))}
         </div>
       </div>
