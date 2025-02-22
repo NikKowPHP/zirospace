@@ -10,9 +10,9 @@ class Logger {
   }
 
   error(...args: unknown[]): void {
-    if (!Logger.isProduction) {
+    // if (!Logger.isProduction) {
       console.error(...args);
-    }
+    // }
   }
 
 }
