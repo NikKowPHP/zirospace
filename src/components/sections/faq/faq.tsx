@@ -44,8 +44,16 @@ function FaqAccordion({ itemId, isOpen, onToggle }: FaqAccordionProps) {
           isOpen ? 'grid-rows-[1fr] ' : 'grid-rows-[0fr] '
         )}
       >
-        <div className="overflow-hidden">
-          <p className="text-gray-600 text-sm sm:text-base pb-6 px-10">
+        <div className="overflow-hidden"
+        
+          itemScope
+          itemProp="acceptedAnswer"
+          itemType="https://schema.org/Answer"
+        >
+          <p
+            itemProp="text"
+            className="text-gray-600 text-sm sm:text-base pb-6 px-10"
+          >
             {t(`${itemId}.answer`)}
           </p>
         </div>
@@ -62,29 +70,23 @@ export function Faq() {
     <section
       id='faqs'
       className="py-12 md:container sm:py-16 mt-10 lg:py-24 lg:mb-10"
-      itemScope
+       itemScope
       itemType="https://schema.org/FAQPage"
     >
       <div className="px-4 sm:px-0 ">
-        <h2 className="text-center text-black text-[36px] sm:text-[46px] lg:text-[56px] font-medium mb-8 sm:mb-12 lg:mb-16">
+        <h2 className="text-center text-black text-[36px] sm:text-[46px] lg:text-[56px] font-medium mb-8 sm:mb-12 lg:mb-16" itemProp="name">
           {t('title')}
         </h2>
-        <div className="mx-auto flex flex-col gap-[12px] text-black"
+        <div 
+          className="mx-auto flex flex-col gap-[12px] text-black"
           itemProp="mainEntity"
-          itemScope
-          itemType="https://schema.org/ItemList"
         >
-          {faqItems.map((item, index) => (
-            <div key={item.id} itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <meta itemProp="position" content={`${index + 1}`} />
-              <div itemProp="item" itemScope itemType="https://schema.org/Question">
+          {faqItems.map((item) => (
                 <FaqAccordion
                   itemId={item.id}
                   isOpen={openId === item.id}
                   onToggle={() => setOpenId(openId === item.id ? null : item.id)}
                 />
-              </div>
-            </div>
           ))}
         </div>
       </div>
