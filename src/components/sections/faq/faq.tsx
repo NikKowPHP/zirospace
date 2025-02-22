@@ -44,7 +44,7 @@ function FaqAccordion({ itemId, isOpen, onToggle }: FaqAccordionProps) {
           isOpen ? 'grid-rows-[1fr] ' : 'grid-rows-[0fr] '
         )}
       >
-        <div className="overflow-hidden">
+        <div className="overflow-hidden" itemProp="acceptedAnswer" itemScope itemType="https://schema.org/Answer">
           <p className="text-gray-600 text-sm sm:text-base pb-6 px-10">
             {t(`${itemId}.answer`)}
           </p>
@@ -71,20 +71,13 @@ export function Faq() {
         </h2>
         <div className="mx-auto flex flex-col gap-[12px] text-black"
           itemProp="mainEntity"
-          itemScope
-          itemType="https://schema.org/ItemList"
         >
-          {faqItems.map((item, index) => (
-            <div key={item.id} itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <meta itemProp="position" content={`${index + 1}`} />
-              <div itemProp="item" itemScope itemType="https://schema.org/Question">
+          {faqItems.map((item) => (
                 <FaqAccordion
                   itemId={item.id}
                   isOpen={openId === item.id}
                   onToggle={() => setOpenId(openId === item.id ? null : item.id)}
                 />
-              </div>
-            </div>
           ))}
         </div>
       </div>
