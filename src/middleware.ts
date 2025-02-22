@@ -36,26 +36,25 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check if the pathname starts with a locale
-  const pathnameHasLocale = locales.some(
-    locale => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  );
+  // const pathnameHasLocale = locales.some(
+  //   locale => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  // );
 
-  if (pathnameHasLocale) {
+  // if (pathnameHasLocale) {
     // Extract the path without locale
-    const pathWithoutLocale = pathname
-      .split('/')
-      .slice(2)
-      .join('/');
+    // const pathWithoutLocale = pathname
+    //   .split('/')
+    //   .slice(2)
+    //   .join('/');
 
     // Validate route pattern for case studies
-    const isCaseStudyRoute = /^case-studies(\/[a-z0-9-]+)?$/.test(pathWithoutLocale);
-    const isBlogRoute = /^blog(\/[a-z0-9-]+)?$/.test(pathWithoutLocale);
+    // const isCaseStudyRoute = /^case-studies(\/[a-z0-9-]+)?$/.test(pathWithoutLocale);
+    // const isBlogRoute = /^blog(\/[a-z0-9-]+)?$/.test(pathWithoutLocale);
     
-    if (pathWithoutLocale && !isCaseStudyRoute && !isBlogRoute) {
-      const locale = pathname.split('/')[1];
-      return NextResponse.redirect(new URL(`/${locale}/404`, request.url));
-    }
-  }
+    // if (pathWithoutLocale && !isCaseStudyRoute && !isBlogRoute) {
+    //   // return NextResponse.redirect(new URL(`/${locale}/404`, request.url));
+    // }
+  // }
 
   return intlMiddleware(request);
 }
