@@ -74,13 +74,16 @@ export function Faq() {
           itemScope
           itemType="https://schema.org/ItemList"
         >
-          {faqItems.map((item) => (
+          {faqItems.map((item, index) => (
             <div key={item.id} itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
-              <FaqAccordion
-                itemId={item.id}
-                isOpen={openId === item.id}
-                onToggle={() => setOpenId(openId === item.id ? null : item.id)}
-              />
+              <meta itemProp="position" content={`${index + 1}`} />
+              <div itemProp="item" itemScope itemType="https://schema.org/Question">
+                <FaqAccordion
+                  itemId={item.id}
+                  isOpen={openId === item.id}
+                  onToggle={() => setOpenId(openId === item.id ? null : item.id)}
+                />
+              </div>
             </div>
           ))}
         </div>
