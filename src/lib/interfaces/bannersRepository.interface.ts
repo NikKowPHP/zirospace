@@ -1,10 +1,9 @@
-import { Locale } from "@/i18n"
-import { CaseStudy } from "@/domain/models/case-study.model"
+import { Banner } from "@/domain/models/banner.model"
 
 export interface IBannerRepository {
-  getBanners: (locale: Locale) => Promise<Banner[]>
-  getBannerById: (id: string, locale: Locale) => Promise<Banner | null>
-  createBanner: (banner: Partial<Banner>, locale: Locale) => Promise<Banner>
-  updateBanner: (id: string, banner: Partial<Banner>, locale: Locale) => Promise<Banner>
-  deleteBanner: (id: string, locale: Locale) => Promise<void>
+  getBanners: (locale: string) => Promise<Banner[]>
+  getBannerById: (id: string, locale: string) => Promise<Banner | null>
+  createBanner: (banner: Partial<Banner>, locale: string) => Promise<Banner>
+  updateBanner: (id: string, banner: Partial<Banner>, locale: string) => Promise<Banner>
+  deleteBanner: (id: string, locale: string) => Promise<void>
 }
