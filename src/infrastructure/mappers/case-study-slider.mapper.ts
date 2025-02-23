@@ -47,7 +47,6 @@ export class CaseStudySliderImagesMapper {
       id: dto.id,
       image: dto.image,
       alt: dto.alt,
-      sliderId: dto.slider_id,
       createdAt: new Date(dto.created_at),
       updatedAt: new Date(dto.updated_at),
     }
@@ -56,7 +55,6 @@ export class CaseStudySliderImagesMapper {
   static toPersistence(domain: Partial<CaseStudyImage>): Partial<CaseStudySliderImageDTO> {
     return {
       id: domain.id,
-      slider_id: domain.sliderId,
       image: domain.image,
       alt: domain.alt,
     }
