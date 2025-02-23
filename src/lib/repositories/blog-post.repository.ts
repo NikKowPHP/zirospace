@@ -31,7 +31,7 @@ export class BlogPostRepository implements IBlogPostRepository {
     },
     [CACHE_TAGS.BLOG_POSTS],
     {
-      revalidate: CACHE_TIMES.HOUR,
+      revalidate: CACHE_TIMES.MINUTE,
       tags: [CACHE_TAGS.BLOG_POSTS],
     }
   )
