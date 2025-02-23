@@ -91,6 +91,21 @@ export default function AdminDashboard() {
           </Button>
         </Link>
 
+        <Link
+          href="/admin/sections/banners"
+          className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
+        >
+          <h2 className="text-xl font-medium text-gray-900 mb-2">
+            Banners
+          </h2>
+          <p className="text-gray-600 mb-4">
+            Manage your banners, add new ones, or edit existing ones.
+          </p>
+          <Button variant="primary" className="mt-auto w-full sm:w-auto">
+            Manage Banners
+          </Button>
+        </Link>
+
         {/* Add more admin sections here as needed */}
       </div>
     </div>
