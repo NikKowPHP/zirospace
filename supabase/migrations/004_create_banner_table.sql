@@ -1,21 +1,29 @@
-CREATE TABLE banner_en (
+CREATE TABLE zirospace_banners_en (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
-  start_date TIMESTAMPTZ,
-  end_date TIMESTAMPTZ,
+  subtitle TEXT DEFAULT NULL,
+  image_url TEXT DEFAULT NULL,
+  start_date TIMESTAMPTZ DEFAULT NULL,
+  end_date TIMESTAMPTZ DEFAULT NULL,
   is_active BOOLEAN NOT NULL DEFAULT FALSE,
+  cta_button_text TEXT DEFAULT NULL,
+  cta_button_link TEXT DEFAULT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE banner_pl (
+CREATE TABLE zirospace_banners_pl (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
-  start_date TIMESTAMPTZ,
-  end_date TIMESTAMPTZ,
+  subtitle TEXT DEFAULT NULL,
+  image_url TEXT DEFAULT NULL,
+  start_date TIMESTAMPTZ DEFAULT NULL,
+  end_date TIMESTAMPTZ DEFAULT NULL,
   is_active BOOLEAN NOT NULL DEFAULT FALSE,
+  cta_button_text TEXT DEFAULT NULL,
+  cta_button_link TEXT DEFAULT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
