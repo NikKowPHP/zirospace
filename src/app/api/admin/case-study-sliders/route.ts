@@ -37,6 +37,7 @@ export async function GET() {
     console.log('Processing case study slider retrieval:')
 
     const caseStudySliders = await caseStudySliderService.getCaseStudySliders();
+    logger.log('caseStudySliders', caseStudySliders)
 
     return NextResponse.json(caseStudySliders.map(CaseStudySliderMapper.toPersistence));
   } catch (error) {

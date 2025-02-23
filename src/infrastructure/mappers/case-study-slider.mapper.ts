@@ -22,6 +22,8 @@ export class CaseStudySliderMapper {
   }
 
   static toPersistence(domain: Partial<CaseStudySlider>): Partial<CaseStudySliderDTO> {
+
+    const updatedAt = new Date(domain.updatedAt ?? new Date())
     return {
       id: domain.id,
       images: domain.images?.map(image => ({
@@ -29,7 +31,7 @@ export class CaseStudySliderMapper {
         image: image.image,
         alt: image.alt,
       })),
-      updated_at: domain.updatedAt?.toISOString(),
+      updated_at: updatedAt.toISOString(),
     }
   }
 } 
