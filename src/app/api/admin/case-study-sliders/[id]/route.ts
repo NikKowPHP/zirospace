@@ -54,7 +54,7 @@ export async function PUT(request: NextRequest) {
 
     const updatedCaseStudySlider = await caseStudySliderService.updateCaseStudySlider(
       id,
-      CaseStudySliderMapper.toDomain(data)
+      data
     )
 
     if (!updatedCaseStudySlider) {
@@ -70,7 +70,7 @@ export async function PUT(request: NextRequest) {
     // Revalidate cache
     revalidateTag(CACHE_TAGS.CASE_STUDY_SLIDERS)
 
-    return NextResponse.json(CaseStudySliderMapper.toPersistence(updatedCaseStudySlider))
+    return NextResponse.json(updatedCaseStudySlider)
   } catch (error) {
     logger.log('Error updating case study slider:', error)
     return NextResponse.json(

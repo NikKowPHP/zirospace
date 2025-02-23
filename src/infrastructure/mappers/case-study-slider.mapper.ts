@@ -9,6 +9,8 @@ export class CaseStudySliderMapper {
         : dto.images
       : [];
 
+    console.log('images in mapper', images)
+
     return {
       id: dto.id,
       images: images.map((image: { id: string; image: string; alt: string; }) => ({
@@ -24,6 +26,7 @@ export class CaseStudySliderMapper {
   static toPersistence(domain: Partial<CaseStudySlider>): Partial<CaseStudySliderDTO> {
 
     const updatedAt = new Date(domain.updatedAt ?? new Date())
+    const createdAt = new Date(domain.createdAt ?? new Date())
     return {
       id: domain.id,
       // images: domain.images?.map(image => ({
@@ -32,6 +35,7 @@ export class CaseStudySliderMapper {
       //   alt: image.alt,
       // })),
       updated_at: updatedAt.toISOString(),
+      created_at: createdAt.toISOString(),
     }
   }
 } 

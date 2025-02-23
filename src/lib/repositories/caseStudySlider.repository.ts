@@ -7,6 +7,8 @@ import { CaseStudySliderMapper, CaseStudySliderImagesMapper } from '@/infrastruc
 import { CaseStudySlider, CaseStudyImage } from '@/domain/models/case-study-slider.model'
 import { ICaseStudySliderRepository } from '../interfaces/caseStudySliderRepository.interface'
 import logger from '@/lib/logger'
+import { writeFileSync } from 'fs'
+import path from 'path'
 
 
 export class CaseStudySliderRepository implements ICaseStudySliderRepository {
@@ -130,6 +132,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
   )
 
   async updateCaseStudySlider(id: string, caseStudySlider: Partial<CaseStudySlider>): Promise<CaseStudySlider | null> {
+    console.log('updating case study slider aaaaaaaaaaa', CaseStudySliderMapper.toPersistence(caseStudySlider))
     const { data, error } = await this.supabaseClient
     .from(this.slidersTable)
     .update(CaseStudySliderMapper.toPersistence(caseStudySlider))
@@ -154,6 +157,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
       const { error: imagesError } = await this.supabaseClient
         .from(this.imagesTable)
         .insert(caseStudySlider.images.map(image => ({
+          id: image.id,
           slider_id: id,
           image: image.image,
           alt: image.alt
@@ -165,8 +169,11 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
       }
     }
   }
+  console.log('processing case study slider with data', data)
 
-  return CaseStudySliderMapper.toDomain(data[0] as CaseStudySliderDTO);
+  console.log('appended data ', caseStudySlider)
+
+  return caseStudySlider as CaseStudySlider;
   }
 
   async deleteCaseStudySlider(id: string): Promise<void> {
