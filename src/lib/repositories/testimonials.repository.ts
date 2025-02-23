@@ -31,7 +31,7 @@ export class TestimonialRepository implements ITestimonialRepository {
     },
     [CACHE_TAGS.TESTIMONIALS],
     {
-      revalidate: CACHE_TIMES.HOUR,
+      revalidate: CACHE_TIMES.MINUTE,
       tags: [CACHE_TAGS.TESTIMONIALS],
     }
   )

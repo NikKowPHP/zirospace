@@ -31,7 +31,7 @@ export class CaseStudyRepository {
     },
     [CACHE_TAGS.CASE_STUDIES],
     {
-      revalidate: CACHE_TIMES.HOUR,
+      revalidate: CACHE_TIMES.MINUTE,
       tags: [CACHE_TAGS.CASE_STUDIES],
     }
   )
@@ -54,7 +54,7 @@ export class CaseStudyRepository {
       },
       [`case-study-${slug}-${locale}`],
       {
-        revalidate: CACHE_TIMES.DAY,
+        revalidate: CACHE_TIMES.MINUTE,
         tags: [CACHE_TAGS.CASE_STUDIES],
       }
     )()
