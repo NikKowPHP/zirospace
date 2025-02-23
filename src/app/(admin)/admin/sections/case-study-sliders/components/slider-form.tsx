@@ -41,7 +41,7 @@ export function CaseStudySliderForm({
 
   const handleAddImage = (e: React.MouseEvent) => {
     e.preventDefault()
-    setImages([...images, { id: Date.now().toString(), image: '', alt: '' }])
+    setImages([...images, { id: Date.now().toString(), image: '', alt: '', sliderId: caseStudySlider?.id ?? '' }])
   }
 
   const handleRemoveImage = (index: number) => {

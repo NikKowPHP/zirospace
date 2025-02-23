@@ -7,8 +7,6 @@ import { CaseStudySliderMapper, CaseStudySliderImagesMapper } from '@/infrastruc
 import { CaseStudySlider, CaseStudyImage } from '@/domain/models/case-study-slider.model'
 import { ICaseStudySliderRepository } from '../interfaces/caseStudySliderRepository.interface'
 import logger from '@/lib/logger'
-import { writeFileSync } from 'fs'
-import path from 'path'
 
 
 export class CaseStudySliderRepository implements ICaseStudySliderRepository {

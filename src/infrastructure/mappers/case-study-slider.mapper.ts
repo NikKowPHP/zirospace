@@ -47,6 +47,7 @@ export class CaseStudySliderImagesMapper {
       id: dto.id,
       image: dto.image,
       alt: dto.alt,
+      sliderId: dto.slider_id,
       createdAt: new Date(dto.created_at),
       updatedAt: new Date(dto.updated_at),
     }
