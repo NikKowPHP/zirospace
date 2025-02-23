@@ -1,37 +1,39 @@
-import { CaseStudySlider } from "@/domain/models/case-study-slider.model"
-import { ICaseStudySliderRepository } from "../interfaces/caseStudySliderRepository.interface"
-import { caseStudySliderRepository } from "../repositories/caseStudySlider.repository"
-import { caseStudySliderRepositoryLocal } from "../repositories/caseStudySlider.local.repository"
+import { Banner } from "@/domain/models/banner.model"
+import { IBannerRepository } from "../interfaces/bannersRepository.interface"
+import { bannerRepository} from "@/lib/repositories/banner.repository"
+// import { bannerRepositoryLocal } from "@/infrastructure/repositories/banner.local.repository"
 
 
-
-
-export class CaseStudySliderService {
-  private caseStudySliderRepository: ICaseStudySliderRepository
+export class BannerService {
+  private bannerRepository: IBannerRepository
   constructor() {
-    if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.caseStudySliderRepository = caseStudySliderRepositoryLocal
-    } else {
-      this.caseStudySliderRepository = caseStudySliderRepository
-    }
+    // if(process.env.MOCK_REPOSITORIES === 'true') {
+    //   this.bannerRepository = bannerRepositoryLocal
+    // } else {
+      this.bannerRepository = bannerRepository
+    // }
   }
 
-  getCaseStudySliders = async (): Promise<CaseStudySlider[]> => {
-    return this.caseStudySliderRepository.getCaseStudiesSliders()
+  getBanners = async (locale: string): Promise<Banner[]> => {
+    return this.bannerRepository.getBanners(locale)
   }
 
-  createCaseStudySlider = async (caseStudySlider: CaseStudySlider ): Promise<CaseStudySlider> => {
-    return this.caseStudySliderRepository.createCaseStudySlider(caseStudySlider )
+  getBannerById = async (id: string, locale: string): Promise<Banner | null> => {
+    return this.bannerRepository.getBannerById(id, locale)
   }
 
-  updateCaseStudySlider = async (id: string, caseStudySlider: CaseStudySlider): Promise<CaseStudySlider | null> => {
-    return this.caseStudySliderRepository.updateCaseStudySlider(id, caseStudySlider)
+  createBanner = async (banner: Banner, locale: string): Promise<Banner> => {
+    return this.bannerRepository.createBanner(banner, locale)
   }
 
-  deleteCaseStudySlider = async (id: string): Promise<void> => {
-    return this.caseStudySliderRepository.deleteCaseStudySlider(id)
+  updateBanner = async (id: string, banner: Banner, locale: string): Promise<Banner | null> => {
+    return this.bannerRepository.updateBanner(id, banner, locale)
+  }
+
+  deleteBanner = async (id: string, locale: string): Promise<void> => {
+    return this.bannerRepository.deleteBanner(id, locale)
   }
 }
 
 // export singleton
-export const caseStudySliderService = new CaseStudySliderService()
+export const bannerService = new BannerService()
