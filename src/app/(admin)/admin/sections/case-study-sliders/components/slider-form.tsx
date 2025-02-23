@@ -35,7 +35,7 @@ export function CaseStudySliderForm({
     value: string
   ) => {
     const newImages = [...images]
-    newImages[index][field] = value
+    newImages[index][field] = value as string & Date
     setImages(newImages)
   }
 

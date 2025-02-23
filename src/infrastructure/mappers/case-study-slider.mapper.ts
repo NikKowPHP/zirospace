@@ -1,5 +1,5 @@
-import { CaseStudySlider } from '@/domain/models/case-study-slider.model';
-import { CaseStudySliderDTO } from '../dto/case-study-slider.dto';
+import { CaseStudyImage, CaseStudySlider } from '@/domain/models/case-study-slider.model';
+import { CaseStudySliderDTO, CaseStudySliderImageDTO } from '../dto/case-study-slider.dto';
 
 export class CaseStudySliderMapper {
   static toDomain(dto: CaseStudySliderDTO): CaseStudySlider {
@@ -26,12 +26,34 @@ export class CaseStudySliderMapper {
     const updatedAt = new Date(domain.updatedAt ?? new Date())
     return {
       id: domain.id,
-      images: domain.images?.map(image => ({
-        id: image.id,
-        image: image.image,
-        alt: image.alt,
-      })),
+      // images: domain.images?.map(image => ({
+      //   id: image.id,
+      //   image: image.image,
+      //   alt: image.alt,
+      // })),
       updated_at: updatedAt.toISOString(),
     }
   }
 } 
+
+
+export class CaseStudySliderImagesMapper {
+  static toDomain(dto: CaseStudySliderImageDTO): CaseStudyImage {
+    return {
+      id: dto.id,
+      image: dto.image,
+      alt: dto.alt,
+      createdAt: new Date(dto.created_at),
+      updatedAt: new Date(dto.updated_at),
+    }
+  }
+
+  static toPersistence(domain: Partial<CaseStudyImage>): Partial<CaseStudySliderImageDTO> {
+    return {
+      id: domain.id,
+      slider_id: domain.sliderId,
+      image: domain.image,
+      alt: domain.alt,
+    }
+  }
+}

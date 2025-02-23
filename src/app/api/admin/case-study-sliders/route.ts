@@ -4,6 +4,8 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
 import logger from '@/lib/logger'
+
+
 export async function POST(request: NextRequest) {
   const { data } = await request.json()
   console.log('data in router ', data)
@@ -32,19 +34,19 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
-  try {
-    console.log('Processing case study slider retrieval:')
+// export async function GET() {
+//   try {
+//     console.log('Processing case study slider retrieval:')
 
-    const caseStudySliders = await caseStudySliderService.getCaseStudySliders();
-    logger.log('caseStudySliders', caseStudySliders)
+//     const caseStudySliders = await caseStudySliderService.getCaseStudySliders();
+//     console.log('caseStudySliders', caseStudySliders)
 
-    return NextResponse.json(caseStudySliders.map(CaseStudySliderMapper.toPersistence));
-  } catch (error) {
-    logger.log('Error retrieving case study sliders:', error)
-    return NextResponse.json(
-      { error: 'Failed to retrieve case study sliders', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    )
-  }
-}
+//     return NextResponse.json(caseStudySliders);
+//   } catch (error) {
+//     logger.log('Error retrieving case study sliders:', error)
+//     return NextResponse.json(
+//       { error: 'Failed to retrieve case study sliders', details: error instanceof Error ? error.message : 'Unknown error' },
+//       { status: 500 }
+//     )
+//   }
+// }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import {  useState } from 'react'
 import { useAdmin } from '@/contexts/admin-context'
 import { CaseStudySliderForm } from './components/slider-form'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
@@ -15,15 +15,11 @@ export function CaseStudySliderList() {
     deleteCaseStudySlider,
     error,
     loading,
-    getCaseStudySliders,
   } = useAdmin()
   const [editingCaseStudySlider, setEditingCaseStudySlider] =
     useState<CaseStudySlider | null>(null)
   const [isCreating, setIsCreating] = useState(false)
 
-  useEffect(() => {
-    getCaseStudySliders()
-  }, [getCaseStudySliders])
 
   const handleCreate = async (data: Partial<CaseStudySlider>) => {
     try {

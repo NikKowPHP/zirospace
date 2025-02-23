@@ -9,6 +9,8 @@ export default async function CaseStudySlidersAdminPage() {
     caseStudySliderService.getCaseStudySliders(),
   ])
 
+  console.log('caseStudySliders in page', caseStudySliders)
+
   return (
     <AdminProvider initialCaseStudySliders={caseStudySliders}>
       <div className="bg-white shadow sm:rounded-lg">

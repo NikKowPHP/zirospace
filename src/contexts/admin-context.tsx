@@ -578,11 +578,14 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
+      console.log('fetching case study sliders')
       const response = await fetch(`/api/admin/case-study-sliders`)
       if (!response.ok) {
         throw new Error('Failed to fetch case study sliders')
       }
+     
       const data = await response.json()
+      console.log('case study sliders data', data)
       setCaseStudySliders(data)
     } catch (error: any) {
       setError(error.message || 'Failed to fetch case study sliders')

@@ -4,6 +4,8 @@ export interface CaseStudyImage {
   id: string;
   image: string;
   alt: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface CaseStudySlider {
