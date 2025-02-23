@@ -13,12 +13,14 @@ import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import logger from '@/lib/logger'
+import { Banner } from '@/domain/models/banner.model'
 
 interface AdminContextType {
   caseStudies: Record<Locale, CaseStudy[]>
   caseStudySliders: CaseStudySlider[]
   testimonials: Record<Locale, Testimonial[]>
   blogPosts: Record<Locale, BlogPost[]>
+  banners: Record<Locale, Banner[]>
   loading: boolean
   error: string | null
   createCaseStudy: (data: Partial<CaseStudy>, locale: Locale) => Promise<void>
@@ -56,6 +58,14 @@ interface AdminContextType {
   deleteBlogPost: (id: string, locale: Locale) => Promise<void>
   pinBlogPost: (id: string, locale: Locale) => Promise<void>
 
+  createBanner: (data: Partial<Banner>, locale: Locale) => Promise<void>
+  updateBanner: (
+    id: string,
+    data: Partial<Banner>,
+    locale: Locale
+  ) => Promise<void>
+  deleteBanner: (id: string, locale: Locale) => Promise<void>
+
   clearError: () => void
   getTestimonials: (locale: Locale) => Promise<void>
   getCaseStudySliders: () => Promise<void>
@@ -69,6 +79,7 @@ interface AdminProviderProps {
   initialCaseStudySliders?: CaseStudySlider[]
   initialTestimonials?: Record<Locale, Testimonial[]>
   initialBlogPosts?: Record<Locale, BlogPost[]>
+  initialBanners?: Record<Locale, Banner[]>
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined)
@@ -79,6 +90,7 @@ export function AdminProvider({
   initialCaseStudySliders,
   initialTestimonials,
   initialBlogPosts,
+  initialBanners,
 }: AdminProviderProps) {
   const [caseStudies, setCaseStudies] = useState<Record<Locale, CaseStudy[]>>(
     initialCaseStudies || { en: [], pl: [] }
@@ -91,6 +103,9 @@ export function AdminProvider({
   >(initialTestimonials || { en: [], pl: [] })
   const [blogPosts, setBlogPosts] = useState<Record<string, BlogPost[]>>(
     initialBlogPosts || { en: [], pl: [] }
+  )
+  const [banners, setBanners] = useState<Record<Locale, Banner[]>>(
+    initialBanners || { en: [], pl: [] }
   )
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -119,6 +134,12 @@ export function AdminProvider({
       setBlogPosts(initialBlogPosts)
     }
   }, [initialBlogPosts])
+
+  useEffect(() => {
+    if (initialBanners) {
+      setBanners(initialBanners)
+    }
+  }, [initialBanners])
 
   const createCaseStudy = async (data: Partial<CaseStudy>, locale: Locale) => {
     setLoading(true)
@@ -555,6 +576,105 @@ export function AdminProvider({
     }
   }
 
+  const createBanner = async (data: Partial<Banner>, locale: Locale) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/banners`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data, locale }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: 'Failed to create banner' }))
+        throw new Error(errorData.error || 'Failed to create banner')
+      }
+
+      const newBanner = await response.json()
+      setBanners((prev) => ({
+        ...prev,
+        [locale]: [...prev[locale], newBanner],
+      }))
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to create banner'
+      )
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const updateBanner = async (
+    id: string,
+    data: Partial<Banner>,
+    locale: Locale
+  ) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/banners/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data, locale }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: 'Failed to update banner' }))
+        throw new Error(errorData.error || 'Failed to update banner')
+      }
+
+      const updatedBanner = await response.json()
+      setBanners((prev) => ({
+        ...prev,
+        [locale]: prev[locale].map((banner) =>
+          banner.id === id ? updatedBanner : banner
+        ),
+      }))
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to update banner'
+      )
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const deleteBanner = async (id: string, locale: Locale) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/banners/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ locale }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to delete banner')
+      }
+
+      setBanners((prev) => ({
+        ...prev,
+        [locale]: prev[locale].filter((banner) => banner.id !== id),
+      }))
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to delete banner'
+      )
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const clearError = () => setError(null)
 
   const getTestimonials = useCallback(async (locale: Locale) => {
@@ -635,6 +755,7 @@ export function AdminProvider({
         caseStudySliders,
         testimonials,
         blogPosts,
+        banners,
         loading,
         error,
         createCaseStudy,
@@ -650,6 +771,9 @@ export function AdminProvider({
         updateBlogPost,
         deleteBlogPost,
         pinBlogPost,
+        createBanner,
+        updateBanner,
+        deleteBanner,
         clearError,
         getTestimonials,
         getCaseStudySliders,
