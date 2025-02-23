@@ -22,6 +22,9 @@ export function BannerForm({
   const [title, setTitle] = useState(banner?.title || '')
   const [content, setContent] = useState(banner?.content || '')
   const [subtitle, setSubtitle] = useState(banner?.subtitle || '')
+  const [imageUrl, setImageUrl] = useState(banner?.imageUrl || '')
+  const [startDate, setStartDate] = useState<Date | null>(banner?.startDate ? new Date(banner.startDate) : null)
+  const [endDate, setEndDate] = useState<Date | null>(banner?.endDate ? new Date(banner.endDate) : null)
   const [isActive, setIsActive] = useState(banner?.isActive || false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,6 +35,9 @@ export function BannerForm({
       title: title,
       content: content,
       subtitle: subtitle,
+      imageUrl: imageUrl,
+      startDate: startDate,
+      endDate: endDate,
       isActive: isActive,
     })
   }
@@ -86,6 +92,57 @@ export function BannerForm({
           id="subtitle"
           value={subtitle}
           onChange={(e) => setSubtitle(e.target.value)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="imageUrl"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Image URL ({locale})
+        </label>
+        <input
+          type="text"
+          name="imageUrl"
+          id="imageUrl"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="startDate"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Start Date ({locale})
+        </label>
+        <input
+          type="date"
+          name="startDate"
+          id="startDate"
+          value={startDate ? startDate.toISOString().split('T')[0] : ''}
+          onChange={(e) => setStartDate(e.target.value ? new Date(e.target.value) : null)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="endDate"
+          className="block text-sm font-medium text-gray-700"
+        >
+          End Date ({locale})
+        </label>
+        <input
+          type="date"
+          name="endDate"
+          id="endDate"
+          value={endDate ? endDate.toISOString().split('T')[0] : ''}
+          onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : null)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
         />
       </div>

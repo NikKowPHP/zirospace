@@ -1,5 +1,5 @@
 CREATE TABLE zirospace_banners_en (
-  id SERIAL PRIMARY KEY,
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   subtitle TEXT DEFAULT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE zirospace_banners_en (
 );
 
 CREATE TABLE zirospace_banners_pl (
-  id SERIAL PRIMARY KEY,
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   subtitle TEXT DEFAULT NULL,
