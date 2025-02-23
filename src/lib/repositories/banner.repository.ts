@@ -1,24 +1,23 @@
 import { IBannerRepository } from '@/lib/interfaces/bannersRepository.interface';
-import { Locale } from '@/i18n';
 import { Banner } from '@/domain/models/banner.model';
-import { BannerDTO } from '../dto/banner.dto'; // Assuming you have a BannerDTO
-import { BannerMapper } from '../mappers/banner.mapper'; // Assuming you have a BannerMapper
+import { BannerDTO } from '../../infrastructure/dto/banner.dto'; // Assuming you have a BannerDTO
+import { BannerMapper } from '../../infrastructure/mappers/banner.mapper'; // Assuming you have a BannerMapper
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Database } from '@/types/supabase';
-
+import { supabase } from '../supabase'
 export class BannerRepository implements IBannerRepository {
     private supabaseClient: SupabaseClient<Database>;
     private tableName: string;
 
-    constructor(supabaseClient: SupabaseClient<Database>) {
-        this.supabaseClient = supabaseClient;
+    constructor() {
+        this.supabaseClient = supabase;
         this.tableName = `zirospace_banners`;
     }
-    private getTableName(locale: Locale): string {
+    private getTableName(locale: string): string {
         return `${this.tableName}_${locale}`;
     }
 
-    async getBanners(locale: Locale): Promise<Banner[]> {
+    async getBanners(locale: string): Promise<Banner[]> {
         const tableName = this.getTableName(locale);
         const { data, error } = await this.supabaseClient
             .from(tableName)
@@ -33,7 +32,7 @@ export class BannerRepository implements IBannerRepository {
         return data.map(BannerMapper.toDomain);
     }
 
-    async getBannerById(id: string, locale: Locale): Promise<Banner | null> {
+    async getBannerById(id: string, locale: string): Promise<Banner | null> {
         const tableName = this.getTableName(locale);
         const { data, error } = await this.supabaseClient
             .from(tableName)
@@ -53,7 +52,7 @@ export class BannerRepository implements IBannerRepository {
         return BannerMapper.toDomain(data);
     }
 
-    async createBanner(banner: Partial<Banner>, locale: Locale): Promise<Banner> {
+    async createBanner(banner: Partial<Banner>, locale: string): Promise<Banner> {
         const tableName = this.getTableName(locale);
         const bannerDTO: Partial<BannerDTO> = BannerMapper.toPersistence(banner);
 
@@ -72,7 +71,7 @@ export class BannerRepository implements IBannerRepository {
         return BannerMapper.toDomain(data);
     }
 
-    async updateBanner(id: string, banner: Partial<Banner>, locale: Locale): Promise<Banner> {
+    async updateBanner(id: string, banner: Partial<Banner>, locale: string): Promise<Banner> {
         const tableName = this.getTableName(locale);
         const bannerDTO: Partial<BannerDTO> = BannerMapper.toPersistence(banner);
 
@@ -92,7 +91,7 @@ export class BannerRepository implements IBannerRepository {
         return BannerMapper.toDomain(data);
     }
 
-    async deleteBanner(id: string, locale: Locale): Promise<void> {
+    async deleteBanner(id: string, locale: string): Promise<void> {
         const tableName = this.getTableName(locale);
         const { error } = await this.supabaseClient
             .from(tableName)
@@ -106,3 +105,5 @@ export class BannerRepository implements IBannerRepository {
         }
     }
 } 
+
+export const bannerRepository = new BannerRepository();
