@@ -4,7 +4,7 @@
  */
 exports.up = async function(knex) {
   await knex.schema.createTable('zirospace_banners_en', (table) => {
-    table.uuid('id').defaultTo(knex.raw('gen_random_uuid()')).primary();
+    table.text('id').primary();
     table.text('title').notNullable();
     table.text('content').notNullable();
     table.text('subtitle');
@@ -19,7 +19,7 @@ exports.up = async function(knex) {
   });
 
   await knex.schema.createTable('zirospace_banners_pl', (table) => {
-    table.uuid('id').defaultTo(knex.raw('gen_random_uuid()')).primary();
+    table.text('id').primary();
     table.text('title').notNullable();
     table.text('content').notNullable();
     table.text('subtitle');
