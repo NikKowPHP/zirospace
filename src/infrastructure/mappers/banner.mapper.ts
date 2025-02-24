@@ -32,15 +32,16 @@ export class BannerMapper {
                 id: domain.id,
                 title: domain.title,
                 content: domain.content,
-                subtitle: domain.subtitle ?? null,
-                image_url: domain.imageUrl ?? null,
-                start_date: domain.startDate instanceof Date ? domain.startDate.toISOString() : null,
-                end_date: domain.endDate instanceof Date ? domain.endDate.toISOString() : null,
+                subtitle: domain.subtitle ?? undefined,
+                image_url: domain.imageUrl ?? undefined,
+                start_date: domain.startDate instanceof Date ? domain.startDate.toISOString() : undefined,
+                end_date: domain.endDate instanceof Date ? domain.endDate.toISOString() : undefined,
                 is_active: domain.isActive ?? false,
-                created_at: domain.createdAt?.toISOString() ?? null,
-                updated_at: domain.updatedAt?.toISOString() ?? null,
-                cta_button_text: domain.ctaButtonText ?? null,
-                cta_button_link: domain.ctaButtonLink ?? null,
+                created_at: domain.createdAt?.toISOString() ?? undefined,
+                updated_at: domain.updatedAt?.toISOString() ?? undefined,
+                cta_button_text: domain.ctaButtonText ?? undefined,
+                cta_button_link: domain.ctaButtonLink ?? undefined,
+                
             };
         } catch (error) {
             logger.error('Error mapping Banner to DTO:', error);
