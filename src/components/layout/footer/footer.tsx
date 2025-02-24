@@ -133,7 +133,7 @@ export function Footer() {
 
             {/* Navigation Links */}
             <nav 
-              className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-2 sm:items-center gap-12 mt-12"
+              className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-2  gap-12 mt-12 "
               aria-label="Footer Navigation"
             >
               {/* Main Navigation */}
