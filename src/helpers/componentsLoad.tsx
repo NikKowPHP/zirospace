@@ -107,6 +107,13 @@ export  const FloatVideo = dynamic(
   }
 )
 
+export const BannerModalWrapper = dynamic(
+  () => import('@/components/BannerModalWrapper').then((mod) => mod.BannerModalWrapper),
+  {
+    ssr: false,
+  }
+)
+
 export const TestimonialsSection = dynamic(
   () => import('@/components/sections/testimonials/testimonials.server'),
   {
