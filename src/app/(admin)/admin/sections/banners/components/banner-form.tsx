@@ -127,7 +127,7 @@ export function BannerForm({
           name="startDate"
           id="startDate"
           value={startDate ? startDate.toISOString().split('T')[0] : ''}
-          onChange={(e) => setStartDate(e.target.value ? new Date(e.target.value) : null)}
+          onChange={(e) => setStartDate(e.target.value ? new Date(e.target.value) : undefined)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
         />
       </div>
@@ -144,7 +144,7 @@ export function BannerForm({
           name="endDate"
           id="endDate"
           value={endDate ? endDate.toISOString().split('T')[0] : ''}
-          onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : null)}
+          onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : undefined)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
         />
       </div>

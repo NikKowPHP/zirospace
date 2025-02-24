@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from 'react';
 import { BannerModal } from '@/components/BannerModal';
 import { usePage } from '@/contexts/page-context';
 
