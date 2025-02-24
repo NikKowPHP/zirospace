@@ -17,6 +17,30 @@ export class BannerRepository implements IBannerRepository {
         return `${this.tableName}_${locale}`;
     }
 
+
+    async getActiveBanner(locale: string): Promise<Banner | null> {
+        const tableName = this.getTableName(locale);
+        const { data, error } = await this.supabaseClient
+            .from(tableName)
+            .select('*')
+            .eq('is_active', true)
+            .lte('start_date', new Date().toISOString())
+            .gte('end_date', new Date().toISOString())
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        if (error) {
+            console.error(`Error fetching active banner for locale ${locale}`, error);
+            throw new Error(`Failed to fetch active banner for locale ${locale}`);
+        }
+
+        if (!data || data.length === 0) {
+            return null;
+        }
+
+        return BannerMapper.toDomain(data[0]);
+    }
+
     async getBanners(locale: string): Promise<Banner[]> {
         const tableName = this.getTableName(locale);
         const { data, error } = await this.supabaseClient
