@@ -19,9 +19,12 @@ export class BannerRepositoryLocal extends SqlLiteAdapter<Banner, string> implem
     const result = await this.list(locale)
     return result
   }
+  private getTableName(locale: string | undefined): string {
+    return locale ? `zirospace_banners_${locale}` : this.tableName
+  }
 
   async list(locale?: string): Promise<Banner[]> {
-    const tableName = locale ? `banners_${locale}` : this.tableName
+    const tableName = this.getTableName(locale)
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM "${tableName}";
@@ -40,7 +43,7 @@ export class BannerRepositoryLocal extends SqlLiteAdapter<Banner, string> implem
 
   getBannerById = async (id: string, locale: string): Promise<Banner | null> => {
     // Define the table name before the try/catch so it is available in the catch block.
-    const tableName = locale ? `banners_${locale}` : this.tableName
+    const tableName = this.getTableName(locale)
     try {
       const query = `
         SELECT * FROM "${tableName}"
@@ -66,7 +69,10 @@ export class BannerRepositoryLocal extends SqlLiteAdapter<Banner, string> implem
   }
 
   createBanner = async (banner: Partial<Banner>, locale: string): Promise<Banner> => {
-    const tableName = locale ? `banners_${locale}` : this.tableName
+    const tableName = this.getTableName(locale)
+
+    const id = crypto.randomUUID()
+    banner.id = id
     const dto = BannerMapper.toPersistence(banner)
 
     return new Promise((resolve, reject) => {
@@ -112,8 +118,16 @@ export class BannerRepositoryLocal extends SqlLiteAdapter<Banner, string> implem
   }
 
   async updateBanner(id: string, banner: Partial<Banner>, locale: string): Promise<Banner> {
-    const tableName = locale ? `banners_${locale}` : this.tableName
-    const dto = BannerMapper.toPersistence(banner)
+    const tableName = this.getTableName(locale)
+    const existingBanner = await this.getBannerById(id, locale);
+  if (!existingBanner) {
+    throw new Error('Banner not found');
+  }
+    const dto = BannerMapper.toPersistence({
+      ...banner,
+      createdAt: existingBanner.createdAt,
+      updatedAt: new Date()
+    });
 
     return new Promise((resolve, reject) => {
       const updates = Object.keys(dto)
@@ -126,6 +140,8 @@ export class BannerRepositoryLocal extends SqlLiteAdapter<Banner, string> implem
         SET ${updates}
         WHERE id = ?
       `
+
+
       this.db.run(query, [...values, id], function (err) {
         if (err) {
           logger.log(`Error updating banner in table "${tableName}":`, err)
@@ -151,7 +167,7 @@ export class BannerRepositoryLocal extends SqlLiteAdapter<Banner, string> implem
   }
 
   deleteBanner = async (id: string, locale: string): Promise<void> => {
-    const tableName = locale ? `banners_${locale}` : this.tableName
+    const tableName = this.getTableName(locale)
     return new Promise((resolve, reject) => {
       const query = `
         DELETE FROM "${tableName}"
