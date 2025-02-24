@@ -4,6 +4,7 @@ import Image from 'next/image'
 import styles from './blog-post.module.css'
 import { blogPostService } from '@/lib/services/blog-post.service'
 import { BlogPost } from '@/domain/models/blog-post.model'
+import { siteUrl } from '@/config/constants';
 
 interface PageProps {
   params: {
@@ -16,7 +17,7 @@ interface PageProps {
 const createArticleJsonLd = (post: BlogPost, locale: string) => ({
   "@context": "https://schema.org",
   "@type": "Article",
-  "@id": `https://ziro.space/${locale}/blog/${post.slug}#article`,
+  "@id": `${siteUrl}/${locale}/blog/${post.slug}#article`,
   "headline": post.title,
   "description": post.excerpt || post.title,
   "image": post.imageurl,
@@ -28,7 +29,7 @@ const createArticleJsonLd = (post: BlogPost, locale: string) => ({
     "name": "ZIRO Healthcare Solutions",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://ziro.space/images/ziro.avif"
+      "url": `${siteUrl}/images/ziro.avif`
     }
   },
   "author": {
@@ -37,7 +38,7 @@ const createArticleJsonLd = (post: BlogPost, locale: string) => ({
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": `https://ziro.space/${locale}/blog/${post.slug}`
+    "@id": `${siteUrl}/${locale}/blog/${post.slug}`
   }
 })
 
@@ -50,19 +51,19 @@ const createBreadcrumbJsonLd = (post: BlogPost, locale: string) => ({
       "@type": "ListItem",
       "position": 1,
       "name": "Home",
-      "item": `https://ziro.space/${locale}`
+      "item": `${siteUrl}/${locale}`
     },
     {
       "@type": "ListItem",
       "position": 2,
       "name": "Blog",
-      "item": `https://ziro.space/${locale}/blog`
+      "item": `${siteUrl}/${locale}/blog`
     },
     {
       "@type": "ListItem",
       "position": 3,
       "name": post.title,
-      "item": `https://ziro.space/${locale}/blog/${post.slug}`
+      "item": `${siteUrl}/${locale}/blog/${post.slug}`
     }
   ]
 })
@@ -164,6 +165,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   priority
                   itemProp="image"
                   quality={100}
+                  unoptimized
                 />
               </div>
             </div>

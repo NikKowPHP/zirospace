@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Suspense } from 'react'
 import { caseStudyService } from '@/lib/services/case-study.service'
 import logger from '@/lib/logger'
+import { siteUrl } from '@/config/constants';
 interface PageProps {
   params: Promise<{
     slug: string;
@@ -27,10 +28,10 @@ export async function generateMetadata({ params }: { params: { slug: string; loc
     description: caseStudy.description,
     keywords: [...caseStudy.tags, 'case study', 'healthcare technology', 'medical software'],
     alternates: {
-      canonical: `https://ziro.space/${locale}/case-studies/${slug}`,
+      canonical: `${siteUrl}/${locale}/case-studies/${slug}`,
       languages: {
-        'en-US': `/en/case-studies/${slug}`,
-        'pl-PL': `/pl/case-studies/${slug}`,
+        'en-US': `${siteUrl}/en/case-studies/${slug}`,
+        'pl-PL': `${siteUrl}/pl/case-studies/${slug}`,
       },
     },
     openGraph: {
@@ -130,7 +131,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
         "name": "ZIRO Healthcare Solutions",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://ziro.space/images/ziro.avif"
+          "url": `${siteUrl}/images/ziro.avif`
         }
       },
       "keywords": caseStudy.tags.join(", "),
@@ -147,19 +148,19 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": `https://ziro.space/${locale}`
+          "item": `${siteUrl}/${locale}`
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": "Case Studies",
-          "item": `https://ziro.space/${locale}/case-studies`
+          "item": `${siteUrl}/${locale}/case-studies`
         },
         {
           "@type": "ListItem",
           "position": 3,
           "name": caseStudy.title,
-          "item": `https://ziro.space/${locale}/case-studies/${slug}`
+          "item": `${siteUrl}/${locale}/case-studies/${slug}`
         }
       ]
     }
@@ -201,6 +202,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                   className="object-cover rounded-primary-lg"
                   priority
                   itemProp="image"
+                  unoptimized
                 />
               </div>
             </div>
@@ -288,6 +290,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                             fill
                             quality={100}
                             className="object-cover rounded-primary-lg"
+                            unoptimized
                           />
                         </div>
                         {/* Next Image (if exists) */}
@@ -299,6 +302,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                               fill
                               quality={100}
                               className="object-cover rounded-primary-lg"
+                              unoptimized
                             />
                           </div>
                         )}
@@ -319,6 +323,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                           fill
                           quality={100}
                           className="object-cover rounded-primary-lg"
+                          unoptimized
                         />
                       </div>
                     )
@@ -332,6 +337,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                           fill
                           quality={100}
                           className="object-cover rounded-primary-lg"
+                          unoptimized
                         />
                       </div>
                     )

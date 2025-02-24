@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
+import { siteUrl } from '@/config/constants';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://ziro.space'
+  const baseUrl = siteUrl;
   
   return {
     rules: [

@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 
+import { siteUrl } from '@/config/constants';
+
 export const homePageMetadata: Metadata = {
   title: 'ZIRO | Digital Health Solutions & Medical Software Development',
   description: 'Transform healthcare through innovative digital solutions. Specializing in medical software development, health tech UI/UX, and patient-centric digital products.',
@@ -14,7 +16,7 @@ export const homePageMetadata: Metadata = {
     'medical software systems'
   ],
   alternates: {
-    canonical: 'https://ziro.space',
+    canonical: siteUrl,
     languages: {
       'en-US': '/en',
       'pl-PL': '/pl',
@@ -23,12 +25,12 @@ export const homePageMetadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://ziro.space',
+    url: siteUrl,
     siteName: 'ZIRO Healthcare Solutions',
     title: 'ZIRO | Healthcare Technology Solutions',
     description: 'Innovative digital health solutions and medical software development for modern healthcare providers.',
     images: [{
-      url: 'https://ziro.space/images/og-image.jpg',
+      url: `${siteUrl}/images/og-image.jpg`,
       width: 1200,
       height: 630,
       alt: 'ZIRO Healthcare Technology Solutions'
@@ -40,7 +42,7 @@ export const homePageMetadata: Metadata = {
     creator: '@ziroagency',
     title: 'ZIRO Healthcare Solutions',
     description: 'Digital health solutions and medical software development',
-    images: ['https://ziro.space/images/og-image.jpg'],
+    images: [`${siteUrl}/images/og-image.jpg`],
   },
   other: {
     'google-site-verification': process.env.GOOGLE_SITE_VERIFICATION || '',

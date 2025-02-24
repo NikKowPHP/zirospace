@@ -14,7 +14,7 @@ const inter = Inter({
 })
 import { PostHogProvider } from '@/contexts/posthog-context'
 import { bannerService } from '@/lib/services/banner.service'
-
+import { siteUrl } from '@/config/constants';
 // Your GA Measurement ID
 const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID
 
@@ -40,7 +40,7 @@ export async function generateMetadata({
 
   return {
     alternates: {
-      canonical: `https://ziro.space/${locale}`,
+      canonical: `${siteUrl}/${locale}`,
       languages: {
         'en-US': '/en',
         'pl-PL': '/pl',

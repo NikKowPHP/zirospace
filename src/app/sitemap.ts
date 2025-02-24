@@ -2,11 +2,11 @@ import { MetadataRoute } from 'next'
 import { locales } from '@/i18n'
 import { blogPostService } from '@/lib/services/blog-post.service'
 import { caseStudyService } from '@/lib/services/case-study.service'
-
+import { siteUrl } from '@/config/constants';
 type ChangeFrequency = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://ziro.space'
+  const baseUrl = siteUrl;
 
   // Base routes that are the same for all locales
   const routes = [

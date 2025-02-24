@@ -11,7 +11,7 @@ import { type Image as ImageType } from '@/domain/models/case-study.model'
 import { type CaseStudy } from '@/domain/models/case-study.model'
 import { Locale } from '@/i18n'
 import { ArrowUpRight } from 'lucide-react'
-
+import { siteUrl } from '@/config/constants';
 interface CaseStudyCardProps {
   caseStudy: CaseStudy
   locale: Locale
@@ -109,7 +109,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
     "description": caseStudy.description,
     // "keywords":  caseStudy.tags ? caseStudy.tags.join(", ") : '',
     // "image": caseStudy.images.length > 0 && caseStudy.images[0]?.url ? caseStudy.images[0].url : '',
-    "url": `https://ziro.space${caseStudyUrl}`,
+    "url": `${siteUrl}${caseStudyUrl}`,
     "datePublished": caseStudy.createdAt,
     "author": {
       "@type": "Organization",
@@ -120,7 +120,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
       "name": "ZIRO Healthcare Solutions",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://ziro.space/images/ziro.avif"
+        "url": `${siteUrl}/images/ziro.avif`
       }
     }
   }

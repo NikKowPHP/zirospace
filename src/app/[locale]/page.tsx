@@ -16,6 +16,7 @@ import {
   BannerModalWrapper
 } from '@/helpers/componentsLoad'
 import { companyConfig } from '@/config/company'
+import { siteUrl } from '@/config/constants';
 interface HomePageProps {
   params: Promise<{ locale: Locale }>
 }
@@ -145,7 +146,7 @@ export async function generateMetadata({ params }: { params: { locale: Locale } 
 
   return {
     alternates: {
-      canonical: `https://ziro.space/${locale}`,
+      canonical: `${siteUrl}/${locale}`,
       languages: {
         'en-US': '/en',
         'pl-PL': '/pl',

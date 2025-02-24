@@ -1,6 +1,8 @@
+import { siteUrl } from '@/config/constants';
+
 export const companyConfig = {
   name: 'ZIRO Healthcare Solutions',
-  url: 'https://ziro.space',
+  url: siteUrl,
   description:
     'Digital health solutions provider specializing in medical software development, healthcare technology innovation, and patient-centric digital products.',
   social: {
