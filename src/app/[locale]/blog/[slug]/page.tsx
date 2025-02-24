@@ -164,6 +164,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   priority
                   itemProp="image"
                   quality={100}
+                  unoptimized
                 />
               </div>
             </div>

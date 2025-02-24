@@ -201,6 +201,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                   className="object-cover rounded-primary-lg"
                   priority
                   itemProp="image"
+                  unoptimized
                 />
               </div>
             </div>
@@ -288,6 +289,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                             fill
                             quality={100}
                             className="object-cover rounded-primary-lg"
+                            unoptimized
                           />
                         </div>
                         {/* Next Image (if exists) */}
@@ -299,6 +301,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                               fill
                               quality={100}
                               className="object-cover rounded-primary-lg"
+                              unoptimized
                             />
                           </div>
                         )}
@@ -319,6 +322,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                           fill
                           quality={100}
                           className="object-cover rounded-primary-lg"
+                          unoptimized
                         />
                       </div>
                     )
@@ -332,6 +336,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                           fill
                           quality={100}
                           className="object-cover rounded-primary-lg"
+                          unoptimized
                         />
                       </div>
                     )
