@@ -23,7 +23,7 @@ export function HeroButtons() {
   
   return (
     <div 
-      className="flex flex-col sm:flex-row gap-[16px] pt-[20px] sm:pt-[20px] w-full px-[20px] sm:w-auto sm:px-4 md:px-0"
+      className="flex  gap-2   sm:gap-[16px] pt-[20px] sm:pt-[20px] w-full px-[20px] sm:w-auto sm:px-4 md:px-0"
       role="group"
       aria-label="Primary actions"
       itemScope
@@ -57,7 +57,7 @@ export function HeroButtons() {
       >
         <Button
           size="lg"
-          className="w-full py-[30px] px-[25px] sm:w-auto rounded-full sm:py-6 sm:px-10 h-[48px] sm:h-[56px] text-[15px] sm:text-[16px] bg-primary hover:bg-[#0066FF]/90"
+          className="w-full py-[30px] px-[25px] sm:w-auto rounded-full sm:py-6 sm:px-10 h-[48px] sm:h-[56px] text-[15px] sm:text-[16px] bg-primary hover:bg-[#0066FF]/90 whitespace-nowrap"
           aria-label={`${t('bookCall')} - Opens in a new tab`}
           title={t('bookCall')}
           data-action="book-call"
