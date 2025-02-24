@@ -31,6 +31,11 @@ export class BannerService {
 
   deleteBanner = async (id: string, locale: string): Promise<void> => {
     return this.bannerRepository.deleteBanner(id, locale)
+
+  }
+
+  getActiveBanner = async (locale: string): Promise<Banner | null> => {
+    return this.bannerRepository.getActiveBanner(locale)
   }
 }
 

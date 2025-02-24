@@ -15,6 +15,27 @@ export class BannerRepositoryLocal extends SqlLiteAdapter<Banner, string> implem
     super("banners", db)
   }
 
+  getActiveBanner = async (locale: string): Promise<Banner | null> => {
+    const tableName = this.getTableName(locale);
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT * FROM "${tableName}"
+        WHERE is_active = 1
+        AND (start_date IS NULL OR start_date <= CURRENT_TIMESTAMP)
+        AND (end_date IS NULL OR end_date >= CURRENT_TIMESTAMP)
+        ORDER BY created_at DESC
+        LIMIT 1;
+      `;
+      this.db.get(query, [], (err, row) => {
+        if (err) {
+          reject(err)
+          return
+        }
+        resolve(row ? BannerMapper.toDomain(row as BannerDTO) : null)
+      })
+    })
+  }
+
   getBanners = async (locale: string): Promise<Banner[]> => {
     const result = await this.list(locale)
     return result

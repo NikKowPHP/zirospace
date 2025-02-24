@@ -6,4 +6,5 @@ export interface IBannerRepository {
   createBanner: (banner: Partial<Banner>, locale: string) => Promise<Banner>
   updateBanner: (id: string, banner: Partial<Banner>, locale: string) => Promise<Banner>
   deleteBanner: (id: string, locale: string) => Promise<void>
+  getActiveBanner: (locale: string) => Promise<Banner | null>
 }
