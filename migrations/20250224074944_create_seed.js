@@ -14,6 +14,8 @@ exports.up = async function(knex) {
       is_active: true,
       cta_button_text: 'Learn More',
       cta_button_link: '/en/learn-more',
+      created_at: new Date(),
+      updated_at: new Date(),
     },
     {
       id: 'banner-en-2',
@@ -24,6 +26,8 @@ exports.up = async function(knex) {
       is_active: false,
       cta_button_text: 'Shop Now',
       cta_button_link: '/en/shop-now',
+      created_at: new Date(),
+      updated_at: new Date(),
     },
   ]);
 
@@ -38,6 +42,8 @@ exports.up = async function(knex) {
       is_active: true,
       cta_button_text: 'Dowiedz się więcej',
       cta_button_link: '/pl/dowiedz-sie-wiecej',
+      created_at: new Date(),
+      updated_at: new Date(),
     },
     {
       id: 'banner-pl-2',
@@ -48,6 +54,8 @@ exports.up = async function(knex) {
       is_active: false,
       cta_button_text: 'Kup teraz',
       cta_button_link: '/pl/kup-teraz',
+      created_at: new Date(),
+      updated_at: new Date(),
     },
   ]);
 };

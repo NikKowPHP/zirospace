@@ -47,7 +47,14 @@ async function testQueries() {
     const blogPostsPlResults = await knex('blog_posts_pl').select('*')
     console.log('blog_posts_pl:', blogPostsPlResults)
 
-    logger.log('Error querying database:', error)
+
+    const bannersEnResults = await knex('zirospace_banners_en').select('*')
+    console.log('zirospace_banners_en:', bannersEnResults)
+
+    const bannersPlResults = await knex('zirospace_banners_pl').select('*')
+    console.log('zirospace_banners_pl:', bannersPlResults)
+
+    console.log('Error querying database:', error)
   } finally {
     knex.destroy()
   }
