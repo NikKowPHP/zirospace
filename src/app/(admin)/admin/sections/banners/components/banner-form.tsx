@@ -23,8 +23,8 @@ export function BannerForm({
   const [content, setContent] = useState(banner?.content || '')
   const [subtitle, setSubtitle] = useState(banner?.subtitle || '')
   const [imageUrl, setImageUrl] = useState(banner?.imageUrl || '')
-  const [startDate, setStartDate] = useState<Date | null>(banner?.startDate ? new Date(banner.startDate) : null)
-  const [endDate, setEndDate] = useState<Date | null>(banner?.endDate ? new Date(banner.endDate) : null)
+  const [startDate, setStartDate] = useState<Date | undefined>(banner?.startDate ? new Date(banner.startDate) : undefined)
+  const [endDate, setEndDate] = useState<Date | undefined>(banner?.endDate ? new Date(banner.endDate) : undefined)
   const [isActive, setIsActive] = useState(banner?.isActive || false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,6 +39,8 @@ export function BannerForm({
       startDate: startDate,
       endDate: endDate,
       isActive: isActive,
+      createdAt: banner?.createdAt,
+      updatedAt: new Date(),
     })
   }
 
@@ -160,7 +162,7 @@ export function BannerForm({
           id="isActive"
           checked={isActive}
           onChange={(e) => setIsActive(e.target.checked)}
-          className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary sm:text-sm"
+          className="mt-1 h-10 w-10 rounded border-gray-300 text-primary focus:ring-primary sm:text-sm"
         />
       </div>
 
