@@ -175,7 +175,7 @@ export function Footer() {
           {/* Copyright */}
           <div className="mt-12 pt-8 border-t border-gray-200">
             <p className="text-sm text-gray-500 text-center">
-              © {new Date().getFullYear()} ZIRO. {t('rights')}
+              © {new Date().getFullYear()} ZIRO sp. z o.o. {t('rights')}
             </p>
           </div>
 
