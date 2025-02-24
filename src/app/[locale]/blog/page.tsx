@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server'
 import { getBlogPostService } from '@/lib/services/blog-post.service'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Suspense } from 'react'
-
+import { siteUrl } from '@/config/constants';
 interface PageProps {
   params: {
     locale: Locale
@@ -16,7 +16,7 @@ interface PageProps {
 const blogJsonLd = {
   "@context": "https://schema.org",
   "@type": "Blog",
-  "@id": "https://ziro.space/blog/#blog",
+  "@id": `${siteUrl}/blog/#blog`,
   "name": "ZIRO Healthcare Technology Blog",
   "description": "Expert insights on healthcare technology, medical software development, and digital health solutions.",
   "publisher": {
@@ -24,7 +24,7 @@ const blogJsonLd = {
     "name": "ZIRO Healthcare Solutions",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://ziro.space/images/ziro.avif"
+      "url": `${siteUrl}/images/ziro.avif`
     }
   }
 }
@@ -45,7 +45,7 @@ const createBlogListJsonLd = (posts: BlogPost[]) => ({
         "@type": "Organization",
         "name": "ZIRO Healthcare Solutions"
       },
-      "url": `https://ziro.space/blog/${post.slug}`
+      "url": `${siteUrl}/blog/${post.slug}`
     }
   }))
 })
@@ -58,12 +58,12 @@ const breadcrumbJsonLd = {
     "@type": "ListItem",
     "position": 1,
     "name": "Home",
-    "item": "https://ziro.space"
+    "item": `${siteUrl}`
   }, {
     "@type": "ListItem",
     "position": 2,
     "name": "Blog",
-    "item": "https://ziro.space/blog"
+    "item": `${siteUrl}/blog`
   }]
 }
 

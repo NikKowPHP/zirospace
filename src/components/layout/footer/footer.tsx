@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { footerConfig } from '@/config/footer'
 import { usePathname, useRouter } from 'next/navigation'
-
+import { siteUrl } from '@/config/constants';
 export function Footer() {
   const t = useTranslations('footer')
   const pathname = usePathname()
@@ -35,12 +35,12 @@ export function Footer() {
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "@id": "https://ziro.space/#organization",
+    "@id": `${siteUrl}#organization`,
     "name": "ZIRO Healthcare Solutions",
-    "url": "https://ziro.space",
+    "url": siteUrl,
     "logo": {
       "@type": "ImageObject",
-      "url": "https://ziro.space/images/ziro.avif",
+      "url": `${siteUrl}/images/ziro.avif`,
       "width": "100",
       "height": "34"
     },
@@ -181,7 +181,7 @@ export function Footer() {
 
           {/* Hidden SEO Metadata */}
           <meta itemProp="foundingDate" content="2023" />
-          <meta itemProp="url" content="https://ziro.space" />
+          <meta itemProp="url" content={siteUrl} />
           <meta itemProp="industry" content="Healthcare Technology" />
           <meta itemProp="keywords" content="digital health solutions, healthcare software development, medical app design, health tech UI/UX, patient experience design" />
         </div>

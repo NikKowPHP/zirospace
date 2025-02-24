@@ -1,11 +1,10 @@
 import type { Metadata } from 'next'
 import { Analytics } from "@vercel/analytics/react"
 import { Suspense } from 'react'
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ziro.space';
+import { siteUrl } from '@/config/constants';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(`https://${siteUrl}`),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'ZIRO | Digital Health Solutions & Development',
     template: '%s | ZIRO - Healthcare Technology Solutions'
@@ -48,7 +47,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: `https://${siteUrl}`,
+    url: siteUrl,
     siteName: 'ZIRO',
     title: 'ZIRO - Digital Health Solutions & Development',
     description: 'Empowering healthcare through innovative digital solutions. We create user-centric medical software and health tech products that enhance patient care and clinical workflows.',
@@ -88,7 +87,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "HealthcareBusiness",
   "name": "ZIRO",
-  "url": `https://${siteUrl}`,
+  "url": siteUrl,
   "logo": `/images/ziro.avif`,
   "description": "Digital health solutions provider specializing in medical software development and healthcare technology.",
   "sameAs": [
@@ -125,7 +124,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href={`https://${siteUrl}`} />
+        <link rel="canonical" href={`${siteUrl}`} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
