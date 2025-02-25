@@ -20,6 +20,7 @@ interface HomePageProps {
   params: Promise<{ locale: Locale }>
 }
 
+
 // Centralize JSON-LD data
 const jsonLdData = {
   organization: {
