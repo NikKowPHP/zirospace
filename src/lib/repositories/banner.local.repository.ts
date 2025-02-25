@@ -89,23 +89,19 @@ export class BannerRepositoryLocal extends SqlLiteAdapter<Banner, string> implem
     }
   }
 
-  createBanner = async (banner: Partial<Banner>, locale: string): Promise<Banner> => {
+  createBanner = async (banner: Partial<BannerDTO>, locale: string): Promise<Banner> => {
     const tableName = this.getTableName(locale)
 
-    const id = crypto.randomUUID()
-    banner.id = id
-    const dto = BannerMapper.toPersistence(banner)
-
     return new Promise((resolve, reject) => {
-      const columns = Object.keys(dto)
-        .filter(key => dto[key as keyof BannerDTO] !== undefined)
+      const columns = Object.keys(banner)
+        .filter(key => banner[key as keyof BannerDTO] !== undefined)
         .map(key => `"${key}"`)
         .join(', ')
-      const placeholders = Object.keys(dto)
-        .filter(key => dto[key as keyof BannerDTO] !== undefined)
+      const placeholders = Object.keys(banner)
+        .filter(key => banner[key as keyof BannerDTO] !== undefined)
         .map(() => '?')
         .join(', ')
-      const values = Object.values(dto).filter(value => value !== undefined)
+      const values = Object.values(banner).filter(value => value !== undefined)
 
       const query = `
         INSERT INTO "${tableName}" (${columns})
@@ -138,24 +134,19 @@ export class BannerRepositoryLocal extends SqlLiteAdapter<Banner, string> implem
     })
   }
 
-  async updateBanner(id: string, banner: Partial<Banner>, locale: string): Promise<Banner> {
+  async updateBanner(id: string, banner: Partial<BannerDTO>, locale: string): Promise<Banner> {
     const tableName = this.getTableName(locale)
     const existingBanner = await this.getBannerById(id, locale);
-  if (!existingBanner) {
-    throw new Error('Banner not found');
-  }
-    const dto = BannerMapper.toPersistence({
-      ...banner,
-      createdAt: existingBanner.createdAt,
-      updatedAt: new Date()
-    });
-
+    if (!existingBanner) {
+      throw new Error('Banner not found');
+    }
+    banner.id = id
     return new Promise((resolve, reject) => {
-      const updates = Object.keys(dto)
-        .filter(key => dto[key as keyof BannerDTO] !== undefined)
+      const updates = Object.keys(banner)
+        .filter(key => banner[key as keyof BannerDTO] !== undefined)
         .map(key => `"${key}" = ?`)
         .join(', ')
-      const values = Object.values(dto).filter(value => value !== undefined)
+      const values = Object.values(banner).filter(value => value !== undefined)
       const query = `
         UPDATE "${tableName}"
         SET ${updates}

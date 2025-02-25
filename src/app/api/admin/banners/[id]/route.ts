@@ -40,10 +40,10 @@ export async function PUT(
     const { id } = params
     const { data, locale } = await request.json()
     
-    console.log('Processing banner update:', {
+    console.log('Processing banner update in router:', {
       id,
       locale,
-      mappedToPersistance: data,
+      data: data,
     })
 
     const updatedBanner = await bannerService.updateBanner(

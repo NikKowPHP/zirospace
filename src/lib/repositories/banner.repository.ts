@@ -76,13 +76,12 @@ export class BannerRepository implements IBannerRepository {
         return BannerMapper.toDomain(data);
     }
 
-    async createBanner(banner: Partial<Banner>, locale: string): Promise<Banner> {
+    async createBanner(banner: Partial<BannerDTO>, locale: string): Promise<Banner> {
         const tableName = this.getTableName(locale);
-        const bannerDTO: Partial<BannerDTO> = BannerMapper.toPersistence(banner);
 
         const { data, error } = await this.supabaseClient
             .from(tableName)
-            .insert([bannerDTO])
+            .insert([banner])
             .select('*')
             .single();
 
@@ -95,13 +94,12 @@ export class BannerRepository implements IBannerRepository {
         return BannerMapper.toDomain(data);
     }
 
-    async updateBanner(id: string, banner: Partial<Banner>, locale: string): Promise<Banner> {
+    async updateBanner(id: string, banner: Partial<BannerDTO>, locale: string): Promise<Banner> {
         const tableName = this.getTableName(locale);
-        const bannerDTO: Partial<BannerDTO> = BannerMapper.toPersistence(banner);
 
         const { data, error } = await this.supabaseClient
             .from(tableName)
-            .update(bannerDTO)
+            .update(banner)
             .eq('id', id)
             .select('*')
             .single();

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import {  useState } from 'react'
 import { useAdmin } from '@/contexts/admin-context'
 import { Banner } from '@/domain/models/banner.model'
 import { Locale } from '@/i18n'
@@ -28,6 +28,7 @@ export function BannerList() {
       logger.log('Failed to create banner:', error)
     }
   }
+
 
   const handleUpdate = async (data: Partial<Banner>) => {
     if (!editingBanner) return
