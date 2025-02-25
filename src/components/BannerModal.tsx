@@ -15,12 +15,13 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
   const t = useTranslations('BannerModal');
 
   useEffect(() => {
-    const dismissed = localStorage.getItem('bannerModalDismissed');
-    if (dismissed === 'true') {
-      setShowModal(false);
-    } else {
-      setShowModal(true);
-    }
+    // const dismissed = localStorage.getItem('bannerModalDismissed');
+    // if (dismissed === 'true') {
+    //   setShowModal(false);
+    // } else {
+    //   setShowModal(true);
+    setShowModal(true);
+    // }
   }, []);
 
    useEffect(() => {
@@ -38,7 +39,7 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
 
 
     const onClose = () => {
-      localStorage.setItem('bannerModalDismissed', 'true');
+      // localStorage.setItem('bannerModalDismissed', 'true');
       setShowModal(false);
     }
 
