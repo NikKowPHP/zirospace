@@ -136,7 +136,7 @@ export function BannerList() {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{banner.content}</div>
+                  <div className="text-sm text-gray-500">{banner.content.slice(0, 100)}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">{banner.subtitle}</div>
