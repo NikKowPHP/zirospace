@@ -13,6 +13,7 @@ const inter = Inter({
   variable: '--font-inter',
 })
 import { PostHogProvider } from '@/contexts/posthog-context'
+import { bannerService } from '@/lib/services/banner.service'
 import { siteUrl } from '@/config/constants';
 // Your GA Measurement ID
 const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID
@@ -99,6 +100,9 @@ export default async function LocaleLayout({
     notFound()
   }
 
+  const initialActiveBanner = await bannerService.getActiveBanner(locale)
+  console.log('initialActiveBanner', initialActiveBanner)
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
@@ -122,7 +126,7 @@ export default async function LocaleLayout({
       <body className={inter.variable}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <PostHogProvider>
-          <PageProvider>
+          <PageProvider initialActiveBanner={initialActiveBanner || undefined}>
             <ClientWrapper>
               <main className="relative">{children}</main>
               </ClientWrapper>

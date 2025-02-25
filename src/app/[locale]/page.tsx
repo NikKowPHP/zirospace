@@ -12,7 +12,8 @@ import {
   Faq,
   // StayInformed,
   FloatVideo,
-  TestimonialsSection
+  TestimonialsSection,
+  BannerModalWrapper
 } from '@/helpers/componentsLoad'
 import { companyConfig } from '@/config/company'
 import { siteUrl } from '@/config/constants';
@@ -115,6 +116,10 @@ export default async function HomePage({ params }: HomePageProps) {
           {/* Load floating video last */}
           <Suspense fallback={null}>
             <FloatVideo />
+          </Suspense>
+
+          <Suspense fallback={null}>
+            <BannerModalWrapper  />
           </Suspense>
         </div>
 

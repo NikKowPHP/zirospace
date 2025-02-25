@@ -246,5 +246,11 @@
   },
   "blog": {
     "latest-articles": "Latest Articles"
+  },
+  "BannerModal": {
+    "submit": "Subscribe",
+    "close": "Close"
   }
-} 
+  
+
+  }

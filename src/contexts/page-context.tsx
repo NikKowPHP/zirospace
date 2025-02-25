@@ -12,11 +12,13 @@ import { Locale } from '@/i18n'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { BlogPost } from '@/domain/models/blog-post.model'
+import { Banner } from '@/domain/models/banner.model'
 
 interface PageContextType {
   caseStudies: Record<Locale, CaseStudy[]>
   caseStudySliders: CaseStudySlider[]
   testimonials: Record<Locale, Testimonial[]>
+  activeBanner: Banner | null
   blogPost: BlogPost | null
   loading: boolean
   error: string | null
@@ -24,6 +26,8 @@ interface PageContextType {
   getTestimonials: (locale: Locale) => Promise<void>
   getCaseStudySliders: () => Promise<void>
   getBlogPost: (slug: string, locale: Locale) => Promise<void>
+  getActiveBanner: (locale: Locale) => Promise<void>
+
 }
 
 interface PageProviderProps {
@@ -31,6 +35,7 @@ interface PageProviderProps {
   initialCaseStudies?: Record<Locale, CaseStudy[]>
   initialCaseStudySliders?: CaseStudySlider[]
   initialTestimonials?: Record<Locale, Testimonial[]>
+  initialActiveBanner?: Banner
 }
 
 const PageContext = createContext<PageContextType | undefined>(undefined)
@@ -40,7 +45,8 @@ export function PageProvider({
   initialCaseStudies,
   initialCaseStudySliders,
   initialTestimonials,
-  }: PageProviderProps) {
+  initialActiveBanner,
+}: PageProviderProps) {
   const [caseStudies, setCaseStudies] = useState<Record<Locale, CaseStudy[]>>(
     initialCaseStudies || { en: [], pl: [] }
   )
@@ -53,7 +59,7 @@ export function PageProvider({
   const [blogPost, setBlogPost] = useState<BlogPost | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
+  const [activeBanner, setActiveBanner] = useState<Banner | null>(initialActiveBanner || null)
   // Initialize case studies when initialCaseStudies changes
   useEffect(() => {
     if (initialCaseStudies) {
@@ -72,6 +78,12 @@ export function PageProvider({
       setTestimonials(initialTestimonials)
     }
   }, [initialTestimonials])
+
+  useEffect(() => {
+    if (initialActiveBanner) {
+      setActiveBanner(initialActiveBanner)
+    }
+  }, [initialActiveBanner])
 
   const clearError = () => setError(null)
 
@@ -127,6 +139,24 @@ export function PageProvider({
     }
   }, [])
 
+  const getActiveBanner = useCallback(async (locale: Locale) => {
+    setLoading(true)
+    setError(null)
+    try {
+      // const response = await bannerService.getActiveBanner(locale)
+      const response = await fetch(`/api/admin/banner?locale=${locale}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch active banner')
+      }
+      const data = await response.json()
+      setActiveBanner(data)
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch active banner')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   return (
     <PageContext.Provider
       value={{
@@ -140,6 +170,8 @@ export function PageProvider({
         getTestimonials,
         getCaseStudySliders,
         getBlogPost,
+        activeBanner,
+        getActiveBanner,
       }}
     >
       {children}
