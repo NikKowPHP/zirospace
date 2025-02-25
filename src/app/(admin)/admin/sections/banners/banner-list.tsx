@@ -132,14 +132,14 @@ export function BannerList() {
               <tr key={banner.id} className={loading ? 'opacity-50' : ''}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
-                    {banner.title}
+                    {banner.title.slice(0, 30)}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{banner.content.slice(0, 100)}</div>
+                  <div className="text-sm text-gray-500">{banner.content.slice(0, 30)}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{banner.subtitle}</div>
+                  <div className="text-sm text-gray-500">{banner.subtitle?.slice(0, 30)}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">{banner.isActive ? 'Yes' : 'No'}</div>
