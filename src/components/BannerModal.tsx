@@ -59,7 +59,7 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
       <div className="flex flex-col gap-6 w-full border border-red-500">
         <h1 className='text-2xl font-bold border border-blue-500'>{banner?.title}</h1>
         <div className='border border-green-500'>
-          <Image src={banner?.imageUrl || ''} alt={banner?.title || ''} width={100} height={100} className='w-full h-auto' />
+          <Image src={banner?.imageUrl || ''} alt={banner?.title || ''} width={600} height={600} quality={100} unoptimized className='w-full h-auto' />
         </div>
         <p className='border border-yellow-500'>{banner?.content}</p>
         <div className='flex items-center justify-between border border-purple-500'>
