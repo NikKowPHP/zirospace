@@ -20,9 +20,10 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
     //   setShowModal(false);
     // } else {
     //   setShowModal(true);
-    setShowModal(true)
-    // }
-  }, [])
+    if (banner) {
+      setShowModal(true)
+    }
+  }, [banner])
 
   useEffect(() => {
     console.log('isOpen', showModal)
