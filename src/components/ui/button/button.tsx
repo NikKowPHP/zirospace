@@ -6,8 +6,8 @@ import Link from 'next/link'
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'white' | 'navbar'
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'white' | 'navbar' | 'modal'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
   isActive?: boolean
   isFullWidth?: boolean
   href?: string
@@ -26,12 +26,15 @@ const buttonStyles = {
         : 'text-gray-700 hover:text-gray-900 active:bg-gray-200',
     white: 'bg-white text-black hover:bg-white/90 active:bg-white/80',
     navbar: 'text-[16px] font-medium transition-colors text-gray-900',
+    modal: 'bg-primary text-white hover:bg-[#0066FF]/90 active:bg-[#0066FF]/80',
   },
   sizes: {
     sm: 'py-[6px] px-[12px] text-[15px] rounded-full',
     md: 'h-[56px] px-8 text-[16px] rounded-full',
     lg: 'h-[64px] px-10 text-[18px] rounded-full',
     xl: 'h-[72px] px-12 text-[20px] rounded-full w-full',
+    full: 'w-full px-4 py-8 rounded-lg ',
+  
   },
 }
 
