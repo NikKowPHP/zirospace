@@ -15,21 +15,33 @@ export class BannerService {
   }
 
   getBanners = async (locale: string): Promise<Banner[]> => {
-    return this.bannerRepository.getBanners(locale)
+    const banners = await this.bannerRepository.getBanners(locale)
+    return banners.map(banner => {
+      if (banner.youtubeUrl) {
+        banner.youtubeUrl = this.createYoutubeUrl(banner.youtubeUrl)
+      }
+      return banner
+    })
   }
 
   getBannerById = async (id: string, locale: string): Promise<Banner | null> => {
-    return this.bannerRepository.getBannerById(id, locale)
+    const banner = await this.bannerRepository.getBannerById(id, locale)
+    if (banner?.youtubeUrl) {
+      banner.youtubeUrl = this.createYoutubeUrl(banner.youtubeUrl)
+    }
+    return banner
   }
 
   createBanner = async (banner: Partial<Banner>, locale: string): Promise<Banner> => {
-    const bannerDto = BannerMapper.toPersistence(banner)
+    const youtubeUrl = banner.youtubeUrl ? this.getYoutubeVideoId(banner.youtubeUrl) : undefined
+    const bannerDto = BannerMapper.toPersistence({ ...banner, youtubeUrl })
     console.log('creating banner to dto in service', bannerDto)
     return this.bannerRepository.createBanner(bannerDto, locale)
   }
 
   updateBanner = async (id: string, banner: Partial<Banner>, locale: string): Promise<Banner | null> => {
-    const bannerDto = BannerMapper.toPersistence(banner)
+    const youtubeUrl = banner.youtubeUrl ? this.getYoutubeVideoId(banner.youtubeUrl) : undefined
+    const bannerDto = BannerMapper.toPersistence({ ...banner, youtubeUrl })
     console.log('updating banner to dto in service', bannerDto)
     return this.bannerRepository.updateBanner(id, bannerDto, locale)
   }
@@ -41,6 +53,20 @@ export class BannerService {
 
   getActiveBanner = async (locale: string): Promise<Banner | null> => {
     return this.bannerRepository.getActiveBanner(locale)
+  }
+
+  private getYoutubeVideoId = (youtubeUrl: string): string => {
+    // https://www.youtube.com/watch?v=Fz_Luw1V1ho
+    const url = new URL(youtubeUrl)
+    const videoId = url.searchParams.get('v')
+    if (!videoId) {
+      throw new Error('Invalid YouTube URL')
+    }
+    return videoId
+  }
+
+  private createYoutubeUrl = (videoId: string): string => {
+    return `https://www.youtube.com/watch?v=${videoId}`
   }
 }
 

@@ -23,6 +23,7 @@ export function BannerForm({
   const [content, setContent] = useState(banner?.content || '')
   const [subtitle, setSubtitle] = useState(banner?.subtitle || '')
   const [imageUrl, setImageUrl] = useState(banner?.imageUrl || '')
+  const [youtubeUrl, setYoutubeUrl] = useState(banner?.youtubeUrl || '')
   const [startDate, setStartDate] = useState<Date | undefined>(banner?.startDate ? new Date(banner.startDate) : undefined)
   const [endDate, setEndDate] = useState<Date | undefined>(banner?.endDate ? new Date(banner.endDate) : undefined)
   const [isActive, setIsActive] = useState(banner?.isActive || false)
@@ -36,6 +37,7 @@ export function BannerForm({
       content: content,
       subtitle: subtitle,
       imageUrl: imageUrl,
+      youtubeUrl: youtubeUrl,
       startDate: startDate,
       endDate: endDate,
       isActive: isActive,
@@ -111,6 +113,23 @@ export function BannerForm({
           id="imageUrl"
           value={imageUrl}
           onChange={(e) => setImageUrl(e.target.value)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="youtubeUrl"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Youtube URL
+        </label>
+        <input
+          type="text"
+          name="youtubeUrl"
+          id="youtubeUrl"
+          value={youtubeUrl}
+          onChange={(e) => setYoutubeUrl(e.target.value)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
         />
       </div>

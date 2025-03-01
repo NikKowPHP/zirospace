@@ -4,6 +4,7 @@ export interface Banner {
     content: string;
     subtitle?: string;
     imageUrl?: string;
+    youtubeUrl?: string;
     startDate?: Date;
     endDate?: Date;
     isActive: boolean;

@@ -4,6 +4,7 @@ export interface BannerDTO {
     content: string;
     subtitle: string;
     image_url?: string;
+    youtube_url?: string;
     start_date?: string; // Dates are strings in DTOs
     end_date?: string;   // Dates are strings in DTOs
     is_active: boolean;
