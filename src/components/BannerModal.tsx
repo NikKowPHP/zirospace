@@ -87,15 +87,13 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
 
           {banner?.youtubeUrl && (
             <div className="relative pt-[56.25%] w-full">
-              <div className="absolute top-0 left-0 w-full h-full">
+              <div className="absolute top-0 left-0 w-full h-full rounded-lg overflow-hidden">
                 <YouTube
                   videoId={banner?.youtubeUrl}
                   opts={opts}
-                  className="w-full h-full rounded-lg"
+                  className="w-full h-full"
                   onReady={(event: any) => {
-                    // Double-check player state before initiating play
                     if (event.target.getPlayerState() !== 1) {
-                      // 1 = PLAYING
                       event.target.playVideo()
                     }
                   }}
