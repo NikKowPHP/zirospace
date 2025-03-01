@@ -32,14 +32,11 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
   }
 
   useEffect(() => {
-    // const dismissed = localStorage.getItem('bannerModalDismissed');
-    // if (dismissed === 'true') {
-    //   setShowModal(false);
-    // } else {
-    //   setShowModal(true);
     if (banner) {
-      console.log('banner', banner)
-      setShowModal(true)
+      const dismissed = JSON.parse(localStorage.getItem('dismissedBanners') || '[]');
+      if (!dismissed.includes(banner.id)) {
+        setShowModal(true);
+      }
     }
   }, [banner])
 
@@ -56,12 +53,22 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
   }, [showModal])
 
   const onClose = () => {
-    // localStorage.setItem('bannerModalDismissed', 'true');
-    setShowModal(false)
+    handleDismissLocalStorage()
+    setShowModal(false);
+  }
+  const handleDismissLocalStorage = () => {
+    if (banner?.id) {
+      const dismissed = new Set(JSON.parse(localStorage.getItem('dismissedBanners') || '[]'));
+      dismissed.add(banner.id);
+      localStorage.setItem('dismissedBanners', JSON.stringify([...dismissed]));
+    }
+  }
+  const handleRedirect = () => {
+    window.location.href = 'https://calendly.com/ziro-nikhil/30min'
   }
 
   const handleClose = () => {
-    window.location.href = 'https://calendly.com/ziro-nikhil/30min'
+    handleRedirect()
     onClose()
   }
 
