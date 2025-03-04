@@ -20,6 +20,7 @@ function FaqAccordion({ itemId, isOpen, onToggle }: FaqAccordionProps) {
         ' rounded-[50px] bg-gray-100 ',
         // isOpen ? 'rounded-3xl' : ''
       )}
+      key={itemId}
       itemScope
       itemType="https://schema.org/Question"
     >
@@ -82,7 +83,8 @@ export function Faq() {
           itemProp="mainEntity"
         >
           {faqItems.map((item) => (
-                <FaqAccordion
+            <FaqAccordion
+                  key={item.id}
                   itemId={item.id}
                   isOpen={openId === item.id}
                   onToggle={() => setOpenId(openId === item.id ? null : item.id)}
