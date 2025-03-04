@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils/cn'
+import { usePosthogEvent } from '@/hooks/use-posthog'
 
 interface Language {
   code: string
@@ -16,6 +17,7 @@ const languages: Language[] = [
 export function LanguageSwitcher() {
   const router = useRouter()
   const pathname = usePathname()
+  const dispatchPosthogEvent = usePosthogEvent()
   
   // Get the path segments and remove empty strings
   const segments = pathname.split('/').filter(Boolean)
@@ -33,6 +35,11 @@ export function LanguageSwitcher() {
 
     // Construct new path with target language
     const newPath = `/${targetLang}${pathWithoutLocale.length > 0 ? '/' + pathWithoutLocale.join('/') : ''}`
+    
+    dispatchPosthogEvent('language_switched', {
+      language: targetLang,
+      path: newPath
+    })
     
     router.push(newPath)
   }
