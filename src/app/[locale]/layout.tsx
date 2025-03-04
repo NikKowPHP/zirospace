@@ -15,8 +15,6 @@ const inter = Inter({
 import { PostHogProvider } from '@/contexts/posthog-context'
 import { bannerService } from '@/lib/services/banner.service'
 import { siteUrl } from '@/config/constants';
-// Your GA Measurement ID
-const GA_MEASUREMENT_ID = process.env.GA_MEASUREMENT_ID
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -101,27 +99,36 @@ export default async function LocaleLayout({
   }
 
   const initialActiveBanner = await bannerService.getActiveBanner(locale)
+  const isProduction = process.env.NODE_ENV === 'production';
   console.log('initialActiveBanner', initialActiveBanner)
 
+  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+  if (!GA_MEASUREMENT_ID) {
+    console.warn('Google Analytics Measurement ID is not set.');
+  }
+  console.log('GA_MEASUREMENT_ID', GA_MEASUREMENT_ID)
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-        {/* Google Analytics Script */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_path: window.location.pathname,
-              cookie_flags: 'SameSite=None;Secure'
-            });
-          `}
-        </Script>
+      {isProduction && GA_MEASUREMENT_ID && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_MEASUREMENT_ID}', {
+                page_path: window.location.pathname,
+                cookie_flags: 'SameSite=None;Secure'
+              });
+            `}
+          </Script>
+        </>
+      )}
       </head>
       <body className={inter.variable}>
         <NextIntlClientProvider locale={locale} messages={messages}>
