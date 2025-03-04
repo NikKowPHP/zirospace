@@ -7,11 +7,40 @@ import { navigationConfig } from '@/config/navigation'
 import { cn } from '@/lib/utils/cn'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
+import { usePosthogEvent } from '@/hooks/use-posthog'
 
 export function Navbar() {
   const pathname = usePathname()
   const t = useTranslations('navigation')
   const router = useRouter();
+  const dispatchEvent = usePosthogEvent();
+
+  const handleNavbarClick = ( e: React.MouseEvent,item: { href: string; isRoute: boolean }, pathname: string) => {
+     
+      console.log('item route and pathname', item.isRoute, pathname)
+
+      dispatchEvent('navbar_click', {
+        item_href: item.href,
+        is_route: item.isRoute,
+        current_path: pathname
+      });
+        
+      if (!item.isRoute && pathname.includes('/blog')) {
+        e.preventDefault()      
+        router.push('/')
+        setTimeout(() => {
+          const element = document.getElementById(item.href)
+          element?.scrollIntoView({ behavior: 'smooth' })
+        }, 500) // Small delay to ensure the page has loaded
+      } else if (!item.isRoute && !pathname.includes('/blog')) {
+        e.preventDefault()
+        const element = document.getElementById(item.href)
+        element?.scrollIntoView({ behavior: 'smooth' })
+      } else if (item.isRoute) {
+       router.push(item.href);
+      }
+
+    };
 
   return (
     <header 
@@ -53,24 +82,7 @@ export function Navbar() {
              )}
              aria-label={t(item.title)}
              onClick={(e) => {
-
-              console.log('item route and pathname', item.isRoute, pathname)
-        
-               if (!item.isRoute && pathname.includes('/blog')) {
-                 e.preventDefault()      
-
-                 router.push('/')
-                 setTimeout(() => {
-                   const element = document.getElementById(item.href)
-                   element?.scrollIntoView({ behavior: 'smooth' })
-                 }, 500) // Small delay to ensure the page has loaded
-               } else if (!item.isRoute && !pathname.includes('/blog')) {
-                 e.preventDefault()
-                 const element = document.getElementById(item.href)
-                 element?.scrollIntoView({ behavior: 'smooth' })
-               } else if (item.isRoute) {
-                router.push(item.href);
-               }
+              handleNavbarClick(e,item, pathname)
              }}
            >
              {t(item.title)}
