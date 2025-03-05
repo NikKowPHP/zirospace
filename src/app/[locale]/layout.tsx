@@ -106,7 +106,6 @@ export default async function LocaleLayout({
   if (!GA_MEASUREMENT_ID) {
     console.warn('Google Analytics Measurement ID is not set.');
   }
-  console.log('GA_MEASUREMENT_ID', GA_MEASUREMENT_ID)
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
@@ -121,10 +120,7 @@ export default async function LocaleLayout({
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', '${GA_MEASUREMENT_ID}', {
-                page_path: window.location.pathname,
-                cookie_flags: 'SameSite=None;Secure'
-              });
+              gtag('config', '${GA_MEASUREMENT_ID}');
             `}
           </Script>
         </>
