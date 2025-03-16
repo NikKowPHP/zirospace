@@ -7,6 +7,7 @@ import { SqlLiteAdapter } from '@/lib/repositories/adapters/sqllite.adapter';
 import { Database } from 'sqlite3';
 import { getDatabaseFilePath } from '@/lib/config/database.config';
 import logger from '@/lib/logger'
+import { OrderUpdate } from '../services/case-study.service';
 const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);
 
@@ -180,6 +181,27 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
         // If no error, it means the deletion was successful
         resolve();
       });
+    });
+  }
+  updateCaseStudyOrder = async (orders: OrderUpdate[], locale: Locale): Promise<void> => {
+    const tableName = `case_studies_${locale}`;
+    return new Promise((resolve, reject) => {
+      const query = `
+        UPDATE "${tableName}"
+        SET order_index = ?
+        WHERE id = ?
+      `;
+
+      for (const { id, order } of orders) {
+        this.db.run(query, [order, id], function (err) {
+          if (err) {
+            logger.log(`Error updating order for id ${id}:`, err);
+            reject(new Error(`Database error updating order for id ${id}: ${err.message || 'Unknown error'}`));
+            return;
+          }
+        });
+      }
+      resolve();
     });
   }
 }
