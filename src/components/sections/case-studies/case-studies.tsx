@@ -1,4 +1,4 @@
-import { Suspense, memo } from 'react';
+import { Suspense, memo, useMemo } from 'react';
 import { CaseStudyCard } from '@/components/ui/case-study/case-study-card'
 import { type Locale } from '@/i18n'
 import { CaseStudy } from '@/domain/models/case-study.model'
@@ -67,9 +67,13 @@ const CaseStudyList = memo(function CaseStudyList({
   caseStudies: CaseStudy[] 
   locale: Locale
 }) {
+  const sortedStudies = useMemo(() => {
+    return [...caseStudies].sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0))
+  }, [caseStudies])
+ 
   return (
     <div className="relative mx-auto  flex flex-col gap-16 max-w-5xl">
-      {caseStudies.map((caseStudy) => (
+      {sortedStudies.map((caseStudy) => (
         <CaseStudyCard key={caseStudy.id} caseStudy={caseStudy} locale={locale} />
       ))}
     </div>

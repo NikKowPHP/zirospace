@@ -1,7 +1,8 @@
-import { CaseStudyList } from './case-study-list'
+// import { CaseStudyList } from './case-study-list'
 import { Suspense } from 'react'
 import { AdminProvider } from '@/contexts/admin-context'
 import { caseStudyService } from '@/lib/services/case-study.service'
+import { CaseStudyListInteractive } from './case-studies-interactive'
 
 export default async function CaseStudiesAdminPage() {
   const [enCaseStudies, plCaseStudies] = await Promise.all([
@@ -15,7 +16,8 @@ export default async function CaseStudiesAdminPage() {
         <div className="px-4 py-5 sm:p-6">
           <h2 className="text-2xl font-bold mb-6">Case Studies Management</h2>
           <Suspense fallback={<div>Loading...</div>}>
-            <CaseStudyList />
+            {/* <CaseStudyList /> */}
+            <CaseStudyListInteractive />
           </Suspense>
         </div>
       </div>

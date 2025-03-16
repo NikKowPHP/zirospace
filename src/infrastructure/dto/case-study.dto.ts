@@ -13,6 +13,7 @@ export interface CaseStudyDTO {
   color: string;
   background_color: string;
   theme: string;
+  order_index: number;
   created_at: string;
   updated_at: string;
 } 

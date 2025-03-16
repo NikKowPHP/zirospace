@@ -15,6 +15,11 @@ import { BlogPost } from '@/domain/models/blog-post.model'
 import logger from '@/lib/logger'
 import { Banner } from '@/domain/models/banner.model'
 
+interface OrderUpdate {
+  id: string
+  order: number
+}
+
 interface AdminContextType {
   caseStudies: Record<Locale, CaseStudy[]>
   caseStudySliders: CaseStudySlider[]
@@ -30,7 +35,7 @@ interface AdminContextType {
     locale: Locale
   ) => Promise<void>
   deleteCaseStudy: (id: string, locale: Locale) => Promise<void>
-
+  updateCaseStudyOrder: (orders: OrderUpdate[], locale: Locale) => Promise<void>
   createCaseStudySlider: (data: Partial<CaseStudySlider>) => Promise<void>
   updateCaseStudySlider: (
     id: string,
@@ -243,6 +248,29 @@ export function AdminProvider({
       setLoading(false)
     }
   }
+
+  const updateCaseStudyOrder = async (orders: OrderUpdate[], locale: Locale) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/admin/case-studies-order`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orders, locale }),
+      })
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to update case study order')
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update case study order')
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  
 
   const createCaseStudySlider = async (
     data: Partial<CaseStudySlider>
@@ -761,6 +789,7 @@ export function AdminProvider({
         createCaseStudy,
         updateCaseStudy,
         deleteCaseStudy,
+        updateCaseStudyOrder,
         createCaseStudySlider,
         updateCaseStudySlider,
         deleteCaseStudySlider,

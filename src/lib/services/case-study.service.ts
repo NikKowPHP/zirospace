@@ -4,6 +4,10 @@ import { CaseStudy } from "@/domain/models/case-study.model"
 import { caseStudyRepositoryLocal } from "../repositories/caseStudy.local.repository"
 import { ICaseStudyRepository } from "../interfaces/caseStudyRepository.interface"
 
+export interface OrderUpdate {
+  id: string
+  order: number
+}
 
 const caseStudyRepository = new CaseStudyRepository()
 
@@ -37,6 +41,10 @@ export class CaseStudyService {
 
   deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {
     return this.caseStudyRepository.deleteCaseStudy(id, locale)
+  }
+
+  updateCaseStudyOrder = async (orders: OrderUpdate[], locale: Locale): Promise<void> => {
+    return this.caseStudyRepository.updateCaseStudyOrder(orders, locale)
   }
 }
 

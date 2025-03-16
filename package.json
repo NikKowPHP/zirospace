@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@google-analytics/data": "^4.12.0",
+    "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^3.9.1",
     "@iconify/react": "^5.1.0",
     "@next/bundle-analyzer": "^15.1.3",

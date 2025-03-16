@@ -7,6 +7,7 @@ import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import { CACHE_TAGS, CACHE_TIMES } from '@/lib/utils/cache'
 import { supabase } from '../supabase'
 import logger from '@/lib/logger'
+import { OrderUpdate } from '../services/case-study.service'
 export class CaseStudyRepository {
   private supabaseClient: SupabaseClient
   private tableName: string = 'zirospace_case_studies'
@@ -100,6 +101,20 @@ export class CaseStudyRepository {
     if (error) {
       logger.log('Error deleting case study:', error)
       throw error
+    }
+  }
+
+  updateCaseStudyOrder = async (orders: OrderUpdate[], locale: Locale): Promise<void> => {
+    for (const { id, order } of orders) {
+      const { error } = await this.supabaseClient
+        .from(`${this.tableName}_${locale}`)
+        .update({ order_index: order })
+        .eq('id', id)
+
+      if (error) {
+        logger.log('Error updating case study order:', error)
+        throw error
+      }
     }
   }
 }
