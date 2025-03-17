@@ -115,7 +115,7 @@ export function Footer() {
                   {t('description')}
                 </p>
                 <p className="text-sm text-gray-500">
-                  <span itemProp="name">ZIRO</span>
+                  <span itemProp="name">ul. Mogilska 43, 31-545 Kraków, Poland</span>
                 </p>
               </div>
 
