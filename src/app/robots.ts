@@ -15,15 +15,7 @@ export default function robots(): MetadataRoute.Robots {
           '/case-studies',
           '/case-studies/*',
         ],
-        disallow: [
-          '/admin/*',
-          '/api/*',
-          '/private/*',
-          '/draft/*',
-          '/*?*', // Prevent crawling of URLs with query parameters
-          '/*/preview', // Prevent crawling of preview pages
-          '/*.json', // Prevent crawling of JSON files
-        ],
+        disallow: [],
       },
       {
         userAgent: 'Google-Extended',
