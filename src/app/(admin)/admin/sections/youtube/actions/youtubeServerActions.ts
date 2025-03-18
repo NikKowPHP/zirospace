@@ -8,3 +8,7 @@ export async function updateYoutubeAction(data: Partial<YoutubeModel>) {
   }
   return await youtubeService.updateYoutube(data.youtube_url)
 }
+
+export async function getYoutubeAction() {
+  return await youtubeService.getYoutube()
+}
