@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import logger from '@/lib/logger'
+import { getYoutubeAction } from '@/app/(admin)/admin/sections/youtube/actions/youtubeServerActions'
 const YouTube = dynamic(
   () => import('react-youtube').then(mod => mod),
   { ssr: false, loading: () => <div className="w-[200px] h-[150px] bg-gray-100 animate-pulse" /> }
@@ -17,8 +18,16 @@ declare global {
 
 export const FloatVideo = () => {
   const [showVideo, setShowVideo] = useState(false)
-  const videoId = 'vKb9WcH8Qpg'
+  const [videoId, setVideoId] = useState('')
   const thumbnailUrl = isProd ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '/images/case-studies/gsense/gsense.avif'
+
+  useEffect(() => {
+    const fetchYoutubeUrl = async () => {
+      const youtubeUrl = await getYoutubeAction()
+      setVideoId(youtubeUrl?.youtube_url || '')
+    }
+    fetchYoutubeUrl()
+  }, [])
 
   const opts = {
     height: '150',
@@ -36,19 +45,18 @@ export const FloatVideo = () => {
 
   useEffect(() => {
     const handleLoad = () => {
-      // Start video only after full page load
       setShowVideo(true);
       logger.log('Page fully loaded - starting video');
     };
 
-    if (document.readyState === 'complete') {
+    if (document.readyState === 'complete' && videoId) {
       handleLoad();
       return () => window.removeEventListener('load', handleLoad);
     } else {
       window.addEventListener('load', handleLoad);
       return () => window.removeEventListener('load', handleLoad);
     }
-  }, []);
+  }, [videoId]);
 
   return (
     <section className="fixed bottom-[65px] right-[10px] z-50">
