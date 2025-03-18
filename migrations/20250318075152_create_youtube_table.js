@@ -4,9 +4,10 @@
  */
 exports.up = function(knex) {
   return knex.schema.createTable('youtube', (table) => {
-    table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
+    table.string('id').primary().defaultTo(knex.raw('(lower(hex(randomblob(16))))'));
     table.string('youtube_url').notNullable();
-    table.timestamps(true, true); // Adds created_at and updated_at columns
+    table.timestamp('created_at').defaultTo(knex.fn.now());
+    table.timestamp('updated_at').defaultTo(knex.fn.now());
   });
 };
 

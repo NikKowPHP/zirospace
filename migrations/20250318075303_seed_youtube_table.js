@@ -4,7 +4,10 @@
  */
 exports.up = async function(knex) {
   await knex('youtube').insert([
-    { youtube_url: 'dQw4w9WgXcQ' } // Example YouTube URL
+    { 
+      id: knex.raw('(lower(hex(randomblob(16))))'),
+      youtube_url: 'dQw4w9WgXcQ' 
+    } // Example YouTube URL
   ]);
 };
 
