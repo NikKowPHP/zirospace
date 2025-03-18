@@ -3,11 +3,14 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button/button'
 import { YoutubeModel} from '@/domain/models/models'
+import { updateYoutubeAction } from '../actions/action'
+import { Loader2 } from 'lucide-react'
+import toast from 'react-hot-toast'
 
-export function YoutubeForm({youtube, handleUpdate}: {youtube: YoutubeModel | null, handleUpdate: (youtube: Partial<YoutubeModel>) => void}) {
+export function YoutubeForm({youtube}: {youtube: YoutubeModel | null}) {
 
   const [youtube_url, setYoutubeUrl] = useState(youtube?.youtube_url || '')
-
+  const [loading, setLoading] = useState(false)
   useEffect(() => {
     if (youtube) {
       setYoutubeUrl(youtube.youtube_url || '')
@@ -18,12 +21,25 @@ export function YoutubeForm({youtube, handleUpdate}: {youtube: YoutubeModel | nu
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     try {
-        handleUpdate({ youtube_url, id: youtube?.id })
+      setLoading(true)
+      const result = await updateYoutubeAction({ youtube_url, id: youtube?.id })
+      console.log('updateYoutubeAction result', result)
+      setYoutubeUrl(result?.youtube_url || '')
+      toast.success('Youtube URL updated successfully')
+      setLoading(false)
     } catch (error) {
       console.error('Failed to update YouTube:', error)
+      toast.error('Failed to update YouTube')
+      setLoading(false)
     }
+  }
+
+  if(loading) {
+    return <div className="flex justify-center items-center h-screen">
+      <Loader2 className="w-4 h-4 animate-spin" />
+    </div>
   }
 
   return (
@@ -48,8 +64,8 @@ export function YoutubeForm({youtube, handleUpdate}: {youtube: YoutubeModel | nu
       </div>
        
       <div className="flex justify-end space-x-4">
-        <Button variant="primary" type="submit">
-          Update
+        <Button variant="primary" type="submit" disabled={loading}>
+          {loading ? 'Updating...' : 'Update'}
         </Button>
       </div>
     </form>
