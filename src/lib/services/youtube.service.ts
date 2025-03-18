@@ -1,32 +1,37 @@
 import { YoutubeModel } from "@/domain/models/models"
+import { youtubeRepositoryLocal } from "../repositories/youtube.local.repository"
 import { youtubeRepository } from "../repositories/youtube.repository"
-import { youtubeRepositoryLocal } from "../repositories/youtube.repository.local"
-export class YoutubeSectionService {
-  private youtubeSectionRepository: IYoutubeSectionRepository
+
+export interface IYoutubeRepository {
+  getYoutube(): Promise<YoutubeModel | null>
+  updateYoutube(youtube_url: string): Promise<YoutubeModel | null>
+}
+
+export class YoutubeService implements IYoutubeRepository {
+  private youtubeRepository: IYoutubeRepository
+
   constructor() {
     if(process.env.NEXT_PUBLIC_MOCK_REPOSITORIES === 'true') {
-      this.youtubeSectionRepository = youtubeSectionRepositoryLocal 
+      this.youtubeRepository = youtubeRepositoryLocal 
     } else {
-      this.youtubeSectionRepository = youtubeSectionRepository 
+      this.youtubeRepository = youtubeRepository
     }
   }
- 
-  getYoutubeSection = async ( ): Promise<YoutubeModel | null> => {
-    const youtubeSection = await this.youtubeSectionRepository.getYoutubeSection()
-    console.log('youtubeSection fetched in service', youtubeSection)
-     return youtubeSection
-  }
- 
 
-  updateYoutubeSection = async (youtubeSection: Partial<YoutubeModel>): Promise<YoutubeModel> => {
-    return this.youtubeSectionRepository.updateYoutubeSection(youtubeSection)
+  getYoutube = async (): Promise<YoutubeModel | null> => {
+    const youtubeData = await this.youtubeRepository.getYoutube()
+    console.log('YouTube data fetched in service', youtubeData)
+    return youtubeData
   }
- 
+
+  updateYoutube = async (youtube_url: string): Promise<YoutubeModel | null> => {
+    return this.youtubeRepository.updateYoutube(youtube_url)
+  }
 }
 
 // export singleton
-export const youtubeSectionService = new YoutubeSectionService()
+export const youtubeService = new YoutubeService()
 
-export const getYoutubeSectionService = async () => {
-  return new YoutubeSectionService()
+export const getYoutubeService = async () => {
+  return new YoutubeService()
 }
