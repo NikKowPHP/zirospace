@@ -106,6 +106,15 @@ export default function AdminDashboard() {
           </Button>
         </Link>
 
+        <Link
+          href="/admin/sections/youtube"
+          className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
+        >
+          <h2 className="text-xl font-medium text-gray-900 mb-2">
+            Youtube
+          </h2>
+        </Link>
+
         {/* Add more admin sections here as needed */}
       </div>
     </div>

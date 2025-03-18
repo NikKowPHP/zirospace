@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button/button'
 import { YoutubeModel} from '@/domain/models/models'
 
-export function YoutubeForm({youtube, handleUpdate}: {youtube: YoutubeModel, handleUpdate: (youtube: YoutubeModel) => void}) {
+export function YoutubeForm({youtube, handleUpdate}: {youtube: YoutubeModel | null, handleUpdate: (youtube: Partial<YoutubeModel>) => void}) {
 
-  const [youtube_url, setYoutubeUrl] = useState(youtube.youtube_url)
+  const [youtube_url, setYoutubeUrl] = useState(youtube?.youtube_url || '')
 
   useEffect(() => {
     if (youtube) {
