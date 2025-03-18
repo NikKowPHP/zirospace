@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button/button'
 import { YoutubeModel} from '@/domain/models/models'
-import { updateYoutubeAction } from '../actions/action'
+import { updateYoutubeAction } from '../actions/youtubeServerActions'
 import { Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
