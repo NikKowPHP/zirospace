@@ -160,6 +160,150 @@ async function main() {
     }
   })
   
+  // ==========================================
+  // Seed Case Studies PL from SQL dump
+  // ==========================================
+  
+  // gSense PL case study
+  await prisma.caseStudyPL.upsert({
+    where: { id: 'gsense-1737894580192' },
+    update: {},
+    create: {
+      id: 'gsense-1737894580192',
+      title: 'gSense',
+      description: 'gSense to platforma zdrowotna skupiająca się na spersonalizowanym monitorowaniu zdrowia. Integruje różne metryki i urządzenia zdrowotne, aby pomóc w zarządzaniu chorobami przewlekłymi.',
+      tags: ['Branding', 'Saas', 'HealthTech'],
+      images: JSON.parse('[{"alt":"Torba z marką gSense","url":"https://i.postimg.cc/28Qzxxzc/dd.png"},{"alt":"Książka gSense","url":"https://i.postimg.cc/NjzTzPFk/001.jpg"},{"alt":"Biurko gSense a4","url":"https://i.postimg.cc/4dTKCCgV/002-2.jpg"},{"alt":"gSense Desk a4 składany","url":"https://i.postimg.cc/BQN2xvGy/005.jpg"},{"alt":"gSense totebag","url":"https://i.postimg.cc/V6BJm7fT/006-2.jpg"},{"alt":"Wizytówka gSense","url":"https://i.postimg.cc/4466x52X/011.jpg"},{"alt":"Książka gSense do góry nogami","url":"https://i.postimg.cc/9QMZ1jmf/012.jpg"},{"alt":"Koperta gSense","url":"https://i.postimg.cc/Prfwrk8M/013-1.jpg"}]'),
+      cta_text: 'Zobacz Case Study',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'http://ziro.agency/gsense-branding',
+      created_at: new Date('2025-01-06T09:25:11.086Z'),
+      updated_at: new Date('2025-01-06T09:25:11.086Z'),
+      slug: 'gsense-branding',
+      order_index: 0
+    }
+  })
+  
+  // HyperFree PL case study
+  await prisma.caseStudyPL.upsert({
+    where: { id: 'hyperfree-1737897732178' },
+    update: {},
+    create: {
+      id: 'hyperfree-1737897732178',
+      title: 'HyperFree',
+      description: 'Platforma oferująca spersonalizowany coaching i narzędzia do skutecznego zarządzania stanem przednadciśnieniowym.',
+      tags: ['Strona internetowa'],
+      images: JSON.parse('[{"alt":"hf 01","url":"https://i.postimg.cc/3xwHPQmr/hf-01.png"},{"alt":"hf 02","url":"https://i.postimg.cc/jdtT47j7/hf-02.png"},{"alt":"hf 03","url":"https://i.postimg.cc/dt6YHV7S/hf-03.png"},{"alt":"hf 04","url":"https://i.postimg.cc/SQWq9rm4/hf-04.png"},{"alt":"hf 05","url":"https://i.postimg.cc/BnwG37BT/hf-05.png"}]'),
+      cta_text: 'Odwiedź stronę',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://hyperfree.framer.website/',
+      created_at: new Date('2025-01-26T13:22:12.499Z'),
+      updated_at: new Date('2025-01-26T13:22:12.499Z'),
+      slug: 'hyperfree',
+      order_index: 2
+    }
+  })
+
+  // IQUBX PL case study
+  await prisma.caseStudyPL.upsert({
+    where: { id: 'iqubx-1737898062843' },
+    update: {},
+    create: {
+      id: 'iqubx-1737898062843',
+      title: 'IQUBX',
+      description: 'Przebudowana strona internetowa dla Iqubx, lidera produktów ekologicznych dla budownictwa z Nowego Delhi. Projekt skupił się na poprawie doświadczeń użytkownika i prezentacji przyjaznych dla środowiska ofert, takich jak aluminiowe klapy sufitowe, z responsywnym designem i dedykowaną sekcją zrównoważonego rozwoju.',
+      tags: ['Strona internetowa', 'Identyfikacja wizualna', 'Zrównoważony rozwój'],
+      images: JSON.parse('[{"alt":"Redesign strony IQUBX prezentujący systemy sufitowe baffle","url":"https://i.postimg.cc/bJPJPFNt/Mac-Book-Air-2022.png"}]'),
+      cta_text: 'Zobacz Case Study',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://iqubx.framer.website/',
+      created_at: new Date('2025-01-26T13:27:43.206Z'),
+      updated_at: new Date('2025-01-26T13:27:43.206Z'),
+      slug: 'iqubx-website-redesign',
+      order_index: 3
+    }
+  })
+
+  // PulsePoint PL case study
+  await prisma.caseStudyPL.upsert({
+    where: { id: 'pulsepoint-1739618629647' },
+    update: {},
+    create: {
+      id: 'pulsepoint-1739618629647',
+      title: 'PulsePoint',
+      description: 'Aplikacja dla pielęgniarek do znajdowania pracy na zlecenie.',
+      tags: ['Aplikacja mobilna', 'HealthTech'],
+      images: JSON.parse('[{"alt":"pp 01","url":"https://i.postimg.cc/CMN8NbNy/PP-01.png"},{"alt":"pp 02","url":"https://i.postimg.cc/Pr5wFN3C/PP-2.png"},{"alt":"pp 03","url":"https://i.postimg.cc/dtNyMvp4/PP-3.png"},{"alt":"pp 04","url":"https://i.postimg.cc/JzyBMvWm/PP-4.png"},{"alt":"pp 05","url":"https://i.postimg.cc/qR42ycsK/PP-5.png"},{"alt":"pp 06","url":"https://i.postimg.cc/wxQZTyVb/PP-6.png"},{"alt":"pp 07","url":"https://i.postimg.cc/MGZxLLnz/PP-7.png"},{"alt":"pp 08","url":"https://i.postimg.cc/ncxBR5SK/PP-8.png"}]'),
+      cta_text: 'Post na LinkedIn',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://www.linkedin.com/feed/update/urn:li:activity:7252461862322094082',
+      created_at: new Date('2025-01-26T14:17:09.914Z'),
+      updated_at: new Date('2025-01-26T14:17:09.914Z'),
+      slug: 'pulsepoint',
+      order_index: 4
+    }
+  })
+
+  // Supernormal PL case study
+  await prisma.caseStudyPL.upsert({
+    where: { id: 'supernormal-1737369377519' },
+    update: {},
+    create: {
+      id: 'supernormal-1737369377519',
+      title: 'Supernormal',
+      description: 'Supernormal to innowacyjna aplikacja dla sportowców długowieczności. Za pośrednictwem strony internetowej potencjalni użytkownicy mogą znaleźć więcej informacji o ofertach aplikacji.',
+      tags: ['Strona internetowa'],
+      images: JSON.parse('[{"alt":"Strona Supernormal","url":"https://i.postimg.cc/BQLWHrxT/L-Mockups-010.png"},{"alt":"Obraz bohatera","url":"https://i.postimg.cc/VvXVH84p/a1.png"},{"alt":"O SuperNormal","url":"https://i.postimg.cc/50hr3058/a2.png"},{"alt":"Funkcje Supernormal","url":"https://i.postimg.cc/26bJhvWz/a3.png"},{"alt":"Opinie użytkowników","url":"https://i.postimg.cc/P5TB9Pg4/a4.png"},{"alt":"Wezwanie do działania","url":"https://i.postimg.cc/XvDmrxpH/a5.png"},{"alt":"Zamknięcie wyjaśnień","url":"https://i.postimg.cc/HkzfgTHC/a6.png"},{"alt":"Dolne wezwanie do działania","url":"https://i.postimg.cc/Gpp636hT/a7.png"}]'),
+      cta_text: 'Odwiedź stronę',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://ssupernnormal.framer.website/',
+      created_at: new Date('2025-01-18T16:42:57.836Z'),
+      updated_at: new Date('2025-01-18T16:42:57.836Z'),
+      slug: 'supernormal-website',
+      order_index: 1
+    }
+  })
+
+  // SuperNormal App PL case study
+  await prisma.caseStudyPL.upsert({
+    where: { id: 'supernormal-app-1739785943582' },
+    update: {},
+    create: {
+      id: 'supernormal-app-1739785943582',
+      title: 'Aplikacja SuperNormal',
+      description: 'SuperNormal to innowacyjna koncepcja aplikacji zaprojektowana specjalnie dla "Sportowców Odmładzania", osób zaangażowanych w spowolnienie biologicznego starzenia się i poprawę ogólnego samopoczucia. Projekt ten ma na celu integrację różnych funkcji, które wspierają użytkowników w ich drodze do długowieczności poprzez przyjazny dla użytkownika interfejs i zaangażowanie społeczności.',
+      tags: ['Aplikacja mobilna', 'HealthTech'],
+      images: JSON.parse('[{"alt":"Interfejs aplikacji SuperNormal","url":"https://i.postimg.cc/0NLrbykh/Instagram-Post-04-15.png"},{"alt":"Nazwa Supernormal","url":"https://i.postimg.cc/VkJTpvmr/Instagram-Post-04-29.png"},{"alt":"Zamierzeni użytkownicy Supernormal","url":"https://i.postimg.cc/kgLZmCgj/Instagram-Post-04-31.png"},{"alt":"Funkcja tablicy wyników Supernormal","url":"https://i.postimg.cc/yx6pPYLN/Instagram-Post-04-32.png"},{"alt":"Postęp użytkownika Supernormal","url":"https://i.postimg.cc/NGbz0m02/Instagram-Post-04-33.png"},{"alt":"Agent zdrowia Supernormal","url":"https://i.postimg.cc/pV7KkLG1/Instagram-Post-04-34.png"},{"alt":"Wyzwania i gamifikacja Supernormal","url":"https://i.postimg.cc/Yq9yL04n/Instagram-Post-04-35.png"},{"alt":"Nagrody i odznaki Supernormal","url":"https://i.postimg.cc/gjfR0gLP/Instagram-Post-04-36.png"},{"alt":"Czcionka i kolory Supernormal","url":"https://i.postimg.cc/Dy8ByNDR/Instagram-Post-04-37.png"}]'),
+      cta_text: 'Przeczytaj Case Study',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://www.nikhil.health/p/supernormal-a-longevity-app-concept',
+      created_at: new Date('2025-01-06T09:25:11.086Z'),
+      updated_at: new Date('2025-01-06T09:25:11.086Z'),
+      slug: 'supernormal-app-design',
+      order_index: 6
+    }
+  })
+
+  // Wellness Way PL case study
+  await prisma.caseStudyPL.upsert({
+    where: { id: 'wellness-way-1739788561262' },
+    update: {},
+    create: {
+      id: 'wellness-way-1739788561262',
+      title: 'Wellness Way',
+      description: 'Aplikacja terapeutyczna dostarczająca spersonalizowane ćwiczenia.',
+      tags: ['Aplikacja mobilna', 'HealthTech'],
+      images: JSON.parse('[{"alt":"ww 01","url":"https://i.postimg.cc/90sx8FND/WW-02.png"},{"alt":"ww 02","url":"https://i.postimg.cc/d12ttLGY/WW-01.png"},{"alt":"ww o3","url":"https://i.postimg.cc/cH9k3cRM/WW-3.png"},{"alt":"ww 04","url":"https://i.postimg.cc/DfxBp5bq/WW-4.png"},{"alt":"ww 05","url":"https://i.postimg.cc/nLT381Pb/WW-5.png"},{"alt":"ww 06","url":"https://i.postimg.cc/y8TNHJXC/WW-6.png"},{"alt":"ww 07","url":"https://i.postimg.cc/8cG3NCmx/WW-7.png"},{"alt":"ww 07","url":"https://i.postimg.cc/C5HKxzT8/WW-8.png"}]'),
+      cta_text: 'Post na LinkedIn',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://www.linkedin.com/feed/update/urn:li:activity:7265740651026137089',
+      created_at: new Date('2025-01-26T12:18:18.005Z'),
+      updated_at: new Date('2025-01-26T12:18:18.005Z'),
+      slug: 'wellnessway',
+      order_index: 5
+    }
+  })
+  
   console.log('Database has been seeded!')
 }
 
