@@ -1,471 +1,166 @@
 import { ProficiencyLevel, LessonStepType, AssessmentStepType } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 // import prisma from '../src/lib/prisma.ts'
-import prisma from '../src/lib/prisma.js';
+const prisma = new PrismaClient()
 
 async function main() {
-  // Clear existing data in the correct order
-  await prisma.lessonStep.deleteMany({}); // Delete lesson steps first
-  await prisma.lesson.deleteMany({}); // Then delete lessons
-  await prisma.assessmentStep.deleteMany({}); // Delete assessment steps
-  await prisma.assessmentLesson.deleteMany({}); // Then delete assessment lessons
-  await prisma.onboarding.deleteMany({}); // Then delete onboarding
-  await prisma.user.deleteMany({}); // Finally delete users
+  // Clear existing data if needed
+  // await prisma.caseStudyEN.deleteMany({})
   
-  // Create test user (matching the mock auth service)
-  const user = await prisma.user.create({
-    data: {
-      id: 'mock-user-id', // Use the same ID as in your mock auth service
-      email: 'mock@example.com',
-      name: 'Mock User',
-    },
-  })
-
-  // Create onboarding data
-  const onboarding = await prisma.onboarding.create({
-    data: {
-      userId: user.id,
-      steps: {
-        welcome: true,
-        purpose: true,
-        languages: true,
-        proficiency: false
-      },
-      completed: false,
-      learningPurpose: '',
-      nativeLanguage: '',
-      targetLanguage: '',
-      proficiencyLevel: null,
-      initialAssessmentCompleted: false,
-    },
-  })
-
-  // Create single assessment lesson with multiple steps
-  const assessmentLesson = await prisma.assessmentLesson.create({
-    data: {
-      userId: user.id,
-      description: "Comprehensive language assessment to evaluate your current German knowledge and skills",
-      completed: false,
-      sourceLanguage: onboarding.nativeLanguage || "English",
-      targetLanguage: onboarding.targetLanguage || "German",
-      metrics: {
-        accuracy: 0,
-        pronunciationScore: 0,
-        grammarScore: 0,
-        vocabularyScore: 0,
-        overallScore: 0,
-        strengths: [],
-        weaknesses: []
-      },
-      proposedTopics: ["Basic Greetings", "Restaurant Vocabulary", "Travel Essentials"],
-      summary: null, // Will be filled after assessment completion
-      steps: {
-        create: [
-          {
-            stepNumber: 1,
-            type: AssessmentStepType.instruction,
-            content: "Welcome to your language assessment. I'll ask you a series of questions to evaluate your current knowledge of German. This will help me create a personalized learning plan for you. Let's begin!",
-            maxAttempts: 1,
-            attempts: 0,
-            correct: false
-          },
-          {
-            stepNumber: 2,
-            type: AssessmentStepType.question,
-            content: "How do you say 'Hello, my name is...' in German?",
-            expectedAnswer: "Hallo, ich heiße...",
-            expectedAnswerAudioUrl: "https://example.com/audio/german/hallo_ich_heisse.mp3",
-            maxAttempts: 3,
-            attempts: 0,
-            correct: false,
-            feedback: "The correct way to introduce yourself in German is 'Hallo, ich heiße...' followed by your name."
-          },
-          {
-            stepNumber: 3,
-            type: AssessmentStepType.feedback,
-            content: "Great job! Let's try another phrase.",
-            maxAttempts: 1,
-            attempts: 0,
-            correct: false
-          },
-          {
-            stepNumber: 4,
-            type: AssessmentStepType.question,
-            content: "How do you ask 'Where is the bathroom?' in German?",
-            expectedAnswer: "Wo ist die Toilette?",
-            expectedAnswerAudioUrl: "https://example.com/audio/german/wo_ist_die_toilette.mp3",
-            maxAttempts: 3,
-            attempts: 0,
-            correct: false,
-            feedback: "To ask where the bathroom is in German, you say 'Wo ist die Toilette?'"
-          },
-          {
-            stepNumber: 5, 
-            type: AssessmentStepType.question,
-            content: "How would you order a coffee in German?",
-            expectedAnswer: "Einen Kaffee, bitte.",
-            expectedAnswerAudioUrl: "https://example.com/audio/german/einen_kaffee_bitte.mp3",
-            maxAttempts: 3,
-            attempts: 0,
-            correct: false,
-            feedback: "To order a coffee in German, you can say 'Einen Kaffee, bitte.'"
-          },
-          {
-            stepNumber: 6,
-            type: AssessmentStepType.question,
-            content: "How do you ask for the time in German?",
-            expectedAnswer: "Wie spät ist es?",
-            expectedAnswerAudioUrl: "https://example.com/audio/german/wie_spat_ist_es.mp3",
-            maxAttempts: 3,
-            attempts: 0,
-            correct: false,
-            feedback: "To ask for the time in German, you say 'Wie spät ist es?'"
-          },
-          {
-            stepNumber: 7,
-            type: AssessmentStepType.question,
-            content: "How do you say 'I don't understand' in German?",
-            expectedAnswer: "Ich verstehe nicht.",
-            expectedAnswerAudioUrl: "https://example.com/audio/german/ich_verstehe_nicht.mp3",
-            maxAttempts: 3,
-            attempts: 0,
-            correct: false,
-            feedback: "When you don't understand something in German, you can say 'Ich verstehe nicht.'"
-          },
-          {
-            stepNumber: 8,
-            type: AssessmentStepType.summary,
-            content: "Great work on completing the assessment! Based on your responses, we'll create a personalized learning plan to help you improve your German skills.",
-            maxAttempts: 1,
-            attempts: 0,
-            correct: false
-          }
-        ]
-      }
-    },
-    include: {
-      steps: true
+  // Seed YouTube data
+  await prisma.youtubeModel.upsert({
+    where: { id: '123413123' },
+    update: {},
+    create: {
+      id: '123413123',
+      youtube_url: 'N4b3apb88Mw',
+      created_at: new Date('2025-03-18T08:24:25.308Z'),
+      updated_at: new Date('2025-03-18T08:24:25.308Z')
     }
-  });
-
-  // Create regular lessons - Lesson 1: Greetings and Introductions
-  const lesson1 = await prisma.lesson.create({
-    data: {
-      userId: user.id,
-      lessonId: 'greetings-intro',
-      focusArea: 'Greetings and Introductions',
-      targetSkills: ['Basic Greetings', 'Self-Introduction', 'Polite Phrases'],
-      performanceMetrics: {
-        accuracy: 0,
-        pronunciationScore: 0,
-        errorPatterns: []
-      },
-      steps: {
-        create: [
-          {
-            stepNumber: 1,
-            type: LessonStepType.instruction,
-            content: "Welcome to the 'Basic Greetings' lesson! In this lesson, you'll learn common German greetings and introductions.",
-            contentAudioUrl: 'https://example.com/audio/german/hallo.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 2,
-            type: LessonStepType.new_word,
-            content: 'Hallo',
-            contentAudioUrl: 'https://example.com/audio/german/hallo.mp3',
-            translation: 'Hello',
-            expectedAnswer: 'Hallo',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/hallo.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 3,
-            type: LessonStepType.new_word,
-            content: 'Guten Tag',
-            contentAudioUrl: 'https://example.com/audio/german/guten_tag.mp3',
-            translation: 'Good day',
-            expectedAnswer: 'Guten Tag',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/guten_tag.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 4,
-            type: LessonStepType.new_word,
-            content: 'Auf Wiedersehen',
-            contentAudioUrl: 'https://example.com/audio/german/auf_wiedersehen.mp3',
-            translation: 'Goodbye',
-            expectedAnswer: 'Auf Wiedersehen',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/auf_wiedersehen.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 5,
-            type: LessonStepType.practice,
-            content: 'How do you introduce yourself in German saying "My name is John"?',
-            contentAudioUrl: null,
-            translation: 'Ich heiße John',
-            expectedAnswer: 'Ich heiße John',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/ich_heisse_john.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 6,
-            type: LessonStepType.model_answer,
-            content: 'Great job! Now let\'s learn how to ask someone\'s name.',
-            contentAudioUrl: null,
-            translation: null,
-            expectedAnswer: null,
-            expectedAnswerAudioUrl: null,
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 7,
-            type: LessonStepType.new_word,
-            content: 'Wie heißt du?',
-            contentAudioUrl: 'https://example.com/audio/german/wie_heisst_du.mp3',
-            translation: 'What is your name?',
-            expectedAnswer: 'Wie heißt du',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/wie_heisst_du.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 8,
-            type: LessonStepType.summary,
-            content: "Congratulations! You've completed the Basic Greetings lesson. You now know how to greet people and introduce yourself in German!",
-            contentAudioUrl: 'https://example.com/audio/german/congratulations.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          }
-        ]
-      },
-      completed: false
-    },
-    include: {
-      steps: true
+  })
+  
+  // Seed Case Studies EN exactly as in the SQL dump
+  // gSense case study
+  await prisma.caseStudyEN.upsert({
+    where: { id: 'gsense-1737888575884' },
+    update: {},
+    create: {
+      id: 'gsense-1737888575884',
+      title: 'gSense',
+      description: 'gSense is a health platform which focuses on personalized health monitoring. It integrates various health metrics and devices to assist in managing chronic diseases.',
+      tags: ['Branding', 'Saas', 'HealthTech'],
+      images: JSON.parse('[{"alt":"gSense branded bag","url":"https://i.postimg.cc/28Qzxxzc/dd.png"},{"alt":"gSense book","url":"https://i.postimg.cc/NjzTzPFk/001.jpg"},{"alt":"gSense Desk a4","url":"https://i.postimg.cc/4dTKCCgV/002-2.jpg"},{"alt":"gSense Desk a4 folded","url":"https://i.postimg.cc/BQN2xvGy/005.jpg"},{"alt":"gSense totebag","url":"https://i.postimg.cc/V6BJm7fT/006-2.jpg"},{"alt":"gSense business card","url":"https://i.postimg.cc/4466x52X/011.jpg"},{"alt":"gSense book upside down","url":"https://i.postimg.cc/9QMZ1jmf/012.jpg"},{"alt":"gSense envelope","url":"https://i.postimg.cc/Prfwrk8M/013-1.jpg"}]'),
+      cta_text: 'View Case Study',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'http://ziro.agency/gsense-branding',
+      created_at: new Date('2025-01-06T09:25:11.086Z'),
+      updated_at: new Date('2025-01-06T09:25:11.086Z'),
+      slug: 'gsense-branding',
+      order_index: 0
     }
   })
 
-  // Lesson 2: Restaurant Phrases
-  const lesson2 = await prisma.lesson.create({
-    data: {
-      userId: user.id,
-      lessonId: 'restaurant-basics',
-      focusArea: 'Restaurant Vocabulary',
-      targetSkills: ['Ordering Food', 'Table Requests', 'Payment Phrases'],
-      performanceMetrics: {
-        accuracy: 0,
-        pronunciationScore: 0,
-        errorPatterns: []
-      },
-      steps: {
-        create: [
-          {
-            stepNumber: 1,
-            type: LessonStepType.instruction,
-            content: "Welcome to the 'Restaurant Phrases' lesson! In this lesson, you'll learn essential phrases for ordering food and drinks in German restaurants.",
-            contentAudioUrl: 'https://example.com/audio/german/congratulations.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 2,
-            type: LessonStepType.new_word,
-            content: 'Speisekarte',
-            contentAudioUrl: 'https://example.com/audio/german/speisekarte.mp3',
-            translation: 'Menu',
-            expectedAnswer: 'Speisekarte',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/speisekarte.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 3,
-            type: LessonStepType.prompt,
-            content: 'How do you ask "Can I have the menu, please?" in German?',
-            contentAudioUrl: null,
-            translation: 'Kann ich bitte die Speisekarte haben?',
-            expectedAnswer: 'Kann ich bitte die Speisekarte haben',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/kann_ich_bitte_speisekarte.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 4,
-            type: LessonStepType.new_word,
-            content: 'Ich möchte bestellen',
-            contentAudioUrl: 'https://example.com/audio/german/ich_moechte_bestellen.mp3',
-            translation: 'I would like to order',
-            expectedAnswer: 'Ich möchte bestellen',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/ich_moechte_bestellen.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 5,
-            type: LessonStepType.practice,
-            content: 'How would you say "The check, please" in German?',
-            contentAudioUrl: null,
-            translation: 'Die Rechnung, bitte',
-            expectedAnswer: 'Die Rechnung, bitte',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/die_rechnung_bitte.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 6,
-            type: LessonStepType.model_answer,
-            content: 'Excellent! Now try ordering a specific item.',
-            contentAudioUrl: null,
-            translation: null,
-            expectedAnswer: null,
-            expectedAnswerAudioUrl: null,
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 7,
-            type: LessonStepType.new_word,
-            content: 'Ein Wasser, bitte',
-            contentAudioUrl: 'https://example.com/audio/german/ein_wasser_bitte.mp3',
-            translation: 'A water, please',
-            expectedAnswer: 'Ein Wasser, bitte',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/ein_wasser_bitte.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 8,
-            type: LessonStepType.summary,
-            content: "Great job! You've completed the Restaurant Phrases lesson. You're now ready to order food and drinks in German restaurants with confidence!",
-            contentAudioUrl: 'https://example.com/audio/german/congratulations.mp3',
-            attempts: 1,
-            correct: false,
-            errorPatterns: []
-          }
-        ]
-      },
-      completed: false
-    },
-    include: {
-      steps: true
+  // HyperFree case study
+  await prisma.caseStudyEN.upsert({
+    where: { id: 'hyperfree-1737897644018' },
+    update: {},
+    create: {
+      id: 'hyperfree-1737897644018',
+      title: 'HyperFree',
+      description: 'A platform offering personalized coaching and tools to manage prehypertension effectively.',
+      tags: ['Website'],
+      images: JSON.parse('[{"alt":"hf 01","url":"https://i.postimg.cc/3xwHPQmr/hf-01.png"},{"alt":"hf 02","url":"https://i.postimg.cc/jdtT47j7/hf-02.png"},{"alt":"hf 03","url":"https://i.postimg.cc/dt6YHV7S/hf-03.png"},{"alt":"hf 04","url":"https://i.postimg.cc/SQWq9rm4/hf-04.png"},{"alt":"hf 05","url":"https://i.postimg.cc/BnwG37BT/hf-05.png"}]'),
+      cta_text: 'Visit Website',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://hyperfree.framer.website/',
+      created_at: new Date('2025-01-26T13:20:44.372Z'),
+      updated_at: new Date('2025-01-26T13:20:44.372Z'),
+      slug: 'hyperfree',
+      order_index: 2
     }
   })
 
-  // Lesson 3: Travel Basics
-  const lesson3 = await prisma.lesson.create({
-    data: {
-      userId: user.id,
-      lessonId: 'travel-basics',
-      focusArea: 'Travel Essentials',
-      targetSkills: ['Asking for Directions', 'Public Transport', 'Booking Accommodation'],
-      performanceMetrics: {
-        accuracy: 0,
-        pronunciationScore: 0,
-        errorPatterns: []
-      },
-      steps: {
-        create: [
-          {
-            stepNumber: 1,
-            type: LessonStepType.instruction,
-            content: "Welcome to the 'Travel Essentials' lesson! In this lesson, you'll learn key phrases for navigating public transportation and asking for directions in German.",
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 2,
-            type: LessonStepType.new_word,
-            content: 'Wo ist...?',
-            contentAudioUrl: 'https://example.com/audio/german/wo_ist.mp3',
-            translation: 'Where is...?',
-            expectedAnswer: 'Wo ist',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/wo_ist.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 3,
-            type: LessonStepType.practice,
-            content: 'How do you ask "How do I get to the train station?" in German?',
-            contentAudioUrl: null,
-            translation: 'Wie komme ich zum Bahnhof?',
-            expectedAnswer: 'Wie komme ich zum Bahnhof',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/wie_komme_ich_zum_bahnhof.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 4,
-            type: LessonStepType.new_word,
-            content: 'Der Zug',
-            contentAudioUrl: 'https://example.com/audio/german/der_zug.mp3',
-            translation: 'The train',
-            expectedAnswer: 'Der Zug',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/der_zug.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 5,
-            type: LessonStepType.practice,
-            content: 'How would you ask "When does the next bus come?" in German?',
-            contentAudioUrl: null,
-            translation: 'Wann kommt der nächste Bus?',
-            expectedAnswer: 'Wann kommt der nächste Bus',
-            expectedAnswerAudioUrl: 'https://example.com/audio/german/wann_kommt_der_naechste_bus.mp3',
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          },
-          {
-            stepNumber: 6,
-            type: LessonStepType.summary,
-            content: "Well done! You've completed the Travel Essentials lesson. You're now prepared to navigate German cities and use public transportation with ease!",
-            attempts: 0,
-            correct: false,
-            errorPatterns: []
-          }
-        ]
-      },
-      completed: false
-    },
-    include: {
-      steps: true
+  // IQUBX case study
+  await prisma.caseStudyEN.upsert({
+    where: { id: 'iqubx-1737298472661' },
+    update: {},
+    create: {
+      id: 'iqubx-1737298472661',
+      title: 'IQUBX',
+      description: 'A redesigned website for Iqubx, a New Delhi leader in green building products. The project focused on enhancing user experience and showcasing eco-friendly offerings like aluminum ceiling trapdoors, featuring a responsive design and a dedicated sustainability section.',
+      tags: ['Website', 'Visual Identity', 'Sustainability'],
+      images: JSON.parse('[{"alt":"IQUBX website redesign showcasing baffle ceiling systems","url":"https://i.postimg.cc/bJPJPFNt/Mac-Book-Air-2022.png"}]'),
+      cta_text: 'View Case Study',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://iqubx.framer.website/',
+      created_at: new Date('2025-01-06T09:25:11.086Z'),
+      updated_at: new Date('2025-01-06T09:25:11.086Z'),
+      slug: 'iqubx-website-redesign',
+      order_index: 3
     }
   })
 
-  console.log(`Created user: ${user.email}`)
-  console.log(`Created onboarding for user: ${onboarding.id}`)
-  console.log(`Created assessment lesson with ${assessmentLesson.steps.length} steps`)
-  console.log(`Created lesson 1: ${lesson1.focusArea} with ${lesson1.steps.length} steps`)
-  console.log(`Created lesson 2: ${lesson2.focusArea} with ${lesson2.steps.length} steps`)
-  console.log(`Created lesson 3: ${lesson3.focusArea} with ${lesson3.steps.length} steps`)
+  // PulsePoint case study
+  await prisma.caseStudyEN.upsert({
+    where: { id: 'pulsepoint-1739618540878' },
+    update: {},
+    create: {
+      id: 'pulsepoint-1739618540878',
+      title: 'PulsePoint',
+      description: 'An app for nurses to find freelance jobs.',
+      tags: ['Mobile Application', 'HealthTech'],
+      images: JSON.parse('[{"alt":"pp 01","url":"https://i.postimg.cc/CMN8NbNy/PP-01.png"},{"alt":"pp 02","url":"https://i.postimg.cc/Pr5wFN3C/PP-2.png"},{"alt":"pp 03","url":"https://i.postimg.cc/dtNyMvp4/PP-3.png"},{"alt":"pp 04","url":"https://i.postimg.cc/JzyBMvWm/PP-4.png"},{"alt":"pp 05","url":"https://i.postimg.cc/Hkf8xzpM/PP-5.png"},{"alt":"pp 06","url":"https://i.postimg.cc/hGTz7mj5/PP-6.png"},{"alt":"pp 07","url":"https://i.postimg.cc/V6FJKcX9/PP-7.png"},{"alt":"pp 08","url":"https://i.postimg.cc/ZRm9PqvK/PP-8.png"},{"alt":"pp 09","url":"https://i.postimg.cc/j2dL9khp/PP-9.png"},{"alt":"pp 10","url":"https://i.postimg.cc/2ycVfFcV/PP-10.png"}]'),
+      cta_text: 'Linkedin Post',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://www.linkedin.com/feed/update/urn:li:activity:7252461862322094082',
+      created_at: new Date('2025-01-26T14:15:38.464Z'),
+      updated_at: new Date('2025-01-26T14:15:38.464Z'),
+      slug: 'pulsepoint',
+      order_index: 4
+    }
+  })
+
+  // Supernormal case study
+  await prisma.caseStudyEN.upsert({
+    where: { id: 'supernormal-1737369180424' },
+    update: {},
+    create: {
+      id: 'supernormal-1737369180424',
+      title: 'Supernormal',
+      description: 'Supernormal is the innovative app for longevity athletes. Through the website potential users can find more information about the app\'s offerings.',
+      tags: ['Website'],
+      images: JSON.parse('[{"alt":"Supernormal Website","url":"https://i.postimg.cc/BQLWHrxT/L-Mockups-010.png"},{"alt":"Hero Image","url":"https://i.postimg.cc/VvXVH84p/a1.png"},{"alt":"About SuperNormal","url":"https://i.postimg.cc/50hr3058/a2.png"},{"alt":"Features Supernormal","url":"https://i.postimg.cc/26bJhvWz/a3.png"},{"alt":"User Testimonials","url":"https://i.postimg.cc/P5TB9Pg4/a4.png"},{"alt":"Call to action","url":"https://i.postimg.cc/XvDmrxpH/a5.png"},{"alt":"Closing Explanations","url":"https://i.postimg.cc/HkzfgTHC/a6.png"},{"alt":"Bottom Call to Action","url":"https://i.postimg.cc/Gpp636hT/a7.png"}]'),
+      cta_text: 'Visit Website',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://ssupernnormal.framer.website/',
+      created_at: new Date('2025-01-18T16:36:38.832Z'),
+      updated_at: new Date('2025-01-18T16:36:38.832Z'),
+      slug: 'supernormal-website',
+      order_index: 1
+    }
+  })
+
+  // SuperNormal App case study
+  await prisma.caseStudyEN.upsert({
+    where: { id: 'supernormal-app-1739785855786' },
+    update: {},
+    create: {
+      id: 'supernormal-app-1739785855786',
+      title: 'SuperNormal App',
+      description: 'SuperNormal is an innovative app concept designed specifically for "Rejuvenation Athletes," individuals dedicated to slowing biological aging and enhancing their overall well-being. This project aims to integrate various features that support users in their journey toward longevity through a user-friendly interface and community engagement.',
+      tags: ['Mobile Application', 'HealthTech'],
+      images: JSON.parse('[{"alt":"SuperNormal app interface","url":"https://i.postimg.cc/0NLrbykh/Instagram-Post-04-15.png"},{"alt":"Supernormal name","url":"https://i.postimg.cc/VkJTpvmr/Instagram-Post-04-29.png"},{"alt":"Supernormal intended users","url":"https://i.postimg.cc/kgLZmCgj/Instagram-Post-04-31.png"},{"alt":"Supernormal leaderboard functionality","url":"https://i.postimg.cc/yx6pPYLN/Instagram-Post-04-32.png"},{"alt":"Supernormal user progress","url":"https://i.postimg.cc/NGbz0m02/Instagram-Post-04-33.png"},{"alt":"Supernormal health agent","url":"https://i.postimg.cc/pV7KkLG1/Instagram-Post-04-34.png"},{"alt":"Supernormal challenges and gamification","url":"https://i.postimg.cc/Yq9yL04n/Instagram-Post-04-35.png"},{"alt":"Supernormal awards and badges","url":"https://i.postimg.cc/gjfR0gLP/Instagram-Post-04-36.png"},{"alt":"Supernormal font and colors","url":"https://i.postimg.cc/Dy8ByNDR/Instagram-Post-04-37.png"}]'),
+      cta_text: 'Read Case Study',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://www.nikhil.health/p/supernormal-a-longevity-app-concept',
+      created_at: new Date('2025-01-06T09:25:11.086Z'),
+      updated_at: new Date('2025-01-06T09:25:11.086Z'),
+      slug: 'supernormal-app-design',
+      order_index: 6
+    }
+  })
+
+  // Wellness Way case study
+  await prisma.caseStudyEN.upsert({
+    where: { id: 'wellness-way-1739788499366' },
+    update: {},
+    create: {
+      id: 'wellness-way-1739788499366',
+      title: 'Wellness Way',
+      description: 'A therapeutic app delivering personalized exercise activities.',
+      tags: ['Mobile Application', 'HealthTech'],
+      images: JSON.parse('[{"alt":"ww 01","url":"https://i.postimg.cc/90sx8FND/WW-02.png"},{"alt":"ww 02","url":"https://i.postimg.cc/d12ttLGY/WW-01.png"},{"alt":"ww o3","url":"https://i.postimg.cc/cH9k3cRM/WW-3.png"},{"alt":"ww 04","url":"https://i.postimg.cc/DfxBp5bq/WW-4.png"},{"alt":"ww 05","url":"https://i.postimg.cc/nLT381Pb/WW-5.png"},{"alt":"ww 06","url":"https://i.postimg.cc/y8TNHJXC/WW-6.png"},{"alt":"ww 07","url":"https://i.postimg.cc/8cG3NCmx/WW-7.png"},{"alt":"ww 07","url":"https://i.postimg.cc/C5HKxzT8/WW-8.png"}]'),
+      cta_text: 'Linkedin Post',
+      cta_text_name: 'caseStudy.ctaText.viewCaseStudy',
+      cta_url: 'https://www.linkedin.com/feed/update/urn:li:activity:7265740651026137089',
+      created_at: new Date('2025-01-26T12:17:16.309Z'),
+      updated_at: new Date('2025-01-26T12:17:16.309Z'),
+      slug: 'wellnessway',
+      order_index: 5
+    }
+  })
+  
+  console.log('Database has been seeded!')
 }
 
 main()

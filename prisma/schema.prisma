@@ -10,181 +10,131 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// English Models
+// Youtube videos
 model YoutubeModel {
   id          String   @id @default(uuid())
   youtube_url String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@map("zirospace_youtube")
 }
 
-model ImageEN {
-  id            String       @id @default(uuid())
-  url           String
-  alt           String
-  caseStudy     CaseStudyEN? @relation(fields: [caseStudyId], references: [id])
-  caseStudyId   String?
-
-  @@map("zirospace_images_en")
-}
-
+// Case Studies - English
 model CaseStudyEN {
-  id              String    @id @default(uuid())
-  slug            String    @unique
-  title           String
-  subtitle        String
-  description     String
-  tags            String[]
-  images          ImageEN[]
-  ctaUrl          String
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-  color           String
-  orderIndex      Int       @default(0) @map("order_index")
-  backgroundColor String    @map("background_color")
-  theme           String
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  tags         String[]
+  images       Json     // This is a JSONB field in the database
+  cta_text     String
+  cta_text_name String
+  cta_url      String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  slug         String
+  order_index  Int      @default(0)
 
-  @@map("zirospace_case_studies_en")
+  @@map("case_studies_en")
 }
 
-model BannerEN {
-  id            String    @id @default(uuid())
-  title         String
-  content       String
-  subtitle      String?
-  imageUrl      String?   @map("image_url")
-  youtubeUrl    String?   @map("youtube_url")
-  startDate     DateTime? @map("start_date")
-  endDate       DateTime? @map("end_date")
-  isActive      Boolean   @default(false) @map("is_active")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-  ctaButtonText String?   @map("cta_button_text")
-  ctaButtonLink String?   @map("cta_button_link")
+// Case Studies - Polish
+model CaseStudyPL {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  tags         String[]
+  images       Json     // This is a JSONB field in the database
+  cta_text     String
+  cta_text_name String
+  cta_url      String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  slug         String
+  order_index  Int      @default(0)
 
-  @@map("zirospace_banners_en")
+  @@map("case_studies_pl")
 }
 
+// Blog Posts - English
 model BlogPostEN {
   id          String   @id @default(uuid())
   slug        String   @unique
   title       String
-  imageurl    String   @map("image_url")
-  createdAt   DateTime @default(now()) @map("created_at")
-  imageAlt    String?  @map("image_alt")
+  image_url   String
+  created_at  DateTime @default(now())
+  image_alt   String?
   excerpt     String
-  contentHtml String   @db.Text @map("content_html")
-  isPinned    Boolean  @default(false) @map("is_pinned")
+  content_html String  @db.Text
+  is_pinned   Boolean  @default(false)
 
   @@map("zirospace_blog_posts_en")
 }
 
-model TestimonialEN {
-  id        String   @id @default(uuid())
-  author    String
-  role      String
-  company   String
-  quote     String   @db.Text
-  image     String
-  image_alt String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("zirospace_testimonials_en")
-}
-
-// Polish Models
-model ImagePL {
-  id            String       @id @default(uuid())
-  url           String
-  alt           String
-  caseStudy     CaseStudyPL? @relation(fields: [caseStudyId], references: [id])
-  caseStudyId   String?
-
-  @@map("zirospace_images_pl")
-}
-
-model CaseStudyPL {
-  id              String    @id @default(uuid())
-  slug            String    @unique
-  title           String
-  subtitle        String
-  description     String
-  tags            String[]
-  images          ImagePL[]
-  ctaUrl          String
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-  color           String
-  orderIndex      Int       @default(0) @map("order_index")
-  backgroundColor String    @map("background_color")
-  theme           String
-
-  @@map("zirospace_case_studies_pl")
-}
-
-model BannerPL {
-  id            String    @id @default(uuid())
-  title         String
-  content       String
-  subtitle      String?
-  imageUrl      String?   @map("image_url")
-  youtubeUrl    String?   @map("youtube_url")
-  startDate     DateTime? @map("start_date")
-  endDate       DateTime? @map("end_date")
-  isActive      Boolean   @default(false) @map("is_active")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-  ctaButtonText String?   @map("cta_button_text")
-  ctaButtonLink String?   @map("cta_button_link")
-
-  @@map("zirospace_banners_pl")
-}
-
+// Blog Posts - Polish
 model BlogPostPL {
   id          String   @id @default(uuid())
   slug        String   @unique
   title       String
-  imageurl    String   @map("image_url")
-  createdAt   DateTime @default(now()) @map("created_at")
-  imageAlt    String?  @map("image_alt")
+  image_url   String
+  created_at  DateTime @default(now())
+  image_alt   String?
   excerpt     String
-  contentHtml String   @db.Text @map("content_html") 
-  isPinned    Boolean  @default(false) @map("is_pinned")
+  content_html String  @db.Text
+  is_pinned   Boolean  @default(false)
 
   @@map("zirospace_blog_posts_pl")
 }
 
+// Testimonials - English
+model TestimonialEN {
+  id         String   @id @default(uuid())
+  author     String
+  role       String
+  company    String
+  quote      String   @db.Text
+  image      String
+  image_alt  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("zirospace_testimonials_en")
+}
+
+// Testimonials - Polish
 model TestimonialPL {
-  id        String   @id @default(uuid())
-  author    String
-  role      String
-  company   String
-  quote     String   @db.Text
-  image     String
-  image_alt String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id         String   @id @default(uuid())
+  author     String
+  role       String
+  company    String
+  quote      String   @db.Text
+  image      String
+  image_alt  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("zirospace_testimonials_pl")
 }
 
-// Shared models (not locale-specific)
+// Case Study Slider (shared)
+model CaseStudySlider {
+  id         String           @id @default(uuid())
+  created_at DateTime         @default(now())
+  updated_at DateTime         @updatedAt
+  images     CaseStudyImage[]
+
+  @@map("zirospace_case_study_sliders")
+}
+
+// Case Study Images (shared)
 model CaseStudyImage {
-  id              String           @id @default(uuid())
+  id              String          @id @default(uuid())
   image           String
   alt             String
-  createdAt       DateTime         @default(now()) @map("created_at")
-  updatedAt       DateTime         @updatedAt @map("updated_at")
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
   caseStudySlider CaseStudySlider? @relation(fields: [sliderId], references: [id])
   sliderId        String?
 
   @@map("zirospace_case_study_images")
-}
-
-model CaseStudySlider {
-  id        String           @id @default(uuid())
-  images    CaseStudyImage[]
-  createdAt DateTime         @default(now()) @map("created_at")
-  updatedAt DateTime         @updatedAt @map("updated_at")
-
-  @@map("zirospace_case_study_sliders")
 }
