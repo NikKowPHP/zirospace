@@ -1,6 +1,7 @@
-const createNextIntlPlugin = require('next-intl/plugin');
-const withBundleAnalyzer = require('@next/bundle-analyzer');
-const { PERFORMANCE_CONFIG } = require('./src/config/performance');
+import createNextIntlPlugin from 'next-intl/plugin';
+import withBundleAnalyzer from '@next/bundle-analyzer';
+import { PERFORMANCE_CONFIG } from './src/config/performance';
+import { NextConfig } from 'next';
 
 const withNextIntl = createNextIntlPlugin();
 const withAnalyzer = withBundleAnalyzer({
@@ -8,7 +9,7 @@ const withAnalyzer = withBundleAnalyzer({
   openAnalyzer: false,
 });
 
-const config = {
+const config: NextConfig = {
   // Image optimization
   images: {
     domains: ['localhost', 'ziro.space', 'drive.google.com', 'i.ibb.co', 'i.postimg.cc', 'i.ytimg.com'],

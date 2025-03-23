@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -13,139 +10,93 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Onboarding {
-  id                      String   @id @default(cuid())
-  userId                  String   @unique
-  user                    User     @relation(fields: [userId], references: [id])
-  steps                   Json
-  completed               Boolean  @default(false)
-  learningPurpose         String?
-  nativeLanguage          String?
-  targetLanguage          String?
-  proficiencyLevel        ProficiencyLevel?
-  initialAssessmentCompleted Boolean @default(false)
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
-
-  @@map("onboarding")
+model YoutubeModel {
+  id          String   @id @default(uuid())
+  youtube_url String
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
+model Image {
+  id            String      @id @default(uuid())
+  url           String
+  alt           String
+  caseStudy     CaseStudy?  @relation(fields: [caseStudyId], references: [id])
+  caseStudyId   String?
+}
+
+model CaseStudy {
+  id              String    @id @default(uuid())
+  slug            String    @unique
+  title           String
+  subtitle        String
+  description     String
+  tags            String[]
+  images          Image[]
+  ctaUrl          String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  color           String
+  orderIndex      Int       @default(0)
+  backgroundColor String
+  theme           String
+  locale          String    @default("en")
+}
+
+model Banner {
+  id            String    @id @default(uuid())
+  title         String
+  content       String
+  subtitle      String?
+  imageUrl      String?
+  youtubeUrl    String?
+  startDate     DateTime?
+  endDate       DateTime?
+  isActive      Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  ctaButtonText String?
+  ctaButtonLink String?
+  locale        String    @default("en")
+}
+
+model BlogPost {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  title       String
+  imageurl    String
+  createdAt   DateTime @default(now())
+  imageAlt    String?
+  excerpt     String
+  contentHtml String   @db.Text
+  isPinned    Boolean  @default(false)
+  locale      String   @default("en")
+}
+
+model Testimonial {
+  id        String   @id @default(uuid())
+  author    String
+  role      String
+  company   String
+  quote     String   @db.Text
+  image     String
+  image_alt String
   createdAt DateTime @default(now())
-  onboarding Onboarding?
-  assessmentLessons AssessmentLesson[]
-  lessons Lesson[]
+  updatedAt DateTime @updatedAt
+  locale    String   @default("en")
 }
 
-enum ProficiencyLevel {
-  beginner
-  intermediate
-  advanced
+model CaseStudyImage {
+  id              String          @id @default(uuid())
+  image           String
+  alt             String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  caseStudySlider CaseStudySlider? @relation(fields: [sliderId], references: [id])
+  sliderId        String?
 }
 
-enum LessonGenerationStatus {
-  pending
-  completed
-  failed
-}
-
-enum AssessmentStepType {
-  question        // Assessment question
-  user_response   // User's answer
-  feedback        // Feedback on user's answer
-  instruction     // Instructions for the assessment
-  summary         // Assessment summary/results
-}
-
-model AssessmentLesson {
-  id                String   @id @default(cuid())
-  userId            String   @unique // Only one assessment per user
-  user              User     @relation(fields: [userId], references: [id])
-  description       String?  // Brief description if needed
-  completed         Boolean  @default(false)
-  sourceLanguage    String   // User's native language
-  targetLanguage    String   // User's target language
-  // Assessment metrics
-  metrics           Json?    // Store assessment metrics like accuracy, pronunciation scores, etc.
-  proposedTopics    String[] // Topics suggested based on assessment performance
-  summary           String?  // Overall assessment summary
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  steps             AssessmentStep[]
-
-  @@map("assessment_lessons")
-}
-
-model AssessmentStep {
-  id                String           @id @default(cuid())
-  assessmentId      String
-  assessment        AssessmentLesson @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
-  stepNumber        Int
-  type              AssessmentStepType
-  content           String
-  contentAudioUrl   String?
-  translation       String?
-  expectedAnswer    String?
-  expectedAnswerAudioUrl String?
-  maxAttempts       Int              @default(3)  // Maximum attempts before showing correct answer
-  userResponse      String?
-  attempts          Int              @default(0)
-  correct           Boolean          @default(false)
-  lastAttemptAt     DateTime?
-  feedback          String?          // Feedback specific to this step
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-
-  @@map("assessment_steps")
-}
-
-model Lesson {
-  id                  String    @id @default(cuid())
-  userId              String
-  user                User      @relation(fields: [userId], references: [id])
-  lessonId            String
-  focusArea           String
-  targetSkills        String[]
-  performanceMetrics  Json?
-  completed           Boolean   @default(false)
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
-  steps               LessonStep[]
-
-  @@map("lessons")
-}
-
-enum LessonStepType {
-  prompt
-  model_answer // messages like 'great job'
-  user_answer
-  new_word
-  practice
-  instruction 
-  summary    
-}
-
-model LessonStep {
-  id              String   @id @default(cuid())
-  lessonId        String
-  lesson          Lesson   @relation(fields: [lessonId], references: [id])
-  stepNumber      Int
-  type            LessonStepType
-  content         String
-  contentAudioUrl String?
-  translation     String?
-  expectedAnswer  String?
-  expectedAnswerAudioUrl String?
-  userResponse    String?
-  attempts        Int      @default(0)
-  correct         Boolean  @default(false)
-  lastAttemptAt   DateTime?
-  errorPatterns   String[]
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  @@map("lesson_steps")
+model CaseStudySlider {
+  id        String           @id @default(uuid())
+  images    CaseStudyImage[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
 }
