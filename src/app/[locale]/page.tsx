@@ -10,7 +10,7 @@ import {
   WhyUs,
   Philosophy,
   Faq,
-  // StayInformed,
+  StayInformed,
   FloatVideo,
   TestimonialsSection,
   BannerModalWrapper
@@ -109,7 +109,7 @@ export default async function HomePage({ params }: HomePageProps) {
               <WhyUs />
               <Philosophy />
               <Faq />
-              {/* <StayInformed /> */}
+              <StayInformed />
             </div>
           </Suspense>
 

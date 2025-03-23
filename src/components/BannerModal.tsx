@@ -14,7 +14,7 @@ interface BannerModalProps {
 }
 
 export const BannerModal = ({ banner }: BannerModalProps) => {
-  const [showModal, setShowModal] = useState(true)
+  const [showModal, setShowModal] = useState(false)
   const t = useTranslations('BannerModal')
 
   const opts = {
@@ -76,7 +76,8 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
     return null
   }
 
-  return (
+  return  banner && (
+
     <Modal isOpen={showModal} onClose={onClose}>
       <div className="flex flex-col gap-[16px] w-full items-center justify-center">
         <div className="rounded-lg w-full">

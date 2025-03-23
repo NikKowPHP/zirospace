@@ -35,3 +35,24 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// GET route to retrieve the active banner
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    // Extract locale from query parameters; default to 'en' if not provided.
+    const locale = searchParams.get('locale') ?? 'en'
+    const activeBanner = await bannerService.getActiveBanner(locale)
+    logger.log('active banner ', activeBanner)
+    if (!activeBanner) {
+      return NextResponse.json({ message: 'No active banner found' }, { status: 404 })
+    }
+    return NextResponse.json(activeBanner)
+  } catch (error) {
+    logger.log('Error fetching active banner:', error)
+    return NextResponse.json(
+      { error: 'Failed to fetch active banner', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    )
+  }
+}
