@@ -96,10 +96,18 @@ export class BannerRepository implements IBannerRepository {
 
     async updateBanner(id: string, banner: Partial<BannerDTO>, locale: string): Promise<Banner> {
         const tableName = this.getTableName(locale);
-
+        
+        // Create a clean object for the update by converting undefined values to null
+        const cleanedBanner: Record<string, any> = {};
+        
+        for (const [key, value] of Object.entries(banner)) {
+            // If the value is undefined, set it to null to properly remove it in the database
+            cleanedBanner[key] = value === undefined ? null : value;
+        }
+        
         const { data, error } = await this.supabaseClient
             .from(tableName)
-            .update(banner)
+            .update(cleanedBanner)
             .eq('id', id)
             .select('*')
             .single();

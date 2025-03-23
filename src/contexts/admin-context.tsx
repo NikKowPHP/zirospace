@@ -656,6 +656,7 @@ export function AdminProvider({
           .catch(() => ({ error: 'Failed to update banner' }))
         throw new Error(errorData.error || 'Failed to update banner')
       }
+      debugger
 
       const updatedBanner = await response.json()
       setBanners((prev) => ({
