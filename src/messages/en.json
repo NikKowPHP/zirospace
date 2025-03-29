@@ -44,7 +44,6 @@
           "item3": "Make adjustments until the solution is ready for launch."
         }
       }
-     
     }
   },
   "servicesSection": {
@@ -53,17 +52,17 @@
     "serviceCard1": {
       "title": "UI/UX Design",
       "subtitle": "Crafting Intuitive Experiences",
-      "description": "Create intuitive and engaging user interfaces that enhance the overall experience for patients and healthcare providers, ensuring that digital health solutions are user-friendly and accessible."
+      "description": "Transform patient and provider experiences with user-friendly UI/UX designs that make digital health solutions accessible and engaging."
     },
     "serviceCard2": {
       "title": "Branding & Identity",
       "subtitle": "Creating Brand Excellence",
-      "description": "Develop impactful brand identities that resonate with target audiences, effectively communicating the values and mission of healthcare organizations through thoughtful design."
+      "description": "Create compelling branding and identity strategies that resonate with audiences, effectively communicating the mission of healthcare organizations."
     },
     "serviceCard3": {
       "title": "Digital Product",
       "subtitle": "Transforming Ideas into Reality",
-      "description": "Design and build innovative digital health products, from mobile apps to web platforms, that address real-world healthcare challenges and improve patient engagement and outcomes."
+      "description": "Design cutting-edge apps and platforms that address healthcare challenges, enhance patient engagement, and deliver measurable outcomes."
     }
   },
   "footer": {
@@ -250,6 +249,4 @@
   "BannerModal": {
     "bookCall": "Book a Call"
   }
-  
-
-  }
+}

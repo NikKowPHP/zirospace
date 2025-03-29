@@ -210,22 +210,24 @@
   "servicesSection": {
     "ourServicesTitle": "Nasze Usługi.",
     "ourServicesSubtitle": "Twój Partner w Innowacyjnych Rozwiązaniach Cyfrowego Zdrowia",
+
     "serviceCard1": {
-      "title": "UI/UX Design",
+      "title": "Projektowanie UI/UX",
       "subtitle": "Tworzenie Intuicyjnych Doświadczeń",
-      "description": "Twórz intuicyjne i angażujące interfejsy użytkownika, które poprawiają ogólne doświadczenia pacjentów i dostawców opieki zdrowotnej, zapewniając, że cyfrowe rozwiązania zdrowotne są przyjazne dla użytkownika i dostępne."
+      "description": "Przekształć doświadczenia pacjentów i świadczeniodawców dzięki przyjaznym dla użytkownika projektom UI/UX, które sprawiają, że cyfrowe rozwiązania zdrowotne są dostępne i angażujące."
     },
     "serviceCard2": {
-      "title": "Branding & Identity",
-      "subtitle": "Tworzenie Doskonałości Marki",
-      "description": "Rozwijaj wpływowe tożsamości marek, które rezonują z grupami docelowymi, skutecznie komunikując wartości i misję organizacji opieki zdrowotnej poprzez przemyślany design."
+      "title": "Branding i Tożsamość Wizualna",
+      "subtitle": "Budowanie Doskonałości Marki",
+      "description": "Twórz przekonujące strategie brandingowe i tożsamości wizualnej, które trafiają do odbiorców, skutecznie komunikując misję organizacji opieki zdrowotnej."
     },
     "serviceCard3": {
       "title": "Produkt Cyfrowy",
       "subtitle": "Przekształcanie Pomysłów w Rzeczywistość",
-      "description": "Projektuj i buduj innowacyjne cyfrowe produkty zdrowotne, od aplikacji mobilnych po platformy internetowe, które rozwiązują rzeczywiste wyzwania opieki zdrowotnej i poprawiają zaangażowanie i wyniki pacjentów."
+      "description": "Projektowanie nowatorskich aplikacji i platform, które odpowiadają na wyzwania opieki zdrowotnej, zwiększają zaangażowanie pacjentów i przynoszą wymierne rezultaty."
     }
   },
+
   "wyZiroSection": {
     "title": "Dlaczego Wybrać Ziro?",
     "description": "Ziro jest partnerem w innowacjach, oddanym tworzeniu wpływowych cyfrowych rozwiązań zdrowotnych, które poprawiają opiekę i zaangażowanie pacjentów. Współpracuj, aby przekształcić opiekę zdrowotną poprzez wyjątkowy design."
@@ -247,4 +249,5 @@
       "submit": "Wyślij"
     }
   }
-} 
+}
+
