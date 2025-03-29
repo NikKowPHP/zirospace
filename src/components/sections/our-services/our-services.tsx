@@ -74,15 +74,16 @@ const ServiceItem = ({
   return (
     <div
       key={index}
-      className="p-[30px] rounded-xl  bg-gray-100 shadow-sm flex flex-col gap-[16px] "
+      className="p-[20px] rounded-xl  bg-gray-100 shadow-sm flex flex-col gap-[16px] "
     >
       <div className="w-full h-full justify-center flex max-h-52 relative">
         <Image
-          src={'/images/client1.webp'}
+          src={item.image_url}
           alt="image"
           className="object-cover rounded-lg"
           width={300}
           height={200}
+          quality={100}
         />
       </div>
       <h2 className="text-[30px] leading-[1.2] text-black">
