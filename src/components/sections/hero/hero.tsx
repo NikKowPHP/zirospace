@@ -1,17 +1,9 @@
 import { getHeroSectionAction } from '@/infrastructure/services/pageServerActions'
 import { HeroButtons } from './hero-buttons'
-import { headers } from 'next/headers'
 
-export const HeroSection = async () => {
-  const headersList = headers()
-  const acceptLanguage = headersList.get('accept-language') ?? 'en-US'
-  // Extract the primary language from the header (e.g., "en-US" from "en-US,en;q=0.9,...")
-  const shortCutLanguage = acceptLanguage.split(',')[0].split('-')[0]
-  console.log('shortCutLanguage:', shortCutLanguage)
+export const HeroSection = async ({ locale }: { locale: string }) => {
 
-  // Fetch translations for the hero namespace.
-
-  const heroData = await getHeroSectionAction(shortCutLanguage)
+  const heroData = await getHeroSectionAction(locale)
 
   return (
     <section

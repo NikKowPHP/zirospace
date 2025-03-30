@@ -78,7 +78,7 @@ export default async function HomePage({ params }: HomePageProps) {
         itemType="https://schema.org/WebPage"
       >
         {/* Priority Content for LCP */}
-        <HeroSection />
+        <HeroSection key={locale} locale={locale} />
 
         {/* Deferred Content */}
         <div className="relative">
