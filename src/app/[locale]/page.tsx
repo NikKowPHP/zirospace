@@ -10,60 +10,61 @@ import {
   WhyUs,
   Philosophy,
   Faq,
-  StayInformed,
+  // StayInformed,
   FloatVideo,
   TestimonialsSection,
-  BannerModalWrapper
+  BannerModalWrapper,
 } from '@/helpers/componentsLoad'
 import { companyConfig } from '@/config/company'
-import { siteUrl } from '@/config/constants';
+import { siteUrl } from '@/config/constants'
 interface HomePageProps {
   params: Promise<{ locale: Locale }>
 }
 
-
 // Centralize JSON-LD data
 const jsonLdData = {
   organization: {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "@id": `${companyConfig.url}/#organization`,
-    "name": companyConfig.name,
-    "url": companyConfig.url,
-    "logo": {
-      "@type": "ImageObject",
-      "url": `${companyConfig.url}/images/ziro.avif`,
-      "width": "180",
-      "height": "180"
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${companyConfig.url}/#organization`,
+    name: companyConfig.name,
+    url: companyConfig.url,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${companyConfig.url}/images/ziro.avif`,
+      width: '180',
+      height: '180',
     },
-    "sameAs": Object.values(companyConfig.social),
-    "description": companyConfig.description,
-    "areaServed": {
-      "@type": "Country",
-      "name": "Poland"
+    sameAs: Object.values(companyConfig.social),
+    description: companyConfig.description,
+    areaServed: {
+      '@type': 'Country',
+      name: 'Poland',
     },
-    "knowsAbout": companyConfig.expertise
+    knowsAbout: companyConfig.expertise,
   },
   service: {
-    "@context": "https://schema.org",
-    "@type": "MedicalBusiness",
-    "name": `${companyConfig.name} Services`,
-    "serviceType": companyConfig.services,
-    "audience": {
-      "@type": "Audience",
-      "audienceType": companyConfig.audience
-    }
+    '@context': 'https://schema.org',
+    '@type': 'MedicalBusiness',
+    name: `${companyConfig.name} Services`,
+    serviceType: companyConfig.services,
+    audience: {
+      '@type': 'Audience',
+      audienceType: companyConfig.audience,
+    },
   },
   breadcrumb: {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [{
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": companyConfig.url
-    }]
-  }
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: companyConfig.url,
+      },
+    ],
+  },
 }
 
 export default async function HomePage({ params }: HomePageProps) {
@@ -77,7 +78,7 @@ export default async function HomePage({ params }: HomePageProps) {
         itemType="https://schema.org/WebPage"
       >
         {/* Priority Content for LCP */}
-        <HeroSection />
+        <HeroSection key={locale} locale={locale} />
 
         {/* Deferred Content */}
         <div className="relative">
@@ -92,7 +93,6 @@ export default async function HomePage({ params }: HomePageProps) {
               <OurServices />
             </div>
           </Suspense>
-
 
           <Suspense fallback={<div className="min-h-[300px]" />}>
             <CaseStudies locale={locale} />
@@ -109,7 +109,7 @@ export default async function HomePage({ params }: HomePageProps) {
               <WhyUs />
               <Philosophy />
               <Faq />
-              <StayInformed />
+              {/* <StayInformed /> */}
             </div>
           </Suspense>
 
@@ -119,7 +119,7 @@ export default async function HomePage({ params }: HomePageProps) {
           </Suspense>
 
           <Suspense fallback={null}>
-            <BannerModalWrapper  />
+            <BannerModalWrapper />
           </Suspense>
         </div>
 
@@ -127,7 +127,10 @@ export default async function HomePage({ params }: HomePageProps) {
         <meta itemProp="name" content={companyConfig.name} />
         <meta itemProp="description" content={companyConfig.description} />
         <meta itemProp="image" content="/images/ziro.avif" />
-        <meta itemProp="dateModified" content={new Date().toISOString().split('T')[0]} />
+        <meta
+          itemProp="dateModified"
+          content={new Date().toISOString().split('T')[0]}
+        />
       </div>
 
       {/* Structured Data */}
@@ -142,7 +145,11 @@ export default async function HomePage({ params }: HomePageProps) {
   )
 }
 
-export async function generateMetadata({ params }: { params: { locale: Locale } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { locale: Locale }
+}) {
   const { locale } = params
 
   return {

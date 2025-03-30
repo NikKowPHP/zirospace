@@ -2,8 +2,7 @@ import dynamic from 'next/dynamic'
 
 
 export const HeroSection = dynamic(
-  () =>
-    import('@/components/sections/hero/hero').then((mod) => mod.HeroSection),
+  () => import('@/components/sections/hero/hero').then((mod) => mod.HeroSection),
   {
     ssr: true,
   }
