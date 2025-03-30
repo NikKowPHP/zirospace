@@ -10,7 +10,7 @@ import {
   WhyUs,
   Philosophy,
   Faq,
-  StayInformed,
+  // StayInformed,
   FloatVideo,
   TestimonialsSection,
   BannerModalWrapper,

@@ -12,9 +12,7 @@ export const HeroSection = async () => {
   console.log('Primary Language:', primaryLanguage)
 
   // Fetch translations for the hero namespace.
-  const [t] = await Promise.all([
-    getTranslations('hero')
-  ])
+  const [t] = await Promise.all([getTranslations('hero')])
 
   return (
     <section
@@ -24,25 +22,21 @@ export const HeroSection = async () => {
     >
       {/* Optimize heading for LCP */}
       <h1
-        className="font-normal text-[64px] sm:text-[72px] lg:text-[64px] leading-[1.1] font-medium tracking-[-0.02em] mb-2 text-center max-w-[1200px] mx-auto"
+        className=" text-[64px] sm:text-[72px] lg:text-[64px] leading-[1.1] font-medium tracking-[-0.02em] mb-2 text-center max-w-[1200px] mx-auto"
         itemProp="headline"
         style={{
           contentVisibility: 'auto',
           containIntrinsicSize: '64px',
         }}
       >
-        <span className="inline-block">
-          {t('title1')}
-        </span>
+        <span className="inline-block">{t('title1')}</span>
         <br className="hidden sm:block" aria-hidden="true" />
         <span className="sm:hidden"> </span>
-        <span className="inline-block">
-          {t('title2')}
-        </span>
+        <span className="inline-block">{t('title2')}</span>
       </h1>
 
       {/* Optimize subtitle */}
-      <p 
+      <p
         className="text-[18px] sm:text-[20px] lg:text-[24px] text-gray-600 leading-relaxed px-4 sm:px-0 max-w-[800px] mx-auto text-center"
         style={{
           contentVisibility: 'auto',
