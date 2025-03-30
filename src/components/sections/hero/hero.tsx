@@ -1,3 +1,4 @@
+import { getHeroSectionAction } from '@/infrastructure/services/pageServerActions'
 import { HeroButtons } from './hero-buttons'
 import { getTranslations } from 'next-intl/server'
 import { headers } from 'next/headers'
@@ -13,6 +14,8 @@ export const HeroSection = async () => {
 
   // Fetch translations for the hero namespace.
   const [t] = await Promise.all([getTranslations('hero')])
+
+  const heroData = await getHeroSectionAction(primaryLanguage)
 
   return (
     <section
