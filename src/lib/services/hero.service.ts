@@ -1,6 +1,8 @@
 import { HeroModel } from '@/domain/models/models'
-import { heroRepository } from '@/lib/repositories/hero.repository'
-import { logger } from '@/lib/logger'
+import {
+  heroRepository, IHeroRepository
+ } from '@/lib/repositories/hero.repository'
+import  logger  from '@/lib/logger'
 
 export class HeroService {
   private heroRepository: IHeroRepository
@@ -12,18 +14,17 @@ export class HeroService {
     // }
   }
 
-  getHeroSection = async (locale: string): Promise<HeroModel[]> => {
-    const heroSection = await this.heroRepository.getHeroSection(locale)
+  getHeroSection = async (locale: string): Promise<HeroModel | null> => {
+    const heroSection = await this.heroRepository.getHero(locale)
     logger.log('heroSection', heroSection)
     return heroSection
   }
 
-  updateBanner = async (
-    id: string,
+  updateHeroSection = async (
     heroData: Partial<HeroModel>,
     locale: string
   ): Promise<HeroModel | null> => {
-    return this.heroRepository.updateHeroSection(id, heroData, locale)
+    return this.heroRepository.updateHero( heroData, locale)
   }
 }
 
