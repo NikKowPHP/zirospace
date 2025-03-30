@@ -1,7 +1,7 @@
 import { unstable_cache } from 'next/cache'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { Locale } from '@/i18n'
-import { CaseStudy } from '@/domain/models/case-study.model'
+import { CaseStudy } from '@/domain/models/models'
 import { CaseStudyDTO } from '@/infrastructure/dto/case-study.dto'
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import { CACHE_TAGS, CACHE_TIMES } from '@/lib/utils/cache'

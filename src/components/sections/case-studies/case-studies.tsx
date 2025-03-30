@@ -1,7 +1,7 @@
 import { Suspense, memo, useMemo } from 'react';
 import { CaseStudyCard } from '@/components/ui/case-study/case-study-card'
 import { type Locale } from '@/i18n'
-import { CaseStudy } from '@/domain/models/case-study.model'
+import { CaseStudy } from '@/domain/models/models'
 import { CaseStudiesLoader } from '@/components/sections/case-studies/case-studies-loader'
 import { getCaseStudyService } from '@/lib/services/case-study.service';
 import { getTranslations } from 'next-intl/server';

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useAdmin } from '@/contexts/admin-context'
-import { CaseStudy } from '@/domain/models/case-study.model'
+import { CaseStudy } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { CaseStudyForm } from './components/case-study-form'
 import logger from '@/lib/logger'

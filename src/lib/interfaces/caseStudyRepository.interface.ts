@@ -1,5 +1,5 @@
 import { Locale } from "@/i18n"
-import { CaseStudy } from "@/domain/models/case-study.model"
+import { CaseStudy } from "@/domain/models/models"
 import { OrderUpdate } from "../services/case-study.service"
 
 export interface ICaseStudyRepository {

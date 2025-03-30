@@ -5,7 +5,7 @@
 // import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 // import { caseStudyService } from '@/lib/services/case-study.service'
 // import logger from '@/lib/logger'
-// import { CaseStudy } from '@/domain/models/case-study.model'
+// import { CaseStudy } from '@/domain/models/models'
 
 // export async function createCaseStudyAction(data: Partial<CaseStudy>, locale: string) {
 //   try {

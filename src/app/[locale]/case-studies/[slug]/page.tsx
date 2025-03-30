@@ -120,7 +120,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
       "@type": "Article",
       "headline": caseStudy.title,
       "description": caseStudy.description,
-      "image": caseStudy.images.map(img => img.url),
+      "image": caseStudy.images.map((img: { url: string }) => img.url),
       "datePublished": caseStudy.createdAt,
       "author": {
         "@type": "Organization",
@@ -275,7 +275,7 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
           <section className="container mx-auto px-4 md:px-6 lg:px-8">
             <div className="max-w-[90rem] mx-auto">
               <div className="space-y-[20px]">
-                {otherImages.map((image, index) => {
+                {otherImages.map((image: { url: string; alt: string }, index: number) => {
                   const { isFullWidth, isSplitColumn } = getImageLayout(index)
                   
                   // If it's a split column image and it's the first of the pair (even index)

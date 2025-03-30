@@ -1,5 +1,5 @@
 import { Locale } from '@/i18n'
-import { CaseStudy } from '@/domain/models/case-study.model'
+import { CaseStudy } from '@/domain/models/models'
 import { CaseStudyDTO } from '@/infrastructure/dto/case-study.dto'
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import { ICaseStudyRepository } from '../interfaces/caseStudyRepository.interface';

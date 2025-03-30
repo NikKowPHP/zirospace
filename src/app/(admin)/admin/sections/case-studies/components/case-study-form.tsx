@@ -1,6 +1,6 @@
 'use client'
 
-import { CaseStudy } from '@/domain/models/case-study.model'
+import { CaseStudy } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { useState, useEffect } from 'react'
 

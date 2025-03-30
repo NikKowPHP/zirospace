@@ -7,7 +7,7 @@ import {
   useEffect,
   useCallback,
 } from 'react'
-import { CaseStudy } from '@/domain/models/case-study.model'
+import { CaseStudy } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
