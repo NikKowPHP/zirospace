@@ -115,6 +115,21 @@ export default function AdminDashboard() {
           </h2>
         </Link>
 
+        <Link
+          href="/admin/sections/hero"
+          className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
+        >
+          <h2 className="text-xl font-medium text-gray-900 mb-2">
+            Hero Section
+          </h2>
+          <p className="text-gray-600 mb-4">
+            Manage your hero section content and appearance.
+          </p>
+          <Button variant="primary" className="mt-auto w-full sm:w-auto">
+            Manage Hero Section
+          </Button>
+        </Link>
+
         {/* Add more admin sections here as needed */}
       </div>
     </div>
