@@ -144,7 +144,7 @@ export function PageProvider({
     setError(null)
     try {
       // const response = await bannerService.getActiveBanner(locale)
-      const response = await fetch(`/api/admin/banner?locale=${locale}`)
+      const response = await fetch(`/api/admin/banners?locale=${locale}`)
       if (!response.ok) {
         throw new Error('Failed to fetch active banner')
       }

@@ -17,7 +17,7 @@ function FaqAccordion({ itemId, isOpen, onToggle }: FaqAccordionProps) {
   return (
     <div
       className={cn(
-        ' rounded-[50px] bg-gray-100 ',
+        ' rounded-[50px] bg-gray-100 '
         // isOpen ? 'rounded-3xl' : ''
       )}
       key={itemId}
@@ -45,8 +45,8 @@ function FaqAccordion({ itemId, isOpen, onToggle }: FaqAccordionProps) {
           isOpen ? 'grid-rows-[1fr] ' : 'grid-rows-[0fr] '
         )}
       >
-        <div className="overflow-hidden"
-        
+        <div
+          className="overflow-hidden"
           itemScope
           itemProp="acceptedAnswer"
           itemType="https://schema.org/Answer"
@@ -69,26 +69,29 @@ export function Faq() {
 
   return (
     <section
-      id='faqs'
-      className="py-12 md:container sm:py-16 mt-10 lg:py-24 lg:mb-10"
-       itemScope
+      id="faqs"
+      className="py-12 max-w-5xl mx-auto sm:py-16 mt-10 lg:py-24 lg:mb-10"
+      itemScope
       itemType="https://schema.org/FAQPage"
     >
       <div className="px-4 sm:px-0 ">
-        <h2 className="text-center text-black text-[36px] sm:text-[46px] lg:text-[56px] font-medium mb-8 sm:mb-12 lg:mb-16" itemProp="name">
+        <h2
+          className="text-center text-black text-[36px] sm:text-[46px] lg:text-[56px] font-medium mb-8 sm:mb-12 lg:mb-16"
+          itemProp="name"
+        >
           {t('title')}
         </h2>
-        <div 
+        <div
           className="mx-auto flex flex-col gap-[12px] text-black"
           itemProp="mainEntity"
         >
           {faqItems.map((item) => (
             <FaqAccordion
-                  key={item.id}
-                  itemId={item.id}
-                  isOpen={openId === item.id}
-                  onToggle={() => setOpenId(openId === item.id ? null : item.id)}
-                />
+              key={item.id}
+              itemId={item.id}
+              isOpen={openId === item.id}
+              onToggle={() => setOpenId(openId === item.id ? null : item.id)}
+            />
           ))}
         </div>
       </div>
