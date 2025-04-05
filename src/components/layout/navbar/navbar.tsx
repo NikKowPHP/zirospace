@@ -59,7 +59,9 @@ export function Navbar() {
 
   return (
     <header
-      className="sticky top-[20px]   mx-auto   px-[10px]  max-w-5xl rounded-[50px] left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm "
+      className={`sticky top-[20px] mx-auto px-[10px] max-w-5xl left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm transition-all duration-300 ease-in-out ${
+        isMobileMenuOpen ? 'rounded-[40px]' : 'rounded-[50px]'
+      }`}
       itemScope
       itemType="https://schema.org/WPHeader"
     >
@@ -108,7 +110,7 @@ export function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-[20px]">
             <Button
               size="sm"
               className="rounded-full px-6 py-6 h-10 text-[15px] bg-white text-black hover:bg-white/90"
