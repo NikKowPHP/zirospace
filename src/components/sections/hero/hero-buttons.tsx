@@ -1,12 +1,24 @@
 'use client'
 
 import { Button } from '@/components/ui/button/button'
-import { useTranslations } from 'next-intl'
+import logger from '@/lib/logger'
 import Link from 'next/link'
 
-export function HeroButtons() {
-  const t = useTranslations('navigation')
-  
+interface HeroButtonsProps {
+  primaryText: string
+  primaryLink: string
+  secondaryText: string
+  secondaryLink: string
+}
+
+export function HeroButtons({
+  primaryText,
+  primaryLink,
+  secondaryText,
+  secondaryLink,
+}: HeroButtonsProps) {
+
+  logger.log(primaryText, primaryLink, secondaryText, secondaryLink)
   const handleProcessScroll = () => {
     const element = document.getElementById('our-process')
     if (!element) return
@@ -35,20 +47,20 @@ export function HeroButtons() {
         size="lg"
         className="w-full py-[30px] px-[25px] sm:w-auto rounded-full sm:py-6 sm:px-10 h-[48px] sm:h-[56px] text-[15px] sm:text-[16px] border border-primary text-[#0066FF] hover:bg-[#0066FF]/5"
         onClick={handleProcessScroll}
-        aria-label={t('learnMore')}
-        title={t('learnMore')}
+        aria-label={secondaryText}
+        title={secondaryText}
         data-action="view-process"
         itemProp="itemListElement"
         itemScope
         itemType="https://schema.org/ListItem"
       >
-        <span itemProp="name">{t('learnMore')}</span>
+        <span itemProp="name">{secondaryText}</span>
         <meta itemProp="position" content="1" />
       </Button>
 
       {/* Book Call Button */}
       <Link 
-        href="https://calendly.com/ziro-nikhil/30min"
+        href={primaryLink}
         target="_blank"
         rel="noopener noreferrer"
         itemProp="itemListElement"
@@ -58,12 +70,12 @@ export function HeroButtons() {
         <Button
           size="lg"
           className="w-full py-[30px] px-[25px] sm:w-auto rounded-full sm:py-6 sm:px-10 h-[48px] sm:h-[56px] text-[15px] sm:text-[16px] bg-primary hover:bg-[#0066FF]/90 whitespace-nowrap"
-          aria-label={`${t('bookCall')} - Opens in a new tab`}
-          title={t('bookCall')}
+          aria-label={`${primaryText} - Opens in a new tab`}
+          title={primaryText}
           data-action="book-call"
           data-tracking="cta-button"
         >
-          <span itemProp="name">{t('bookCall')}</span>
+          <span itemProp="name">{primaryText}</span>
           <meta itemProp="position" content="2" />
         </Button>
       </Link>

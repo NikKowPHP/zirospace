@@ -5,7 +5,10 @@ import { HeroModel } from '@/domain/models/models'
 export interface IHeroRepository {
   getHero(locale: string): Promise<HeroModel | null>
   updateHero(heroData: Partial<HeroModel>, locale: string): Promise<HeroModel | null>
-}
+
+}// Export a singleton instance with the default Prisma client
+
+import prisma from '@/lib/prisma'
 
 export class HeroRepository implements IHeroRepository {
   private prisma: PrismaClient
@@ -16,6 +19,7 @@ export class HeroRepository implements IHeroRepository {
 
   async getHero(locale: string): Promise<HeroModel | null> {
     try {
+      logger.log('locale on hero repository' , locale)
       const hero = await this.prisma.hero.findUnique({
         where: { locale }
       })
@@ -49,6 +53,4 @@ export class HeroRepository implements IHeroRepository {
   }
 }
 
-// Export a singleton instance with the default Prisma client
-import { prisma } from '@/lib/prisma'
 export const heroRepository = new HeroRepository(prisma)

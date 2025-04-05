@@ -7,7 +7,14 @@ export interface HeroModel {
   id: string
   title: string
   subtitle: string
-  background_image: string | null
+  cta_primary_text: string
+  cta_primary_link: string
+  cta_secondary_text: string
+  cta_secondary_link: string
+  background: string
+  locale: string
+  created_at: Date
+  updated_at: Date
 }
 
 

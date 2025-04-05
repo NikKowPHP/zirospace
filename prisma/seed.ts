@@ -312,9 +312,11 @@ async function main() {
       id: 'c84cebca-91e9-4d6a-afb0-02460a838c8e',
       title: 'Pioneering Integrated Digital Health Solutions',
       subtitle: 'Designing User-Friendly Technology for Better Patient Experiences, from Apps to Devices',
-      cta_text: 'Explore Our Work',
-      cta_link: '/case-studies',
-      background: '', // Add a background image URL here
+      cta_primary_text: 'Book a Call',
+      cta_primary_link: '/contact',
+      cta_secondary_text: 'Learn More',
+      cta_secondary_link: '#process',
+      background: '',
       locale: 'en',
       created_at: new Date('2025-03-30T07:43:41.645Z'),
       updated_at: new Date('2025-03-30T07:43:41.645Z')

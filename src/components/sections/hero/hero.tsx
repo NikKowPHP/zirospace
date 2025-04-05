@@ -1,9 +1,12 @@
 import { getHeroSectionAction } from '@/infrastructure/services/pageServerActions'
 import { HeroButtons } from './hero-buttons'
+import logger from '@/lib/logger'
 
 export const HeroSection = async ({ locale }: { locale: string }) => {
 
   const heroData = await getHeroSectionAction(locale)
+  logger.log('hero data ' , heroData)
+  logger.log('locale on hero section' , locale)
 
   return (
     <section
@@ -36,7 +39,12 @@ export const HeroSection = async ({ locale }: { locale: string }) => {
 
       {/* Defer buttons rendering */}
       <div className="opacity-0 animate-fadeIn">
-        <HeroButtons />
+        <HeroButtons
+          primaryText={heroData?.cta_primary_text || 'Book a Call'}
+          primaryLink={heroData?.cta_primary_link || '/contact'}
+          secondaryText={heroData?.cta_secondary_text || 'Learn More'}
+          secondaryLink={heroData?.cta_secondary_link || '#process'}
+        />
       </div>
     </section>
   )
