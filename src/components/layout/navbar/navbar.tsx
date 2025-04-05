@@ -146,7 +146,7 @@ export function Navbar() {
 
           {/* Mobile Navigation */}
           {isMobileMenuOpen && (
-            <div className="md:hidden absolute left-0 right-0 top-full bg-white">
+            <div className="md:hidden absolute left-0 right-0 top-full  bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm">
               <nav
                 className="flex flex-col items-center gap-8"
                 aria-label="Main navigation"
