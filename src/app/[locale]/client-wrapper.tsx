@@ -7,7 +7,7 @@ import { LanguageSwitcher } from '@/components/ui/language-switcher/language-swi
 export function ClientWrapper({ children }: { children: React.ReactNode }) {
   return (
       <div className='bg-white w-full'>
-    <div className='bg-white  pb-[40px] container px-[20px] sm:px-[20px] relative'>
+    <div className='bg-white  pb-[40px] px-[20px] sm:px-0  relative'>
 
       <Navbar />
       {children}

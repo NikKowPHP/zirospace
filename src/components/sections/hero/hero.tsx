@@ -2,19 +2,20 @@ import { getHeroSectionAction } from '@/infrastructure/services/pageServerAction
 import { HeroButtons } from './hero-buttons'
 
 export const HeroSection = async ({ locale }: { locale: string }) => {
-
   const heroData = await getHeroSectionAction(locale)
 
   return (
     <section
-      className="flex flex-col justify-center items-center pt-[180px] sm:pt-[175px] sm:pb-[100px] space-y-6 sm:space-y-8 min-h-screen"
+      className="w-screen max-w-[100vw] -mx-4 sm:-mx-6 lg:-mx-8 flex flex-col justify-center items-center pt-[180px] sm:pt-[175px] sm:pb-[100px] space-y-6 sm:space-y-8 min-h-screen"
       itemScope
       itemType="https://schema.org/WebPageElement"
       style={{
-        backgroundImage: heroData?.background_image ? `url(${heroData.background_image})` : undefined,
+        backgroundImage: heroData?.background_image
+          ? `url(${heroData.background_image})`
+          : undefined,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
       }}
     >
       {/* Optimize heading for LCP */}
