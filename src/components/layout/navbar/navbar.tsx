@@ -9,7 +9,6 @@ import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { usePosthogEvent } from '@/hooks/use-posthog'
 import { useState } from 'react'
-import { MenuIcon } from 'lucide-react'
 
 export function Navbar() {
   const pathname = usePathname()
@@ -32,7 +31,6 @@ export function Navbar() {
       current_path: pathname,
     })
 
-
     if (!item.isRoute && pathname.includes('/blog')) {
       e.preventDefault()
       router.push('/')
@@ -53,6 +51,10 @@ export function Navbar() {
     } else if (item.isRoute) {
       router.push(item.href)
     }
+  }
+
+  const handleHamburgerClick = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
   return (
@@ -114,41 +116,60 @@ export function Navbar() {
             {t('bookCall')}
           </Button>
 
-          <Button
-            variant="navbar"
-            className="text-[16px] font-medium transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          <button
+            onClick={handleHamburgerClick}
+            className="flex flex-col justify-center items-center"
           >
-            <MenuIcon className="w-6 h-6" />
-          </Button>
+            <span
+              className={`bg-gray-400 block transition-all duration-300 ease-out 
+                    h-0.5 w-6 rounded-sm ${
+                      isMobileMenuOpen
+                        ? 'rotate-45 translate-y-1'
+                        : '-translate-y-0.5'
+                    }`}
+            ></span>
+            <span
+              className={`bg-gray-400 block transition-all duration-300 ease-out 
+                    h-0.5 w-6 rounded-sm my-0.5 ${
+                      isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
+                    }`}
+            ></span>
+            <span
+              className={`bg-gray-400 block transition-all duration-300 ease-out 
+                    h-0.5 w-6 rounded-sm ${
+                      isMobileMenuOpen
+                        ? '-rotate-45 -translate-y-1'
+                        : 'translate-y-0.5'
+                    }`}
+            ></span>
+          </button>
 
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <nav
-              className="flex-col items-center gap-8"
-            aria-label="Main navigation"
-            itemScope
-            itemType="https://schema.org/SiteNavigationElement"
-          >
-            {navigationConfig.mainNav.map((item) => (
-              <Button
-                variant="navbar"
-                key={item.href}
-                className={cn(
-                  'text-[16px] font-medium transition-colors',
-                  pathname === item.href ? 'text-gray-900' : 'text-gray-900'
-                )}
-                aria-label={t(item.title)}
-                onClick={(e) => {
-                  handleNavbarClick(e, item, pathname)
-                }}
+          {/* Mobile Navigation */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden">
+              <nav
+                className="flex flex-col items-center gap-8"
+                aria-label="Main navigation"
+                itemScope
+                itemType="https://schema.org/SiteNavigationElement"
               >
-                {t(item.title)}
-              </Button>
-            ))}
-          </nav>
-
+                {navigationConfig.mainNav.map((item) => (
+                  <Button
+                    variant="navbar"
+                    key={item.href}
+                    className={cn(
+                      'text-[16px] font-medium transition-colors',
+                      pathname === item.href ? 'text-gray-900' : 'text-gray-900'
+                    )}
+                    aria-label={t(item.title)}
+                    onClick={(e) => {
+                      handleNavbarClick(e, item, pathname)
+                    }}
+                  >
+                    {t(item.title)}
+                  </Button>
+                ))}
+              </nav>
             </div>
           )}
         </div>
