@@ -118,7 +118,7 @@ export function Navbar() {
 
           <button
             onClick={handleHamburgerClick}
-            className="flex flex-col justify-center items-center"
+            className="flex flex-col justify-center  gap-[6px] items-center"
           >
             <span
               className={`bg-gray-400 block transition-all duration-300 ease-out 
