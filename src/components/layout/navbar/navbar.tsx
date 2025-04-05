@@ -92,6 +92,8 @@ export function Navbar() {
             itemScope
             itemType="https://schema.org/SiteNavigationElement"
           >
+            {/* TODO: go to another page is not closing the mobile menu */}
+            {/* TODO: the padding of the image left is not matching from the right of the button */}
             {navigationConfig.mainNav.map((item) => (
               <Button
                 variant="navbar"
