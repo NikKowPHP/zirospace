@@ -1,123 +1,110 @@
-import { unstable_cache } from 'next/cache'
-import { SupabaseClient } from '@supabase/supabase-js'
+import { PrismaClient } from '@prisma/client'
 import { Locale } from '@/i18n'
-import { CaseStudy } from '@/domain/models/case-study.model'
-import { CaseStudyDTO } from '@/infrastructure/dto/case-study.dto'
+
 import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
-import { CACHE_TAGS, CACHE_TIMES } from '@/lib/utils/cache'
-import { supabase } from '../supabase'
 import logger from '@/lib/logger'
+import prisma from '@/lib/prisma'
 import { OrderUpdate } from '../services/case-study.service'
-export class CaseStudyRepository {
-  private supabaseClient: SupabaseClient
-  private tableName: string = 'zirospace_case_studies'
+import { CaseStudy } from '@/domain/models/models'
 
-  constructor() {
-    this.supabaseClient = supabase
+export interface ICaseStudyRepository {
+  getCaseStudies(locale: Locale): Promise<CaseStudy[]>
+  getCaseStudyBySlug(slug: string, locale: Locale): Promise<CaseStudy | null>
+  createCaseStudy(caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy | null>
+  updateCaseStudy(id: string, caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy | null>
+  deleteCaseStudy(id: string, locale: Locale): Promise<boolean>
+  updateCaseStudyOrder(orders: OrderUpdate[], locale: Locale): Promise<void>
+}
+
+export class CaseStudyRepository implements ICaseStudyRepository {
+  private prisma: PrismaClient
+
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma
   }
 
-  getCaseStudies = unstable_cache(
-    async (locale: Locale): Promise<CaseStudy[]> => {
-      const { data, error } = await this.supabaseClient
-        .from(`${this.tableName}_${locale}`)
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        logger.log('Error fetching case studies:', error)
-        return []
-      }
-
-      return (data as CaseStudyDTO[]).map(CaseStudyMapper.toDomain)
-    },
-    [CACHE_TAGS.CASE_STUDIES],
-    {
-      revalidate: CACHE_TIMES.MINUTE,
-      tags: [CACHE_TAGS.CASE_STUDIES],
+  async getCaseStudies(locale: Locale): Promise<CaseStudy[]> {
+    try {
+      const data = await this.prisma.caseStudy.findMany({
+        where: { locale },
+        orderBy: { created_at: 'desc' }
+      })
+      return data.map(CaseStudyMapper.toDomain)
+    } catch (error) {
+      logger.log('Error fetching case studies:', error)
+      return []
     }
-  )
+  }
 
-  getCaseStudyBySlug = async (slug: string, locale: Locale): Promise<CaseStudy | null> => {
-    return unstable_cache(
-      async () => {
-        const { data, error } = await this.supabaseClient
-          .from(`${this.tableName}_${locale}`)
-          .select('*')
-          .eq('slug', slug)
-          .single()
-
-        if (error) {
-          logger.log('Error fetching case study:', error)
-          return null
+  async getCaseStudyBySlug(slug: string, locale: Locale): Promise<CaseStudy | null> {
+    try {
+      const data = await this.prisma.caseStudy.findUnique({
+        where: { 
+          slug_locale: {
+            slug,
+            locale
+          }
         }
-
-        return data ? CaseStudyMapper.toDomain(data as CaseStudyDTO) : null
-      },
-      [`case-study-${slug}-${locale}`],
-      {
-        revalidate: CACHE_TIMES.MINUTE,
-        tags: [CACHE_TAGS.CASE_STUDIES],
-      }
-    )()
+      })
+      return data ? CaseStudyMapper.toDomain(data) : null
+    } catch (error) {
+      logger.log('Error fetching case study:', error)
+      return null
+    }
   }
 
-  createCaseStudy = async (caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
-    const { data, error } = await this.supabaseClient
-      .from(`${this.tableName}_${locale}`)
-      .insert(CaseStudyMapper.toPersistence(caseStudy))
-      .select()
-      .single()
-
-    if (error) {
+  async createCaseStudy(caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy | null> {
+    try {
+      const data = await this.prisma.caseStudy.create({
+        data: CaseStudyMapper.toPersistence(caseStudy)
+      })
+      return CaseStudyMapper.toDomain(data)
+    } catch (error) {
       logger.log('Error creating case study:', error)
-      throw error
+      return null
     }
-
-    return CaseStudyMapper.toDomain(data as CaseStudyDTO)
   }
 
-  updateCaseStudy = async (id: string, caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
-    const { data, error } = await this.supabaseClient
-      .from(`${this.tableName}_${locale}`)
-      .update(CaseStudyMapper.toPersistence(caseStudy))
-      .eq('id', id)
-      .select()
-      .single()
-
-    if (error) {
+  async updateCaseStudy(id: string, caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy | null> {
+    try {
+      const data = await this.prisma.caseStudy.update({
+        where: { id },
+        data: CaseStudyMapper.toPersistence(caseStudy)
+      })
+      return CaseStudyMapper.toDomain(data)
+    } catch (error) {
       logger.log('Error updating case study:', error)
-      throw error
+      return null
     }
-
-    return CaseStudyMapper.toDomain(data as CaseStudyDTO)
   }
 
-  deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {
-    const { error } = await this.supabaseClient
-      .from(`${this.tableName}_${locale}`)
-      .delete()
-      .eq('id', id)
-
-    if (error) {
+  async deleteCaseStudy(id: string, locale: Locale): Promise<boolean> {
+    try {
+      await this.prisma.caseStudy.delete({
+        where: { id }
+      })
+      return true
+    } catch (error) {
       logger.log('Error deleting case study:', error)
-      throw error
+      return false
     }
   }
 
-  updateCaseStudyOrder = async (orders: OrderUpdate[], locale: Locale): Promise<void> => {
-    for (const { id, order } of orders) {
-      const { error } = await this.supabaseClient
-        .from(`${this.tableName}_${locale}`)
-        .update({ order_index: order })
-        .eq('id', id)
-
-      if (error) {
-        logger.log('Error updating case study order:', error)
-        throw error
-      }
+  async updateCaseStudyOrder(orders: OrderUpdate[], locale: Locale): Promise<void> {
+    try {
+      await this.prisma.$transaction(
+        orders.map(({ id, order }) => 
+          this.prisma.caseStudy.update({
+            where: { id },
+            data: { order_index: order }
+          })
+        )
+      )
+    } catch (error) {
+      logger.log('Error updating case study order:', error)
+      throw error
     }
   }
 }
 
-// export singleton
-export const caseStudyRepository = new CaseStudyRepository();
+export const caseStudyRepository = new CaseStudyRepository(prisma)

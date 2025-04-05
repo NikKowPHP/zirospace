@@ -6,7 +6,6 @@ generator client {
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -22,100 +21,24 @@ model YoutubeModel {
   @@map("zirospace_youtube")
 }
 
-// Case Studies - English
-model CaseStudyEN {
-  id           String   @id @default(uuid())
-  title        String
-  description  String
-  tags         String[]
-  images       Json     // This is a JSONB field in the database
-  cta_text     String
+// Consolidated Case Studies
+model CaseStudy {
+  id            String   @id @default(uuid())
+  title         String
+  description   String
+  tags          String[]
+  images        Json
+  cta_text      String
   cta_text_name String
-  cta_url      String
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
-  slug         String
-  order_index  Int      @default(0)
+  cta_url       String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  slug          String
+  order_index   Int      @default(0)
+  locale        String // 'en' or 'pl'
 
-  @@map("zirospace_case_studies_en")
-}
-
-// Case Studies - Polish
-model CaseStudyPL {
-  id           String   @id @default(uuid())
-  title        String
-  description  String
-  tags         String[]
-  images       Json     // This is a JSONB field in the database
-  cta_text     String
-  cta_text_name String
-  cta_url      String
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
-  slug         String
-  order_index  Int      @default(0)
-
-  @@map("zirospace_case_studies_pl")
-}
-
-// Blog Posts - English
-model BlogPostEN {
-  id          String   @id @default(uuid())
-  slug        String   @unique
-  title       String
-  image_url   String
-  created_at  DateTime @default(now())
-  image_alt   String?
-  excerpt     String
-  content_html String  @db.Text
-  is_pinned   Boolean  @default(false)
-
-  @@map("zirospace_blog_posts_en")
-}
-
-// Blog Posts - Polish
-model BlogPostPL {
-  id          String   @id @default(uuid())
-  slug        String   @unique
-  title       String
-  image_url   String
-  created_at  DateTime @default(now())
-  image_alt   String?
-  excerpt     String
-  content_html String  @db.Text
-  is_pinned   Boolean  @default(false)
-
-  @@map("zirospace_blog_posts_pl")
-}
-
-// Testimonials - English
-model TestimonialEN {
-  id         String   @id @default(uuid())
-  author     String
-  role       String
-  company    String
-  quote      String   @db.Text
-  image      String
-  image_alt  String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@map("zirospace_testimonials_en")
-}
-
-// Testimonials - Polish
-model TestimonialPL {
-  id         String   @id @default(uuid())
-  author     String
-  role       String
-  company    String
-  quote      String   @db.Text
-  image      String
-  image_alt  String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@map("zirospace_testimonials_pl")
+  @@unique([slug, locale]) // Ensure unique slugs per locale
+  @@map("zirospace_case_studies")
 }
 
 // Case Study Slider (shared)
@@ -130,11 +53,11 @@ model CaseStudySlider {
 
 // Case Study Images (shared)
 model CaseStudyImage {
-  id              String          @id @default(uuid())
+  id              String           @id @default(uuid())
   image           String
   alt             String
-  created_at      DateTime        @default(now())
-  updated_at      DateTime        @updatedAt
+  created_at      DateTime         @default(now())
+  updated_at      DateTime         @updatedAt
   caseStudySlider CaseStudySlider? @relation(fields: [sliderId], references: [id])
   sliderId        String?
 
@@ -150,11 +73,44 @@ model Hero {
   cta_primary_link   String
   cta_secondary_text String
   cta_secondary_link String
-  background         String   // URL or image path
-  locale             String   // 'en' or 'pl'
+  background         String // URL or image path
+  locale             String // 'en' or 'pl'
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 
-  @@unique([locale])  // Ensure only one entry per locale
+  @@unique([locale]) // Ensure only one entry per locale
   @@map("zirospace_hero")
+}
+
+// Consolidated Blog Posts
+model BlogPost {
+  id           String   @id @default(uuid())
+  slug         String
+  title        String
+  image_url    String
+  created_at   DateTime @default(now())
+  image_alt    String?
+  excerpt      String
+  content_html String   @db.Text
+  is_pinned    Boolean  @default(false)
+  locale       String // 'en' or 'pl'
+
+  @@unique([slug, locale]) // Unique slugs per locale
+  @@map("zirospace_blog_posts")
+}
+
+// Consolidated Testimonials
+model Testimonial {
+  id         String   @id @default(uuid())
+  author     String
+  role       String
+  company    String
+  quote      String   @db.Text
+  image      String
+  image_alt  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  locale     String // 'en' or 'pl'
+
+  @@map("zirospace_testimonials")
 }
