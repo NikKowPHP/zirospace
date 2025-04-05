@@ -73,7 +73,7 @@ export default async function HomePage({ params }: HomePageProps) {
   return (
     <>
       <div
-        className="relative overflow-hidden min-h-screen bg-white"
+        className="relative  min-h-screen bg-white"
         itemScope
         itemType="https://schema.org/WebPage"
       >
@@ -95,7 +95,9 @@ export default async function HomePage({ params }: HomePageProps) {
           </Suspense>
 
           <Suspense fallback={<div className="min-h-[300px]" />}>
-            <CaseStudies locale={locale} />
+            <div className="min-h-[100vh]">
+              <CaseStudies locale={locale} />
+            </div>
           </Suspense>
 
           {/* Defer less critical sections */}

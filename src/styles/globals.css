@@ -20,6 +20,22 @@
   .container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
+  .stacking-scroll {
+    perspective: 1000px;
+    position: relative;
+  }
+  
+  .stacking-card {
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    will-change: transform, opacity;
+    position: relative;
+  }
+  
+  /* This helper ensures there's enough scrollable height */
+  .stacking-container {
+    height: 200vh;
+  }
 } 
 
 @keyframes fadeIn {
@@ -30,4 +46,26 @@
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-in forwards;
   animation-delay: 0.1s;
+}
+
+/* (Optional) An infinite animation that is independent of scroll.
+   To test this effect, you would remove conflicting inline transform properties.
+*/
+@keyframes stackScroll {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-20px) scale(0.95);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-stackScroll {
+  animation: stackScroll 1.5s ease-in-out infinite;
 }
