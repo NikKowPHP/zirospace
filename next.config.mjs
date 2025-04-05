@@ -1,6 +1,6 @@
 import createNextIntlPlugin from 'next-intl/plugin';
 import withBundleAnalyzer from '@next/bundle-analyzer';
-import { PERFORMANCE_CONFIG } from './src/config/performance.js';
+import { PERFORMANCE_CONFIG } from './src/config/performance.mjs';
 
 const withNextIntl = createNextIntlPlugin();
 const withAnalyzer = withBundleAnalyzer({
