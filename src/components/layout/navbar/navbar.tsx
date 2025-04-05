@@ -59,7 +59,7 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-[20px] mx-auto px-[10px] max-w-5xl left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm transition-all duration-300 ease-in-out ${
+      className={`sticky top-[20px] mx-auto px-[10px] max-w-5xl left-0 right-0 z-50 bg-gray-200/50 backdrop-blur-xl transition-all duration-300 ease-in-out border border-white/5 ${
         isMobileMenuOpen ? 'rounded-[40px]' : 'rounded-[50px]'
       }`}
       itemScope
@@ -113,7 +113,7 @@ export function Navbar() {
           <div className="flex items-center gap-[20px]">
             <Button
               size="sm"
-              className="rounded-full px-6 py-6 h-10 text-[15px] bg-white text-black hover:bg-white/90"
+              variant='bookcall'
               onClick={() => {
                 window.location.href = 'https://calendly.com/ziro-nikhil/30min'
               }}
@@ -164,13 +164,11 @@ export function Navbar() {
             itemType="https://schema.org/SiteNavigationElement"
           >
             {navigationConfig.mainNav.map((item) => (
-              <div className='flex  '>
-
               <Button
                 variant="navbar"
                 key={item.href}
                 className={cn(
-                  ' text-[16px] font-medium w-full text-center p-[20px] hover:bg-white transition-colors duration-200',
+                  'text-[16px] font-medium w-full text-center px-4 hover:bg-white transition-colors duration-200',
                   pathname === item.href ? 'text-gray-900' : 'text-gray-900'
                 )}
                 aria-label={t(item.title)}
@@ -180,7 +178,6 @@ export function Navbar() {
               >
                 {t(item.title)}
               </Button>
-              </div>
             ))}
           </nav>
         </div>

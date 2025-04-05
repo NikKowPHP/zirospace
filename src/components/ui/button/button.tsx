@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'white' | 'navbar' | 'modal'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'white' | 'navbar' | 'modal' | 'bookcall'
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
   isActive?: boolean
   isFullWidth?: boolean
@@ -27,6 +27,7 @@ const buttonStyles = {
     white: 'bg-white text-black hover:bg-white/90 active:bg-white/80',
     navbar: 'text-[16px] font-medium transition-colors text-gray-900',
     modal: 'bg-primary text-white hover:bg-[#0066FF]/90 active:bg-[#0066FF]/80',
+    bookcall: 'rounded-full px-6 py-6 h-10 text-[15px] border border-white/70 bg-white/70 backdrop-blur-xl text-black hover:bg-white/90',
   },
   sizes: {
     sm: 'py-[6px] px-[12px] text-[15px] rounded-full',
