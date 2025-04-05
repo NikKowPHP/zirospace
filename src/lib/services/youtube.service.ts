@@ -1,5 +1,4 @@
 import { YoutubeModel } from "@/domain/models/models"
-import { youtubeRepositoryLocal } from "../repositories/youtube.local.repository"
 import { youtubeRepository } from "../repositories/youtube.repository"
 
 export interface IYoutubeRepository {
@@ -11,11 +10,7 @@ export class YoutubeService implements IYoutubeRepository {
   private youtubeRepository: IYoutubeRepository
 
   constructor() {
-    if(process.env.NEXT_PUBLIC_MOCK_REPOSITORIES === 'true') {
-      this.youtubeRepository = youtubeRepositoryLocal 
-    } else {
-      this.youtubeRepository = youtubeRepository
-    }
+    this.youtubeRepository = youtubeRepository
   }
 
   getYoutube = async (): Promise<YoutubeModel | null> => {

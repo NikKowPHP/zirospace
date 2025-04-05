@@ -1,17 +1,12 @@
 import { Banner } from "@/domain/models/banner.model"
 import { IBannerRepository } from "@/lib/interfaces/bannersRepository.interface"
 import { bannerRepository} from "@/lib/repositories/banner.repository"
-import { bannerRepositoryLocal } from "@/lib/repositories/banner.local.repository"
 import { BannerMapper } from "@/infrastructure/mappers/banner.mapper"
 
 export class BannerService {
   private bannerRepository: IBannerRepository
   constructor() {
-    if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.bannerRepository = bannerRepositoryLocal
-    } else {
-      this.bannerRepository = bannerRepository
-    }
+    this.bannerRepository = bannerRepository
   }
 
   getBanners = async (locale: string): Promise<Banner[]> => {

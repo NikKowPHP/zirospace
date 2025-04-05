@@ -1,7 +1,5 @@
 import { CaseStudySlider } from "@/domain/models/case-study-slider.model"
-import { ICaseStudySliderRepository } from "../interfaces/caseStudySliderRepository.interface"
-import { caseStudySliderRepository } from "../repositories/caseStudySlider.repository"
-import { caseStudySliderRepositoryLocal } from "../repositories/caseStudySlider.local.repository"
+import { caseStudySliderRepository, ICaseStudySliderRepository } from "../repositories/caseStudySlider.repository"
 
 
 
@@ -9,11 +7,7 @@ import { caseStudySliderRepositoryLocal } from "../repositories/caseStudySlider.
 export class CaseStudySliderService {
   private caseStudySliderRepository: ICaseStudySliderRepository
   constructor() {
-    if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.caseStudySliderRepository = caseStudySliderRepositoryLocal
-    } else {
-      this.caseStudySliderRepository = caseStudySliderRepository
-    }
+    this.caseStudySliderRepository = caseStudySliderRepository
   }
 
   getCaseStudySliders = async (): Promise<CaseStudySlider[]> => {

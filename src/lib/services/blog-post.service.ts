@@ -1,5 +1,4 @@
 import { BlogPost } from "@/domain/models/blog-post.model"
-import { blogPostRepositoryLocal } from "@/lib/repositories/blog-post.local.repository"
 import { blogPostRepository } from "@/lib/repositories/blog-post.repository"
 
 export interface IBlogPostService {
@@ -13,11 +12,7 @@ export interface IBlogPostService {
 export class BlogPostService implements IBlogPostService {
   private blogPostRepository: any //IBlogPostRepository
   constructor() {
-    if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.blogPostRepository = blogPostRepositoryLocal
-    } else {
-      this.blogPostRepository = blogPostRepository // TODO: implement postgres repo
-    }
+    this.blogPostRepository = blogPostRepository
   }
 
   getBlogPosts = async (locale: string): Promise<BlogPost[]> => {

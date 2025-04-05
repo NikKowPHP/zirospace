@@ -1,16 +1,11 @@
 import { ITestimonialRepository } from "../interfaces/testimonials.interface"
 import { Testimonial } from "@/domain/models/testimonial.model"
-import { testimonialRepositoryLocal } from "../repositories/testimonials.local.repository"
 import { testimonialRepository } from "../repositories/testimonials.repository"
 
 export class TestimonialService {
   private testimonialRepository: ITestimonialRepository
   constructor() {
-    if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.testimonialRepository = testimonialRepositoryLocal
-    } else {
-      this.testimonialRepository = testimonialRepository // TODO: implement postgres repo
-    }
+    this.testimonialRepository = testimonialRepository
   }
 
   getTestimonials = async (locale: string): Promise<Testimonial[]> => {

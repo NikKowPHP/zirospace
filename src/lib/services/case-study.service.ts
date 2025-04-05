@@ -1,8 +1,7 @@
 import { Locale } from "@/i18n"
 import { CaseStudyRepository } from "../repositories/caseStudy.repository"
-import { CaseStudy } from "@/domain/models/case-study.model"
-import { caseStudyRepositoryLocal } from "../repositories/caseStudy.local.repository"
 import { ICaseStudyRepository } from "../interfaces/caseStudyRepository.interface"
+import { CaseStudy } from "@/domain/models/models"
 
 export interface OrderUpdate {
   id: string
@@ -16,11 +15,7 @@ const caseStudyRepository = new CaseStudyRepository()
 export class CaseStudyService {
   private caseStudyRepository: ICaseStudyRepository
   constructor() {
-    if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.caseStudyRepository = caseStudyRepositoryLocal
-    } else {
-      this.caseStudyRepository = caseStudyRepository
-    }
+    this.caseStudyRepository = caseStudyRepository
   }
 
   getCaseStudies = async (locale: Locale): Promise<CaseStudy[]> => {
