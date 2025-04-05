@@ -108,45 +108,52 @@ export function Navbar() {
             ))}
           </nav>
 
-          <Button
-            size="sm"
-            className="rounded-full px-6 py-6 h-10 text-[15px] bg-white text-black hover:bg-white/90"
-            onClick={() => {
-              window.location.href = 'https://calendly.com/ziro-nikhil/30min'
-            }}
-            aria-label={t('bookCall')}
-          >
-            {t('bookCall')}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              className="rounded-full px-6 py-6 h-10 text-[15px] bg-white text-black hover:bg-white/90"
+              onClick={() => {
+                window.location.href = 'https://calendly.com/ziro-nikhil/30min'
+              }}
+              aria-label={t('bookCall')}
+            >
+              {t('bookCall')}
+            </Button>
 
-          <button
-            onClick={handleHamburgerClick}
-            className="flex flex-col justify-center  gap-[6px] items-center md:hidden"
-          >
-            <span
-              className={`bg-gray-400 block transition-all duration-300 ease-out 
+            {/* hamburger menu */}
+            <button
+              onClick={handleHamburgerClick}
+              className="flex flex-col justify-center  gap-[6px] items-center md:hidden"
+            >
+              <span
+                className={`bg-gray-400 block transition-all duration-300 ease-out 
                     h-0.5 w-6 rounded-sm ${
                       isMobileMenuOpen
                         ? 'rotate-45 translate-y-1'
                         : '-translate-y-0.5'
                     }`}
-            ></span>
-            <span
-              className={`bg-gray-400 block transition-all duration-300 ease-out 
+              ></span>
+              <span
+                className={`bg-gray-400 block transition-all duration-300 ease-out 
                     h-0.5 w-6 rounded-sm ${
                       isMobileMenuOpen
                         ? '-rotate-45 -translate-y-1'
                         : 'translate-y-0.5'
                     }`}
-            ></span>
-          </button>
+              ></span>
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Navigation - Now direct sibling to main flex container */}
+        {/* Mobile Navigation */}
         <div
-          className={`md:hidden w-full overflow-hidden transition-[max-height] duration-300 ease-in-out ${
-            isMobileMenuOpen ? 'max-h-[500px]' : 'max-h-0'
+          className={`md:hidden w-full overflow-hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'max-h-[500px] rounded-b-[50px]' : 'max-h-0'
           }`}
+          style={{
+            background: 'inherit',
+            backdropFilter: 'inherit',
+          }}
         >
           <nav
             className="flex flex-col items-center gap-4 py-6"
