@@ -1,7 +1,6 @@
 import createNextIntlPlugin from 'next-intl/plugin';
 import withBundleAnalyzer from '@next/bundle-analyzer';
-import { PERFORMANCE_CONFIG } from './src/config/performance';
-import { NextConfig } from 'next';
+import { PERFORMANCE_CONFIG } from './src/config/performance.js';
 
 const withNextIntl = createNextIntlPlugin();
 const withAnalyzer = withBundleAnalyzer({
@@ -9,7 +8,7 @@ const withAnalyzer = withBundleAnalyzer({
   openAnalyzer: false,
 });
 
-const config: NextConfig = {
+const config= {
   // Image optimization
   images: {
     domains: ['localhost', 'ziro.space', 'drive.google.com', 'i.ibb.co', 'i.postimg.cc', 'i.ytimg.com'],
@@ -119,11 +118,12 @@ const config: NextConfig = {
 
 // Install critters for CSS optimization
 try {
-  require('critters');
+  await import('critters');
 } catch (e) {
-  console.warn('Installing critters...');
-  require('child_process').execSync('npm install critters');
+  console.warn('Installing critters...', e);
+  const { execSync } = await import('node:child_process');
+  execSync('npm install critters');
 }
 
-// Export your configuration using CommonJS
-module.exports = withNextIntl(withAnalyzer(config));
+// Export configuration using ESM syntax
+export default withNextIntl(withAnalyzer(config));

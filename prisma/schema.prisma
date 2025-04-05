@@ -35,7 +35,7 @@ model CaseStudyEN {
   slug         String
   order_index  Int      @default(0)
 
-  @@map("case_studies_en")
+  @@map("zirospace_case_studies_en")
 }
 
 // Case Studies - Polish
@@ -53,7 +53,7 @@ model CaseStudyPL {
   slug         String
   order_index  Int      @default(0)
 
-  @@map("case_studies_pl")
+  @@map("zirospace_case_studies_pl")
 }
 
 // Blog Posts - English

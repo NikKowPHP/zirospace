@@ -29,6 +29,7 @@ services:
       - ./prisma:/app/prisma  # Mount prisma
       - ./node_modules:/app/node_modules
       - ./.env:/app/.env
+      - ./next.config.mjs:/app/next.config.mjs
     networks:
       - web-network
     command: sh -c "npm rebuild && npm run dev"
@@ -38,7 +39,7 @@ services:
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydb
+      POSTGRES_DB: zirospace
     ports:
       - "5433:5432" 
     volumes:
