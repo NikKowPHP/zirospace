@@ -35,9 +35,9 @@ model CaseStudy {
   updated_at    DateTime @updatedAt
   slug          String
   order_index   Int      @default(0)
-  locale        String // 'en' or 'pl'
+  locale        String
 
-  @@unique([slug, locale]) // Ensure unique slugs per locale
+  @@unique([slug, locale])
   @@map("zirospace_case_studies")
 }
 
@@ -93,9 +93,9 @@ model BlogPost {
   excerpt      String
   content_html String   @db.Text
   is_pinned    Boolean  @default(false)
-  locale       String // 'en' or 'pl'
+  locale       String
 
-  @@unique([slug, locale]) // Unique slugs per locale
+  @@unique([slug, locale])
   @@map("zirospace_blog_posts")
 }
 
@@ -110,7 +110,7 @@ model Testimonial {
   image_alt  String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  locale     String // 'en' or 'pl'
+  locale     String
 
   @@map("zirospace_testimonials")
 }
