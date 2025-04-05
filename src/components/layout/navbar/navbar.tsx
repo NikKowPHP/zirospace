@@ -59,7 +59,7 @@ export function Navbar() {
 
   return (
     <header
-      className="sticky top-6 md:top-10   mx-auto   px-[10px]  max-w-5xl rounded-[50px] left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm "
+      className="sticky top-[20px]   mx-auto   px-[10px]  max-w-5xl rounded-[50px] left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm "
       itemScope
       itemType="https://schema.org/WPHeader"
     >
@@ -126,7 +126,7 @@ export function Navbar() {
               className="flex flex-col justify-center  gap-[6px] items-center md:hidden"
             >
               <span
-                className={`bg-gray-400 block transition-all duration-300 ease-out 
+                className={`bg-black block transition-all duration-300 ease-out 
                     h-0.5 w-6 rounded-sm ${
                       isMobileMenuOpen
                         ? 'rotate-45 translate-y-1'
@@ -134,7 +134,7 @@ export function Navbar() {
                     }`}
               ></span>
               <span
-                className={`bg-gray-400 block transition-all duration-300 ease-out 
+                className={` bg-black block transition-all duration-300 ease-out 
                     h-0.5 w-6 rounded-sm ${
                       isMobileMenuOpen
                         ? '-rotate-45 -translate-y-1'
@@ -162,11 +162,13 @@ export function Navbar() {
             itemType="https://schema.org/SiteNavigationElement"
           >
             {navigationConfig.mainNav.map((item) => (
+              <div className='flex  '>
+
               <Button
                 variant="navbar"
                 key={item.href}
                 className={cn(
-                  'text-[16px] font-medium w-full text-center px-4',
+                  ' text-[16px] font-medium w-full text-center p-[20px] hover:bg-white transition-colors duration-200',
                   pathname === item.href ? 'text-gray-900' : 'text-gray-900'
                 )}
                 aria-label={t(item.title)}
@@ -176,6 +178,7 @@ export function Navbar() {
               >
                 {t(item.title)}
               </Button>
+              </div>
             ))}
           </nav>
         </div>
