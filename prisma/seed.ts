@@ -304,6 +304,23 @@ async function main() {
     }
   })
   
+  // Add this after your case study seeds and before the final console.log
+  await prisma.hero.upsert({
+    where: { id: 'c84cebca-91e9-4d6a-afb0-02460a838c8e' },
+    update: {},
+    create: {
+      id: 'c84cebca-91e9-4d6a-afb0-02460a838c8e',
+      title: 'Pioneering Integrated Digital Health Solutions',
+      subtitle: 'Designing User-Friendly Technology for Better Patient Experiences, from Apps to Devices',
+      cta_text: 'Explore Our Work',
+      cta_link: '/case-studies',
+      background: '', // Add a background image URL here
+      locale: 'en',
+      created_at: new Date('2025-03-30T07:43:41.645Z'),
+      updated_at: new Date('2025-03-30T07:43:41.645Z')
+    }
+  });
+  
   console.log('Database has been seeded!')
 }
 
