@@ -21,7 +21,7 @@ export const HeroSection = async ({ locale }: { locale: string }) => {
     >
       {/* Optimize heading for LCP */}
       <h1
-        className="text-[64px] sm:text-[72px] lg:text-[64px] leading-[1.1] font-medium tracking-[-0.02em] mb-2 text-center max-w-[90vw] sm:max-w-[650px] mx-auto"
+        className="text-[48px] sm:text-[72px] lg:text-[64px] leading-[1.1] font-medium tracking-[-0.02em] mb-2 text-center max-w-[90vw] sm:max-w-[650px] mx-auto"
         itemProp="headline"
         style={{
           contentVisibility: 'auto',

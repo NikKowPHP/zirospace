@@ -14,7 +14,8 @@ const inter = Inter({
 })
 import { PostHogProvider } from '@/contexts/posthog-context'
 import { bannerService } from '@/lib/services/banner.service'
-import { siteUrl } from '@/config/constants';
+import { siteUrl } from '@/config/constants'
+import { SmoothScroll } from '@/components/smooth-scroll'
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -65,7 +66,7 @@ export async function generateMetadata({
             'patient experience design',
             'clinical workflow solutions',
             'healthcare technology',
-            'medical software systems'
+            'medical software systems',
           ]
         : [
             'rozwiązania cyfrowe dla zdrowia',
@@ -75,7 +76,7 @@ export async function generateMetadata({
             'doświadczenie pacjenta',
             'systemy dla służby zdrowia',
             'informatyka medyczna',
-            'rozwiązania dla klinik'
+            'rozwiązania dla klinik',
           ],
   }
 }
@@ -99,40 +100,44 @@ export default async function LocaleLayout({
   }
 
   const initialActiveBanner = await bannerService.getActiveBanner(locale)
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = process.env.NODE_ENV === 'production'
   console.log('initialActiveBanner', initialActiveBanner)
 
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
   if (!GA_MEASUREMENT_ID) {
-    console.warn('Google Analytics Measurement ID is not set.');
+    console.warn('Google Analytics Measurement ID is not set.')
   }
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-      {isProduction && GA_MEASUREMENT_ID && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
+        {isProduction && GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', '${GA_MEASUREMENT_ID}');
             `}
-          </Script>
-        </>
-      )}
+            </Script>
+          </>
+        )}
       </head>
       <body className={inter.variable}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <PostHogProvider>
-          <PageProvider initialActiveBanner={initialActiveBanner || undefined}>
-            <ClientWrapper>
-              <main className="relative">{children}</main>
-              </ClientWrapper>
+            <PageProvider
+              initialActiveBanner={initialActiveBanner || undefined}
+            >
+              <SmoothScroll>
+                <ClientWrapper>
+                  <main className="relative">{children}</main>
+                </ClientWrapper>
+              </SmoothScroll>
             </PageProvider>
           </PostHogProvider>
         </NextIntlClientProvider>
