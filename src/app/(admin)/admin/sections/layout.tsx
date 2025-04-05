@@ -83,6 +83,14 @@ export default async function AdminLayout({
             <Youtube className="w-5 h-5" />
             <span className="font-medium">Youtube</span>
           </Link>
+
+          <Link 
+            href="/admin/sections/hero" 
+            className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <ImageIcon className="w-5 h-5" />
+            <span className="font-medium">Hero Section</span>
+          </Link>
         </nav>
       </aside>
 

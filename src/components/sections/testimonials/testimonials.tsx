@@ -8,7 +8,7 @@ import { Testimonial } from '@/domain/models/testimonial.model'
 
 // Define the props for the Testimonials component
 interface TestimonialsProps {
-  testimonials: Testimonial[];
+  testimonials: Testimonial[]
 }
 
 // Update the Testimonials component to accept testimonials as props
@@ -19,86 +19,87 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
   const [showLeftButton, setShowLeftButton] = useState(false)
   const [showRightButton, setShowRightButton] = useState(false)
 
-  
   useEffect(() => {
     const checkOverflow = () => {
       if (containerRef.current) {
-        const hasHorizontalScroll = 
+        const hasHorizontalScroll =
           containerRef.current.scrollWidth > containerRef.current.clientWidth
         setHasOverflow(hasHorizontalScroll)
       }
     }
-    
+
     checkOverflow()
     window.addEventListener('resize', debounce(checkOverflow, 200))
-    return () => window.removeEventListener('resize', debounce(checkOverflow, 200))
+    return () =>
+      window.removeEventListener('resize', debounce(checkOverflow, 200))
   }, [])
 
   useEffect(() => {
     const handleScroll = () => {
       if (currentContainerRef) {
-        const { scrollLeft, clientWidth, scrollWidth } = currentContainerRef;
-        setShowLeftButton(scrollLeft > 0);
-        setShowRightButton(scrollLeft + clientWidth < scrollWidth - 1);
+        const { scrollLeft, clientWidth, scrollWidth } = currentContainerRef
+        setShowLeftButton(scrollLeft > 0)
+        setShowRightButton(scrollLeft + clientWidth < scrollWidth - 1)
       }
-    };
-    const currentContainerRef = containerRef.current;
+    }
+    const currentContainerRef = containerRef.current
 
     if (currentContainerRef && hasOverflow) {
-      currentContainerRef?.addEventListener('scroll', handleScroll);
-      handleScroll();
+      currentContainerRef?.addEventListener('scroll', handleScroll)
+      handleScroll()
       return () => {
-        if(currentContainerRef) {
-          currentContainerRef.removeEventListener('scroll', handleScroll);
+        if (currentContainerRef) {
+          currentContainerRef.removeEventListener('scroll', handleScroll)
         }
-      };
+      }
     } else {
-      setShowLeftButton(false);
-      setShowRightButton(false);
+      setShowLeftButton(false)
+      setShowRightButton(false)
       return () => {
-        if(currentContainerRef) {
-          currentContainerRef.removeEventListener('scroll', handleScroll);
+        if (currentContainerRef) {
+          currentContainerRef.removeEventListener('scroll', handleScroll)
         }
-      };
+      }
     }
-  }, [hasOverflow]);
-
+  }, [hasOverflow])
 
   const handleScrollButtonClick = (direction: 'left' | 'right') => {
     if (containerRef.current) {
-      const scrollAmount = direction === 'right' ? 400 : -400;
-      containerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      const scrollAmount = direction === 'right' ? 400 : -400
+      containerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' })
     }
-  };
-  
-  const debounce = <T extends unknown[]>(func: (...args: T) => void, wait: number) => {
-    let timeout: NodeJS.Timeout | null = null;
+  }
+
+  const debounce = <T extends unknown[]>(
+    func: (...args: T) => void,
+    wait: number
+  ) => {
+    let timeout: NodeJS.Timeout | null = null
     return (...args: T) => {
-      if (timeout) clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), wait);
-    };
-  };
+      if (timeout) clearTimeout(timeout)
+      timeout = setTimeout(() => func(...args), wait)
+    }
+  }
 
   return (
     <section className="py-[100px] relative   ">
-      <div className="container mx-auto px-4 sm:px-6">
+      <div className=" mx-auto max-w-5xl px-4 sm:px-0">
         <div className="flex flex-col items-center mb-10 sm:mb-12 gap-[12px]">
-
           <h2 className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-primary">
             {t('title')}
           </h2>
-          <h3 className='text-gray-500 text-[18px] sm:text-[20px]'>
+          <h3 className="text-gray-500 text-[18px] sm:text-[20px]">
             {t('description')}
           </h3>
         </div>
 
         <div className="relative group">
-          <div 
+          <div
             ref={containerRef}
-            className="flex overflow-x-auto pb-8 gap-6 scrollbar-hide scrollbar-w-0 relative"
-            style={{ 
-              scrollbarWidth: 'none',  // Firefox
-              msOverflowStyle: 'none'  // IE/Edge
+            className="flex overflow-x-auto  pb-8 gap-6 scrollbar-hide scrollbar-w-0 relative"
+            style={{
+              scrollbarWidth: 'none', // Firefox
+              msOverflowStyle: 'none', // IE/Edge
             }}
           >
             {testimonials.map((testimonial: Testimonial) => (
@@ -108,7 +109,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
               >
                 <div className="space-y-6 flex flex-col h-full">
                   <p className="text-gray-900 text-lg leading-relaxed flex-1">
-                    &quot;{(testimonial.quote).trim()}&quot;
+                    &quot;{testimonial.quote.trim()}&quot;
                   </p>
 
                   <div className="flex items-center gap-4">
@@ -126,8 +127,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                         {testimonial.author}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {testimonial.role},{' '}
-                        {/* 'my role' */}
+                        {testimonial.role}, {/* 'my role' */}
                         {testimonial.company}
                         {/* 'my company' */}
                       </p>
@@ -137,9 +137,9 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
               </div>
             ))}
           </div>
-          
-         {/* Scroll fade Left */}
-         {showLeftButton && (
+
+          {/* Scroll fade Left */}
+          {showLeftButton && (
             <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent pointer-events-none" />
           )}
 
@@ -147,10 +147,10 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
           {showRightButton && (
             <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent pointer-events-none" />
           )}
-          
+
           {/* Navigation buttons */}
-           {/* Navigation buttons */}
-           {showLeftButton && (
+          {/* Navigation buttons */}
+          {showLeftButton && (
             <button
               onClick={() => handleScrollButtonClick('left')}
               className="absolute left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-50 transition-colors"

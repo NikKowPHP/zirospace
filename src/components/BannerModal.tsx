@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import logger from '@/lib/logger'
 import YouTube from 'react-youtube'
+
 interface BannerModalProps {
   banner?: Banner | null
 }
@@ -28,14 +29,13 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
       modestbranding: 1,
       rel: 0,
     },
-  
   }
 
   useEffect(() => {
     if (banner) {
-      const dismissed = JSON.parse(localStorage.getItem('dismissedBanners') || '[]');
+      const dismissed = JSON.parse(localStorage.getItem('dismissedBanners') || '[]')
       if (!dismissed.includes(banner.id)) {
-        setShowModal(true);
+        setShowModal(true)
       }
     }
   }, [banner])
@@ -54,13 +54,13 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
 
   const onClose = () => {
     handleDismissLocalStorage()
-    setShowModal(false);
+    setShowModal(false)
   }
   const handleDismissLocalStorage = () => {
     if (banner?.id) {
-      const dismissed = new Set(JSON.parse(localStorage.getItem('dismissedBanners') || '[]'));
-      dismissed.add(banner.id);
-      localStorage.setItem('dismissedBanners', JSON.stringify([...dismissed]));
+      const dismissed = new Set(JSON.parse(localStorage.getItem('dismissedBanners') || '[]'))
+      dismissed.add(banner.id)
+      localStorage.setItem('dismissedBanners', JSON.stringify([...dismissed]))
     }
   }
   const handleRedirect = () => {
@@ -76,27 +76,16 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
     return null
   }
 
-  return (
+  return  banner && (
+
     <Modal isOpen={showModal} onClose={onClose}>
       <div className="flex flex-col gap-[16px] w-full items-center justify-center">
         <div className="rounded-lg w-full">
-          {banner?.imageUrl && (
-            <Image
-              src={banner?.imageUrl || ''}
-              alt={banner?.title || ''}
-              width={1000}
-              height={1000}
-              quality={100}
-              unoptimized
-              className="w-full h-auto rounded-lg aspect-[6/4] sm:aspect-[16/9] object-cover"
-            />
-          )}
-
-          {banner?.youtubeUrl && (
+          {banner?.youtubeUrl ? (
             <div className="relative pt-[56.25%] w-full">
               <div className="absolute top-0 left-0 w-full h-full rounded-lg overflow-hidden">
                 <YouTube
-                  videoId={banner?.youtubeUrl}
+                  videoId={banner.youtubeUrl}
                   opts={opts}
                   className="w-full h-full"
                   onReady={(event: any) => {
@@ -105,7 +94,6 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
                     }
                   }}
                   onStateChange={(event: any) => {
-                    // Handle any autoplay errors gracefully
                     if (
                       window.YT &&
                       event.data === window.YT.PlayerState.UNSTARTED
@@ -117,22 +105,30 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
                 />
               </div>
             </div>
-          )}
+          ) : banner?.imageUrl ? (
+            <Image
+              src={banner.imageUrl}
+              alt={banner.title || ''}
+              width={1000}
+              height={1000}
+              quality={100}
+              unoptimized
+              className="w-full h-auto rounded-lg aspect-[6/4] sm:aspect-[16/9] object-cover"
+            />
+          ) : null}
         </div>
-        <div className="flex flex-col gap-[16px] max-w-[90%] justify-center ">
+        <div className="flex flex-col gap-[16px] max-w-[90%] justify-center">
           <h1 className="text-[24px] leading-[32px] font-semibold">
             {banner?.title}
           </h1>
 
-          <p className="text-[14px] leading-[20px] font-normal ">
+          <p className="text-[14px] leading-[20px] font-normal">
             {banner?.content}
           </p>
 
-          {/* <div className="flex items-center justify-center border border-purple-500 w-full"> */}
           <Button onClick={handleClose} variant="primary" size="full">
             {t('bookCall')}
           </Button>
-          {/* </div> */}
         </div>
       </div>
     </Modal>
