@@ -138,3 +138,19 @@ model CaseStudyImage {
 
   @@map("zirospace_case_study_images")
 }
+
+// Hero Section (supports multiple locales)
+model Hero {
+  id           String   @id @default(uuid())
+  title        String
+  subtitle     String
+  cta_text     String
+  cta_link     String
+  background   String   // URL or image path
+  locale       String   // 'en' or 'pl'
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@unique([locale])  // Ensure only one entry per locale
+  @@map("zirospace_hero")
+}
