@@ -59,12 +59,14 @@ export function Navbar() {
 
   return (
     <header
-      className="sticky top-6 md:top-10  mx-auto   px-[10px]  max-w-5xl rounded-full left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm "
+      className="sticky top-6 md:top-10   mx-auto   px-[10px]  max-w-5xl rounded-[50px] left-0 right-0 z-50 bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm "
       itemScope
       itemType="https://schema.org/WPHeader"
     >
       <div className=" mx-auto px-[5px]">
-        <div className="flex h-[72px] items-center justify-between">
+        <div
+          className={`flex min-h-[72px] items-center justify-between overflow-hidden duration-300 ease-in-out `}
+        >
           <Link
             href="/"
             className="flex items-center gap-2"
@@ -81,6 +83,7 @@ export function Navbar() {
             />
           </Link>
 
+          {/*  desktop nav */}
           <nav
             className="hidden md:flex items-center gap-8"
             aria-label="Main navigation"
@@ -118,7 +121,7 @@ export function Navbar() {
 
           <button
             onClick={handleHamburgerClick}
-            className="flex flex-col justify-center  gap-[6px] items-center"
+            className="flex flex-col justify-center  gap-[6px] items-center md:hidden"
           >
             <span
               className={`bg-gray-400 block transition-all duration-300 ease-out 
@@ -128,12 +131,6 @@ export function Navbar() {
                         : '-translate-y-0.5'
                     }`}
             ></span>
-            {/* <span
-              className={`bg-gray-400 block transition-all duration-300 ease-out 
-                    h-0.5 w-6 rounded-sm my-0.5 ${
-                      isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
-                    }`}
-            ></span> */}
             <span
               className={`bg-gray-400 block transition-all duration-300 ease-out 
                     h-0.5 w-6 rounded-sm ${
@@ -143,35 +140,37 @@ export function Navbar() {
                     }`}
             ></span>
           </button>
+        </div>
 
-          {/* Mobile Navigation */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden absolute left-0 right-0 top-full  bg-[#F7F7F7] bg-opacity-80 backdrop-blur-sm">
-              <nav
-                className="flex flex-col items-center gap-8"
-                aria-label="Main navigation"
-                itemScope
-                itemType="https://schema.org/SiteNavigationElement"
+        {/* Mobile Navigation - Now direct sibling to main flex container */}
+        <div
+          className={`md:hidden w-full overflow-hidden transition-[max-height] duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'max-h-[500px]' : 'max-h-0'
+          }`}
+        >
+          <nav
+            className="flex flex-col items-center gap-4 py-6"
+            aria-label="Mobile navigation"
+            itemScope
+            itemType="https://schema.org/SiteNavigationElement"
+          >
+            {navigationConfig.mainNav.map((item) => (
+              <Button
+                variant="navbar"
+                key={item.href}
+                className={cn(
+                  'text-[16px] font-medium w-full text-center px-4',
+                  pathname === item.href ? 'text-gray-900' : 'text-gray-900'
+                )}
+                aria-label={t(item.title)}
+                onClick={(e) => {
+                  handleNavbarClick(e, item, pathname, true)
+                }}
               >
-                {navigationConfig.mainNav.map((item) => (
-                  <Button
-                    variant="navbar"
-                    key={item.href}
-                    className={cn(
-                      'text-[16px] font-medium transition-colors',
-                      pathname === item.href ? 'text-gray-900' : 'text-gray-900'
-                    )}
-                    aria-label={t(item.title)}
-                    onClick={(e) => {
-                      handleNavbarClick(e, item, pathname)
-                    }}
-                  >
-                    {t(item.title)}
-                  </Button>
-                ))}
-              </nav>
-            </div>
-          )}
+                {t(item.title)}
+              </Button>
+            ))}
+          </nav>
         </div>
       </div>
     </header>
