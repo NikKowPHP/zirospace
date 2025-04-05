@@ -128,12 +128,12 @@ export function Navbar() {
                         : '-translate-y-0.5'
                     }`}
             ></span>
-            <span
+            {/* <span
               className={`bg-gray-400 block transition-all duration-300 ease-out 
                     h-0.5 w-6 rounded-sm my-0.5 ${
                       isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
                     }`}
-            ></span>
+            ></span> */}
             <span
               className={`bg-gray-400 block transition-all duration-300 ease-out 
                     h-0.5 w-6 rounded-sm ${
@@ -146,7 +146,7 @@ export function Navbar() {
 
           {/* Mobile Navigation */}
           {isMobileMenuOpen && (
-            <div className="md:hidden">
+            <div className="md:hidden absolute left-0 right-0 top-full bg-white">
               <nav
                 className="flex flex-col items-center gap-8"
                 aria-label="Main navigation"
