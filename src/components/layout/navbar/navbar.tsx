@@ -8,17 +8,21 @@ import { cn } from '@/lib/utils/cn'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { usePosthogEvent } from '@/hooks/use-posthog'
+import { useState } from 'react'
+import { MenuIcon } from 'lucide-react'
 
 export function Navbar() {
   const pathname = usePathname()
   const t = useTranslations('navigation')
   const router = useRouter()
   const dispatchEvent = usePosthogEvent()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleNavbarClick = (
     e: React.MouseEvent,
     item: { href: string; isRoute: boolean },
-    pathname: string
+    pathname: string,
+    isMobile = false
   ) => {
     console.log('item route and pathname', item.isRoute, pathname)
 
@@ -28,17 +32,24 @@ export function Navbar() {
       current_path: pathname,
     })
 
+
     if (!item.isRoute && pathname.includes('/blog')) {
       e.preventDefault()
       router.push('/')
       setTimeout(() => {
         const element = document.getElementById(item.href)
         element?.scrollIntoView({ behavior: 'smooth' })
+        if (isMobile) {
+          setIsMobileMenuOpen(false)
+        }
       }, 500) // Small delay to ensure the page has loaded
     } else if (!item.isRoute && !pathname.includes('/blog')) {
       e.preventDefault()
       const element = document.getElementById(item.href)
       element?.scrollIntoView({ behavior: 'smooth' })
+      if (isMobile) {
+        setIsMobileMenuOpen(false)
+      }
     } else if (item.isRoute) {
       router.push(item.href)
     }
@@ -102,6 +113,44 @@ export function Navbar() {
           >
             {t('bookCall')}
           </Button>
+
+          <Button
+            variant="navbar"
+            className="text-[16px] font-medium transition-colors"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <MenuIcon className="w-6 h-6" />
+          </Button>
+
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden">
+            <nav
+              className="flex-col items-center gap-8"
+            aria-label="Main navigation"
+            itemScope
+            itemType="https://schema.org/SiteNavigationElement"
+          >
+            {navigationConfig.mainNav.map((item) => (
+              <Button
+                variant="navbar"
+                key={item.href}
+                className={cn(
+                  'text-[16px] font-medium transition-colors',
+                  pathname === item.href ? 'text-gray-900' : 'text-gray-900'
+                )}
+                aria-label={t(item.title)}
+                onClick={(e) => {
+                  handleNavbarClick(e, item, pathname)
+                }}
+              >
+                {t(item.title)}
+              </Button>
+            ))}
+          </nav>
+
+            </div>
+          )}
         </div>
       </div>
     </header>
