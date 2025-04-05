@@ -1,11 +1,10 @@
-import { ProficiencyLevel, LessonStepType, AssessmentStepType } from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
 // import prisma from '../src/lib/prisma.ts'
 const prisma = new PrismaClient()
 
 async function main() {
   // Clear existing data if needed
-  // await prisma.caseStudyEN.deleteMany({})
+  // await prisma.caseStudy.deleteMany({})
   
   // Seed YouTube data
   await prisma.youtubeModel.upsert({
@@ -19,9 +18,8 @@ async function main() {
     }
   })
   
-  // Seed Case Studies EN exactly as in the SQL dump
-  // gSense case study
-  await prisma.caseStudyEN.upsert({
+  // Consolidated Case Study seeding with locale
+  await prisma.caseStudy.upsert({
     where: { id: 'gsense-1737888575884' },
     update: {},
     create: {
@@ -36,12 +34,12 @@ async function main() {
       created_at: new Date('2025-01-06T09:25:11.086Z'),
       updated_at: new Date('2025-01-06T09:25:11.086Z'),
       slug: 'gsense-branding',
-      order_index: 0
+      order_index: 0,
+      locale: 'en'
     }
   })
 
-  // HyperFree case study
-  await prisma.caseStudyEN.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'hyperfree-1737897644018' },
     update: {},
     create: {
@@ -56,12 +54,13 @@ async function main() {
       created_at: new Date('2025-01-26T13:20:44.372Z'),
       updated_at: new Date('2025-01-26T13:20:44.372Z'),
       slug: 'hyperfree',
-      order_index: 2
+      order_index: 2,
+      locale: 'en'
     }
   })
 
   // IQUBX case study
-  await prisma.caseStudyEN.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'iqubx-1737298472661' },
     update: {},
     create: {
@@ -76,12 +75,13 @@ async function main() {
       created_at: new Date('2025-01-06T09:25:11.086Z'),
       updated_at: new Date('2025-01-06T09:25:11.086Z'),
       slug: 'iqubx-website-redesign',
-      order_index: 3
+      order_index: 3,
+      locale: 'en'
     }
   })
 
   // PulsePoint case study
-  await prisma.caseStudyEN.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'pulsepoint-1739618540878' },
     update: {},
     create: {
@@ -96,12 +96,13 @@ async function main() {
       created_at: new Date('2025-01-26T14:15:38.464Z'),
       updated_at: new Date('2025-01-26T14:15:38.464Z'),
       slug: 'pulsepoint',
-      order_index: 4
+      order_index: 4,
+      locale: 'en'
     }
   })
 
   // Supernormal case study
-  await prisma.caseStudyEN.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'supernormal-1737369180424' },
     update: {},
     create: {
@@ -116,12 +117,13 @@ async function main() {
       created_at: new Date('2025-01-18T16:36:38.832Z'),
       updated_at: new Date('2025-01-18T16:36:38.832Z'),
       slug: 'supernormal-website',
-      order_index: 1
+      order_index: 1,
+      locale: 'en'
     }
   })
 
   // SuperNormal App case study
-  await prisma.caseStudyEN.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'supernormal-app-1739785855786' },
     update: {},
     create: {
@@ -136,12 +138,13 @@ async function main() {
       created_at: new Date('2025-01-06T09:25:11.086Z'),
       updated_at: new Date('2025-01-06T09:25:11.086Z'),
       slug: 'supernormal-app-design',
-      order_index: 6
+      order_index: 6,
+      locale: 'en'
     }
   })
 
   // Wellness Way case study
-  await prisma.caseStudyEN.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'wellness-way-1739788499366' },
     update: {},
     create: {
@@ -156,7 +159,8 @@ async function main() {
       created_at: new Date('2025-01-26T12:17:16.309Z'),
       updated_at: new Date('2025-01-26T12:17:16.309Z'),
       slug: 'wellnessway',
-      order_index: 5
+      order_index: 5,
+      locale: 'en'
     }
   })
   
@@ -165,7 +169,7 @@ async function main() {
   // ==========================================
   
   // gSense PL case study
-  await prisma.caseStudyPL.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'gsense-1737894580192' },
     update: {},
     create: {
@@ -180,12 +184,13 @@ async function main() {
       created_at: new Date('2025-01-06T09:25:11.086Z'),
       updated_at: new Date('2025-01-06T09:25:11.086Z'),
       slug: 'gsense-branding',
-      order_index: 0
+      order_index: 0,
+      locale: 'pl'
     }
   })
   
   // HyperFree PL case study
-  await prisma.caseStudyPL.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'hyperfree-1737897732178' },
     update: {},
     create: {
@@ -200,12 +205,13 @@ async function main() {
       created_at: new Date('2025-01-26T13:22:12.499Z'),
       updated_at: new Date('2025-01-26T13:22:12.499Z'),
       slug: 'hyperfree',
-      order_index: 2
+      order_index: 2,
+      locale: 'pl'
     }
   })
 
   // IQUBX PL case study
-  await prisma.caseStudyPL.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'iqubx-1737898062843' },
     update: {},
     create: {
@@ -220,12 +226,13 @@ async function main() {
       created_at: new Date('2025-01-26T13:27:43.206Z'),
       updated_at: new Date('2025-01-26T13:27:43.206Z'),
       slug: 'iqubx-website-redesign',
-      order_index: 3
+      order_index: 3,
+      locale: 'pl'
     }
   })
 
   // PulsePoint PL case study
-  await prisma.caseStudyPL.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'pulsepoint-1739618629647' },
     update: {},
     create: {
@@ -240,12 +247,13 @@ async function main() {
       created_at: new Date('2025-01-26T14:17:09.914Z'),
       updated_at: new Date('2025-01-26T14:17:09.914Z'),
       slug: 'pulsepoint',
-      order_index: 4
+      order_index: 4,
+      locale: 'pl'
     }
   })
 
   // Supernormal PL case study
-  await prisma.caseStudyPL.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'supernormal-1737369377519' },
     update: {},
     create: {
@@ -260,12 +268,13 @@ async function main() {
       created_at: new Date('2025-01-18T16:42:57.836Z'),
       updated_at: new Date('2025-01-18T16:42:57.836Z'),
       slug: 'supernormal-website',
-      order_index: 1
+      order_index: 1,
+      locale: 'pl'
     }
   })
 
   // SuperNormal App PL case study
-  await prisma.caseStudyPL.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'supernormal-app-1739785943582' },
     update: {},
     create: {
@@ -280,12 +289,13 @@ async function main() {
       created_at: new Date('2025-01-06T09:25:11.086Z'),
       updated_at: new Date('2025-01-06T09:25:11.086Z'),
       slug: 'supernormal-app-design',
-      order_index: 6
+      order_index: 6,
+      locale: 'pl'
     }
   })
 
   // Wellness Way PL case study
-  await prisma.caseStudyPL.upsert({
+  await prisma.caseStudy.upsert({
     where: { id: 'wellness-way-1739788561262' },
     update: {},
     create: {
@@ -300,7 +310,8 @@ async function main() {
       created_at: new Date('2025-01-26T12:18:18.005Z'),
       updated_at: new Date('2025-01-26T12:18:18.005Z'),
       slug: 'wellnessway',
-      order_index: 5
+      order_index: 5,
+      locale: 'pl'
     }
   })
   
