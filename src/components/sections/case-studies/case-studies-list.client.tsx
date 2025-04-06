@@ -35,7 +35,7 @@ export const CaseStudyList = memo(function CaseStudyList({
   return (
     <div ref={targetRef} className="mx-auto flex flex-col gap-[200px] max-w-5xl">
       {sortedStudies.map((caseStudy, index) => (
-        <div className="sticky top-[400px] flex items-center justify-center"   key={caseStudy.id ?? index} 
+        <div className="sticky top-[300px] flex items-center justify-center"   key={caseStudy.id ?? index} 
           style={{
             zIndex: index + 1,
         
