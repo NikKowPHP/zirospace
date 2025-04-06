@@ -37,12 +37,15 @@ export const CaseStudyList = memo(function CaseStudyList({
             {sortedStudies.map((caseStudy, index) => {
 
                 const offset = index * 40;
+                const rotation = index * 1.5;
 
                 return (
                     <motion.div className="sticky top-[300px] flex items-center justify-center" key={caseStudy.id ?? index}
                         style={{
                             zIndex: index + 1,
-                            top: `calc(300px + ${offset}px)`
+                            top: `calc(300px + ${offset}px)`,
+                            rotate: rotation,
+                            transformOrigin: 'center center'
 
                         }}>
                         <CaseStudyCard caseStudy={caseStudy} locale={locale} />
