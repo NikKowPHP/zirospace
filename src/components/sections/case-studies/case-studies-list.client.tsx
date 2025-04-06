@@ -22,26 +22,35 @@ export const CaseStudyList = memo(function CaseStudyList({
     }, [caseStudies])
 
     const targetRef = useRef(null)
-    const { scrollY } = useScroll({
-        target: targetRef,
-        offset: ['start start', 'end end']
-    });
+    // Correction: Remove target and offset to track window scrollY in pixels
+    const { scrollY } = useScroll();
 
     useMotionValueEvent(scrollY, 'change', () => {
         console.log('scrollY', scrollY.get())
     })
+    
 
     const randomRotations = useMemo(() => 
-        sortedStudies.map(() => (Math.random() * 10 - 5)), // Random angle between -5 and 5 degrees
+        sortedStudies.map(() => (Math.random() * 6 - 3)),
         [sortedStudies]
     );
-    const Rotation = (index: number) => {
-        return useTransform(
-            scrollY,
-            [300 + index * 40 - 100, 300 + index * 40], // Rotation happens when card reaches top
-            [0, randomRotations[index]] // From 0 to random angle
-        );
-    }
+    console.log('randomRotations', randomRotations)
+   // This function now correctly uses window scrollY (pixels)
+   const Rotation = (index: number) => {
+    // Ensure useTransform is called consistently
+    const transformHook = useTransform(
+        scrollY, // Now represents window scroll pixels
+        [
+            3500 - index * 500 - 400,  // Animation start (scroll pixels)
+            3500 - index * 500         // Animation end (scroll pixels)
+        ],
+        [0, randomRotations[index]], // Output range: 0 to random angle
+        { clamp: true } // Allow extrapolation if needed, though maybe clamp: true is safer
+    );
+    return transformHook;
+}
+
+console.log('scrollY MotionValue object:', scrollY)
 
     console.log('scrollY', scrollY)
     return (
@@ -49,7 +58,7 @@ export const CaseStudyList = memo(function CaseStudyList({
             {sortedStudies.map((caseStudy, index) => {
 
                 const offset = index * 40;
-              
+                const rotate = Rotation(index);
 
 
                 return (
@@ -57,7 +66,7 @@ export const CaseStudyList = memo(function CaseStudyList({
                         style={{
                             zIndex: index + 1,
                             top: `calc(300px + ${offset}px)`,
-                            rotate: Rotation(index),
+                            rotate: rotate,
                             transformOrigin: 'center center'
 
                         }}>
