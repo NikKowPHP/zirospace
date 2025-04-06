@@ -14,7 +14,12 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
 }) => {
     const cardRef = useRef<HTMLDivElement>(null);
     // Calculate the final sticky top position for this card
-    const stickyTopOffset = 300 + index * 40;
+    const stickyTopOffset = useMemo(() => {
+        if (typeof window !== 'undefined') {
+            return window.innerHeight / 2.5 - 100 + index * 40; // adjust the value as needed
+        }
+        return 0;
+    }, [index]);
 
     return (
         <motion.div
