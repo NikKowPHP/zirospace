@@ -36,10 +36,13 @@ export const CaseStudyList = memo(function CaseStudyList({
         <div ref={targetRef} className="mx-auto flex flex-col gap-[200px] max-w-5xl">
             {sortedStudies.map((caseStudy, index) => {
 
+                const offset = index * 40;
+
                 return (
                     <motion.div className="sticky top-[300px] flex items-center justify-center" key={caseStudy.id ?? index}
                         style={{
                             zIndex: index + 1,
+                            top: `calc(300px + ${offset}px)`
 
                         }}>
                         <CaseStudyCard caseStudy={caseStudy} locale={locale} />
