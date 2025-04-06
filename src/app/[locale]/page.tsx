@@ -73,7 +73,7 @@ export default async function HomePage({ params }: HomePageProps) {
   return (
     <>
       <div
-        className="relative overflow-hidden min-h-screen bg-white"
+        className="relative min-h-screen  bg-white"
         itemScope
         itemType="https://schema.org/WebPage"
       >
