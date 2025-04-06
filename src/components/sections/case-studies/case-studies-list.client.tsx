@@ -64,9 +64,9 @@ export const CaseStudiesTitleSubtitle = ({ title, description }: { title: string
     const scale = useTransform(scrollY, [2800, 3200], [1, 0.8])
     const opacity = useTransform(scrollY, [2800, 3200], [1, 0])
     return (
-        <motion.div ref={targetRef} 
-        style={{ scale, opacity }}
-            className='sticky top-[300px] mb-[36px] flex flex-col items-center justify-center gap-[12px] z-10'>
+        <motion.div ref={targetRef}
+            style={{ scale, opacity }}
+            className='sticky top-[300px] mb-[36px] flex flex-col items-center justify-center gap-[12px] '>
             <h1
                 className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-primary"
                 itemProp="headline"
