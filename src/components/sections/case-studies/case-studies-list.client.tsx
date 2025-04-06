@@ -31,20 +31,33 @@ export const CaseStudyList = memo(function CaseStudyList({
         console.log('scrollY', scrollY.get())
     })
 
+    const randomRotations = useMemo(() => 
+        sortedStudies.map(() => (Math.random() * 10 - 5)), // Random angle between -5 and 5 degrees
+        [sortedStudies]
+    );
+    const Rotation = (index: number) => {
+        return useTransform(
+            scrollY,
+            [300 + index * 40 - 100, 300 + index * 40], // Rotation happens when card reaches top
+            [0, randomRotations[index]] // From 0 to random angle
+        );
+    }
+
     console.log('scrollY', scrollY)
     return (
         <div ref={targetRef} className="mx-auto flex flex-col gap-[200px] max-w-5xl">
             {sortedStudies.map((caseStudy, index) => {
 
                 const offset = index * 40;
-                const rotation = index * 1.5;
+              
+
 
                 return (
                     <motion.div className="sticky top-[300px] flex items-center justify-center" key={caseStudy.id ?? index}
                         style={{
                             zIndex: index + 1,
                             top: `calc(300px + ${offset}px)`,
-                            rotate: rotation,
+                            rotate: Rotation(index),
                             transformOrigin: 'center center'
 
                         }}>
