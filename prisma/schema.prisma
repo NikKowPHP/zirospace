@@ -114,3 +114,19 @@ model Testimonial {
 
   @@map("zirospace_testimonials")
 }
+
+model Banner {
+  id         String   @id @default(uuid())
+  title      String?
+  subtitle   String?
+  image_url  String?
+  link       String?
+  is_active  Boolean  @default(false)
+  start_date DateTime
+  end_date   DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  locale     String
+
+  @@map(name: "zirospace_banners")
+}

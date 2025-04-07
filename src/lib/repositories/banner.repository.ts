@@ -1,139 +1,105 @@
+import { PrismaClient } from '@prisma/client';
 import { IBannerRepository } from '@/lib/interfaces/bannersRepository.interface';
 import { Banner } from '@/domain/models/banner.model';
-import { BannerDTO } from '../../infrastructure/dto/banner.dto'; // Assuming you have a BannerDTO
-import { BannerMapper } from '../../infrastructure/mappers/banner.mapper'; // Assuming you have a BannerMapper
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '@/types/supabase';
-import { supabase } from '../supabase'
+import { BannerDTO } from '../../infrastructure/dto/banner.dto';
+import { BannerMapper } from '../../infrastructure/mappers/banner.mapper';
+import logger from '@/lib/logger';
+import prisma from '@/lib/prisma';
+
+
 export class BannerRepository implements IBannerRepository {
-    private supabaseClient: SupabaseClient<Database>;
-    private tableName: string;
+    private prisma: PrismaClient;
 
-    constructor() {
-        this.supabaseClient = supabase;
-        this.tableName = `zirospace_banners`;
+    constructor(prisma: PrismaClient) {
+        this.prisma = prisma;
     }
-    private getTableName(locale: string): string {
-        return `${this.tableName}_${locale}`;
-    }
-
 
     async getActiveBanner(locale: string): Promise<Banner | null> {
-        const tableName = this.getTableName(locale);
-        const { data, error } = await this.supabaseClient
-            .from(tableName)
-            .select('*')
-            .eq('is_active', true)
-            .lte('start_date', new Date().toISOString())
-            .gte('end_date', new Date().toISOString())
-            .order('created_at', { ascending: false })
-            .limit(1);
+        try {
+            const banner = await this.prisma.banner.findFirst({
+                where: {
+                    locale,
+                    isActive: true,
+                    startDate: { lte: new Date() },
+                    endDate: { gte: new Date() },
+                },
+                orderBy: { createdAt: 'desc' },
+            });
 
-        if (error) {
-            console.error(`Error fetching active banner for locale ${locale}`, error);
+            if (!banner) return null;
+            return BannerMapper.toDomain(banner);
+        } catch (error) {
+            logger.log(`Error fetching active banner for locale ${locale}`, error);
             throw new Error(`Failed to fetch active banner for locale ${locale}`);
         }
-
-        if (!data || data.length === 0) {
-            return null;
-        }
-
-        return BannerMapper.toDomain(data[0]);
     }
 
     async getBanners(locale: string): Promise<Banner[]> {
-        const tableName = this.getTableName(locale);
-        const { data, error } = await this.supabaseClient
-            .from(tableName)
-            .select('*');
+        try {
+            const banners = await this.prisma.banner.findMany({
+                where: { locale },
+            });
 
-        if (error) {
-            // TODO: Implement proper error handling
-            console.error(`Error fetching banners for locale ${locale}`, error);
+            return banners.map(BannerMapper.toDomain);
+        } catch (error) {
+            logger.log(`Error fetching banners for locale ${locale}`, error);
             throw new Error(`Failed to fetch banners for locale ${locale}`);
         }
-
-        return data.map(BannerMapper.toDomain);
     }
 
     async getBannerById(id: string, locale: string): Promise<Banner | null> {
-        const tableName = this.getTableName(locale);
-        const { data, error } = await this.supabaseClient
-            .from(tableName)
-            .select('*')
-            .eq('id', id)
-            .single();
+        try {
+            const banner = await this.prisma.banner.findFirst({
+                where: { id, locale },
+            });
 
-        if (error) {
-            if (error.message === 'No rows found') {
-                return null; // Banner not found, return null
-            }
-            // TODO: Implement proper error handling
-            console.error(`Error fetching banner by ID ${id} for locale ${locale}`, error);
+            if (!banner) return null;
+            return BannerMapper.toDomain(banner);
+        } catch (error) {
+            logger.log(`Error fetching banner by ID ${id} for locale ${locale}`, error);
             throw new Error(`Failed to fetch banner by ID ${id} for locale ${locale}`);
         }
-
-        return BannerMapper.toDomain(data);
     }
 
     async createBanner(banner: Partial<BannerDTO>, locale: string): Promise<Banner> {
-        const tableName = this.getTableName(locale);
+        try {
+            const createdBanner = await this.prisma.banner.create({
+                data: { ...banner, locale },
+            });
 
-        const { data, error } = await this.supabaseClient
-            .from(tableName)
-            .insert([banner])
-            .select('*')
-            .single();
-
-        if (error) {
-            // TODO: Implement proper error handling
-            console.error(`Error creating banner for locale ${locale}`, error);
+            return BannerMapper.toDomain(createdBanner);
+        } catch (error) {
+            logger.log(`Error creating banner for locale ${locale}`, error);
             throw new Error(`Failed to create banner for locale ${locale}`);
         }
-
-        return BannerMapper.toDomain(data);
     }
 
     async updateBanner(id: string, banner: Partial<BannerDTO>, locale: string): Promise<Banner> {
-        const tableName = this.getTableName(locale);
-        
-        // Create a clean object for the update by converting undefined values to null
-        const cleanedBanner: Record<string, any> = {};
-        
-        for (const [key, value] of Object.entries(banner)) {
-            // If the value is undefined, set it to null to properly remove it in the database
-            cleanedBanner[key] = value === undefined ? null : value;
-        }
-        
-        const { data, error } = await this.supabaseClient
-            .from(tableName)
-            .update(cleanedBanner)
-            .eq('id', id)
-            .select('*')
-            .single();
+        try {
+            const updatedBanner = await this.prisma.banner.update({
+                where: { id },
+                data: banner,
+            });
 
-        if (error) {
-            // TODO: Implement proper error handling
-            console.error(`Error updating banner ${id} for locale ${locale}`, error);
+            return BannerMapper.toDomain(updatedBanner);
+        } catch (error) {
+            logger.log(`Error updating banner ${id} for locale ${locale}`, error);
             throw new Error(`Failed to update banner ${id} for locale ${locale}`);
         }
-
-        return BannerMapper.toDomain(data);
     }
 
     async deleteBanner(id: string, locale: string): Promise<void> {
-        const tableName = this.getTableName(locale);
-        const { error } = await this.supabaseClient
-            .from(tableName)
-            .delete()
-            .eq('id', id);
-
-        if (error) {
-            // TODO: Implement proper error handling
-            console.error(`Error deleting banner ${id} for locale ${locale}`, error);
+        try {
+            await this.prisma.banner.delete({
+                where: { id },
+            });
+        } catch (error) {
+            logger.log(`Error deleting banner ${id} for locale ${locale}`, error);
             throw new Error(`Failed to delete banner ${id} for locale ${locale}`);
         }
     }
-} 
+}
 
-export const bannerRepository = new BannerRepository();
+export const bannerRepository = new BannerRepository(prisma);
+
+
