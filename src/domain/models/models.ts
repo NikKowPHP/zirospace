@@ -43,48 +43,33 @@ export interface CaseStudy {
 }
 
 export interface Banner {
-    id: string;
-    title: string;
-    content: string;
-    subtitle?: string;
-    imageUrl?: string;
-    youtubeUrl?: string;
-    startDate?: Date;
-    endDate?: Date;
-    isActive: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    ctaButtonText?: string;
-    ctaButtonLink?: string;
-  }
+  id: string;
+  title: string;
+  content: string;
+  subtitle?: string;
+  imageUrl?: string;
+  youtubeUrl?: string;
+  startDate?: Date;
+  endDate?: Date;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  ctaButtonText?: string;
+  ctaButtonLink?: string;
+}
 
 
-  export interface BlogPost {
-    id: string;
-    slug: string;
-    title: string;
-    imageurl: string;
-    createdAt: string;
-    imageAlt?: string;
-    excerpt: string;
-    contentHtml: string;
-    isPinned: boolean;
-  }
-
-  export interface Testimonial {
-    readonly id: string;
-    readonly author: string;
-    readonly role: string;
-    readonly company: string;
-    readonly quote: string;
-    readonly image: string;
-    readonly image_alt: string;
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
-  }
-
-
-
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  imageurl: string;
+  createdAt: string;
+  imageAlt?: string;
+  excerpt: string;
+  contentHtml: string;
+  isPinned: boolean;
+}
 
 
 export interface CaseStudyImage {
@@ -101,4 +86,16 @@ export interface CaseStudySlider {
   images: CaseStudyImage[]
   createdAt: Date
   updatedAt: Date
+}
+export interface Testimonial {
+  id: string;
+  author: string;
+  role: string;
+  company: string;
+  quote: string;
+  image: string;
+  image_alt: string;
+  locale: string
+  createdAt: Date;
+  updatedAt: Date;
 }

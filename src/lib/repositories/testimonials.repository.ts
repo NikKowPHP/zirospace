@@ -1,123 +1,87 @@
-import { unstable_cache } from 'next/cache'
-import { SupabaseClient } from '@supabase/supabase-js'
-import { CACHE_TAGS, CACHE_TIMES } from '@/lib/utils/cache'
-import { supabase } from '../supabase'
-import { TestimonialDTO } from '@/infrastructure/dto/testimonial.dto'
-import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
-import { Testimonial } from '@/domain/models/testimonial.model'
+
+import { PrismaClient } from '@prisma/client'
+import { Testimonial } from '@/domain/models/models'
 import { ITestimonialRepository } from '../interfaces/testimonials.interface'
 import logger from '@/lib/logger'
+import prisma from '@/lib/prisma'
+import { unstable_cache } from 'next/cache'
+import { CACHE_TAGS, CACHE_TIMES } from '@/lib/utils/cache'
+import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
+
+
 export class TestimonialRepository implements ITestimonialRepository {
-  private supabaseClient: SupabaseClient
-  private tableName: string = 'zirospace_testimonials'
-  constructor() {
-    this.supabaseClient = supabase
+  private prisma: PrismaClient
+
+  constructor(prisma: PrismaClient) {
+    this.prisma = prisma
   }
 
-  getTestimonials = unstable_cache(
-    async (locale: string): Promise<Testimonial[]> => {
-      const tableName = `${this.tableName}_${locale}`
-      const { data, error } = await this.supabaseClient
-        .from(tableName)
-        .select('*')
-        .order('created_at', { ascending: false })
+  async getTestimonials(locale: string): Promise<Testimonial[]> {
+    try {
+      const testimonials = await this.prisma.testimonial.findMany({
+        where: { locale },
+        orderBy: { createdAt: 'desc' },
+      })
 
-      if (error) {
-        logger.log('Error fetching testimonials:', error)
-        return []
-      }
-
-      return (data as TestimonialDTO[]).map(TestimonialMapper.toDomain)
-    },
-    [CACHE_TAGS.TESTIMONIALS],
-    {
-      revalidate: CACHE_TIMES.MINUTE,
-      tags: [CACHE_TAGS.TESTIMONIALS],
+      return testimonials
+    } catch (error) {
+      logger.log('Error fetching testimonials:', error)
+      return []
     }
-  )
+  }
 
-  getTestimonialById = async (id: string, locale: string): Promise<Testimonial | null> => {
-    const tableName = `${this.tableName}_${locale}`
-    const { data, error } = await this.supabaseClient
-      .from(tableName)
-      .select('*')
-      .eq('id', id)
-      .single()
+  async getTestimonialById(id: string, locale: string): Promise<Testimonial | null> {
+    try {
+      const testimonial = await this.prisma.testimonial.findFirst({
+        where: { id, locale },
+      })
 
-    if (error) {
+      return testimonial
+    } catch (error) {
       logger.log('Error fetching testimonial by ID:', error)
       return null
     }
-
-    if (!data) {
-      return null
-    }
-
-    return TestimonialMapper.toDomain(data as TestimonialDTO)
   }
 
-  createTestimonial = async (testimonial: Omit<Testimonial, 'id'>, locale: string): Promise<Testimonial> => {
-    const tableName = `${this.tableName}_${locale}`
-    logger.log('testimonial data ', testimonial)
+  async createTestimonial(testimonial: Omit<Testimonial, 'id'>, locale: string): Promise<Testimonial> {
+    try {
+      const createdTestimonial = await this.prisma.testimonial.create({
+        data: { ...testimonial, locale },
+      })
 
-    const { data, error } = await this.supabaseClient
-      .from(tableName)
-      .insert(TestimonialMapper.toPersistence(testimonial))
-      .select()
-      .single()
-
-    if (error) {
+      return createdTestimonial
+    } catch (error) {
       logger.log('Error creating testimonial:', error)
       throw new Error('Failed to create testimonial')
     }
-
-    return TestimonialMapper.toDomain(data as TestimonialDTO)
   }
 
-  updateTestimonial = async (id: string, testimonial: Partial<Testimonial>, locale: string): Promise<Testimonial | null> => {
-    const tableName = `${this.tableName}_${locale}`
-    const { data, error } = await this.supabaseClient
-      .from(tableName)
-      .update({
-        author: testimonial.author,
-        role: testimonial.role,
-        company: testimonial.company,
-        quote: testimonial.quote,
-        image: testimonial.image,
-        image_alt: testimonial.image_alt,
-        updated_at: new Date().toISOString(),
+  async updateTestimonial(id: string, testimonial: Partial<Testimonial>, locale: string): Promise<Testimonial | null> {
+    try {
+      const updatedTestimonial = await this.prisma.testimonial.update({
+        where: { id },
+        data: testimonial,
       })
-      .eq('id', id)
-      .select()
-      .single()
 
-    if (error) {
+      return updatedTestimonial
+    } catch (error) {
       logger.log('Error updating testimonial:', error)
       return null
     }
-
-    if (!data) {
-      return null
-    }
-
-    return TestimonialMapper.toDomain(data as TestimonialDTO)
   }
 
-  deleteTestimonial = async (id: string, locale: string): Promise<boolean> => {
-    const tableName = `${this.tableName}_${locale}`
-    const { error } = await this.supabaseClient
-      .from(tableName)
-      .delete()
-      .eq('id', id)
+  async deleteTestimonial(id: string, locale: string): Promise<boolean> {
+    try {
+      await this.prisma.testimonial.delete({
+        where: { id },
+      })
 
-    if (error) {
+      return true
+    } catch (error) {
       logger.log('Error deleting testimonial:', error)
       return false
     }
-
-    return true
   }
 }
 
-// export singleton
-export const testimonialRepository = new TestimonialRepository()
+export const testimonialRepository = new TestimonialRepository(prisma)
