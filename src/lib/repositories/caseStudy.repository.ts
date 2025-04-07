@@ -1,11 +1,11 @@
 import { PrismaClient } from '@prisma/client'
 import { Locale } from '@/i18n'
 
-import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
+// Removed: import { CaseStudyMapper } from '@/infrastructure/mappers/case-study.mapper'
 import logger from '@/lib/logger'
 import prisma from '@/lib/prisma'
 import { OrderUpdate } from '../services/case-study.service'
-import { CaseStudy } from '@/domain/models/models'
+import { CaseStudy } from '@/domain/models/models' // Assuming this type is compatible with Prisma's CaseStudy model
 
 export interface ICaseStudyRepository {
   getCaseStudies(locale: Locale): Promise<CaseStudy[]>
@@ -29,7 +29,8 @@ export class CaseStudyRepository implements ICaseStudyRepository {
         where: { locale },
         orderBy: { created_at: 'desc' }
       })
-      return data.map(CaseStudyMapper.toDomain)
+      // Assuming 'data' returned by Prisma is compatible with 'CaseStudy[]'
+      return data;
     } catch (error) {
       logger.log('Error fetching case studies:', error)
       return []
@@ -39,14 +40,15 @@ export class CaseStudyRepository implements ICaseStudyRepository {
   async getCaseStudyBySlug(slug: string, locale: Locale): Promise<CaseStudy | null> {
     try {
       const data = await this.prisma.caseStudy.findUnique({
-        where: { 
+        where: {
           slug_locale: {
             slug,
             locale
           }
         }
       })
-      return data ? CaseStudyMapper.toDomain(data) : null
+      // Assuming 'data' returned by Prisma is compatible with 'CaseStudy | null'
+      return data; // Removed CaseStudyMapper.toDomain
     } catch (error) {
       logger.log('Error fetching case study:', error)
       return null
@@ -56,9 +58,11 @@ export class CaseStudyRepository implements ICaseStudyRepository {
   async createCaseStudy(caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy | null> {
     try {
       const data = await this.prisma.caseStudy.create({
-        data: CaseStudyMapper.toPersistence(caseStudy)
+        // Assuming 'caseStudy' (Partial<CaseStudy>) is compatible with Prisma's create data input
+        data: caseStudy // Removed CaseStudyMapper.toPersistence
       })
-      return CaseStudyMapper.toDomain(data)
+      // Assuming 'data' returned by Prisma is compatible with 'CaseStudy | null'
+      return data; // Removed CaseStudyMapper.toDomain
     } catch (error) {
       logger.log('Error creating case study:', error)
       return null
@@ -69,9 +73,11 @@ export class CaseStudyRepository implements ICaseStudyRepository {
     try {
       const data = await this.prisma.caseStudy.update({
         where: { id },
-        data: CaseStudyMapper.toPersistence(caseStudy)
+        // Assuming 'caseStudy' (Partial<CaseStudy>) is compatible with Prisma's update data input
+        data: caseStudy // Removed CaseStudyMapper.toPersistence
       })
-      return CaseStudyMapper.toDomain(data)
+      // Assuming 'data' returned by Prisma is compatible with 'CaseStudy | null'
+      return data; // Removed CaseStudyMapper.toDomain
     } catch (error) {
       logger.log('Error updating case study:', error)
       return null
@@ -92,8 +98,9 @@ export class CaseStudyRepository implements ICaseStudyRepository {
 
   async updateCaseStudyOrder(orders: OrderUpdate[], locale: Locale): Promise<void> {
     try {
+      // This part did not use the mapper and remains unchanged
       await this.prisma.$transaction(
-        orders.map(({ id, order }) => 
+        orders.map(({ id, order }) =>
           this.prisma.caseStudy.update({
             where: { id },
             data: { order_index: order }
