@@ -35,6 +35,9 @@ model CaseStudy {
   updated_at    DateTime @updatedAt
   slug          String
   order_index   Int      @default(0)
+  color         String
+  background_color String
+  theme         String
   locale        String
 
   @@unique([slug, locale])

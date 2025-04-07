@@ -31,15 +31,18 @@ export interface CaseStudy {
   title: string;
   subtitle: string;
   description: string;
-  tags: readonly string[];
-  images: readonly Image[];
-  ctaUrl: string;
-  createdAt: Date;
-  updatedAt: Date;
+  tags: string[];
+  images: Image[];
+  cta_text: string; // Added from Prisma
+  cta_text_name: string; // Added from Prisma
+  cta_url: string; // Renamed from ctaUrl to match Prisma
+  created_at: Date; // Renamed from createdAt to match Prisma
+  updated_at: Date; // Renamed from updatedAt to match Prisma
   color: string;
-  orderIndex: number;
-  backgroundColor: string;
+  order_index: number;
+  background_color: string;
   theme: string;
+  locale: string;
 }
 
 export interface Banner {
@@ -54,6 +57,7 @@ export interface Banner {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  locale: string;
   ctaButtonText?: string;
   ctaButtonLink?: string;
 }
@@ -97,6 +101,6 @@ export interface Testimonial {
   image: string;
   image_alt: string;
   locale: string
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date
+  updated_at: Date
 }
