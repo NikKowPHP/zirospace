@@ -51,11 +51,11 @@ export interface CaseStudy {
   title: string;
   subtitle: string; // Consider aligning with Prisma schema
   description: string;
-  tags: CaseStudyTag[];
+  tags: CaseStudyTag[]; // Relation to tags
   images: CaseStudyImage[]; // Now uses the dedicated CaseStudyImage interface
-  cta_text: string;
-  cta_text_name: string;
-  cta_url: string;
+  // cta_text: string; // Removed - Use cta_text_name for button label
+  cta_text_name: string; // Text for the button/link
+  cta_url: string; // URL for the button/link
   created_at: Date;
   updated_at: Date;
   color: string;

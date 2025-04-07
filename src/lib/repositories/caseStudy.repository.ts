@@ -13,13 +13,17 @@ import { CaseStudy, CaseStudyImage } from '@/domain/models/models'
 export type CaseStudyImageCreateInput = Omit<CaseStudyImage, 'id' | 'created_at' | 'updated_at' | 'caseStudyId'>;
 
 // Input for creating a CaseStudy, including optional images
-export type CaseStudyCreateInput = Omit<CaseStudy, 'id' | 'created_at' | 'updated_at' | 'images'> & {
+// Tags are handled separately (e.g., connect existing tags)
+export type CaseStudyCreateInput = Omit<CaseStudy, 'id' | 'created_at' | 'updated_at' | 'images' | 'tags'> & {
   images?: CaseStudyImageCreateInput[]; // Array of image data to create
+  // tagIds?: string[]; // Optional: Add this if you want to connect tags by ID during creation
 };
 
 // Input for updating only the scalar fields of a CaseStudy
-// Image updates should be handled separately or via a different strategy.
-export type CaseStudyUpdateInput = Partial<Omit<CaseStudy, 'id' | 'created_at' | 'updated_at' | 'images' | 'locale'>>;
+// Image and Tag updates should be handled separately.
+export type CaseStudyUpdateInput = Partial<Omit<CaseStudy, 'id' | 'created_at' | 'updated_at' | 'images' | 'tags' | 'locale'>>;
+// Optional: Add fields here if you implement tag connection updates, e.g.,
+// { tagIdsToConnect?: string[], tagIdsToDisconnect?: string[] }
 
 // --- Repository Interface ---
 
@@ -99,9 +103,11 @@ export class CaseStudyRepository implements ICaseStudyRepository {
               alt: img.alt,
             })) || [], // Handle case where images might be undefined/empty
           }
+
         },
         include: { // Ensure images are included in the returned object
-          images: true
+          images: true,
+          tags: true
         }
       })
       return createdCaseStudy;
@@ -128,8 +134,10 @@ export class CaseStudyRepository implements ICaseStudyRepository {
           ...caseStudyData, // Apply partial updates to scalar fields
         },
         include: { // Include images in the response
-          images: true
-        }
+          images: true,
+          tags: true
+        },
+
       })
       return updatedCaseStudy;
     } catch (error) {
@@ -155,6 +163,7 @@ export class CaseStudyRepository implements ICaseStudyRepository {
       return true
     } catch (error) {
       logger.log(`Error deleting case study with ID ${id}:`, error)
+      return false;
     }
   }
 
@@ -168,9 +177,9 @@ export class CaseStudyRepository implements ICaseStudyRepository {
         include: {
           images: { // Include related images
             orderBy: { created_at: 'asc' }
-          }
+          },
+          tags: true
         },
-        tags: true
       });
       // Prisma's return type with include should match the updated CaseStudy domain model
       return data;

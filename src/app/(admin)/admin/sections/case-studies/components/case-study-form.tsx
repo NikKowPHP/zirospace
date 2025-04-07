@@ -1,37 +1,22 @@
 'use client'
 
-import { CaseStudy } from '@/domain/models/models'
+import { CaseStudy, CaseStudyImage } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { useState, useEffect } from 'react'
 
 interface CaseStudyFormProps {
   study?: CaseStudy
   locale: Locale
-  onSubmit: (data: ImageInput) => Promise<void>
+  // Update onSubmit prop to expect data matching CaseStudyCreateInput or CaseStudyUpdateInput structure
   onCancel: () => void
   loading: boolean
+
+  onSubmit: (data: Partial<CaseStudy>) => Promise<void>
 }
 
-interface ImageInput {
-  url: string
-  alt: string
-}
+// Match the structure expected by CaseStudyImageCreateInput
 
-const isGoogleDriveLink = (url: string): boolean => {
-  return url.includes('drive.google.com') || url.includes('googleusercontent.com')
-}
 
-const getGoogleDriveDirectLink = (url: string): string | null => {
-  try {
-    const fileId = url.match(/\/d\/(.+?)\/|id=(.+?)&/)?.[1] || url.match(/id=(.+?)&/)?.[1]
-    if (fileId) {
-      return `https://drive.google.com/uc?export=view&id=${fileId}`
-    }
-    return null
-  } catch {
-    return null
-  }
-}
 
 interface ImagePreviewProps {
   url: string
@@ -74,7 +59,6 @@ const ImagePreview = ({ url, alt, onError }: ImagePreviewProps) => {
     </div>
   )
 }
-
 export function CaseStudyForm({
   study,
   locale,
@@ -82,12 +66,14 @@ export function CaseStudyForm({
   onCancel,
   loading,
 }: CaseStudyFormProps) {
-  const [images, setImages] = useState<ImageInput[]>(
-    study?.images.map((img) => ({ url: img.image, alt: img.alt })) || [
-      { url: '', alt: '' },
+  // Initialize images state correctly using 'image' field
+  const [images, setImages] = useState<CaseStudyImage[]>(
+    study?.images.map((img) => ({ image: img.image, alt: img.alt })) || [
+      { image: '', alt: '' }, // Default empty image input
     ]
   )
-  const [tags, setTags] = useState<readonly string[]>(study?.tags || [])
+  // Initialize tags state using tag names from the study object
+  const [tags, setTags] = useState<readonly string[]>(study?.tags.map(t => t.name).filter(Boolean) as string[] || [])
   const [tagInput, setTagInput] = useState('')
   const [title, setTitle] = useState(study?.title || '')
   const [slug, setSlug] = useState(study?.slug || '')
@@ -109,7 +95,7 @@ export function CaseStudyForm({
   }
 
   const handleAddImage = () => {
-    setImages([...images, { url: '', alt: '' }])
+    setImages([...images, { image: '', alt: '' }])
   }
 
   const handleRemoveImage = (index: number) => {
@@ -119,35 +105,18 @@ export function CaseStudyForm({
 
   const handleImageChange = (
     index: number,
-    field: keyof ImageInput,
+    field: keyof ImageInput, // Use keyof for type safety
     value: string
   ) => {
-    if (field === 'url') {
-      setImageErrors(prev => ({ ...prev, [index]: null }))
-
-      if (isGoogleDriveLink(value)) {
-        const directLink = getGoogleDriveDirectLink(value)
-        if (!directLink) {
-          setImageErrors(prev => ({
-            ...prev,
-            [index]: 'Invalid Google Drive link format. Please use a direct image link.'
-          }))
-        }
-        // Always update the URL, even if invalid
-        setImages(images.map((img, i) =>
-          i === index ? { ...img, url: value } : img
-        ))
-      } else {
-        setImages(images.map((img, i) =>
-          i === index ? { ...img, url: value } : img
-        ))
-      }
-    } else {
-      setImages(images.map((img, i) =>
-        i === index ? { ...img, [field]: value } : img
-      ))
+    // Update the correct image object in the array
+    setImages(images.map((img, i) =>
+      i === index ? { ...img, [field]: value } : img
+    ));
+    // Clear error for this index if user modifies the input
+    if (imageErrors[index]) {
+      setImageErrors(prev => ({ ...prev, [index]: null }));
     }
-  }
+  };
 
   const handleAddTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -164,19 +133,50 @@ export function CaseStudyForm({
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
 
-    await onSubmit({
-      id: study?.id || '',
+
+    // Construct the data object as Partial<CaseStudy>
+    const submitData: Partial<CaseStudy> = {
+      // Include id only if 'study' exists (i.e., we are updating)
+      ...(study?.id && { id: study.id }),
       title: formData.get('title') as string,
       slug: formData.get('slug') as string,
-      description: formData.get('description') as string,
-      tags: tags,
-      images: images.filter((img) => img.url && img.alt),
-      ctaUrl: ctaUrl,
-      theme: theme,
-      backgroundColor: backgroundColor,
-      color: color,
       subtitle: subtitle,
-    })
+      description: formData.get('description') as string,
+      // Ensure 'images' structure matches CaseStudyImage[] for Partial<CaseStudy>
+      // Note: The repository/service layer handles converting this if needed
+      images: images
+        .filter((img) => img.image && img.alt)
+        .map(img => ({
+          // Map back to the structure expected by CaseStudy model if necessary,
+          // assuming ImageInput is compatible or needs mapping.
+          // If CaseStudyImage requires more fields (like id, caseStudyId),
+          // they should be handled during the actual DB operation, not here.
+          id: '', // Placeholder or fetch existing image ID if updating images
+          image: img.image,
+          alt: img.alt,
+          created_at: new Date(), // Placeholder
+          updated_at: new Date(), // Placeholder
+          caseStudyId: study?.id || '' // Placeholder
+        })),
+      // Map tags back to CaseStudyTag[] structure if needed
+      tags: tags.map(tagName => ({
+        id: '', // Placeholder or fetch existing tag ID
+        name: tagName,
+        image_url: null, // Placeholder
+        created_at: new Date(), // Placeholder
+        updated_at: new Date() // Placeholder
+      })),
+      cta_text_name: formData.get('cta_text_name') as string || study?.cta_text_name || 'View Case Study', // Get from form if added, else default
+      cta_url: ctaUrl,
+      theme: theme,
+      background_color: backgroundColor,
+      color: color,
+      order_index: study?.order_index ?? 0,
+      // locale is typically handled by the service/action, not passed in data
+    };
+
+    await onSubmit(submitData);
+
   }
 
   const handleImageError = (index: number) => {
@@ -278,14 +278,14 @@ export function CaseStudyForm({
               <div className="flex-1">
                 <input
                   type="text"
-                  value={image.url}
-                  onChange={(e) => handleImageChange(index, 'url', e.target.value)}
+                  value={image.image}
+                  onChange={(e) => handleImageChange(index, 'image', e.target.value)}
                   placeholder="Image URL (direct link recommended)"
                   className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
                 />
-                {image.url && !imageErrors[index] && (
+                {image.image && !imageErrors[index] && (
                   <ImagePreview
-                    url={image.url}
+                    url={image.image}
                     alt={image.alt}
                     onError={() => handleImageError(index)}
                   />
@@ -293,7 +293,7 @@ export function CaseStudyForm({
                 {imageErrors[index] && (
                   <div className="mt-2 text-sm text-red-600">
                     <p>{imageErrors[index]}</p>
-                    {isGoogleDriveLink(image.url) && (
+                    {isGoogleDriveLink(image.image) && (
                       <p className="mt-1">
                         For Google Drive images:
                         <ol className="list-decimal ml-4 mt-1">
@@ -312,7 +312,7 @@ export function CaseStudyForm({
                   value={image.alt}
                   onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
                   placeholder="Alt text"
-                  required={!!image.url}
+                  required={!!image.image}
                   className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
                 />
               </div>
@@ -361,7 +361,7 @@ export function CaseStudyForm({
               type="text"
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
-              onKeyPress={(e) =>
+              onKeyDown={(e) =>
                 e.key === 'Enter' && (e.preventDefault(), handleAddTag())
               }
               placeholder="Add a tag"
