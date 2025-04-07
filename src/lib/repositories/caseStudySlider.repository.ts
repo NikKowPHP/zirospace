@@ -18,35 +18,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
     this.prisma = prisma
   }
 
-  private toDomain(prismaSlider: any): CaseStudySlider {
-    return {
-      id: prismaSlider.id,
-      createdAt: prismaSlider.created_at,
-      updatedAt: prismaSlider.updated_at,
-      images: prismaSlider.images.map((img: any) => ({
-        id: img.id,
-        image: img.image,
-        alt: img.alt,
-        createdAt: img.created_at,
-        updatedAt: img.updated_at,
-        sliderId: img.sliderId
-      }))
-    }
-  }
 
-  private toPrisma(slider: Partial<CaseStudySlider>): any {
-    return {
-      created_at: slider.createdAt,
-      updated_at: slider.updatedAt,
-      images: slider.images?.map(img => ({
-        image: img.image,
-        alt: img.alt,
-        created_at: img.createdAt,
-        updated_at: img.updatedAt,
-        sliderId: img.sliderId
-      }))
-    }
-  }
 
   async getCaseStudiesSliders(): Promise<CaseStudySlider[]> {
     try {
@@ -54,7 +26,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
         include: { images: true },
         orderBy: { created_at: 'desc' }
       })
-      return data.map(this.toDomain)
+      return data
     } catch (error) {
       logger.log('Error fetching sliders:', error)
       return []
@@ -78,7 +50,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
         },
         include: { images: true }
       })
-      return this.toDomain(created)
+      return created;
     } catch (error) {
       logger.log('Error creating slider:', error)
       throw new Error(`Failed to create slider: ${error instanceof Error ? error.message : 'Unknown error'}`)
@@ -91,7 +63,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
         where: { id },
         include: { images: true }
       })
-      return data ? this.toDomain(data) : null
+      return data;
     } catch (error) {
       logger.log('Error fetching slider:', error)
       return null
@@ -116,7 +88,7 @@ export class CaseStudySliderRepository implements ICaseStudySliderRepository {
         },
         include: { images: true }
       })
-      return this.toDomain(updated)
+      return updated;
     } catch (error) {
       logger.log('Error updating slider:', error)
       return null

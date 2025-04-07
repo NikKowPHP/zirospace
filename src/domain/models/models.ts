@@ -26,20 +26,20 @@ export interface Image {
 }
 
 export interface CaseStudy {
-  readonly id: string;
-  readonly slug: string;
-  readonly title: string;
-  readonly subtitle: string;
-  readonly description: string;
+  id: string;
+  slug: string;
+  title: string;
+  subtitle: string;
+  description: string;
   tags: readonly string[];
-  readonly images: readonly Image[];
-  readonly ctaUrl: string;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
-  readonly color: string;
-  readonly orderIndex: number;
-  readonly backgroundColor: string;
-  readonly theme: string;
+  images: readonly Image[];
+  ctaUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
+  color: string;
+  orderIndex: number;
+  backgroundColor: string;
+  theme: string;
 }
 
 export interface Banner {
@@ -58,17 +58,18 @@ export interface Banner {
   ctaButtonLink?: string;
 }
 
-
 export interface BlogPost {
   id: string;
   slug: string;
   title: string;
-  imageurl: string;
-  createdAt: string;
-  imageAlt?: string;
+  image_url: string; // Matched Prisma: image_url
+  created_at: Date; // Matched Prisma: created_at (DateTime -> Date)
+  image_alt: string | null; // Matched Prisma: image_alt (String? -> string | null)
   excerpt: string;
-  contentHtml: string;
-  isPinned: boolean;
+  content_html: string; // Matched Prisma: content_html
+  is_pinned: boolean; // Matched Prisma: is_pinned
+  locale: string; // Added from Prisma
+
 }
 
 
@@ -76,16 +77,16 @@ export interface CaseStudyImage {
   id: string
   image: string
   alt: string
-  createdAt: Date
-  updatedAt: Date
+  created_at: Date
+  updated_at: Date
   sliderId?: string
 }
 
 export interface CaseStudySlider {
   id: string
   images: CaseStudyImage[]
-  createdAt: Date
-  updatedAt: Date
+  created_at: Date
+  updated_at: Date
 }
 export interface Testimonial {
   id: string;
