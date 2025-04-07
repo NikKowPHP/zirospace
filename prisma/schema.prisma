@@ -20,15 +20,12 @@ model YoutubeModel {
 
   @@map("zirospace_youtube")
 }
-
 // Consolidated Case Studies
 model CaseStudy {
   id            String   @id @default(uuid())
   title         String
   subtitle      String
   description   String
-  tags          String[]
-  cta_text      String
   cta_text_name String
   cta_url       String
   created_at    DateTime @default(now())
@@ -40,10 +37,23 @@ model CaseStudy {
   theme         String
   locale        String
   images     CaseStudyImage[]
+  tags       CaseStudyTags[]
 
   @@unique([slug, locale])
   @@map("zirospace_case_studies")
 }
+
+// Case Study Images (linked directly to CaseStudy)
+model CaseStudyTags {
+  id              String   @id @default(uuid())
+  name            String?
+  image_url       String?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  caseStudies     CaseStudy[]
+  @@map("zirospace_case_study_tags")
+}
+
 
 
 // Case Study Images (linked directly to CaseStudy)

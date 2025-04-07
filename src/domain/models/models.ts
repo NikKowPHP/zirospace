@@ -26,6 +26,14 @@ export interface Image {
 }
 
 
+export interface CaseStudyTag {
+  id: string;
+  name: string | null;
+  image_url: string | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
 
 export interface CaseStudyImage {
   id: string;
@@ -43,7 +51,7 @@ export interface CaseStudy {
   title: string;
   subtitle: string; // Consider aligning with Prisma schema
   description: string;
-  tags: string[];
+  tags: CaseStudyTag[];
   images: CaseStudyImage[]; // Now uses the dedicated CaseStudyImage interface
   cta_text: string;
   cta_text_name: string;
