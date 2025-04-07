@@ -25,9 +25,9 @@ model YoutubeModel {
 model CaseStudy {
   id            String   @id @default(uuid())
   title         String
+  subtitle      String
   description   String
   tags          String[]
-  images        Json
   cta_text      String
   cta_text_name String
   cta_url       String
@@ -39,23 +39,40 @@ model CaseStudy {
   background_color String
   theme         String
   locale        String
+  images     CaseStudyImage[]
 
   @@unique([slug, locale])
   @@map("zirospace_case_studies")
 }
 
-// Case Study Slider (shared)
+
+// Case Study Images (linked directly to CaseStudy)
+model CaseStudyImage {
+  id              String   @id @default(uuid())
+  image           String   // URL or path to the image
+  alt             String   // Alt text for the image
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  // Relation back to CaseStudy
+  // onDelete: Cascade ensures images are deleted when the parent CaseStudy is deleted.
+  caseStudy    CaseStudy @relation(fields: [caseStudyId], references: [id], onDelete: Cascade)
+  caseStudyId  String    // Foreign key
+
+  @@index([caseStudyId]) // Index for faster lookups based on caseStudyId
+  @@map("zirospace_case_study_images")
+}
+
 model CaseStudySlider {
   id         String           @id @default(uuid())
   created_at DateTime         @default(now())
   updated_at DateTime         @updatedAt
-  images     CaseStudyImage[]
+  images     CaseStudySliderImage[]
 
   @@map("zirospace_case_study_sliders")
 }
 
-// Case Study Images (shared)
-model CaseStudyImage {
+model CaseStudySliderImage {
   id              String           @id @default(uuid())
   image           String
   alt             String
@@ -64,7 +81,7 @@ model CaseStudyImage {
   caseStudySlider CaseStudySlider? @relation(fields: [sliderId], references: [id])
   sliderId        String?
 
-  @@map("zirospace_case_study_images")
+  @@map("zirospace_case_study_slider_images")
 }
 
 // Hero Section (supports multiple locales)
@@ -121,7 +138,7 @@ model Testimonial {
 model Banner {
   id         String   @id @default(uuid())
   title      String?
-  subtitle   String?
+  content    String?
   image_url  String?
   link       String?
   is_active  Boolean  @default(false)

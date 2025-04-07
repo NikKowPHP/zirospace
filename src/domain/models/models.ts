@@ -25,19 +25,31 @@ export interface Image {
   alt: string;
 }
 
+
+
+export interface CaseStudyImage {
+  id: string;
+  image: string; // URL or path
+  alt: string;
+  created_at: Date;
+  updated_at: Date;
+  caseStudyId: string; // Foreign key linking back to CaseStudy
+}
+
+// Updated CaseStudy interface
 export interface CaseStudy {
   id: string;
   slug: string;
   title: string;
-  subtitle: string;
+  subtitle: string; // Consider aligning with Prisma schema
   description: string;
   tags: string[];
-  images: Image[];
-  cta_text: string; // Added from Prisma
-  cta_text_name: string; // Added from Prisma
-  cta_url: string; // Renamed from ctaUrl to match Prisma
-  created_at: Date; // Renamed from createdAt to match Prisma
-  updated_at: Date; // Renamed from updatedAt to match Prisma
+  images: CaseStudyImage[]; // Now uses the dedicated CaseStudyImage interface
+  cta_text: string;
+  cta_text_name: string;
+  cta_url: string;
+  created_at: Date;
+  updated_at: Date;
   color: string;
   order_index: number;
   background_color: string;
