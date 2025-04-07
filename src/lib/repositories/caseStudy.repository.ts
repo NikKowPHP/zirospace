@@ -10,16 +10,16 @@ import { CaseStudy, CaseStudyImage } from '@/domain/models/models'
 // --- Define Input Types ---
 
 // Input for creating a single image within a case study creation
-type CaseStudyImageCreateInput = Omit<CaseStudyImage, 'id' | 'created_at' | 'updated_at' | 'caseStudyId'>;
+export type CaseStudyImageCreateInput = Omit<CaseStudyImage, 'id' | 'created_at' | 'updated_at' | 'caseStudyId'>;
 
 // Input for creating a CaseStudy, including optional images
-type CaseStudyCreateInput = Omit<CaseStudy, 'id' | 'created_at' | 'updated_at' | 'images'> & {
+export type CaseStudyCreateInput = Omit<CaseStudy, 'id' | 'created_at' | 'updated_at' | 'images'> & {
   images?: CaseStudyImageCreateInput[]; // Array of image data to create
 };
 
 // Input for updating only the scalar fields of a CaseStudy
 // Image updates should be handled separately or via a different strategy.
-type CaseStudyUpdateInput = Partial<Omit<CaseStudy, 'id' | 'created_at' | 'updated_at' | 'images' | 'locale'>>;
+export type CaseStudyUpdateInput = Partial<Omit<CaseStudy, 'id' | 'created_at' | 'updated_at' | 'images' | 'locale'>>;
 
 // --- Repository Interface ---
 
@@ -30,7 +30,8 @@ export interface ICaseStudyRepository {
   updateCaseStudy(id: string, caseStudyData: CaseStudyUpdateInput, locale: Locale): Promise<CaseStudy | null>
   deleteCaseStudy(id: string, locale: Locale): Promise<boolean>
   updateCaseStudyOrder(orders: OrderUpdate[], locale: Locale): Promise<void>
-  // Consider adding dedicated image management methods if needed
+  getCaseStudyById(id: string, locale: Locale): Promise<CaseStudy | null> // Add this line
+
 }
 
 // --- Repository Implementation ---
@@ -50,7 +51,9 @@ export class CaseStudyRepository implements ICaseStudyRepository {
         include: {
           images: { // Include related images
             orderBy: { created_at: 'asc' } // Order images consistently
-          }
+          },
+          tags: true
+
         }
       })
       // Prisma's return type with include should match the updated CaseStudy domain model
@@ -70,7 +73,8 @@ export class CaseStudyRepository implements ICaseStudyRepository {
         include: {
           images: { // Include related images
             orderBy: { created_at: 'asc' }
-          }
+          },
+          tags: true
         }
       })
       // Prisma's return type with include should match the updated CaseStudy domain model
@@ -151,11 +155,34 @@ export class CaseStudyRepository implements ICaseStudyRepository {
       return true
     } catch (error) {
       logger.log(`Error deleting case study with ID ${id}:`, error)
-      return false
     }
   }
 
+  async getCaseStudyById(id: string, locale: Locale): Promise<CaseStudy | null> {
+    try {
+      const data = await this.prisma.caseStudy.findUnique({
+        where: {
+          id: id,
+          locale: locale // Ensure the fetched study matches the locale
+        },
+        include: {
+          images: { // Include related images
+            orderBy: { created_at: 'asc' }
+          }
+        },
+        tags: true
+      });
+      // Prisma's return type with include should match the updated CaseStudy domain model
+      return data;
+    } catch (error) {
+      logger.log(`Error fetching case study with ID ${id}:`, error);
+      return null;
+    }
+  }
+
+
   async updateCaseStudyOrder(orders: OrderUpdate[], locale: Locale): Promise<void> {
+    // This method remains unchanged as it only affects the 'order_index' scalar field.
     // This method remains unchanged as it only affects the 'order_index' scalar field.
     // Add locale check for safety if necessary.
     try {

@@ -7,11 +7,10 @@ import { cn } from '@/lib/utils/cn'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
-import { type Image as ImageType } from '@/domain/models/case-study.model'
-import { type CaseStudy } from '@/domain/models/case-study.model'
 import { Locale } from '@/i18n'
 import { ArrowUpRight } from 'lucide-react'
 import { siteUrl } from '@/config/constants';
+import { CaseStudy, CaseStudyImage as ImageType } from '@/domain/models/models'
 interface CaseStudyCardProps {
   caseStudy: CaseStudy
   locale: Locale
@@ -62,7 +61,7 @@ const CaseStudyTags = memo(function CaseStudyTags({
   theme: string
 }) {
   return (
-    <div 
+    <div
       className="flex flex-wrap"
       itemProp="keywords"
       aria-label="Project tags"
@@ -111,7 +110,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
     // "keywords":  caseStudy.tags ? caseStudy.tags.join(", ") : '',
     // "image": caseStudy.images.length > 0 && caseStudy.images[0]?.url ? caseStudy.images[0].url : '',
     "url": `${siteUrl}${caseStudyUrl}`,
-    "datePublished": caseStudy.createdAt,
+    "datePublished": caseStudy.created_at,
     "author": {
       "@type": "Organization",
       "name": "ZIRO Healthcare Solutions"
@@ -126,19 +125,20 @@ export const CaseStudyCard = memo(function CaseStudyCard({
     }
   }
 
+
   return (
     <>
       <article
         className={`flex flex-col rounded-[24px] sm:rounded-[32px] shadow-sm h-full`}
         style={{
           color: caseStudy.color,
-          backgroundColor: caseStudy.backgroundColor,
+          backgroundColor: caseStudy.background_color,
         }}
         itemScope
         itemType="https://schema.org/CreativeWork"
         role="article"
       >
-        <Link 
+        <Link
           href={caseStudyUrl}
           className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full"
           aria-label={`Read case study: ${caseStudy.title}`}
@@ -163,7 +163,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
             </header>
 
             {/* Description with proper semantic markup */}
-            <div 
+            <div
               className="text-[16px] sm:text-[24px] text-gray-400 line-clamp-4 overflow-hidden leading-[1.2]"
               itemProp="description"
             >
@@ -192,7 +192,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
           </div>
 
           {/* Images Grid with semantic markup */}
-          <div 
+          <div
             className="w-full aspect-[6/3] sm:h-full sm:w-full"
             role="img"
             aria-label={`${caseStudy.title} preview image`}
@@ -201,8 +201,8 @@ export const CaseStudyCard = memo(function CaseStudyCard({
               .slice(0, 1)
               .map((image: ImageType, index: number) => (
                 <CaseStudyImage
-                  key={image.url}
-                  url={image.url}
+                  key={image.image}
+                  url={image.image}
                   alt={image.alt}
                   isFirst={index === 0}
                 />
@@ -211,7 +211,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
         </Link>
 
         {/* Add metadata */}
-        <meta itemProp="datePublished" content={new Date(caseStudy.createdAt).toString()} />
+        <meta itemProp="datePublished" content={new Date(caseStudy.created_at).toString()} />
         <meta itemProp="author" content="ZIRO " />
         <meta itemProp="publisher" content="ZIRO " />
       </article>

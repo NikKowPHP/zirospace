@@ -1,13 +1,13 @@
 import { Suspense, memo, useMemo } from 'react';
 import { CaseStudyCard } from '@/components/ui/case-study/case-study-card'
 import { type Locale } from '@/i18n'
-import { CaseStudy } from '@/domain/models/case-study.model'
 import { CaseStudiesLoader } from '@/components/sections/case-studies/case-studies-loader'
 import { getCaseStudyService } from '@/lib/services/case-study.service';
 import { getTranslations } from 'next-intl/server';
-import {  CaseStudySlider as CaseStudySliderType} from '@/domain/models/case-study-slider.model';
+import { CaseStudySlider as CaseStudySliderType } from '@/domain/models/case-study-slider.model';
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service';
 import dynamic from 'next/dynamic';
+import { CaseStudy } from '@/domain/models/models';
 
 // Dynamically import the client slider (disable SSR)
 const CaseStudySliderClient = dynamic(
@@ -51,26 +51,26 @@ const CaseStudiesTitleSubtitle = ({ t }: { t: any }) => {
         itemProp="headline"
       >
         {t('title')}
-       
+
       </h1>
       <h3 className="text-[14px] sm:text-[16px] lg:text-[18px] text-gray-600 leading-relaxed max-w-xl sm:max-w-2xl px-4 sm:px-0">
-          {t('description')}
-        </h3>
+        {t('description')}
+      </h3>
     </div>
   )
 }
 
-const CaseStudyList = memo(function CaseStudyList({ 
+const CaseStudyList = memo(function CaseStudyList({
   caseStudies,
   locale
-}: { 
-  caseStudies: CaseStudy[] 
+}: {
+  caseStudies: CaseStudy[]
   locale: Locale
 }) {
   const sortedStudies = useMemo(() => {
-    return [...caseStudies].sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0))
+    return [...caseStudies].sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
   }, [caseStudies])
- 
+
   return (
     <div className="relative mx-auto  flex flex-col gap-16 max-w-5xl">
       {sortedStudies.map((caseStudy) => (

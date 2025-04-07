@@ -1,13 +1,13 @@
 'use client'
 
-import { CaseStudy } from '@/domain/models/case-study.model'
+import { CaseStudy } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { useState, useEffect } from 'react'
 
 interface CaseStudyFormProps {
   study?: CaseStudy
   locale: Locale
-  onSubmit: (data: Partial<CaseStudy>) => Promise<void>
+  onSubmit: (data: ImageInput) => Promise<void>
   onCancel: () => void
   loading: boolean
 }
@@ -47,7 +47,7 @@ const ImagePreview = ({ url, alt, onError }: ImagePreviewProps) => {
     img.onload = () => setShowImage(true)
     img.onerror = onError
     img.src = url
-    
+
     return () => {
       img.onload = null
       img.onerror = null
@@ -83,7 +83,7 @@ export function CaseStudyForm({
   loading,
 }: CaseStudyFormProps) {
   const [images, setImages] = useState<ImageInput[]>(
-    study?.images.map((img) => ({ url: img.url, alt: img.alt })) || [
+    study?.images.map((img) => ({ url: img.image, alt: img.alt })) || [
       { url: '', alt: '' },
     ]
   )
@@ -94,10 +94,10 @@ export function CaseStudyForm({
   const [imageErrors, setImageErrors] = useState<Record<number, string | null>>({})
 
   const [theme, setTheme] = useState<CaseStudy['theme']>(study?.theme || 'dark')
-  const [backgroundColor, setBackgroundColor] = useState(study?.backgroundColor || '#FFFFFF')
+  const [backgroundColor, setBackgroundColor] = useState(study?.background_color || '#FFFFFF')
   const [color, setColor] = useState(study?.color || '#000000')
   const [subtitle, setSubtitle] = useState(study?.subtitle || '')
-  const [ctaUrl, setCtaUrl] = useState(study?.ctaUrl || '')
+  const [ctaUrl, setCtaUrl] = useState(study?.cta_url || '')
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value
@@ -124,7 +124,7 @@ export function CaseStudyForm({
   ) => {
     if (field === 'url') {
       setImageErrors(prev => ({ ...prev, [index]: null }))
-      
+
       if (isGoogleDriveLink(value)) {
         const directLink = getGoogleDriveDirectLink(value)
         if (!directLink) {
@@ -134,16 +134,16 @@ export function CaseStudyForm({
           }))
         }
         // Always update the URL, even if invalid
-        setImages(images.map((img, i) => 
+        setImages(images.map((img, i) =>
           i === index ? { ...img, url: value } : img
         ))
       } else {
-        setImages(images.map((img, i) => 
+        setImages(images.map((img, i) =>
           i === index ? { ...img, url: value } : img
         ))
       }
     } else {
-      setImages(images.map((img, i) => 
+      setImages(images.map((img, i) =>
         i === index ? { ...img, [field]: value } : img
       ))
     }
@@ -295,7 +295,7 @@ export function CaseStudyForm({
                     <p>{imageErrors[index]}</p>
                     {isGoogleDriveLink(image.url) && (
                       <p className="mt-1">
-                        For Google Drive images: 
+                        For Google Drive images:
                         <ol className="list-decimal ml-4 mt-1">
                           <li>Open the image in Google Drive</li>
                           <li>Click &ldquo;Share&rdquo; and make it accessible to anyone with the link</li>
@@ -389,7 +389,7 @@ export function CaseStudyForm({
             name="theme"
             id="theme"
             value={theme}
-            onChange={(e) => setTheme(e.target.value )}
+            onChange={(e) => setTheme(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           >
             <option value="dark">Dark</option>
