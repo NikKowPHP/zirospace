@@ -3,7 +3,8 @@
 import {
   ProcessItem as ProcessItemType,
 } from '@/lib/data/our-processes'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { useScroll, useTransform, motion } from 'framer-motion'
 
 
 
@@ -75,9 +76,23 @@ export const ProcessItemListClient = ({
   processItems: any
 }) => {
   const [currentSlide, setCurrentSlide] = useState(1)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end start']
+  })
+
+  // Scale effect based on scroll
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.95, 0.9])
+  // Opacity effect based on scroll
+  const opacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.8, 0.6])
 
   return (
-    <div className="relative">
+    <motion.div 
+      className="relative"
+      ref={containerRef}
+      style={{ scale, opacity }}
+    >
       <div className="overflow-hidden px-4">
         <div 
           className="flex transition-transform duration-300 ease-in-out gap-4"
@@ -112,6 +127,6 @@ export const ProcessItemListClient = ({
           />
         ))}
       </div>
-    </div>
+    </motion.div>
   )
 }
