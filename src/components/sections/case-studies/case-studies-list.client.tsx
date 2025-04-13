@@ -2,9 +2,8 @@
 import { memo, useMemo, useRef } from 'react';
 import { type Locale } from '@/i18n'
 import { CaseStudy } from '@/domain/models/models'
-import { useScroll, useMotionValueEvent, useTransform, motion } from 'framer-motion';
+import { useScroll, useTransform, motion } from 'framer-motion';
 import { CaseStudyCard } from '@/components/ui/case-study/case-study-card';
-
 
 
 export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
@@ -13,13 +12,26 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
     index: number;
 }) => {
     const cardRef = useRef<HTMLDivElement>(null);
-    // Calculate the final sticky top position for this card
+    const { scrollY } = useScroll({
+        target: cardRef,
+        offset: ['start end', 'end start']
+    });
+
+    const effectiveIndex = Math.min(index, 2);
+
     const stickyTopOffset = useMemo(() => {
         if (typeof window !== 'undefined') {
-            return window.innerHeight / 2.5 - 100 + index * 40; // adjust the value as needed
+            const baseOffset = window.innerHeight / 2.5 - 100;
+            const spacing = 20;
+            return baseOffset + effectiveIndex * spacing;
         }
         return 0;
-    }, [index]);
+    }, [effectiveIndex]);
+
+
+    const scale = useTransform(scrollY, [2800, 4000], [1, 0.89]);
+
+    console.log('scrollY', scrollY.get())
 
     return (
         <motion.div
@@ -29,8 +41,8 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
             style={{
                 zIndex: index + 1,
                 top: `${stickyTopOffset}px`,
-             
-                transformOrigin: 'center center'
+                transformOrigin: 'center center',
+                scale
             }}
         >
             <CaseStudyCard caseStudy={caseStudy} locale={locale} />
@@ -78,9 +90,6 @@ export const CaseStudiesTitleSubtitle = ({ title, description }: { title: string
     });
 
 
-    useMotionValueEvent(scrollY, 'change', () => {
-        console.log('scrolly for title subtitle', scrollY.get())
-    })
     const scale = useTransform(scrollY, [2800, 3200], [1, 0.8])
     const opacity = useTransform(scrollY, [2800, 3200], [1, 0])
     return (
