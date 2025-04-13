@@ -1,5 +1,5 @@
 'use client'
-import { memo, useMemo, useRef, useState } from 'react';
+import { memo, useMemo, useRef, useState, useEffect } from 'react';
 import { type Locale } from '@/i18n'
 import { CaseStudy } from '@/domain/models/models'
 import { useScroll, useTransform, motion } from 'framer-motion';
@@ -34,21 +34,22 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
 
     const scale = useTransform(scrollY, [2800, 4000], [1, 0.89]);
 
-    // Track when card touches the top
-    useTransform(scrollY, (latest) => {
-        if (cardRef.current && index === 2) {
-            const rect = cardRef.current.getBoundingClientRect();
-            const threshold = 50; // Your specified offset
-            if (rect.top <= threshold) {
-                // When card 3 reaches threshold, adjust cards 1 and 2
-                const adjustment = Math.min(threshold - rect.top, 40);
-                setAdjustedOffset(-adjustment * 0.5); // Adjust by half the distance
-            } else {
-                setAdjustedOffset(0);
+    // Fixed scroll tracking with debounce effect
+    useEffect(() => {
+        const unsubscribe = scrollY.on('change', (latest) => {
+            if (cardRef.current && index === 2) {
+                const rect = cardRef.current.getBoundingClientRect();
+                const threshold = 50;
+                if (rect.top <= threshold) {
+                    const adjustment = Math.min(threshold - rect.top, 40);
+                    setAdjustedOffset(-adjustment * 0.5);
+                } else {
+                    setAdjustedOffset(0);
+                }
             }
-        }
-        return latest;
-    });
+        });
+        return () => unsubscribe();
+    }, [scrollY, index]);
 
     return (
         <motion.div
