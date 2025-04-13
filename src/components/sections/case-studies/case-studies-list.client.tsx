@@ -36,7 +36,7 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
 
     // Fixed scroll tracking with debounce effect
     useEffect(() => {
-        const unsubscribe = scrollY.on('change', (latest) => {
+        const unsubscribe = scrollY.on('change', () => {
             if (cardRef.current && index === 2) {
                 const rect = cardRef.current.getBoundingClientRect();
                 const threshold = 50;
