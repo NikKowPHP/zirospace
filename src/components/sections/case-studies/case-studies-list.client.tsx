@@ -36,14 +36,6 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
 
     // Track when card touches the top
     useTransform(scrollY, (latest) => {
-        if (cardRef.current) {
-            const rect = cardRef.current.getBoundingClientRect();
-            const isTouchingTop = rect.top <= 0;
-            console.log('rect top card index ', index, rect.top)
-            if (isTouchingTop) {
-                console.log(`Card ${index} is touching the top`);
-            }
-        }
         if (cardRef.current && index === 2) {
             const rect = cardRef.current.getBoundingClientRect();
             const threshold = 50; // Your specified offset
