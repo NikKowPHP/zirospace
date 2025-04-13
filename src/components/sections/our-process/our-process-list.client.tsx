@@ -16,35 +16,46 @@ export const ProcessItem = ({
 }) => {
   return (
     <div
-      className="p-[36px] rounded-xl bg-gray-100 shadow-sm flex flex-col gap-[16px]"
+      className="p-[48px] rounded-xl bg-gray-100 shadow-sm flex flex-col gap-[24px] max-w-4xl relative overflow-hidden"
       itemProp="step"
       itemScope
       itemType="https://schema.org/HowToStep"
     >
+      {/* Background image with overlay */}
+      {item.image && (
+        <>
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-20"
+            style={{ backgroundImage: `url(${item.image})` }}
+          />
+          <div className="absolute inset-0 bg-black/10" />
+        </>
+      )}
       <meta itemProp="position" content={`${index + 1}`} />
       <span
-        className="text-[16px] leading-[1.2] text-primary"
+        className="text-[20px] leading-[1.2] text-primary relative z-10"
         aria-hidden="true"
       >
         0{index + 1}
       </span>
-      <h3 className="text-lg text-black" itemProp="name">
+      <h3 className="text-xl text-black relative z-10" itemProp="name">
         {item.title}
       </h3>
       <div
+        className="relative z-10"
         itemProp="itemListElement"
         itemScope
         itemType="https://schema.org/ItemList"
       >
         <ul
-          className="flex flex-col gap-[16px]"
+          className="flex flex-col gap-[20px]"
           role="list"
           aria-label={`Steps for ${item.title}`}
         >
           {item.list.map((listItem: string, listIndex: number) => (
             <li
               key={listIndex}
-              className="text-gray-600 list-disc ml-[16px]"
+              className="text-gray-700 list-disc ml-[20px] text-lg"
               itemProp="itemListElement"
               itemScope
               itemType="https://schema.org/HowToDirection"

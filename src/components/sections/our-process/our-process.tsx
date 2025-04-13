@@ -11,7 +11,8 @@ export const OurProcess = async () => {
   const processItemsTranslated = processItems.map((item) => ({
     ...item,
     title: t(`${item.title}`),
-    list: item.list.map((listItem) => t(`${listItem}`))
+    list: item.list.map((listItem) => t(`${listItem}`)),
+    image: item.image
   }))
   // Create JSON-LD for the process section
   const processJsonLd = {
