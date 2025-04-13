@@ -1,5 +1,5 @@
 'use client'
-import { memo, useMemo, useRef } from 'react';
+import { memo, useMemo, useRef, useState } from 'react';
 import { type Locale } from '@/i18n'
 import { CaseStudy } from '@/domain/models/models'
 import { useScroll, useTransform, motion } from 'framer-motion';
@@ -18,20 +18,45 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
     });
 
     const effectiveIndex = Math.min(index, 2);
+    const [adjustedOffset, setAdjustedOffset] = useState(0);
 
-    const stickyTopOffset = useMemo(() => {
+    const baseStickyTopOffset = useMemo(() => {
         if (typeof window !== 'undefined') {
-            const baseOffset = window.innerHeight / 2.5 - 100;
-            const spacing = 20;
-            return baseOffset + effectiveIndex * spacing;
+            return window.innerHeight / 2.5 - 100;
         }
         return 0;
-    }, [effectiveIndex]);
+    }, []);
 
+    const stickyTopOffset = useMemo(() => {
+        const spacing = 20;
+        return baseStickyTopOffset + effectiveIndex * spacing + adjustedOffset;
+    }, [baseStickyTopOffset, effectiveIndex, adjustedOffset]);
 
     const scale = useTransform(scrollY, [2800, 4000], [1, 0.89]);
 
-    console.log('scrollY', scrollY.get())
+    // Track when card touches the top
+    useTransform(scrollY, (latest) => {
+        if (cardRef.current) {
+            const rect = cardRef.current.getBoundingClientRect();
+            const isTouchingTop = rect.top <= 0;
+            console.log('rect top card index ', index, rect.top)
+            if (isTouchingTop) {
+                console.log(`Card ${index} is touching the top`);
+            }
+        }
+        if (cardRef.current && index === 2) {
+            const rect = cardRef.current.getBoundingClientRect();
+            const threshold = 50; // Your specified offset
+            if (rect.top <= threshold) {
+                // When card 3 reaches threshold, adjust cards 1 and 2
+                const adjustment = Math.min(threshold - rect.top, 40);
+                setAdjustedOffset(-adjustment * 0.5); // Adjust by half the distance
+            } else {
+                setAdjustedOffset(0);
+            }
+        }
+        return latest;
+    });
 
     return (
         <motion.div
