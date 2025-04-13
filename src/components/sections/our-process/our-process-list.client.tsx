@@ -86,6 +86,12 @@ export const ProcessItemListClient = ({
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.95, 0.9])
   // Opacity effect based on scroll
   const opacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.8, 0.6])
+  // Controls dot container visibility
+  const dotsOpacity = useTransform(
+    scrollYProgress,
+    [0.3, 0.5, 0.7], // Appears when section is 30-70% in view
+    [0, 1, 0]         // Fades in and out
+  )
 
   return (
     <motion.div 
@@ -114,8 +120,11 @@ export const ProcessItemListClient = ({
         </div>
       </div>
       
-      {/* Navigation dots */}
-      <div className="flex justify-center gap-2 mt-6">
+      {/* Navigation dots - now absolutely positioned */}
+      <motion.div 
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 flex justify-center gap-2 rounded-full p-16  bg-gray-400"
+        style={{ opacity: dotsOpacity }}
+      >
         {processItems.map((_: any, index: number) => (
           <button
             key={index+1}
@@ -126,7 +135,7 @@ export const ProcessItemListClient = ({
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}
-      </div>
+      </motion.div>
     </motion.div>
   )
 }
