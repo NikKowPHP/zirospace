@@ -63,17 +63,25 @@ export const ProcessItemListClient = ({
 }: {
   processItems: any
 }) => {
-  const [currentSlide, setCurrentSlide] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(1)
 
   return (
     <div className="relative">
-      <div className="overflow-hidden">
+      <div className="overflow-hidden px-4">
         <div 
-          className="flex transition-transform duration-300 ease-in-out"
-          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          className="flex transition-transform duration-300 ease-in-out gap-4"
+          style={{ 
+            transform: `translateX(calc(50% - ${currentSlide * (100 / 3)}%))`,
+            width: `${processItems.length * (100 / 3)}%`
+          }}
         >
           {processItems.map((item: any, index: number) => (
-            <div key={index} className="w-full flex-shrink-0">
+            <div 
+              key={index} 
+              className={`w-1/3 flex-shrink-0 transition-opacity duration-300 ${
+                Math.abs(index - currentSlide) > 1 ? 'opacity-30' : 'opacity-100'
+              }`}
+            >
               <ProcessItem index={index} item={item} />
             </div>
           ))}
@@ -84,10 +92,10 @@ export const ProcessItemListClient = ({
       <div className="flex justify-center gap-2 mt-6">
         {processItems.map((_: any, index: number) => (
           <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
+            key={index+1}
+            onClick={() => setCurrentSlide(index+1)}
             className={`w-3 h-3 rounded-full transition-colors ${
-              index === currentSlide ? 'bg-primary' : 'bg-gray-300'
+              index +1 === currentSlide ? 'bg-primary' : 'bg-gray-300'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />
