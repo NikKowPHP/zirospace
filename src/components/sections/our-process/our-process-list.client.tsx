@@ -3,6 +3,7 @@
 import {
   ProcessItem as ProcessItemType,
 } from '@/lib/data/our-processes'
+import { useState } from 'react'
 
 
 
@@ -62,15 +63,36 @@ export const ProcessItemListClient = ({
 }: {
   processItems: any
 }) => {
+  const [currentSlide, setCurrentSlide] = useState(0)
+
   return (
-    <div
-      className="grid grid-cols-1 sm:grid-cols-2 gap-[10px] sm:gap-[20px] max-w-5xl justify-center mx-auto"
-      role="list"
-      aria-label="Development process steps"
-    >
-      {processItems.map((item: any, index: number) => (
-        <ProcessItem index={index} item={item} key={index} />
-      ))}
+    <div className="relative">
+      <div className="overflow-hidden">
+        <div 
+          className="flex transition-transform duration-300 ease-in-out"
+          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        >
+          {processItems.map((item: any, index: number) => (
+            <div key={index} className="w-full flex-shrink-0">
+              <ProcessItem index={index} item={item} />
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Navigation dots */}
+      <div className="flex justify-center gap-2 mt-6">
+        {processItems.map((_: any, index: number) => (
+          <button
+            key={index}
+            onClick={() => setCurrentSlide(index)}
+            className={`w-3 h-3 rounded-full transition-colors ${
+              index === currentSlide ? 'bg-primary' : 'bg-gray-300'
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
     </div>
   )
 }
