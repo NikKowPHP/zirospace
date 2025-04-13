@@ -5,6 +5,7 @@ import { CaseStudy } from '@/domain/models/models'
 import { useScroll, useTransform, motion } from 'framer-motion';
 import { CaseStudyCard } from '@/components/ui/case-study/case-study-card';
 
+const CARD_HEIGHT = 400; // Adjust this value based on your card's actual height
 
 export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
     caseStudy: CaseStudy;
@@ -22,7 +23,7 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
 
     const baseStickyTopOffset = useMemo(() => {
         if (typeof window !== 'undefined') {
-            return window.innerHeight / 2.5 - 100;
+            return (window.innerHeight / 2) - (CARD_HEIGHT / 2);
         }
         return 0;
     }, []);
