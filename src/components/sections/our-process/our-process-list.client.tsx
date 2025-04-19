@@ -4,13 +4,8 @@
 import {
   ProcessItem as ProcessItemType,
 } from '@/lib/data/our-processes'
-// --- OLD CODE START ---
-// import { useState, useRef, useCallback, useEffect } from 'react'
-// --- OLD CODE END ---
-// --- NEW CODE START ---
-import { useState, useRef, useCallback, useEffect } from 'react' // useEffect already imported
-// --- NEW CODE END ---
-import { Play, Pause } from 'lucide-react';
+import { useState, useRef, useCallback, useEffect } from 'react'
+import { Play, Pause } from 'lucide-react'; // Import icons
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { cn } from '@/lib/utils/cn';
 
@@ -85,66 +80,38 @@ export const ProcessItemListClient = ({
   processItems: ProcessItemType[]
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [isPlaying, setIsPlaying] = useState(false); // State for autoplay
+  const containerRef = useRef<HTMLDivElement>(null) // Ref for the main container
   const numItems = processItems.length;
-  // --- NEW CODE START ---
   const intervalRef = useRef<NodeJS.Timeout | null>(null); // Ref to store interval ID
-  // --- NEW CODE END ---
 
+  // Hook to track if the main container is in view
   const isInView = useInView(containerRef, {
-    margin: "-50% 0px -50% 0px"
+    margin: "-50% 0px -50% 0px" // Trigger when the center of the element is in the center of the viewport
   });
 
-  // --- NEW CODE START ---
   // Function to clear the interval
   const clearExistingInterval = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
-      // console.log("Interval cleared"); // For debugging
     }
-  }, []); // No dependencies needed
+  }, []);
 
   // Function to go to the next slide (used by autoplay)
   const goToNextSlide = useCallback(() => {
-    // console.log("goToNextSlide called"); // For debugging
     setCurrentIndex((prevIndex) => {
       const nextIndex = prevIndex === numItems - 1 ? 0 : prevIndex + 1;
-      // console.log(`Index changing from ${prevIndex} to ${nextIndex}`); // For debugging
       return nextIndex;
     });
   }, [numItems]);
-  // --- NEW CODE END ---
 
-  // --- OLD CODE START ---
-  // const goToNextSlide = useCallback(() => {
-  //   setCurrentIndex((prevIndex) =>
-  //     prevIndex === numItems - 1 ? 0 : prevIndex + 1
-  //   );
-  // }, [numItems]);
-
-  // const goToPrevSlide = useCallback(() => {
-  //   setCurrentIndex((prevIndex) =>
-  //     prevIndex === 0 ? numItems - 1 : prevIndex - 1
-  //   );
-  // }, [numItems]);
-
-  // const goToSlide = useCallback((index: number) => {
-  //   if (index >= 0 && index < numItems) {
-  //     setCurrentIndex(index);
-  //   }
-  // }, [numItems]);
-  // --- OLD CODE END ---
-
-  // --- NEW CODE START ---
   // Function to go to the previous slide (manual navigation)
   const goToPrevSlide = useCallback(() => {
     clearExistingInterval(); // Clear interval on manual navigation
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? numItems - 1 : prevIndex - 1
     );
-    // Autoplay restart (if needed) is handled by the useEffect below
   }, [numItems, clearExistingInterval]);
 
   // Function to go to a specific slide (manual navigation)
@@ -152,17 +119,14 @@ export const ProcessItemListClient = ({
     if (index >= 0 && index < numItems) {
       clearExistingInterval(); // Clear interval on manual navigation
       setCurrentIndex(index);
-      // Autoplay restart (if needed) is handled by the useEffect below
     }
   }, [numItems, clearExistingInterval]);
 
   // Effect to manage the autoplay interval
   useEffect(() => {
-    // console.log(`Effect running: isPlaying=${isPlaying}, isInView=${isInView}`); // For debugging
     if (isPlaying && isInView) {
       // Start interval only if playing and in view
       clearExistingInterval(); // Clear just in case one is already running
-      // console.log("Starting interval..."); // For debugging
       intervalRef.current = setInterval(goToNextSlide, 3000);
     } else {
       // Clear interval if paused or out of view
@@ -177,11 +141,10 @@ export const ProcessItemListClient = ({
     setIsPlaying(prev => !prev);
     // The useEffect above handles starting/stopping the interval
   };
-  // --- NEW CODE END ---
 
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="relative"> {/* Attach ref here */}
       <div className="overflow-hidden">
         <motion.div
           className="flex"
@@ -202,17 +165,17 @@ export const ProcessItemListClient = ({
 
       {/* Fixed Controls Container with Animation */}
       <AnimatePresence>
-        {isInView && (
+        {isInView && ( // Conditionally render based on isInView
           <motion.div
             className={cn(
               "fixed bottom-8 left-1/2 -translate-x-1/2 z-50",
               "bg-white/80 backdrop-blur-sm",
               "p-3 rounded-full shadow-md",
-              "flex items-center gap-x-3"
+              "flex items-center gap-x-3" // Increased gap slightly for separator
             )}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 20 }} // Start hidden and slightly down
+            animate={{ opacity: 1, y: 0 }} // Fade in and slide up
+            exit={{ opacity: 0, y: 20 }} // Fade out and slide down
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
             {/* Navigation Dots */}
