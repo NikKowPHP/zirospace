@@ -6,12 +6,7 @@ import {
 } from '@/lib/data/our-processes'
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { Play, Pause } from 'lucide-react';
-// --- OLD CODE START ---
-// import { motion, AnimatePresence, useInView } from 'framer-motion'
-// --- OLD CODE END ---
-// --- NEW CODE START ---
-import { motion, AnimatePresence, useInView, animate } from 'framer-motion' // Import animate
-// --- NEW CODE END ---
+import { motion, AnimatePresence, useInView, animate } from 'framer-motion'
 import { cn } from '@/lib/utils/cn';
 
 // --- ProcessItem component remains the same ---
@@ -89,6 +84,15 @@ export const ProcessItemListClient = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const numItems = processItems.length;
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  // --- NEW CODE START ---
+  // Refs for progress fill elements
+  const progressFillRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Ensure the refs array has the correct size
+  useEffect(() => {
+    progressFillRefs.current = progressFillRefs.current.slice(0, processItems.length);
+  }, [processItems.length]);
+  // --- NEW CODE END ---
+
 
   const isInView = useInView(containerRef, {
     margin: "-50% 0px -50% 0px"
@@ -174,30 +178,13 @@ export const ProcessItemListClient = ({
           >
             {/* Navigation Dots */}
             <div className="flex items-center gap-x-2">
-              {/* --- OLD CODE START --- */}
-              {/* {processItems.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={cn(
-                    "w-2.5 h-2.5 rounded-full transition-all duration-200 ease-in-out",
-                    currentIndex === index
-                      ? 'bg-primary scale-110 ring-2 ring-primary/50 ring-offset-1 ring-offset-white/80'
-                      : 'bg-gray-400 hover:bg-gray-500'
-                  )}
-                  aria-label={`Go to process step ${index + 1}`}
-                  aria-current={currentIndex === index ? 'step' : undefined}
-                />
-              ))} */}
-              {/* --- OLD CODE END --- */}
-              {/* --- NEW CODE START --- */}
               {processItems.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={cn(
-                    "relative w-4 h-4 rounded-full transition-colors duration-200 flex items-center justify-center", // Increased size slightly for progress ring
-                    "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1" // Focus style
+                    "relative w-4 h-4 rounded-full transition-colors duration-200 flex items-center justify-center",
+                    "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1"
                   )}
                   aria-label={`Go to process step ${index + 1}`}
                   aria-current={currentIndex === index ? 'step' : undefined}
@@ -205,21 +192,31 @@ export const ProcessItemListClient = ({
                   {/* Dot itself */}
                   <span className={cn(
                     "block w-2.5 h-2.5 rounded-full transition-all duration-200 ease-in-out",
-                    currentIndex === index ? 'bg-primary scale-110' : 'bg-gray-400 group-hover:bg-gray-500' // Use group-hover if needed later
+                    currentIndex === index ? 'bg-primary scale-110' : 'bg-gray-400 group-hover:bg-gray-500'
                   )}></span>
 
                   {/* Progress Indicator Structure */}
-                  {/* Track (e.g., a faint ring) */}
-                  <div className="absolute inset-0 rounded-full border-2 border-gray-300/50"></div>
-                  {/* Fill (animated element) */}
-                  <motion.div
+                  {/* Track */}
+                  <div className="absolute inset-0 rounded-full border-2 border-gray-300/50 pointer-events-none"></div> {/* Added pointer-events-none */}
+                  {/* Fill */}
+                  {/* --- OLD CODE START --- */}
+                  {/* <motion.div
                     className="absolute inset-0 rounded-full border-2 border-primary origin-center" // Use border for ring effect
                     style={{ scaleX: 0, borderTopColor: 'transparent', borderLeftColor: 'transparent', rotate: '-90deg' }} // Initial state & rotation for top start
                     // Animation will be applied later via `animate` function
+                  /> */}
+                  {/* --- OLD CODE END --- */}
+                  {/* --- NEW CODE START --- */}
+                  <motion.div
+                    ref={el => progressFillRefs.current[index] = el} // Assign ref
+                    className="absolute inset-0 rounded-full border-2 border-primary origin-center pointer-events-none" // Added pointer-events-none
+                    style={{ borderTopColor: 'transparent', borderLeftColor: 'transparent', rotate: '-90deg' }} // Rotation for top start
+                    initial={{ scaleX: 0 }} // Initial state handled by Framer Motion
+                    // Animation will be applied later via `animate` function or useEffect
                   />
+                   {/* --- NEW CODE END --- */}
                 </button>
               ))}
-              {/* --- NEW CODE END --- */}
             </div>
 
             {/* Separator */}
