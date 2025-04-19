@@ -71,6 +71,7 @@ export const FloatVideo = () => {
       window.addEventListener('load', handleLoad);
       return () => window.removeEventListener('load', handleLoad);
     }
+    return undefined;
   }, [videoId, isOurProcessVisible]);
 
   const videoVariants = {

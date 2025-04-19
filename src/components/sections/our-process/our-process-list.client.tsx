@@ -198,6 +198,7 @@ export const ProcessItemListClient = ({
       }, 150);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [currentIndex, processItems, numItems]);
 
 
