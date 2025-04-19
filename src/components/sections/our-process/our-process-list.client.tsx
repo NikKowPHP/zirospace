@@ -4,20 +4,22 @@
 import {
   ProcessItem as ProcessItemType,
 } from '@/lib/data/our-processes'
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, memo } from 'react' // Added memo
 import { Play, Pause } from 'lucide-react';
 import { motion, AnimatePresence, useInView, animate, AnimationControls } from 'framer-motion'
 import { cn } from '@/lib/utils/cn';
 
 // --- ProcessItem component remains the same ---
-export const ProcessItem = ({
+// Consider memoizing if ProcessItem becomes complex or if profiling shows benefits
+const ProcessItem = ({
   index,
   item,
 }: {
   index: number
   item: ProcessItemType
 }) => {
-  return (
+  // ... (ProcessItem implementation remains the same) ...
+    return (
     <div
       className="p-[48px] rounded-xl bg-gray-100 shadow-sm flex flex-col gap-[24px] max-w-4xl relative overflow-hidden"
       itemProp="step"
@@ -70,7 +72,7 @@ export const ProcessItem = ({
       </div>
     </div>
   )
-}
+};
 // --- End of ProcessItem component ---
 
 
@@ -79,28 +81,29 @@ export const ProcessItemListClient = ({
 }: {
   processItems: ProcessItemType[]
 }) => {
+  // --- State ---
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null)
-  const numItems = processItems.length;
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const progressFillRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const animationControlsRef = useRef<AnimationControls | null>(null);
   const [liveRegionText, setLiveRegionText] = useState('');
-  // --- NEW CODE START ---
-  // Ref to track if autoplay was active before hovering
-  const wasPlayingBeforeHoverRef = useRef(false);
-  // --- NEW CODE END ---
 
-  useEffect(() => {
-    progressFillRefs.current = progressFillRefs.current.slice(0, processItems.length);
-  }, [processItems.length]);
+  // --- Refs ---
+  const containerRef = useRef<HTMLDivElement>(null); // For useInView
+  const intervalRef = useRef<NodeJS.Timeout | null>(null); // For autoplay interval
+  const progressFillRefs = useRef<(HTMLDivElement | null)[]>([]); // For progress bar elements
+  const animationControlsRef = useRef<AnimationControls | null>(null); // For active progress animation
+  const wasPlayingBeforeHoverRef = useRef(false); // For pause on hover logic
 
+  // --- Constants ---
+  const numItems = processItems.length;
+  const AUTOPLAY_INTERVAL = 3000; // ms
+  const PROGRESS_DURATION = AUTOPLAY_INTERVAL / 1000; // seconds
 
+  // --- Hooks ---
   const isInView = useInView(containerRef, {
-    margin: "-50% 0px -50% 0px"
+    margin: "-50% 0px -50% 0px" // Trigger when center is in viewport center
   });
 
+  // --- Utility Functions ---
   const clearExistingInterval = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -108,28 +111,27 @@ export const ProcessItemListClient = ({
     }
   }, []);
 
-  const goToNextSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => {
-      const nextIndex = prevIndex === numItems - 1 ? 0 : prevIndex + 1;
-      return nextIndex;
-    });
-  }, [numItems]);
-
   const stopAndResetProgress = useCallback(() => {
-    animationControlsRef.current?.stop();
+    animationControlsRef.current?.stop(); // Stop current animation if any
+    // Reset all progress bars instantly
     progressFillRefs.current.forEach(ref => {
         if (ref) {
             animate(ref, { scaleX: 0 }, { duration: 0 });
         }
     });
-  }, []);
+  }, []); // No dependencies needed as it uses refs
+
+  // --- Navigation Functions ---
+  const goToNextSlide = useCallback(() => {
+    // Note: stopAndResetProgress is called by the progress animation useEffect
+    // when currentIndex changes. No need to call it here directly.
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % numItems);
+  }, [numItems]);
 
   const goToPrevSlide = useCallback(() => {
     clearExistingInterval();
     stopAndResetProgress();
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? numItems - 1 : prevIndex - 1
-    );
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + numItems) % numItems);
   }, [numItems, clearExistingInterval, stopAndResetProgress]);
 
   const goToSlide = useCallback((index: number) => {
@@ -140,101 +142,105 @@ export const ProcessItemListClient = ({
     }
   }, [numItems, clearExistingInterval, stopAndResetProgress, currentIndex]);
 
-
-  // Autoplay interval effect
-  useEffect(() => {
-    if (isPlaying && isInView) {
-      clearExistingInterval();
-      intervalRef.current = setInterval(goToNextSlide, 3000);
-    } else {
-      clearExistingInterval();
-    }
-    return clearExistingInterval;
-  }, [isPlaying, isInView, goToNextSlide, clearExistingInterval]);
-
-  // Progress animation effect
-  useEffect(() => {
-    stopAndResetProgress();
-    if (isPlaying && isInView) {
-        const element = progressFillRefs.current[currentIndex];
-        if (element) {
-            animationControlsRef.current = animate(
-                element,
-                { scaleX: 1 },
-                { duration: 3, ease: 'linear' }
-            );
-        }
-    }
-    return () => {
-        animationControlsRef.current?.stop();
-    };
-  }, [currentIndex, isPlaying, isInView, stopAndResetProgress]);
-
-  // Effect to update the aria-live region text when the slide changes
-  useEffect(() => {
-    if (processItems[currentIndex]) {
-      const timer = setTimeout(() => {
-        setLiveRegionText(`Showing process step ${currentIndex + 1} of ${numItems}: ${processItems[currentIndex].title}`);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [currentIndex, processItems, numItems]);
-
+  // --- Event Handlers ---
   const togglePlayPause = () => {
     setIsPlaying(prev => !prev);
   };
 
-  // --- NEW CODE START ---
-  // Handlers for pausing/resuming on hover
   const handleMouseEnter = () => {
     if (isPlaying) {
-      wasPlayingBeforeHoverRef.current = true; // Remember it was playing
-      setIsPlaying(false); // Pause the carousel
+      wasPlayingBeforeHoverRef.current = true;
+      setIsPlaying(false); // This will trigger effects to stop interval/animation
     }
   };
 
   const handleMouseLeave = () => {
     if (wasPlayingBeforeHoverRef.current) {
-      setIsPlaying(true); // Resume playing
-      wasPlayingBeforeHoverRef.current = false; // Reset the flag
+      setIsPlaying(true); // This will trigger effects to restart interval/animation
+      wasPlayingBeforeHoverRef.current = false;
     }
   };
-  // --- NEW CODE END ---
+
+  // --- Effects ---
+  // Ensure progress refs array size matches items length
+  useEffect(() => {
+    progressFillRefs.current = progressFillRefs.current.slice(0, numItems);
+  }, [numItems]);
+
+  // Autoplay interval effect
+  useEffect(() => {
+    if (isPlaying && isInView) {
+      clearExistingInterval(); // Ensure no duplicate intervals
+      intervalRef.current = setInterval(goToNextSlide, AUTOPLAY_INTERVAL);
+    } else {
+      clearExistingInterval(); // Clear if paused or out of view
+    }
+    return clearExistingInterval; // Cleanup on unmount or dependency change
+  }, [isPlaying, isInView, goToNextSlide, clearExistingInterval]);
+
+  // Progress animation effect
+  useEffect(() => {
+    stopAndResetProgress(); // Reset all progress bars on slide change or play/pause
+
+    if (isPlaying && isInView) {
+        const element = progressFillRefs.current[currentIndex];
+        if (element) {
+            // Start animation for the current slide
+            animationControlsRef.current = animate(
+                element,
+                { scaleX: 1 },
+                { duration: PROGRESS_DURATION, ease: 'linear' }
+            );
+        }
+    }
+    // Cleanup function to stop animation if dependencies change mid-animation
+    return () => {
+        animationControlsRef.current?.stop();
+    };
+  }, [currentIndex, isPlaying, isInView, stopAndResetProgress]); // Rerun when these change
+
+  // Aria-live region update effect
+  useEffect(() => {
+    if (processItems[currentIndex]) {
+      const timer = setTimeout(() => {
+        setLiveRegionText(`Showing process step ${currentIndex + 1} of ${numItems}: ${processItems[currentIndex].title}`);
+      }, 150); // Slightly increased delay for smoother announcement after transition
+      return () => clearTimeout(timer);
+    }
+  }, [currentIndex, processItems, numItems]);
 
 
   return (
-    // --- OLD CODE START ---
-    // <div ref={containerRef} className="relative">
-    // --- OLD CODE END ---
-    // --- NEW CODE START ---
     <div
       ref={containerRef}
       className="relative"
-      onMouseEnter={handleMouseEnter} // Add mouse enter handler
-      onMouseLeave={handleMouseLeave} // Add mouse leave handler
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-    {/* --- NEW CODE END --- */}
       {/* Visually hidden container for screen reader announcements */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {liveRegionText}
       </div>
 
+      {/* Carousel Viewport */}
       <div className="overflow-hidden">
+        {/* Sliding Strip */}
         <motion.div
           className="flex"
           animate={{ x: `-${currentIndex * 100}%` }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
+          {/* Slides */}
           {processItems.map((item, index) => (
             <div
               key={item.id || index}
-              className="w-full flex-shrink-0 px-2"
+              className="w-full flex-shrink-0 px-2" // Padding between slides
               style={{ flexBasis: '100%' }}
               role="group"
               aria-roledescription="slide"
               aria-label={`${index + 1} of ${numItems}`}
               aria-hidden={currentIndex !== index}
-              id={`carousel-slide-${index}`} // Add ID for aria-controls
+              id={`carousel-slide-${index}`}
             >
               <ProcessItem index={index} item={item} />
             </div>
@@ -242,7 +248,7 @@ export const ProcessItemListClient = ({
         </motion.div>
       </div>
 
-      {/* Fixed Controls Container with Animation */}
+      {/* Fixed Controls Container */}
       <AnimatePresence>
         {isInView && (
           <motion.div
@@ -268,23 +274,20 @@ export const ProcessItemListClient = ({
                   role="tab"
                   aria-selected={currentIndex === index}
                   id={`carousel-dot-${index}`}
-                  aria-controls={`carousel-slide-${index}`} // Matches slide ID
+                  aria-controls={`carousel-slide-${index}`}
                   className={cn(
                     "relative w-4 h-4 rounded-full transition-colors duration-200 flex items-center justify-center",
                     "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1"
                   )}
                   aria-label={`Go to process step ${index + 1}`}
                 >
-                  {/* Dot itself */}
-                  <span className={cn(
+                  <span className={cn( // Inner visual dot
                     "block w-2.5 h-2.5 rounded-full transition-all duration-200 ease-in-out",
-                    currentIndex === index ? 'bg-primary scale-110' : 'bg-gray-400 group-hover:bg-gray-500'
+                    currentIndex === index ? 'bg-primary scale-110' : 'bg-gray-400'
                   )}></span>
-
-                  {/* Progress Indicator Structure */}
-                  {/* Track */}
+                  {/* Progress Track */}
                   <div className="absolute inset-0 rounded-full border-2 border-gray-300/50 pointer-events-none"></div>
-                  {/* Fill */}
+                  {/* Progress Fill */}
                   <motion.div
                     ref={el => progressFillRefs.current[index] = el}
                     className="absolute inset-0 rounded-full border-2 border-primary origin-center pointer-events-none"
@@ -305,17 +308,11 @@ export const ProcessItemListClient = ({
               aria-label={isPlaying ? "Pause carousel autoplay" : "Play carousel autoplay"}
               aria-pressed={isPlaying}
             >
-              {isPlaying ? (
-                <Pause className="w-4 h-4" />
-              ) : (
-                <Play className="w-4 h-4" />
-              )}
+              {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             </button>
-
           </motion.div>
         )}
       </AnimatePresence>
-
     </div>
   )
 }
