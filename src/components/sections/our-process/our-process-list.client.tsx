@@ -255,7 +255,7 @@ export const ProcessItemListClient = ({
               // shrink‑wrap & center
               "mx-auto w-max",
               // styling
-              "bg-neutral-800 p-10 rounded-full shadow-lg",
+              " p-10 rounded-full",
               "flex items-center gap-x-2"
             )}
             initial={{ opacity: 0, y: 20 }}
@@ -266,7 +266,7 @@ export const ProcessItemListClient = ({
             {/* Play/Pause Button */}
              <button
               onClick={togglePlayPause}
-              className="flex items-center justify-center w-[40px] h-[40px] bg-neutral-700 rounded-full text-white hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-neutral-800 transition-colors"
+              className="flex items-center justify-center p-[20px] bg-gray-200/50 backdrop-blur-xl transition-all duration-300 rounded-full text-gray-800 hover:bg-gray-300/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-neutral-800 transition-colors"
               aria-label={isPlaying ? "Pause carousel autoplay" : "Play carousel autoplay"}
               aria-pressed={isPlaying}
             >
@@ -274,6 +274,7 @@ export const ProcessItemListClient = ({
             </button>
 
             {/* Navigation Dots Area */}
+            <div className="bg-gray-200/50 backdrop-blur-xl transition-all duration-300 ease-in-out rounded-full p-[10px]">
             <div className="flex items-center gap-x-1.5">
               {processItems.map((_, index) => (
                 <button
@@ -291,7 +292,7 @@ export const ProcessItemListClient = ({
                 >
                   {/* Active State Background / Progress Track */}
                   {currentIndex === index && (
-                    <div className="absolute inset-y-0 left-0 w-full h-full bg-neutral-600 rounded-full overflow-hidden">
+                    <div className="absolute inset-y-0 left-0 w-full h-full bg-neutral-300 rounded-full overflow-hidden">
                        {/* Progress Fill */}
                        <motion.div
                          ref={(el) => { progressFillRefs.current[index] = el; }}
@@ -307,7 +308,7 @@ export const ProcessItemListClient = ({
                   )}></span>
                 </button>
               ))}
-            </div>
+            </div></div>
           </motion.div>
         )}
       </AnimatePresence>
