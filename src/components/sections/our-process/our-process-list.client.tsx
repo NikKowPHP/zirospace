@@ -5,7 +5,6 @@ import {
   ProcessItem as ProcessItemType,
 } from '@/lib/data/our-processes'
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Play, Pause } from 'lucide-react';
 import { motion, AnimatePresence, useInView, animate, AnimationPlaybackControls } from 'framer-motion'
 import { cn } from '@/lib/utils/cn';
 import { Icon } from '@iconify/react';

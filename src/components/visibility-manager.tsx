@@ -1,4 +1,3 @@
-// --- NEW FILE START ---
 // File: src/components/visibility-manager.tsx
 'use client'
 
@@ -55,4 +54,3 @@ export const VisibilityManager = ({ children, targetSectionId }: VisibilityManag
 
   return <>{children}</>;
 };
-// --- NEW FILE END ---

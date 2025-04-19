@@ -1,4 +1,3 @@
-// --- NEW FILE START ---
 // File: src/contexts/VisibilityContext.tsx
 'use client'
 
@@ -28,4 +27,3 @@ export const useVisibility = (): VisibilityContextType => {
   }
   return context;
 };
-// --- NEW FILE END ---
