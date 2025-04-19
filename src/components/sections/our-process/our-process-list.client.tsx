@@ -86,9 +86,10 @@ export const ProcessItemListClient = ({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const progressFillRefs = useRef<(HTMLDivElement | null)[]>([]);
   const animationControlsRef = useRef<AnimationControls | null>(null);
-  // --- NEW CODE START ---
-  // State to hold the announcement text for the aria-live region
   const [liveRegionText, setLiveRegionText] = useState('');
+  // --- NEW CODE START ---
+  // Ref to track if autoplay was active before hovering
+  const wasPlayingBeforeHoverRef = useRef(false);
   // --- NEW CODE END ---
 
   useEffect(() => {
@@ -169,28 +170,54 @@ export const ProcessItemListClient = ({
     };
   }, [currentIndex, isPlaying, isInView, stopAndResetProgress]);
 
-  // --- NEW CODE START ---
   // Effect to update the aria-live region text when the slide changes
   useEffect(() => {
     if (processItems[currentIndex]) {
-      setLiveRegionText(`Showing process step ${currentIndex + 1} of ${numItems}: ${processItems[currentIndex].title}`);
+      const timer = setTimeout(() => {
+        setLiveRegionText(`Showing process step ${currentIndex + 1} of ${numItems}: ${processItems[currentIndex].title}`);
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [currentIndex, processItems, numItems]);
-  // --- NEW CODE END ---
 
   const togglePlayPause = () => {
     setIsPlaying(prev => !prev);
   };
 
+  // --- NEW CODE START ---
+  // Handlers for pausing/resuming on hover
+  const handleMouseEnter = () => {
+    if (isPlaying) {
+      wasPlayingBeforeHoverRef.current = true; // Remember it was playing
+      setIsPlaying(false); // Pause the carousel
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (wasPlayingBeforeHoverRef.current) {
+      setIsPlaying(true); // Resume playing
+      wasPlayingBeforeHoverRef.current = false; // Reset the flag
+    }
+  };
+  // --- NEW CODE END ---
+
 
   return (
-    <div ref={containerRef} className="relative">
-      {/* --- NEW CODE START --- */}
+    // --- OLD CODE START ---
+    // <div ref={containerRef} className="relative">
+    // --- OLD CODE END ---
+    // --- NEW CODE START ---
+    <div
+      ref={containerRef}
+      className="relative"
+      onMouseEnter={handleMouseEnter} // Add mouse enter handler
+      onMouseLeave={handleMouseLeave} // Add mouse leave handler
+    >
+    {/* --- NEW CODE END --- */}
       {/* Visually hidden container for screen reader announcements */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {liveRegionText}
       </div>
-      {/* --- NEW CODE END --- */}
 
       <div className="overflow-hidden">
         <motion.div
@@ -203,11 +230,11 @@ export const ProcessItemListClient = ({
               key={item.id || index}
               className="w-full flex-shrink-0 px-2"
               style={{ flexBasis: '100%' }}
-              // Add role="group" and aria-roledescription for better semantics if needed
               role="group"
               aria-roledescription="slide"
-              aria-label={`${index + 1} of ${numItems}`} // Announce slide number
-              aria-hidden={currentIndex !== index} // Hide inactive slides from accessibility tree
+              aria-label={`${index + 1} of ${numItems}`}
+              aria-hidden={currentIndex !== index}
+              id={`carousel-slide-${index}`} // Add ID for aria-controls
             >
               <ProcessItem index={index} item={item} />
             </div>
@@ -219,10 +246,8 @@ export const ProcessItemListClient = ({
       <AnimatePresence>
         {isInView && (
           <motion.div
-            // --- NEW CODE START ---
-            role="tablist" // Role for the container of interactive controls (dots)
+            role="tablist"
             aria-label="Process steps navigation"
-            // --- NEW CODE END ---
             className={cn(
               "fixed bottom-8 left-1/2 -translate-x-1/2 z-50",
               "bg-white/80 backdrop-blur-sm",
@@ -240,17 +265,15 @@ export const ProcessItemListClient = ({
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  // --- NEW CODE START ---
-                  role="tab" // Role for each dot
-                  aria-selected={currentIndex === index} // Indicate selection state
-                  aria-controls={`slide-${index}`} // Associate control with slide panel (assuming slide panels get IDs)
-                  // --- NEW CODE END ---
+                  role="tab"
+                  aria-selected={currentIndex === index}
+                  id={`carousel-dot-${index}`}
+                  aria-controls={`carousel-slide-${index}`} // Matches slide ID
                   className={cn(
                     "relative w-4 h-4 rounded-full transition-colors duration-200 flex items-center justify-center",
                     "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1"
                   )}
-                  aria-label={`Go to process step ${index + 1}`} // Keep existing aria-label
-                  // aria-current removed as aria-selected is more appropriate for role="tab"
+                  aria-label={`Go to process step ${index + 1}`}
                 >
                   {/* Dot itself */}
                   <span className={cn(
@@ -279,10 +302,8 @@ export const ProcessItemListClient = ({
             <button
               onClick={togglePlayPause}
               className="p-1 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 rounded-full"
-              aria-label={isPlaying ? "Pause carousel autoplay" : "Play carousel autoplay"} // Slightly more descriptive label
-              // --- NEW CODE START ---
-              aria-pressed={isPlaying} // Indicate toggle state
-              // --- NEW CODE END ---
+              aria-label={isPlaying ? "Pause carousel autoplay" : "Play carousel autoplay"}
+              aria-pressed={isPlaying}
             >
               {isPlaying ? (
                 <Pause className="w-4 h-4" />
