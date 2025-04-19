@@ -81,7 +81,7 @@ export const ProcessItemListClient = ({
 }) => {
   // --- State ---
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [liveRegionText, setLiveRegionText] = useState('');
 
   // --- Refs ---
@@ -213,7 +213,7 @@ export const ProcessItemListClient = ({
         {liveRegionText}
       </div>
 
-      <div className="relative px-8 sm:px-16 md:px-24 lg:px-32 xl:px-40"> {/* Responsive padding */}
+      <div className="relative overflow-hidden px-8 sm:px-16 md:px-24 lg:px-32 xl:px-40"> {/* Responsive padding */}
         <motion.div
           className="flex" // Items will arrange horizontally
           animate={{ x: `-${currentIndex * 100}%` }} // Slide based on index
