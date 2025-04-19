@@ -250,9 +250,12 @@ export const ProcessItemListClient = ({
             role="tablist"
             aria-label="Process steps navigation"
             className={cn(
-              "fixed bottom-8 left-1/2 -translate-x-1/2 z-50",
-              "bg-neutral-800",
-              "p-2 rounded-full shadow-lg",
+              // span full width, then auto‑center the inner box
+              "fixed bottom-8 inset-x-0 z-50",
+              // shrink‑wrap & center
+              "mx-auto w-max",
+              // styling
+              "bg-neutral-800 p-10 rounded-full shadow-lg",
               "flex items-center gap-x-2"
             )}
             initial={{ opacity: 0, y: 20 }}
@@ -263,7 +266,7 @@ export const ProcessItemListClient = ({
             {/* Play/Pause Button */}
              <button
               onClick={togglePlayPause}
-              className="flex items-center justify-center w-[15px] h-[15px] bg-neutral-700 rounded-full text-white hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-neutral-800 transition-colors"
+              className="flex items-center justify-center w-[40px] h-[40px] bg-neutral-700 rounded-full text-white hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-neutral-800 transition-colors"
               aria-label={isPlaying ? "Pause carousel autoplay" : "Play carousel autoplay"}
               aria-pressed={isPlaying}
             >
@@ -281,7 +284,7 @@ export const ProcessItemListClient = ({
                   id={`carousel-dot-${index}`}
                   aria-controls={`carousel-slide-${index}`}
                   className={cn(
-                    "relative h-[15px] w-[15px] flex items-center justify-center px-1",
+                    "relative h-[40px] w-[40px] flex items-center justify-center px-1",
                     "focus:outline-none focus:ring-1 focus:ring-white/50 rounded-full"
                   )}
                   aria-label={`Go to process step ${index + 1}`}
