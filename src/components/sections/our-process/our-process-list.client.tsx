@@ -6,7 +6,7 @@ import {
 } from '@/lib/data/our-processes'
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { Play, Pause } from 'lucide-react';
-import { motion, AnimatePresence, useInView, animate } from 'framer-motion'
+import { motion, AnimatePresence, useInView, animate, AnimationControls } from 'framer-motion' // Import animate and AnimationControls type
 import { cn } from '@/lib/utils/cn';
 
 // --- ProcessItem component remains the same ---
@@ -84,20 +84,22 @@ export const ProcessItemListClient = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const numItems = processItems.length;
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  // --- NEW CODE START ---
   // Refs for progress fill elements
   const progressFillRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Ref to store the currently active animation control
+  const animationControlsRef = useRef<AnimationControls | null>(null);
+
   // Ensure the refs array has the correct size
   useEffect(() => {
     progressFillRefs.current = progressFillRefs.current.slice(0, processItems.length);
   }, [processItems.length]);
-  // --- NEW CODE END ---
 
 
   const isInView = useInView(containerRef, {
     margin: "-50% 0px -50% 0px"
   });
 
+  // Function to clear the interval
   const clearExistingInterval = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -105,6 +107,7 @@ export const ProcessItemListClient = ({
     }
   }, []);
 
+  // Function to go to the next slide (used by autoplay)
   const goToNextSlide = useCallback(() => {
     setCurrentIndex((prevIndex) => {
       const nextIndex = prevIndex === numItems - 1 ? 0 : prevIndex + 1;
@@ -112,20 +115,38 @@ export const ProcessItemListClient = ({
     });
   }, [numItems]);
 
+  // Stop animation and reset progress on manual navigation
+  const stopAndResetProgress = useCallback(() => {
+    animationControlsRef.current?.stop(); // Stop current animation
+    // Reset all progress bars immediately
+    progressFillRefs.current.forEach(ref => {
+        if (ref) {
+            // Use animate from framer-motion to reset instantly
+            animate(ref, { scaleX: 0 }, { duration: 0 });
+        }
+    });
+  }, []); // No dependencies needed
+
+  // Function to go to the previous slide (manual navigation)
   const goToPrevSlide = useCallback(() => {
     clearExistingInterval();
+    stopAndResetProgress(); // Stop animation and reset progress
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? numItems - 1 : prevIndex - 1
     );
-  }, [numItems, clearExistingInterval]);
+  }, [numItems, clearExistingInterval, stopAndResetProgress]);
 
+  // Function to go to a specific slide (manual navigation)
   const goToSlide = useCallback((index: number) => {
-    if (index >= 0 && index < numItems) {
+    if (index >= 0 && index < numItems && index !== currentIndex) { // Prevent resetting if clicking the current dot
       clearExistingInterval();
+      stopAndResetProgress(); // Stop animation and reset progress
       setCurrentIndex(index);
     }
-  }, [numItems, clearExistingInterval]);
+  }, [numItems, clearExistingInterval, stopAndResetProgress, currentIndex]);
 
+
+  // Autoplay interval effect
   useEffect(() => {
     if (isPlaying && isInView) {
       clearExistingInterval();
@@ -136,8 +157,36 @@ export const ProcessItemListClient = ({
     return clearExistingInterval;
   }, [isPlaying, isInView, goToNextSlide, clearExistingInterval]);
 
+  // Progress animation effect
+  useEffect(() => {
+    // Stop any previously running animation and reset all bars
+    stopAndResetProgress();
+
+    // Start animation for the current slide if playing and in view
+    if (isPlaying && isInView) {
+        const element = progressFillRefs.current[currentIndex];
+        if (element) {
+            // Animate scaleX from its current value (should be 0 after reset) to 1
+            animationControlsRef.current = animate(
+                element,
+                { scaleX: 1 }, // Animate to 1
+                { duration: 3, ease: 'linear' } // 3-second duration
+            );
+        }
+    }
+    // No else needed here, stopAndResetProgress handles the reset
+
+    // Cleanup function to stop animation on unmount or dependency change
+    return () => {
+        animationControlsRef.current?.stop();
+    };
+  // Rerun when the slide changes, play state changes, or visibility changes
+  }, [currentIndex, isPlaying, isInView, stopAndResetProgress]);
+
+
   const togglePlayPause = () => {
     setIsPlaying(prev => !prev);
+    // The useEffect hooks handle starting/stopping intervals and animations
   };
 
 
@@ -197,24 +246,15 @@ export const ProcessItemListClient = ({
 
                   {/* Progress Indicator Structure */}
                   {/* Track */}
-                  <div className="absolute inset-0 rounded-full border-2 border-gray-300/50 pointer-events-none"></div> {/* Added pointer-events-none */}
+                  <div className="absolute inset-0 rounded-full border-2 border-gray-300/50 pointer-events-none"></div>
                   {/* Fill */}
-                  {/* --- OLD CODE START --- */}
-                  {/* <motion.div
-                    className="absolute inset-0 rounded-full border-2 border-primary origin-center" // Use border for ring effect
-                    style={{ scaleX: 0, borderTopColor: 'transparent', borderLeftColor: 'transparent', rotate: '-90deg' }} // Initial state & rotation for top start
-                    // Animation will be applied later via `animate` function
-                  /> */}
-                  {/* --- OLD CODE END --- */}
-                  {/* --- NEW CODE START --- */}
                   <motion.div
-                    ref={el => progressFillRefs.current[index] = el} // Assign ref
-                    className="absolute inset-0 rounded-full border-2 border-primary origin-center pointer-events-none" // Added pointer-events-none
-                    style={{ borderTopColor: 'transparent', borderLeftColor: 'transparent', rotate: '-90deg' }} // Rotation for top start
-                    initial={{ scaleX: 0 }} // Initial state handled by Framer Motion
-                    // Animation will be applied later via `animate` function or useEffect
+                    ref={el => progressFillRefs.current[index] = el}
+                    className="absolute inset-0 rounded-full border-2 border-primary origin-center pointer-events-none"
+                    style={{ borderTopColor: 'transparent', borderLeftColor: 'transparent', rotate: '-90deg' }}
+                    initial={{ scaleX: 0 }} // Initial state set here
+                    // Animate prop is not needed here as we use the imperative `animate` function
                   />
-                   {/* --- NEW CODE END --- */}
                 </button>
               ))}
             </div>
