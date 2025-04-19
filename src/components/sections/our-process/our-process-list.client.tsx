@@ -8,6 +8,7 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import { Play, Pause } from 'lucide-react';
 import { motion, AnimatePresence, useInView, animate, AnimationPlaybackControls } from 'framer-motion'
 import { cn } from '@/lib/utils/cn';
+import { Icon } from '@iconify/react';
 
 // ProcessItem component remains the same
 export const ProcessItem = ({
@@ -266,15 +267,19 @@ export const ProcessItemListClient = ({
             {/* Play/Pause Button */}
              <button
               onClick={togglePlayPause}
-              className="flex items-center justify-center p-[20px] bg-gray-200/50 backdrop-blur-xl transition-all duration-300 rounded-full text-gray-800 hover:bg-gray-300/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-neutral-800 transition-colors"
+              className="flex items-center justify-center p-[20px] bg-gray-200/50 backdrop-blur-xl transition-all duration-300 rounded-full text-gray-800 hover:bg-gray-300/50 focus:outline-none  transition-colors"
               aria-label={isPlaying ? "Pause carousel autoplay" : "Play carousel autoplay"}
               aria-pressed={isPlaying}
             >
-              {isPlaying ? <Pause className="w-full h-full" /> : <Play className="w-full h-full" />}
+              {isPlaying ? (
+                <Icon icon="fluent:pause-24-filled" className="w-[30px] h-[30px] text-neutral-500 " />
+              ) : (
+                <Icon icon="fluent:play-24-filled" className="w-[30px] h-[30px] text-neutral-500 " />
+              )}
             </button>
 
             {/* Navigation Dots Area */}
-            <div className="bg-gray-200/50 backdrop-blur-xl transition-all duration-300 ease-in-out rounded-full p-[10px]">
+            <div className="bg-gray-200/50 backdrop-blur-xl transition-all duration-300 ease-in-out rounded-full p-[15px]">
             <div className="flex items-center gap-x-1.5">
               {processItems.map((_, index) => (
                 <button
@@ -291,21 +296,39 @@ export const ProcessItemListClient = ({
                   aria-label={`Go to process step ${index + 1}`}
                 >
                   {/* Active State Background / Progress Track */}
-                  {currentIndex === index && (
-                    <div className="absolute inset-y-0 left-0 w-full h-full bg-neutral-300 rounded-full overflow-hidden">
-                       {/* Progress Fill */}
-                       <motion.div
-                         ref={(el) => { progressFillRefs.current[index] = el; }}
-                         className="h-full bg-white rounded-full"
-                         initial={{ width: "0%" }}
-                       />
-                    </div>
-                  )}
+                  <AnimatePresence>
+                    {currentIndex === index && (
+                      <motion.div
+                        key="progress-track"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.25, ease: 'easeInOut' }}
+                        className="absolute inset-0 flex items-center justify-center rounded-full overflow-hidden"
+                      >
+                        {/* Background Track */}
+                        <div className="w-full h-2 bg-neutral-300 rounded-full overflow-hidden">
+                          {/* Animated Fill */}
+                          <motion.div
+                            ref={(el) => { progressFillRefs.current[index] = el; }}
+                            className="h-full bg-white rounded-full"
+                            initial={{ width: '0%' }}
+                          />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                   {/* Dot */}
-                  <span className={cn(
-                    "relative block w-2 h-2 rounded-full transition-colors duration-200 z-10",
-                    currentIndex === index ? 'bg-neutral-800' : 'bg-neutral-500'
-                  )}></span>
+                  <span
+                    className={cn(
+                      "relative block rounded-full z-10",
+                      // animate size + color
+                      "transition-all duration-200 ease-in-out",
+                      currentIndex === index
+                        ? "w-3 h-3"
+                        : "w-2 h-2 bg-neutral-500"
+                    )}
+                  />
                 </button>
               ))}
             </div></div>
