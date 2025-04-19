@@ -4,21 +4,29 @@
 import {
   ProcessItem as ProcessItemType,
 } from '@/lib/data/our-processes'
-import { useState, useRef, useCallback, useEffect, memo } from 'react' // Added memo
+// --- OLD CODE START ---
+// import { useState, useRef, useCallback, useEffect, memo } from 'react' // Added memo
+// --- OLD CODE END ---
+// --- NEW CODE START ---
+import { useState, useRef, useCallback, useEffect } from 'react' // Removed memo
+// --- NEW CODE END ---
 import { Play, Pause } from 'lucide-react';
-import { motion, AnimatePresence, useInView, animate, AnimationControls } from 'framer-motion'
+// --- OLD CODE START ---
+// import { motion, AnimatePresence, useInView, animate, AnimationControls } from 'framer-motion' // Import animate and AnimationControls type
+// --- OLD CODE END ---
+// --- NEW CODE START ---
+import { motion, AnimatePresence, useInView, animate, AnimationPlaybackControls } from 'framer-motion' // Use AnimationPlaybackControls type
+// --- NEW CODE END ---
 import { cn } from '@/lib/utils/cn';
 
-// --- ProcessItem component remains the same ---
-// Consider memoizing if ProcessItem becomes complex or if profiling shows benefits
-const ProcessItem = ({
+// ProcessItem component remains the same
+export const ProcessItem = ({
   index,
   item,
 }: {
   index: number
   item: ProcessItemType
 }) => {
-  // ... (ProcessItem implementation remains the same) ...
     return (
     <div
       className="p-[48px] rounded-xl bg-gray-100 shadow-sm flex flex-col gap-[24px] max-w-4xl relative overflow-hidden"
@@ -87,20 +95,25 @@ export const ProcessItemListClient = ({
   const [liveRegionText, setLiveRegionText] = useState('');
 
   // --- Refs ---
-  const containerRef = useRef<HTMLDivElement>(null); // For useInView
-  const intervalRef = useRef<NodeJS.Timeout | null>(null); // For autoplay interval
-  const progressFillRefs = useRef<(HTMLDivElement | null)[]>([]); // For progress bar elements
-  const animationControlsRef = useRef<AnimationControls | null>(null); // For active progress animation
-  const wasPlayingBeforeHoverRef = useRef(false); // For pause on hover logic
+  const containerRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const progressFillRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // --- OLD CODE START ---
+  // const animationControlsRef = useRef<AnimationControls | null>(null);
+  // --- OLD CODE END ---
+  // --- NEW CODE START ---
+  const animationControlsRef = useRef<AnimationPlaybackControls | null>(null); // Use AnimationPlaybackControls type
+  // --- NEW CODE END ---
+  const wasPlayingBeforeHoverRef = useRef(false);
 
   // --- Constants ---
   const numItems = processItems.length;
-  const AUTOPLAY_INTERVAL = 3000; // ms
-  const PROGRESS_DURATION = AUTOPLAY_INTERVAL / 1000; // seconds
+  const AUTOPLAY_INTERVAL = 3000;
+  const PROGRESS_DURATION = AUTOPLAY_INTERVAL / 1000;
 
   // --- Hooks ---
   const isInView = useInView(containerRef, {
-    margin: "-50% 0px -50% 0px" // Trigger when center is in viewport center
+    margin: "-50% 0px -50% 0px"
   });
 
   // --- Utility Functions ---
@@ -112,27 +125,29 @@ export const ProcessItemListClient = ({
   }, []);
 
   const stopAndResetProgress = useCallback(() => {
-    animationControlsRef.current?.stop(); // Stop current animation if any
-    // Reset all progress bars instantly
+    animationControlsRef.current?.stop();
     progressFillRefs.current.forEach(ref => {
         if (ref) {
             animate(ref, { scaleX: 0 }, { duration: 0 });
         }
     });
-  }, []); // No dependencies needed as it uses refs
+  }, []);
 
   // --- Navigation Functions ---
   const goToNextSlide = useCallback(() => {
-    // Note: stopAndResetProgress is called by the progress animation useEffect
-    // when currentIndex changes. No need to call it here directly.
     setCurrentIndex((prevIndex) => (prevIndex + 1) % numItems);
   }, [numItems]);
 
-  const goToPrevSlide = useCallback(() => {
-    clearExistingInterval();
-    stopAndResetProgress();
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + numItems) % numItems);
-  }, [numItems, clearExistingInterval, stopAndResetProgress]);
+  // --- OLD CODE START ---
+  // const goToPrevSlide = useCallback(() => {
+  //   clearExistingInterval();
+  //   stopAndResetProgress();
+  //   setCurrentIndex((prevIndex) => (prevIndex - 1 + numItems) % numItems);
+  // }, [numItems, clearExistingInterval, stopAndResetProgress]);
+  // --- OLD CODE END ---
+  // --- NEW CODE START ---
+  // goToPrevSlide removed as it's unused
+  // --- NEW CODE END ---
 
   const goToSlide = useCallback((index: number) => {
     if (index >= 0 && index < numItems && index !== currentIndex) {
@@ -150,42 +165,37 @@ export const ProcessItemListClient = ({
   const handleMouseEnter = () => {
     if (isPlaying) {
       wasPlayingBeforeHoverRef.current = true;
-      setIsPlaying(false); // This will trigger effects to stop interval/animation
+      setIsPlaying(false);
     }
   };
 
   const handleMouseLeave = () => {
     if (wasPlayingBeforeHoverRef.current) {
-      setIsPlaying(true); // This will trigger effects to restart interval/animation
+      setIsPlaying(true);
       wasPlayingBeforeHoverRef.current = false;
     }
   };
 
   // --- Effects ---
-  // Ensure progress refs array size matches items length
   useEffect(() => {
     progressFillRefs.current = progressFillRefs.current.slice(0, numItems);
   }, [numItems]);
 
-  // Autoplay interval effect
   useEffect(() => {
     if (isPlaying && isInView) {
-      clearExistingInterval(); // Ensure no duplicate intervals
+      clearExistingInterval();
       intervalRef.current = setInterval(goToNextSlide, AUTOPLAY_INTERVAL);
     } else {
-      clearExistingInterval(); // Clear if paused or out of view
+      clearExistingInterval();
     }
-    return clearExistingInterval; // Cleanup on unmount or dependency change
+    return clearExistingInterval;
   }, [isPlaying, isInView, goToNextSlide, clearExistingInterval]);
 
-  // Progress animation effect
   useEffect(() => {
-    stopAndResetProgress(); // Reset all progress bars on slide change or play/pause
-
+    stopAndResetProgress();
     if (isPlaying && isInView) {
         const element = progressFillRefs.current[currentIndex];
         if (element) {
-            // Start animation for the current slide
             animationControlsRef.current = animate(
                 element,
                 { scaleX: 1 },
@@ -193,18 +203,17 @@ export const ProcessItemListClient = ({
             );
         }
     }
-    // Cleanup function to stop animation if dependencies change mid-animation
+    // Ensure cleanup function is always returned
     return () => {
         animationControlsRef.current?.stop();
     };
-  }, [currentIndex, isPlaying, isInView, stopAndResetProgress]); // Rerun when these change
+  }, [currentIndex, isPlaying, isInView, stopAndResetProgress]);
 
-  // Aria-live region update effect
   useEffect(() => {
     if (processItems[currentIndex]) {
       const timer = setTimeout(() => {
         setLiveRegionText(`Showing process step ${currentIndex + 1} of ${numItems}: ${processItems[currentIndex].title}`);
-      }, 150); // Slightly increased delay for smoother announcement after transition
+      }, 150);
       return () => clearTimeout(timer);
     }
   }, [currentIndex, processItems, numItems]);
@@ -217,24 +226,20 @@ export const ProcessItemListClient = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Visually hidden container for screen reader announcements */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {liveRegionText}
       </div>
 
-      {/* Carousel Viewport */}
       <div className="overflow-hidden">
-        {/* Sliding Strip */}
         <motion.div
           className="flex"
           animate={{ x: `-${currentIndex * 100}%` }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
-          {/* Slides */}
           {processItems.map((item, index) => (
             <div
               key={item.id || index}
-              className="w-full flex-shrink-0 px-2" // Padding between slides
+              className="w-full flex-shrink-0 px-2"
               style={{ flexBasis: '100%' }}
               role="group"
               aria-roledescription="slide"
@@ -248,7 +253,6 @@ export const ProcessItemListClient = ({
         </motion.div>
       </div>
 
-      {/* Fixed Controls Container */}
       <AnimatePresence>
         {isInView && (
           <motion.div
@@ -265,7 +269,6 @@ export const ProcessItemListClient = ({
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
-            {/* Navigation Dots */}
             <div className="flex items-center gap-x-2">
               {processItems.map((_, index) => (
                 <button
@@ -281,15 +284,19 @@ export const ProcessItemListClient = ({
                   )}
                   aria-label={`Go to process step ${index + 1}`}
                 >
-                  <span className={cn( // Inner visual dot
+                  <span className={cn(
                     "block w-2.5 h-2.5 rounded-full transition-all duration-200 ease-in-out",
                     currentIndex === index ? 'bg-primary scale-110' : 'bg-gray-400'
                   )}></span>
-                  {/* Progress Track */}
                   <div className="absolute inset-0 rounded-full border-2 border-gray-300/50 pointer-events-none"></div>
-                  {/* Progress Fill */}
                   <motion.div
-                    ref={el => progressFillRefs.current[index] = el}
+                    // --- OLD CODE START ---
+                    // ref={el => progressFillRefs.current[index] = el}
+                    // --- OLD CODE END ---
+                    // --- NEW CODE START ---
+                    // Correct ref assignment syntax
+                    ref={(el) => { progressFillRefs.current[index] = el; }}
+                    // --- NEW CODE END ---
                     className="absolute inset-0 rounded-full border-2 border-primary origin-center pointer-events-none"
                     style={{ borderTopColor: 'transparent', borderLeftColor: 'transparent', rotate: '-90deg' }}
                     initial={{ scaleX: 0 }}
@@ -298,10 +305,8 @@ export const ProcessItemListClient = ({
               ))}
             </div>
 
-            {/* Separator */}
             <div className="w-px h-4 bg-gray-300"></div>
 
-            {/* Play/Pause Button */}
             <button
               onClick={togglePlayPause}
               className="p-1 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 rounded-full"
