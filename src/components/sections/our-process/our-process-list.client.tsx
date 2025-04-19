@@ -10,8 +10,7 @@ import {
 import { useState, useRef, useCallback } from 'react' // Added useCallback
 // --- NEW CODE END ---
 import { motion, AnimatePresence } from 'framer-motion'
-
-
+import { cn } from '@/lib/utils/cn'
 
 
 export const ProcessItem = ({
@@ -77,7 +76,6 @@ export const ProcessItem = ({
 }
 
 
-
 export const ProcessItemListClient = ({
   processItems,
 }: {
@@ -87,84 +85,105 @@ export const ProcessItemListClient = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const numItems = processItems.length;
 
-  // --- NEW CODE START ---
   const goToNextSlide = useCallback(() => {
     setCurrentIndex((prevIndex) =>
       prevIndex === numItems - 1 ? 0 : prevIndex + 1
     );
-  }, [numItems]); // Dependency: numItems
+  }, [numItems]);
 
   const goToPrevSlide = useCallback(() => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? numItems - 1 : prevIndex - 1
     );
-  }, [numItems]); // Dependency: numItems
+  }, [numItems]);
 
   const goToSlide = useCallback((index: number) => {
     if (index >= 0 && index < numItems) {
       setCurrentIndex(index);
     }
-  }, [numItems]); // Dependency: numItems
-  // --- NEW CODE END ---
+  }, [numItems]);
 
 
+  // --- OLD CODE START ---
+  // return (
+  //   <div ref={containerRef} className="relative overflow-hidden">
+  //     <motion.div
+  //       className="flex"
+  //       animate={{ x: `-${currentIndex * 100}%` }}
+  //       transition={{ duration: 0.5, ease: "easeInOut" }}
+  //     >
+  //       {processItems.map((item, index) => (
+  //         <div
+  //           key={item.id || index}
+  //           className="w-full flex-shrink-0 px-2"
+  //           style={{ flexBasis: '100%' }}
+  //         >
+  //           <ProcessItem index={index} item={item} />
+  //         </div>
+  //       ))}
+  //     </motion.div>
+
+  //      <div className="absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 flex gap-4 p-4 bg-black/10 rounded">
+  //        <button
+  //          onClick={goToPrevSlide} // Use the new function
+  //          className="bg-white p-2 rounded-full shadow"
+  //          aria-label="Previous slide"
+  //        >
+  //          Prev
+  //        </button>
+  //        <button
+  //          onClick={goToNextSlide} // Use the new function
+  //          className="bg-white p-2 rounded-full shadow"
+  //          aria-label="Next slide"
+  //        >
+  //          Next
+  //        </button>
+  //      </div>
+  //   </div>
+  // )
+  // --- OLD CODE END ---
+
+  // --- NEW CODE START ---
   return (
-    <div ref={containerRef} className="relative overflow-hidden">
-      <motion.div
-        className="flex"
-        animate={{ x: `-${currentIndex * 100}%` }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-      >
-        {processItems.map((item, index) => (
-          <div
-            key={item.id || index}
-            className="w-full flex-shrink-0 px-2"
-            style={{ flexBasis: '100%' }}
-          >
-            <ProcessItem index={index} item={item} />
-          </div>
-        ))}
-      </motion.div>
+    <div className="relative"> {/* Removed overflow-hidden from here */}
+      <div ref={containerRef} className="overflow-hidden"> {/* Added overflow-hidden here */}
+        <motion.div
+          className="flex"
+          animate={{ x: `-${currentIndex * 100}%` }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        >
+          {processItems.map((item, index) => (
+            <div
+              key={item.id || index}
+              className="w-full flex-shrink-0 px-2" // Added px-2 for spacing between slides
+              style={{ flexBasis: '100%' }}
+            >
+              <ProcessItem index={index} item={item} />
+            </div>
+          ))}
+        </motion.div>
+      </div>
 
-      {/* Temporary buttons for testing sliding */}
-      {/* --- OLD CODE START --- */}
+      {/* Fixed Controls Container */}
+      <div
+        className={cn(
+          "fixed bottom-8 left-1/2 -translate-x-1/2 z-50", // Positioning
+          "bg-white/80 backdrop-blur-sm", // Background & Blur
+          "p-3 rounded-full shadow-md", // Padding, Shape, Shadow
+          "flex items-center gap-x-3" // Layout for children (dots, play/pause)
+        )}
+      >
+        {/* Placeholder for controls - Dots and Play/Pause button will go here */}
+        <span className="text-xs text-gray-500">Controls Placeholder</span>
+      </div>
+
+      {/* Remove temporary buttons after verification */}
       {/* <div className="absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 flex gap-4 p-4 bg-black/10 rounded">
-         <button
-           onClick={() => setCurrentIndex((prev) => (prev > 0 ? prev - 1 : processItems.length - 1))}
-           className="bg-white p-2 rounded-full shadow"
-         >
-           Prev
-         </button>
-         <button
-           onClick={() => setCurrentIndex((prev) => (prev < processItems.length - 1 ? prev + 1 : 0))}
-           className="bg-white p-2 rounded-full shadow"
-         >
-           Next
-         </button>
+         <button onClick={goToPrevSlide} className="bg-white p-2 rounded-full shadow" aria-label="Previous slide">Prev</button>
+         <button onClick={goToNextSlide} className="bg-white p-2 rounded-full shadow" aria-label="Next slide">Next</button>
        </div> */}
-      {/* --- OLD CODE END --- */}
-      {/* --- NEW CODE START --- */}
-       <div className="absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 flex gap-4 p-4 bg-black/10 rounded">
-         <button
-           onClick={goToPrevSlide} // Use the new function
-           className="bg-white p-2 rounded-full shadow"
-           aria-label="Previous slide"
-         >
-           Prev
-         </button>
-         {/* Example usage of goToSlide (will be used by dots later) */}
-         {/* {processItems.map((_, index) => (
-            <button key={index} onClick={() => goToSlide(index)} className="bg-gray-300 p-1 rounded-full text-xs">{index + 1}</button>
-         ))} */}
-         <button
-           onClick={goToNextSlide} // Use the new function
-           className="bg-white p-2 rounded-full shadow"
-           aria-label="Next slide"
-         >
-           Next
-         </button>
-       </div>
-      {/* --- NEW CODE END --- */}
     </div>
   )
+  // --- NEW CODE END ---
 }
+// --- END FILE ---
