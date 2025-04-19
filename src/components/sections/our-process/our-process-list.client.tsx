@@ -5,8 +5,13 @@ import {
   ProcessItem as ProcessItemType,
 } from '@/lib/data/our-processes'
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Play, Pause } from 'lucide-react'; // Import icons
-import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { Play, Pause } from 'lucide-react';
+// --- OLD CODE START ---
+// import { motion, AnimatePresence, useInView } from 'framer-motion'
+// --- OLD CODE END ---
+// --- NEW CODE START ---
+import { motion, AnimatePresence, useInView, animate } from 'framer-motion' // Import animate
+// --- NEW CODE END ---
 import { cn } from '@/lib/utils/cn';
 
 // --- ProcessItem component remains the same ---
@@ -80,17 +85,15 @@ export const ProcessItemListClient = ({
   processItems: ProcessItemType[]
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false); // State for autoplay
-  const containerRef = useRef<HTMLDivElement>(null) // Ref for the main container
+  const [isPlaying, setIsPlaying] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null)
   const numItems = processItems.length;
-  const intervalRef = useRef<NodeJS.Timeout | null>(null); // Ref to store interval ID
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Hook to track if the main container is in view
   const isInView = useInView(containerRef, {
-    margin: "-50% 0px -50% 0px" // Trigger when the center of the element is in the center of the viewport
+    margin: "-50% 0px -50% 0px"
   });
 
-  // Function to clear the interval
   const clearExistingInterval = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -98,7 +101,6 @@ export const ProcessItemListClient = ({
     }
   }, []);
 
-  // Function to go to the next slide (used by autoplay)
   const goToNextSlide = useCallback(() => {
     setCurrentIndex((prevIndex) => {
       const nextIndex = prevIndex === numItems - 1 ? 0 : prevIndex + 1;
@@ -106,45 +108,37 @@ export const ProcessItemListClient = ({
     });
   }, [numItems]);
 
-  // Function to go to the previous slide (manual navigation)
   const goToPrevSlide = useCallback(() => {
-    clearExistingInterval(); // Clear interval on manual navigation
+    clearExistingInterval();
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? numItems - 1 : prevIndex - 1
     );
   }, [numItems, clearExistingInterval]);
 
-  // Function to go to a specific slide (manual navigation)
   const goToSlide = useCallback((index: number) => {
     if (index >= 0 && index < numItems) {
-      clearExistingInterval(); // Clear interval on manual navigation
+      clearExistingInterval();
       setCurrentIndex(index);
     }
   }, [numItems, clearExistingInterval]);
 
-  // Effect to manage the autoplay interval
   useEffect(() => {
     if (isPlaying && isInView) {
-      // Start interval only if playing and in view
-      clearExistingInterval(); // Clear just in case one is already running
+      clearExistingInterval();
       intervalRef.current = setInterval(goToNextSlide, 3000);
     } else {
-      // Clear interval if paused or out of view
       clearExistingInterval();
     }
-
-    // Cleanup function: clear interval when isPlaying/isInView changes or component unmounts
     return clearExistingInterval;
-  }, [isPlaying, isInView, goToNextSlide, clearExistingInterval]); // Dependencies
+  }, [isPlaying, isInView, goToNextSlide, clearExistingInterval]);
 
   const togglePlayPause = () => {
     setIsPlaying(prev => !prev);
-    // The useEffect above handles starting/stopping the interval
   };
 
 
   return (
-    <div ref={containerRef} className="relative"> {/* Attach ref here */}
+    <div ref={containerRef} className="relative">
       <div className="overflow-hidden">
         <motion.div
           className="flex"
@@ -165,25 +159,26 @@ export const ProcessItemListClient = ({
 
       {/* Fixed Controls Container with Animation */}
       <AnimatePresence>
-        {isInView && ( // Conditionally render based on isInView
+        {isInView && (
           <motion.div
             className={cn(
               "fixed bottom-8 left-1/2 -translate-x-1/2 z-50",
               "bg-white/80 backdrop-blur-sm",
               "p-3 rounded-full shadow-md",
-              "flex items-center gap-x-3" // Increased gap slightly for separator
+              "flex items-center gap-x-3"
             )}
-            initial={{ opacity: 0, y: 20 }} // Start hidden and slightly down
-            animate={{ opacity: 1, y: 0 }} // Fade in and slide up
-            exit={{ opacity: 0, y: 20 }} // Fade out and slide down
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
             {/* Navigation Dots */}
             <div className="flex items-center gap-x-2">
-              {processItems.map((_, index) => (
+              {/* --- OLD CODE START --- */}
+              {/* {processItems.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => goToSlide(index)} // Use updated goToSlide
+                  onClick={() => goToSlide(index)}
                   className={cn(
                     "w-2.5 h-2.5 rounded-full transition-all duration-200 ease-in-out",
                     currentIndex === index
@@ -193,7 +188,38 @@ export const ProcessItemListClient = ({
                   aria-label={`Go to process step ${index + 1}`}
                   aria-current={currentIndex === index ? 'step' : undefined}
                 />
+              ))} */}
+              {/* --- OLD CODE END --- */}
+              {/* --- NEW CODE START --- */}
+              {processItems.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={cn(
+                    "relative w-4 h-4 rounded-full transition-colors duration-200 flex items-center justify-center", // Increased size slightly for progress ring
+                    "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1" // Focus style
+                  )}
+                  aria-label={`Go to process step ${index + 1}`}
+                  aria-current={currentIndex === index ? 'step' : undefined}
+                >
+                  {/* Dot itself */}
+                  <span className={cn(
+                    "block w-2.5 h-2.5 rounded-full transition-all duration-200 ease-in-out",
+                    currentIndex === index ? 'bg-primary scale-110' : 'bg-gray-400 group-hover:bg-gray-500' // Use group-hover if needed later
+                  )}></span>
+
+                  {/* Progress Indicator Structure */}
+                  {/* Track (e.g., a faint ring) */}
+                  <div className="absolute inset-0 rounded-full border-2 border-gray-300/50"></div>
+                  {/* Fill (animated element) */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full border-2 border-primary origin-center" // Use border for ring effect
+                    style={{ scaleX: 0, borderTopColor: 'transparent', borderLeftColor: 'transparent', rotate: '-90deg' }} // Initial state & rotation for top start
+                    // Animation will be applied later via `animate` function
+                  />
+                </button>
               ))}
+              {/* --- NEW CODE END --- */}
             </div>
 
             {/* Separator */}
