@@ -8,9 +8,9 @@ import {
 // import { useState, useRef, useCallback, useEffect } from 'react'
 // --- OLD CODE END ---
 // --- NEW CODE START ---
-import { useState, useRef, useCallback, useEffect } from 'react'
-import { Play, Pause } from 'lucide-react'; // Import icons
+import { useState, useRef, useCallback, useEffect } from 'react' // useEffect already imported
 // --- NEW CODE END ---
+import { Play, Pause } from 'lucide-react';
 import { motion, AnimatePresence, useInView } from 'framer-motion'
 import { cn } from '@/lib/utils/cn';
 
@@ -85,37 +85,97 @@ export const ProcessItemListClient = ({
   processItems: ProcessItemType[]
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  // --- NEW CODE START ---
-  const [isPlaying, setIsPlaying] = useState(false); // State for autoplay
-  // --- NEW CODE END ---
+  const [isPlaying, setIsPlaying] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null)
   const numItems = processItems.length;
+  // --- NEW CODE START ---
+  const intervalRef = useRef<NodeJS.Timeout | null>(null); // Ref to store interval ID
+  // --- NEW CODE END ---
 
   const isInView = useInView(containerRef, {
     margin: "-50% 0px -50% 0px"
   });
 
-  const goToNextSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === numItems - 1 ? 0 : prevIndex + 1
-    );
-  }, [numItems]);
+  // --- NEW CODE START ---
+  // Function to clear the interval
+  const clearExistingInterval = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+      // console.log("Interval cleared"); // For debugging
+    }
+  }, []); // No dependencies needed
 
+  // Function to go to the next slide (used by autoplay)
+  const goToNextSlide = useCallback(() => {
+    // console.log("goToNextSlide called"); // For debugging
+    setCurrentIndex((prevIndex) => {
+      const nextIndex = prevIndex === numItems - 1 ? 0 : prevIndex + 1;
+      // console.log(`Index changing from ${prevIndex} to ${nextIndex}`); // For debugging
+      return nextIndex;
+    });
+  }, [numItems]);
+  // --- NEW CODE END ---
+
+  // --- OLD CODE START ---
+  // const goToNextSlide = useCallback(() => {
+  //   setCurrentIndex((prevIndex) =>
+  //     prevIndex === numItems - 1 ? 0 : prevIndex + 1
+  //   );
+  // }, [numItems]);
+
+  // const goToPrevSlide = useCallback(() => {
+  //   setCurrentIndex((prevIndex) =>
+  //     prevIndex === 0 ? numItems - 1 : prevIndex - 1
+  //   );
+  // }, [numItems]);
+
+  // const goToSlide = useCallback((index: number) => {
+  //   if (index >= 0 && index < numItems) {
+  //     setCurrentIndex(index);
+  //   }
+  // }, [numItems]);
+  // --- OLD CODE END ---
+
+  // --- NEW CODE START ---
+  // Function to go to the previous slide (manual navigation)
   const goToPrevSlide = useCallback(() => {
+    clearExistingInterval(); // Clear interval on manual navigation
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? numItems - 1 : prevIndex - 1
     );
-  }, [numItems]);
+    // Autoplay restart (if needed) is handled by the useEffect below
+  }, [numItems, clearExistingInterval]);
 
+  // Function to go to a specific slide (manual navigation)
   const goToSlide = useCallback((index: number) => {
     if (index >= 0 && index < numItems) {
+      clearExistingInterval(); // Clear interval on manual navigation
       setCurrentIndex(index);
+      // Autoplay restart (if needed) is handled by the useEffect below
     }
-  }, [numItems]);
+  }, [numItems, clearExistingInterval]);
 
-  // --- NEW CODE START ---
+  // Effect to manage the autoplay interval
+  useEffect(() => {
+    // console.log(`Effect running: isPlaying=${isPlaying}, isInView=${isInView}`); // For debugging
+    if (isPlaying && isInView) {
+      // Start interval only if playing and in view
+      clearExistingInterval(); // Clear just in case one is already running
+      // console.log("Starting interval..."); // For debugging
+      intervalRef.current = setInterval(goToNextSlide, 3000);
+    } else {
+      // Clear interval if paused or out of view
+      clearExistingInterval();
+    }
+
+    // Cleanup function: clear interval when isPlaying/isInView changes or component unmounts
+    return clearExistingInterval;
+  }, [isPlaying, isInView, goToNextSlide, clearExistingInterval]); // Dependencies
+
   const togglePlayPause = () => {
     setIsPlaying(prev => !prev);
+    // The useEffect above handles starting/stopping the interval
   };
   // --- NEW CODE END ---
 
@@ -148,12 +208,7 @@ export const ProcessItemListClient = ({
               "fixed bottom-8 left-1/2 -translate-x-1/2 z-50",
               "bg-white/80 backdrop-blur-sm",
               "p-3 rounded-full shadow-md",
-              // --- OLD CODE START ---
-              // "flex items-center gap-x-2"
-              // --- OLD CODE END ---
-              // --- NEW CODE START ---
-              "flex items-center gap-x-3" // Increased gap slightly for separator
-              // --- NEW CODE END ---
+              "flex items-center gap-x-3"
             )}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -165,7 +220,7 @@ export const ProcessItemListClient = ({
               {processItems.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => goToSlide(index)}
+                  onClick={() => goToSlide(index)} // Use updated goToSlide
                   className={cn(
                     "w-2.5 h-2.5 rounded-full transition-all duration-200 ease-in-out",
                     currentIndex === index
@@ -178,7 +233,6 @@ export const ProcessItemListClient = ({
               ))}
             </div>
 
-            {/* --- NEW CODE START --- */}
             {/* Separator */}
             <div className="w-px h-4 bg-gray-300"></div>
 
@@ -194,7 +248,6 @@ export const ProcessItemListClient = ({
                 <Play className="w-4 h-4" />
               )}
             </button>
-            {/* --- NEW CODE END --- */}
 
           </motion.div>
         )}
