@@ -19,7 +19,7 @@ export const ProcessItem = ({
 }) => {
     return (
     <div
-      className="p-8 sm:p-12 rounded-xl bg-gray-100 shadow-sm flex flex-col gap-4 sm:gap-6 max-w-3xl mx-auto relative overflow-hidden" // Adjusted padding, max-width, gap and added mx-auto
+      className="p-12  rounded-xl bg-gray-100 shadow-sm flex flex-col gap-4 sm:gap-6 max-w-3xl mx-auto relative overflow-hidden" // Adjusted padding, max-width, gap and added mx-auto
       itemProp="step"
       itemScope
       itemType="https://schema.org/HowToStep"
@@ -238,7 +238,6 @@ export const ProcessItemListClient = ({
               {/* ProcessItem is centered within this motion.div due to its own max-w-3xl mx-auto */}
               <ProcessItem index={index} item={item} />
             </motion.div>
-            // --- NEW CODE END ---
           ))}
         </motion.div>
       </div>
