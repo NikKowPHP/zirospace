@@ -1,18 +1,14 @@
+// --- FILE: src/components/sections/our-process/our-process-list.client.tsx ---
 'use client'
 
 import {
   ProcessItem as ProcessItemType,
 } from '@/lib/data/our-processes'
-// --- OLD CODE START ---
-// import { useState, useRef } from 'react'
-// --- OLD CODE END ---
-// --- NEW CODE START ---
-import { useState, useRef, useCallback } from 'react' // Added useCallback
-// --- NEW CODE END ---
-import { motion, AnimatePresence } from 'framer-motion'
-import { cn } from '@/lib/utils/cn'
+import { useState, useRef, useCallback } from 'react'
+import { motion } from 'framer-motion' // Removed AnimatePresence as it's not used yet
+import { cn } from '@/lib/utils/cn';
 
-
+// --- ProcessItem component remains the same ---
 export const ProcessItem = ({
   index,
   item,
@@ -30,7 +26,7 @@ export const ProcessItem = ({
       {/* Background image with overlay */}
       {item.image && (
         <>
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center opacity-20"
             style={{ backgroundImage: `url(${item.image})` }}
           />
@@ -74,6 +70,7 @@ export const ProcessItem = ({
     </div>
   )
 }
+// --- End of ProcessItem component ---
 
 
 export const ProcessItemListClient = ({
@@ -104,58 +101,18 @@ export const ProcessItemListClient = ({
   }, [numItems]);
 
 
-  // --- OLD CODE START ---
-  // return (
-  //   <div ref={containerRef} className="relative overflow-hidden">
-  //     <motion.div
-  //       className="flex"
-  //       animate={{ x: `-${currentIndex * 100}%` }}
-  //       transition={{ duration: 0.5, ease: "easeInOut" }}
-  //     >
-  //       {processItems.map((item, index) => (
-  //         <div
-  //           key={item.id || index}
-  //           className="w-full flex-shrink-0 px-2"
-  //           style={{ flexBasis: '100%' }}
-  //         >
-  //           <ProcessItem index={index} item={item} />
-  //         </div>
-  //       ))}
-  //     </motion.div>
-
-  //      <div className="absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 flex gap-4 p-4 bg-black/10 rounded">
-  //        <button
-  //          onClick={goToPrevSlide} // Use the new function
-  //          className="bg-white p-2 rounded-full shadow"
-  //          aria-label="Previous slide"
-  //        >
-  //          Prev
-  //        </button>
-  //        <button
-  //          onClick={goToNextSlide} // Use the new function
-  //          className="bg-white p-2 rounded-full shadow"
-  //          aria-label="Next slide"
-  //        >
-  //          Next
-  //        </button>
-  //      </div>
-  //   </div>
-  // )
-  // --- OLD CODE END ---
-
-  // --- NEW CODE START ---
   return (
-    <div className="relative"> {/* Removed overflow-hidden from here */}
-      <div ref={containerRef} className="overflow-hidden"> {/* Added overflow-hidden here */}
+    <div className="relative"> {/* Outermost container */}
+      <div ref={containerRef} className="overflow-hidden"> {/* Carousel viewport */}
         <motion.div
-          className="flex"
+          className="flex" // Sliding strip
           animate={{ x: `-${currentIndex * 100}%` }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
           {processItems.map((item, index) => (
             <div
-              key={item.id || index}
-              className="w-full flex-shrink-0 px-2" // Added px-2 for spacing between slides
+              key={item.id || index} // Slide container
+              className="w-full flex-shrink-0 px-2" // Add padding between slides if needed
               style={{ flexBasis: '100%' }}
             >
               <ProcessItem index={index} item={item} />
@@ -170,20 +127,31 @@ export const ProcessItemListClient = ({
           "fixed bottom-8 left-1/2 -translate-x-1/2 z-50", // Positioning
           "bg-white/80 backdrop-blur-sm", // Background & Blur
           "p-3 rounded-full shadow-md", // Padding, Shape, Shadow
-          "flex items-center gap-x-3" // Layout for children (dots, play/pause)
+          "flex items-center gap-x-2" // Layout for children (dots, play/pause)
         )}
       >
-        {/* Placeholder for controls - Dots and Play/Pause button will go here */}
-        <span className="text-xs text-gray-500">Controls Placeholder</span>
+        {/* Navigation Dots */}
+        <div className="flex items-center gap-x-2">
+          {processItems.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={cn(
+                "w-2.5 h-2.5 rounded-full transition-all duration-200 ease-in-out", // Base style & transition
+                currentIndex === index
+                  ? 'bg-primary scale-110 ring-2 ring-primary/50 ring-offset-1 ring-offset-white/80' // Active style
+                  : 'bg-gray-400 hover:bg-gray-500' // Inactive style
+              )}
+              aria-label={`Go to process step ${index + 1}`}
+              aria-current={currentIndex === index ? 'step' : undefined} // Indicate current step
+            />
+          ))}
+        </div>
+        {/* Placeholder for Play/Pause button - will be added in Phase 2 */}
+        {/* <div className="w-px h-4 bg-gray-300 mx-1"></div> */}
+        {/* <button className="p-1 text-gray-600 hover:text-gray-900">Play/Pause</button> */}
       </div>
-
-      {/* Remove temporary buttons after verification */}
-      {/* <div className="absolute bottom-[-50px] left-1/2 transform -translate-x-1/2 flex gap-4 p-4 bg-black/10 rounded">
-         <button onClick={goToPrevSlide} className="bg-white p-2 rounded-full shadow" aria-label="Previous slide">Prev</button>
-         <button onClick={goToNextSlide} className="bg-white p-2 rounded-full shadow" aria-label="Next slide">Next</button>
-       </div> */}
     </div>
   )
-  // --- NEW CODE END ---
 }
 // --- END FILE ---
