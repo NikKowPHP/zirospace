@@ -6,7 +6,7 @@ import {
 } from '@/lib/data/our-processes'
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { Play, Pause } from 'lucide-react';
-import { motion, AnimatePresence, useInView, animate, AnimationControls } from 'framer-motion' // Import animate and AnimationControls type
+import { motion, AnimatePresence, useInView, animate, AnimationControls } from 'framer-motion'
 import { cn } from '@/lib/utils/cn';
 
 // --- ProcessItem component remains the same ---
@@ -84,12 +84,13 @@ export const ProcessItemListClient = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const numItems = processItems.length;
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  // Refs for progress fill elements
   const progressFillRefs = useRef<(HTMLDivElement | null)[]>([]);
-  // Ref to store the currently active animation control
   const animationControlsRef = useRef<AnimationControls | null>(null);
+  // --- NEW CODE START ---
+  // State to hold the announcement text for the aria-live region
+  const [liveRegionText, setLiveRegionText] = useState('');
+  // --- NEW CODE END ---
 
-  // Ensure the refs array has the correct size
   useEffect(() => {
     progressFillRefs.current = progressFillRefs.current.slice(0, processItems.length);
   }, [processItems.length]);
@@ -99,7 +100,6 @@ export const ProcessItemListClient = ({
     margin: "-50% 0px -50% 0px"
   });
 
-  // Function to clear the interval
   const clearExistingInterval = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -107,7 +107,6 @@ export const ProcessItemListClient = ({
     }
   }, []);
 
-  // Function to go to the next slide (used by autoplay)
   const goToNextSlide = useCallback(() => {
     setCurrentIndex((prevIndex) => {
       const nextIndex = prevIndex === numItems - 1 ? 0 : prevIndex + 1;
@@ -115,32 +114,27 @@ export const ProcessItemListClient = ({
     });
   }, [numItems]);
 
-  // Stop animation and reset progress on manual navigation
   const stopAndResetProgress = useCallback(() => {
-    animationControlsRef.current?.stop(); // Stop current animation
-    // Reset all progress bars immediately
+    animationControlsRef.current?.stop();
     progressFillRefs.current.forEach(ref => {
         if (ref) {
-            // Use animate from framer-motion to reset instantly
             animate(ref, { scaleX: 0 }, { duration: 0 });
         }
     });
-  }, []); // No dependencies needed
+  }, []);
 
-  // Function to go to the previous slide (manual navigation)
   const goToPrevSlide = useCallback(() => {
     clearExistingInterval();
-    stopAndResetProgress(); // Stop animation and reset progress
+    stopAndResetProgress();
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? numItems - 1 : prevIndex - 1
     );
   }, [numItems, clearExistingInterval, stopAndResetProgress]);
 
-  // Function to go to a specific slide (manual navigation)
   const goToSlide = useCallback((index: number) => {
-    if (index >= 0 && index < numItems && index !== currentIndex) { // Prevent resetting if clicking the current dot
+    if (index >= 0 && index < numItems && index !== currentIndex) {
       clearExistingInterval();
-      stopAndResetProgress(); // Stop animation and reset progress
+      stopAndResetProgress();
       setCurrentIndex(index);
     }
   }, [numItems, clearExistingInterval, stopAndResetProgress, currentIndex]);
@@ -159,39 +153,45 @@ export const ProcessItemListClient = ({
 
   // Progress animation effect
   useEffect(() => {
-    // Stop any previously running animation and reset all bars
     stopAndResetProgress();
-
-    // Start animation for the current slide if playing and in view
     if (isPlaying && isInView) {
         const element = progressFillRefs.current[currentIndex];
         if (element) {
-            // Animate scaleX from its current value (should be 0 after reset) to 1
             animationControlsRef.current = animate(
                 element,
-                { scaleX: 1 }, // Animate to 1
-                { duration: 3, ease: 'linear' } // 3-second duration
+                { scaleX: 1 },
+                { duration: 3, ease: 'linear' }
             );
         }
     }
-    // No else needed here, stopAndResetProgress handles the reset
-
-    // Cleanup function to stop animation on unmount or dependency change
     return () => {
         animationControlsRef.current?.stop();
     };
-  // Rerun when the slide changes, play state changes, or visibility changes
   }, [currentIndex, isPlaying, isInView, stopAndResetProgress]);
 
+  // --- NEW CODE START ---
+  // Effect to update the aria-live region text when the slide changes
+  useEffect(() => {
+    if (processItems[currentIndex]) {
+      setLiveRegionText(`Showing process step ${currentIndex + 1} of ${numItems}: ${processItems[currentIndex].title}`);
+    }
+  }, [currentIndex, processItems, numItems]);
+  // --- NEW CODE END ---
 
   const togglePlayPause = () => {
     setIsPlaying(prev => !prev);
-    // The useEffect hooks handle starting/stopping intervals and animations
   };
 
 
   return (
     <div ref={containerRef} className="relative">
+      {/* --- NEW CODE START --- */}
+      {/* Visually hidden container for screen reader announcements */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {liveRegionText}
+      </div>
+      {/* --- NEW CODE END --- */}
+
       <div className="overflow-hidden">
         <motion.div
           className="flex"
@@ -203,6 +203,11 @@ export const ProcessItemListClient = ({
               key={item.id || index}
               className="w-full flex-shrink-0 px-2"
               style={{ flexBasis: '100%' }}
+              // Add role="group" and aria-roledescription for better semantics if needed
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${index + 1} of ${numItems}`} // Announce slide number
+              aria-hidden={currentIndex !== index} // Hide inactive slides from accessibility tree
             >
               <ProcessItem index={index} item={item} />
             </div>
@@ -214,6 +219,10 @@ export const ProcessItemListClient = ({
       <AnimatePresence>
         {isInView && (
           <motion.div
+            // --- NEW CODE START ---
+            role="tablist" // Role for the container of interactive controls (dots)
+            aria-label="Process steps navigation"
+            // --- NEW CODE END ---
             className={cn(
               "fixed bottom-8 left-1/2 -translate-x-1/2 z-50",
               "bg-white/80 backdrop-blur-sm",
@@ -231,12 +240,17 @@ export const ProcessItemListClient = ({
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
+                  // --- NEW CODE START ---
+                  role="tab" // Role for each dot
+                  aria-selected={currentIndex === index} // Indicate selection state
+                  aria-controls={`slide-${index}`} // Associate control with slide panel (assuming slide panels get IDs)
+                  // --- NEW CODE END ---
                   className={cn(
                     "relative w-4 h-4 rounded-full transition-colors duration-200 flex items-center justify-center",
                     "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1"
                   )}
-                  aria-label={`Go to process step ${index + 1}`}
-                  aria-current={currentIndex === index ? 'step' : undefined}
+                  aria-label={`Go to process step ${index + 1}`} // Keep existing aria-label
+                  // aria-current removed as aria-selected is more appropriate for role="tab"
                 >
                   {/* Dot itself */}
                   <span className={cn(
@@ -252,8 +266,7 @@ export const ProcessItemListClient = ({
                     ref={el => progressFillRefs.current[index] = el}
                     className="absolute inset-0 rounded-full border-2 border-primary origin-center pointer-events-none"
                     style={{ borderTopColor: 'transparent', borderLeftColor: 'transparent', rotate: '-90deg' }}
-                    initial={{ scaleX: 0 }} // Initial state set here
-                    // Animate prop is not needed here as we use the imperative `animate` function
+                    initial={{ scaleX: 0 }}
                   />
                 </button>
               ))}
@@ -266,7 +279,10 @@ export const ProcessItemListClient = ({
             <button
               onClick={togglePlayPause}
               className="p-1 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 rounded-full"
-              aria-label={isPlaying ? "Pause carousel" : "Play carousel"}
+              aria-label={isPlaying ? "Pause carousel autoplay" : "Play carousel autoplay"} // Slightly more descriptive label
+              // --- NEW CODE START ---
+              aria-pressed={isPlaying} // Indicate toggle state
+              // --- NEW CODE END ---
             >
               {isPlaying ? (
                 <Pause className="w-4 h-4" />
