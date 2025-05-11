@@ -44,48 +44,53 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const sortBy = searchParams.get('sortBy') || 'name_asc'; // Default sort by name ascending
+
+    // Sorting
+    const sortBy = searchParams.get('sortBy') || 'name_asc';
     const [orderBy, orderDirection] = sortBy.split('_');
 
-    const query = supabaseAdmin!
+    // Pagination
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('limit') || '9', 10); // Use 'limit' from client, default 9
+    const start = (page - 1) * limit;
+    const end = start + limit - 1;
+
+    let queryBuilder = supabaseAdmin!
       .from('apps')
-      .select('*')
+      .select('*', { count: 'exact' }) // Request total count for pagination metadata
       .order(orderBy, { ascending: orderDirection === 'asc' });
 
-    // Implement filtering based on query parameters
-    const filter = searchParams.get('filter');
-    if (filter) {
-      query.or(`name.ilike.%${filter}%,description.ilike.%${filter}%`);
+    // Filtering - use 'searchTerm' as per client request
+    const searchTerm = searchParams.get('searchTerm');
+    if (searchTerm && searchTerm.trim() !== '') {
+      const decodedSearchTerm = decodeURIComponent(searchTerm);
+      queryBuilder = queryBuilder.or(`name.ilike.%${decodedSearchTerm}%,description.ilike.%${decodedSearchTerm}%`);
     }
 
-    const { error } = await query;
+    // Apply range for pagination
+    queryBuilder = queryBuilder.range(start, end);
+
+    const { data: apps, error, count } = await queryBuilder;
 
     if (error) {
       console.error('Error fetching apps:', error);
-      return NextResponse.json({ error: 'Error fetching apps' }, { status: 500 });
+      return NextResponse.json({ error: 'Error fetching apps', details: error.message }, { status: 500 });
     }
 
-    // Implement pagination
-    const page = parseInt(searchParams.get('page') || '1', 10);
-    const pageSize = parseInt(searchParams.get('pageSize') || '10', 10);
-    const start = (page - 1) * pageSize;
-    const end = start + pageSize - 1;
+    return NextResponse.json({
+        data: apps,
+        total: count,
+        page,
+        limit,
+     }, { status: 200 });
 
-    const { data: paginatedApps, error: paginationError } = await supabaseAdmin!
-      .from('apps')
-      .select('*')
-      .order(orderBy, { ascending: orderDirection === 'asc' })
-      .range(start, end);
-
-    if (paginationError) {
-      console.error('Error fetching paginated apps:', paginationError);
-      return NextResponse.json({ error: 'Error fetching paginated apps' }, { status: 500 });
-    }
-
-    return NextResponse.json(paginatedApps, { status: 200 });
-  } catch (error) {
+  } catch (error: unknown) { // Catch any other errors
     console.error('Error fetching apps:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    let errorMessage = 'Internal Server Error';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: 'Internal Server Error', details: errorMessage }, { status: 500 });
   }
 }
 
