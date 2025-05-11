@@ -27,6 +27,9 @@ const PublicAppsPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState(''); // State for search term
   const [sortBy, setSortBy] = useState('name_asc'); // State for sorting
+  const [currentPage, setCurrentPage] = useState(1); // State for current page
+  const [itemsPerPage] = useState(9); // State for items per page (example: 9 apps per page)
+  const [totalPages, setTotalPages] = useState(1); // State for total pages (will need to get this from API response headers or body)
 
 
   useEffect(() => {
@@ -34,12 +37,13 @@ const PublicAppsPage = () => {
       try {
         setPageLoading(true);
         setError(null);
-        // Include search term and sort by in the API request
-        const response = await fetch(`/api/apps?searchTerm=${encodeURIComponent(searchTerm)}&sortBy=${encodeURIComponent(sortBy)}`);
+        // Include search term, sort by, and pagination parameters in the API request
+        const response = await fetch(`/api/apps?searchTerm=${encodeURIComponent(searchTerm)}&sortBy=${encodeURIComponent(sortBy)}&page=${currentPage}&limit=${itemsPerPage}`);
         if (!response.ok) {
           throw new Error(`Error fetching apps: ${response.statusText}`);
         }
         const data: App[] = await response.json();
+        // TODO: Get total pages from API response headers or body
         setApps(data);
       } catch (err) {
         console.error('Error fetching apps:', err);
@@ -50,7 +54,20 @@ const PublicAppsPage = () => {
     };
 
     fetchApps();
-  }, [searchTerm, sortBy]); // Refetch when search term or sort by changes
+  }, [searchTerm, sortBy, currentPage, itemsPerPage]); // Refetch when search term, sort by, or page changes
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
 
   if (pageLoading) {
     return <div>Loading...</div>; // Loading state
@@ -98,7 +115,6 @@ const PublicAppsPage = () => {
       </div>
 
 
-      {/* TODO: Implement pagination */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {apps.length === 0 ? (
           <p>No apps found.</p>
@@ -107,6 +123,25 @@ const PublicAppsPage = () => {
             <AppCard key={app.id} app={app} />
           ))
         )}
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-8">
+        <button
+          className="px-4 py-2 mr-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow hover:bg-gray-400 disabled:opacity-50"
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1 || pageLoading}
+        >
+          Previous Page
+        </button>
+        <span className="self-center">Page {currentPage} of {totalPages}</span>
+        <button
+          className="px-4 py-2 ml-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow hover:bg-gray-400 disabled:opacity-50"
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages || pageLoading}
+        >
+          Next Page
+        </button>
       </div>
     </div>
   );
