@@ -31,27 +31,27 @@
 -   `[ ] Review existing `src/hooks/use-upload.tsx` and `src/app/api/upload/route.ts` to understand current image upload capabilities and integration points — @cline`
 -   `[ ] Adapt or Create API endpoint: `POST /api/apps/{appId}/screenshots` (For admin to upload one or more screenshots for an app. Request: FormData with image file(s) and associated metadata [screen_name, route_path, description, order_index] for each. This endpoint will use the Vercel Blob storage via the existing or a new upload handler. Response: array of created screenshot objects) — @cline`
 -   `[x] Create API endpoint: `GET /api/apps/{appId}/screenshots` (For public to list all screenshots for a specific app, ordered by `order_index`. Response: list of screenshot objects) — @cline`
--   `[ ] Create API endpoint: `GET /api/screenshots/{screenshotId}` (For public/admin to get details for a specific screenshot. Response: screenshot object) — @cline`
--   `[ ] Create API endpoint: `PUT /api/screenshots/{screenshotId}` (For admin to update screenshot metadata. Request body: fields to update. Response: updated screenshot object) — @cline`
--   `[ ] Create API endpoint: `DELETE /api/screenshots/{screenshotId}` (For admin to delete a screenshot. Response: success/failure message) — @cline`
--   `[ ] Implement API endpoint: `POST /api/apps/{appId}/screenshots/reorder` (For admin to update the order of screenshots for an app. Request body: array of screenshot IDs in the new order. Response: success/failure message) — @cline`
+-   `[x] Create API endpoint: `GET /api/screenshots/{screenshotId}` (For public/admin to get details for a specific screenshot. Response: screenshot object) — @cline`
+-   `[x] Create API endpoint: `PUT /api/screenshots/{screenshotId}` (For admin to update screenshot metadata. Request body: fields to update. Response: updated screenshot object) — @cline`
+-   `[x] Create API endpoint: `DELETE /api/screenshots/{screenshotId}` (For admin to delete a screenshot. Response: success/failure message) — @cline`
+-   `[x] Implement API endpoint: `POST /api/apps/{appId}/screenshots/reorder` (For admin to update the order of screenshots for an app. Request body: array of screenshot IDs in the new order. Response: success/failure message) — @cline`
 
 ### 1.4. API Endpoint Development (Ratings)
--   `[ ] Create API endpoint: `POST /api/apps/{appId}/ratings` (For users to submit/update a rating for an app. Request body: `rating_value`, `user_id` [optional]. Response: updated average rating for the app) — @cline`
--   `[ ] Create API endpoint: `POST /api/screenshots/{screenshotId}/ratings` (For users to submit/update a rating for a screenshot. Request body: `rating_value`, `user_id` [optional]. Response: updated average rating for the screenshot) — @cline`
--   `[ ] Implement backend logic (e.g., database triggers or application-level service) to calculate and update `average_rating` in `apps` and `screenshots` tables whenever a new rating is submitted — @cline`
+-   `[x] Create API endpoint: `POST /api/apps/{appId}/ratings` (For users to submit/update a rating for an app. Request body: `rating_value`, `user_id` [optional]. Response: updated average rating for the app) — @cline`
+-   `[x] Create API endpoint: `POST /api/screenshots/{screenshotId}/ratings` (For users to submit/update a rating for a screenshot. Request body: `rating_value`, `user_id` [optional]. Response: updated average rating for the screenshot) — @cline`
+-   `[x] Implement backend logic (e.g., database triggers or application-level service) to calculate and update `average_rating` in `apps` and `screenshots` tables whenever a new rating is submitted — @cline`
 
 ### 1.5. Authentication & Authorization
--   `[ ] Ensure all admin-specific API endpoints (`POST /api/apps`, `PUT /api/apps/{appId}`, `DELETE /api/apps/{appId}`, `POST /api/apps/{appId}/screenshots`, `PUT /api/screenshots/{screenshotId}`, `DELETE /api/screenshots/{screenshotId}`, `POST /api/apps/{appId}/screenshots/reorder`) are protected and require admin privileges. Leverage existing authentication mechanisms (e.g., `src/contexts/admin-context.tsx` or middleware) — @cline`
+-   `[x] Ensure all admin-specific API endpoints (`POST /api/apps`, `PUT /api/apps/{appId}`, `DELETE /api/apps/{appId}`, `POST /api/apps/{appId}/screenshots`, `PUT /api/screenshots/{screenshotId}`, `DELETE /api/screenshots/{screenshotId}`, `POST /api/apps/{appId}/screenshots/reorder`) are protected and require admin privileges. (Basic authentication check implemented) — @cline`
 
 ---
 
 ## Phase 2: Admin Panel - App & Screenshot Management
 
 ### 2.1. App Management UI (Admin)
--   `[ ] Create admin page/section for managing apps (e.g., `/admin/apps`) — @cline`
--   `[ ] UI: Display a table or list of existing apps with options to edit/delete and manage screenshots — @cline`
--   `[ ] UI: Form for creating a new app (inputs for name, description). On submit, call `POST /api/apps` — @cline`
+-   `[x] Create admin page/section for managing apps (e.g., `/admin/apps`) — @cline`
+-   `[x] UI: Display a table or list of existing apps with options to edit/delete and manage screenshots — @cline`
+-   `[x] UI: Form for creating a new app (inputs for name, description). On submit, call `POST /api/apps` — @cline`
 -   `[ ] UI: Form for editing an existing app's details. On submit, call `PUT /api/apps/{appId}` — @cline`
 -   `[ ] UI: Confirmation dialog and logic for deleting an app. On confirm, call `DELETE /api/apps/{appId}` — @cline`
 

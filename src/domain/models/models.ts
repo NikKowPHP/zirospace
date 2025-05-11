@@ -74,8 +74,15 @@ export interface Banner {
     readonly updatedAt: Date;
   }
 
-
-
+export interface App {
+  id: number; // Assuming id is a number based on database schema
+  name: string;
+  description?: string;
+  thumbnail_url?: string;
+  average_rating?: number;
+  created_at: string; // Assuming timestamps are strings
+  updated_at: string; // Assuming timestamps are strings
+}
 
 
 export interface CaseStudyImage {

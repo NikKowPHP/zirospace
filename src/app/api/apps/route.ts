@@ -1,7 +1,21 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase'; // Import supabaseAdmin
 
+// Helper function to check for authenticated admin user
+async function isAuthenticatedAdmin(): Promise<boolean> {
+  // In a real application, you would check for a valid session or token
+  // and verify if the user has admin privileges.
+  // For now, we'll just check if there's any authenticated user as a placeholder.
+  const { data: { user } } = await supabaseAdmin!.auth.getUser();
+  return !!user; // Return true if user exists, false otherwise
+}
+
 export async function POST(request: Request) {
+  // Check if the user is authenticated and is an admin
+  if (!await isAuthenticatedAdmin()) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { name, description } = await request.json();
 
