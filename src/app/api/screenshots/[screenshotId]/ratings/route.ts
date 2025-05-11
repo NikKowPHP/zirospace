@@ -11,11 +11,9 @@ export async function POST(request: Request, { params }: { params: { screenshotI
     }
 
     // Insert the new rating
-    const { data: newRating, error: insertError } = await supabaseAdmin!
+    const { error: insertError } = await supabaseAdmin!
       .from('screenshot_ratings')
-      .insert([{ screenshot_id: parseInt(screenshotId), user_id: user_id || null, rating_value: rating_value }])
-      .select()
-      .single();
+      .insert([{ screenshot_id: parseInt(screenshotId), user_id: user_id || null, rating_value: rating_value }]);
 
     if (insertError) {
       console.error('Error inserting screenshot rating:', insertError);

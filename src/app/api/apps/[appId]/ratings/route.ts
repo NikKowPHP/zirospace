@@ -11,11 +11,9 @@ export async function POST(request: Request, { params }: { params: { appId: stri
     }
 
     // Insert the new rating
-    const { data: newRating, error: insertError } = await supabaseAdmin!
+    const { error: insertError } = await supabaseAdmin!
       .from('app_ratings')
-      .insert([{ app_id: parseInt(appId), user_id: user_id || null, rating_value: rating_value }])
-      .select()
-      .single();
+      .insert([{ app_id: parseInt(appId), user_id: user_id || null, rating_value: rating_value }]);
 
     if (insertError) {
       console.error('Error inserting app rating:', insertError);
