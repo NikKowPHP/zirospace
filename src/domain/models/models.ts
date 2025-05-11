@@ -84,6 +84,19 @@ export interface App {
   updated_at: string; // Assuming timestamps are strings
 }
 
+export interface Screenshot {
+  id: number; // Assuming id is a number
+  app_id: number; // Assuming app_id is a number (FK)
+  image_url: string;
+  screen_name?: string;
+  route_path?: string;
+  description?: string;
+  order_index: number;
+  average_rating?: number;
+  created_at: string; // Assuming timestamps are strings
+  updated_at: string; // Assuming timestamps are strings
+}
+
 
 export interface CaseStudyImage {
     id: string;

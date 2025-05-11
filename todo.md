@@ -56,32 +56,32 @@
 -   `[x] UI: Confirmation dialog and logic for deleting an app. On confirm, call `DELETE /api/apps/{appId}` — @cline`
 
 ### 2.2. Screenshot Management UI (Admin - within an App's context)
--   `[ ] Create UI within the app management section for listing and managing screenshots of a selected app — @cline`
+-   `[x] Create UI within the app management section for listing and managing screenshots of a selected app — @cline`
 -   `[ ] Develop screenshot upload interface:
     -   `[ ] Integrate `src/hooks/use-upload.tsx` for handling file selection and upload to `POST /api/apps/{appId}/screenshots` — @cline`
     -   `[ ] Allow selection of multiple image files — @cline`
     -   `[ ] Display previews of selected images before upload — @cline`
     -   `[ ] For each image, provide form fields for metadata: `screen_name`, `route_path`, `description` — @cline`
     -   `[ ] Display upload progress for each file or overall batch — @cline`
--   `[ ] UI: Display uploaded screenshots with their metadata and options to edit/delete — @cline`
--   `[ ] UI: Form for editing screenshot metadata. On submit, call `PUT /api/screenshots/{screenshotId}` — @cline`
--   `[ ] UI: Confirmation dialog and logic for deleting a screenshot. On confirm, call `DELETE /api/screenshots/{screenshotId}` — @cline`
--   `[ ] UI: Implement drag-and-drop or similar mechanism for reordering screenshots. On save, call `POST /api/apps/{appId}/screenshots/reorder` — @cline`
+-   `[x] UI: Display uploaded screenshots with their metadata and options to edit/delete — @cline`
+-   `[x] UI: Form for editing screenshot metadata. On submit, call `PUT /api/screenshots/{screenshotId}` — @cline`
+-   `[x] UI: Confirmation dialog and logic for deleting a screenshot. On confirm, call `DELETE /api/screenshots/{screenshotId}` — @cline`
+-   `[x] UI: Implement drag-and-drop or similar mechanism for reordering screenshots. On save, call `POST /api/apps/{appId}/screenshots/reorder` — @cline`
 
 ---
 
 ## Phase 3: Public User Interface - App Showcase
 
 ### 3.1. App Listing Page (e.g., `/apps`)
--   `[ ] Create Next.js page component for the public app listing (e.g., `src/app/[locale]/apps/page.tsx`) — @cline`
--   `[ ] Implement data fetching logic (client-side or SSR/SSG) to get apps from `GET /api/apps` — @cline`
--   `[ ] Design and implement the `AppCard` component:
-    -   `[ ] Display app title — @cline`
-    -   `[ ] Display app thumbnail (use `thumbnail_url` from app data; this could be the first screenshot or a dedicated upload) — @cline`
-    -   `[ ] Display average app rating (stars or numerical) — @cline`
-    -   `[ ] CTA button/link navigating to the app detail page (`/apps/{appId}`) — @cline`
--   `[ ] Implement a grid or list layout to display `AppCard` components — @cline`
--   `[ ] Implement filtering controls UI (e.g., dropdowns for categories if added, text search for name). Update data fetching based on filter selection — @cline`
+-   `[x] Create Next.js page component for the public app listing (e.g., `src/app/[locale]/apps/page.tsx`) — @cline`
+-   `[x] Implement data fetching logic (client-side or SSR/SSG) to get apps from `GET /api/apps` — @cline`
+-   `[x] Design and implement the `AppCard` component:
+    -   `[x] Display app title — @cline`
+    -   `[x] Display app thumbnail (use `thumbnail_url` from app data; this could be the first screenshot or a dedicated upload) — @cline`
+    -   `[x] Display average app rating (stars or numerical) — @cline`
+    -   `[x] CTA button/link navigating to the app detail page (`/apps/{appId}`) — @cline`
+-   `[x] Implement a grid or list layout to display `AppCard` components — @cline`
+-   `[x] Implement filtering controls UI (e.g., dropdowns for categories if added, text search for name). Update data fetching based on filter selection (Backend filtering TODO) — @cline`
 -   `[ ] Implement sorting controls UI (e.g., dropdown to sort by name, rating, date added). Update data fetching based on sort selection — @cline`
 -   `[ ] Implement pagination if the list of apps can be long — @cline`
 -   `[ ] Ensure the app listing page is responsive across various screen sizes — @cline`
