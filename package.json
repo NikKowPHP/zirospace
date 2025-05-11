@@ -30,6 +30,7 @@
     "@types/chart.js": "^2.9.41",
     "@types/dompurify": "^3.0.5",
     "@vercel/analytics": "^1.4.1",
+    "@vercel/blob": "^1.0.1",
     "chart.js": "^4.4.7",
     "clsx": "^2.1.1",
     "compression": "^1.7.4",

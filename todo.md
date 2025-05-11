@@ -11,24 +11,26 @@
 ## Phase 1: Backend & Data Model Setup
 
 ### 1.1. Database Schema Definition
--   `[ ] Define `apps` table schema (id, name, description, thumbnail_url, average_rating, created_at, updated_at) — @cline`
+-   `[x] Define `apps` table schema (id, name, description, thumbnail_url, average_rating, created_at, updated_at) — @cline`
 -   `[ ] Define `screenshots` table schema (id, app_id (FK to apps), image_url, screen_name, route_path, description, order_index, average_rating, created_at, updated_at) — @cline`
 -   `[ ] Define `app_ratings` table schema (id, app_id (FK to apps), user_id (nullable, for identifying unique raters if needed), rating_value (e.g., 1-5), created_at) — @cline`
 -   `[ ] Define `screenshot_ratings` table schema (id, screenshot_id (FK to screenshots), user_id (nullable), rating_value (e.g., 1-5), created_at) — @cline`
--   `[ ] Create database migrations for the new tables based on the defined schemas — @cline`
+-   `[x] Create database migrations for the new tables based on the defined schemas — @cline`
 -   `[ ] Seed initial data for `apps` and `screenshots` for development and testing purposes (optional) — @cline`
 
 ### 1.2. API Endpoint Development (CRUD for Apps)
--   `[ ] Create API endpoint: `POST /api/apps` (For admin to create a new app entry. Request body: name, description. Response: created app object) — @cline`
--   `[ ] Create API endpoint: `GET /api/apps` (For public to list all apps. Support query parameters for filtering [e.g., by category if added later] and sorting [e.g., `sortBy=rating_desc`, `sortBy=name_asc`]. Response: paginated list of apps) — @cline`
--   `[ ] Create API endpoint: `GET /api/apps/{appId}` (For public to get details for a specific app. Response: app object with its details) — @cline`
--   `[ ] Create API endpoint: `PUT /api/apps/{appId}` (For admin to update app details. Request body: fields to update. Response: updated app object) — @cline`
--   `[ ] Create API endpoint: `DELETE /api/apps/{appId}` (For admin to delete an app. Response: success/failure message) — @cline`
+-   `[x] Create API endpoint: `POST /api/apps` (For admin to create a new app entry. Request body: name, description. Response: created app object) — @cline`
+-   `[x] Create API endpoint: `GET /api/apps` (For public to list all apps. Support query parameters for filtering [e.g., by category if added later] and sorting [e.g., `sortBy=rating_desc`, `sortBy=name_asc`]. Response: paginated list of apps) — @cline`
+-   `[ ] Implement filtering for GET /api/apps — @cline`
+-   `[ ] Implement pagination for GET /api/apps — @cline`
+-   `[x] Create API endpoint: `GET /api/apps/{appId}` (For public to get details for a specific app. Response: app object with its details) — @cline`
+-   `[x] Create API endpoint: `PUT /api/apps/{appId}` (For admin to update app details. Request body: fields to update. Response: updated app object) — @cline`
+-   `[x] Create API endpoint: `DELETE /api/apps/{appId}` (For admin to delete an app. Response: success/failure message) — @cline`
 
 ### 1.3. API Endpoint Development (CRUD for Screenshots & Upload)
 -   `[ ] Review existing `src/hooks/use-upload.tsx` and `src/app/api/upload/route.ts` to understand current image upload capabilities and integration points — @cline`
 -   `[ ] Adapt or Create API endpoint: `POST /api/apps/{appId}/screenshots` (For admin to upload one or more screenshots for an app. Request: FormData with image file(s) and associated metadata [screen_name, route_path, description, order_index] for each. This endpoint will use the Vercel Blob storage via the existing or a new upload handler. Response: array of created screenshot objects) — @cline`
--   `[ ] Create API endpoint: `GET /api/apps/{appId}/screenshots` (For public to list all screenshots for a specific app, ordered by `order_index`. Response: list of screenshot objects) — @cline`
+-   `[x] Create API endpoint: `GET /api/apps/{appId}/screenshots` (For public to list all screenshots for a specific app, ordered by `order_index`. Response: list of screenshot objects) — @cline`
 -   `[ ] Create API endpoint: `GET /api/screenshots/{screenshotId}` (For public/admin to get details for a specific screenshot. Response: screenshot object) — @cline`
 -   `[ ] Create API endpoint: `PUT /api/screenshots/{screenshotId}` (For admin to update screenshot metadata. Request body: fields to update. Response: updated screenshot object) — @cline`
 -   `[ ] Create API endpoint: `DELETE /api/screenshots/{screenshotId}` (For admin to delete a screenshot. Response: success/failure message) — @cline`
