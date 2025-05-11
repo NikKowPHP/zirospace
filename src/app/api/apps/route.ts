@@ -73,7 +73,8 @@ export async function GET(request: Request) {
     const { data: apps, error, count } = await queryBuilder;
 
     if (error) {
-      console.error('Error fetching apps:', error);
+      console.error('Error fetching apps from Supabase:', error);
+      console.error('Request URL:', request.url);
       return NextResponse.json({ error: 'Error fetching apps', details: error.message }, { status: 500 });
     }
 
@@ -85,10 +86,12 @@ export async function GET(request: Request) {
      }, { status: 200 });
 
   } catch (error: unknown) { // Catch any other errors
-    console.error('Error fetching apps:', error);
+    console.error('An unexpected error occurred while fetching apps:', error);
+    console.error('Request URL:', request.url);
     let errorMessage = 'Internal Server Error';
     if (error instanceof Error) {
       errorMessage = error.message;
+      console.error('Error stack:', error.stack);
     }
     return NextResponse.json({ error: 'Internal Server Error', details: errorMessage }, { status: 500 });
   }
