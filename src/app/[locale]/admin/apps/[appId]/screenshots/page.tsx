@@ -34,6 +34,11 @@ const AdminAppScreenshotsPage = () => {
 
   const [isReordering, setIsReordering] = useState(false);
 
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [filePreviews, setFilePreviews] = useState<{ file: File, preview: string, metadata: { screen_name: string, route_path: string, description: string } }[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
 
   useEffect(() => {
     // Redirect if not authenticated and loading is complete
@@ -79,6 +84,78 @@ const AdminAppScreenshotsPage = () => {
       fetchData();
     }
   }, [user, appId]); // Refetch when user or appId changes
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setSelectedFiles(filesArray);
+
+      const previews = filesArray.map(file => ({
+        file,
+        preview: URL.createObjectURL(file),
+        metadata: { screen_name: '', route_path: '', description: '' },
+      }));
+      setFilePreviews(previews);
+    }
+  };
+
+  const handleMetadataChange = (index: number, field: 'screen_name' | 'route_path' | 'description', value: string) => {
+    setFilePreviews(prevPreviews => {
+      const newPreviews = [...prevPreviews];
+      newPreviews[index].metadata[field] = value;
+      return newPreviews;
+    });
+  };
+
+  const handleUploadScreenshots = async () => {
+    if (selectedFiles.length === 0) {
+      toast.error('Please select files to upload.');
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadProgress(0);
+    setError(null);
+
+    const formData = new FormData();
+    selectedFiles.forEach((file, index) => {
+      formData.append('files', file);
+      formData.append('screen_name', filePreviews[index].metadata.screen_name);
+      formData.append('route_path', filePreviews[index].metadata.route_path);
+      formData.append('description', filePreviews[index].metadata.description);
+      formData.append('order_index', (screenshots.length + index).toString()); // Simple ordering for new uploads
+    });
+
+    try {
+      // Using fetch directly to the new POST endpoint
+      const response = await fetch(`/api/apps/${appId}/screenshots`, {
+        method: 'POST',
+        body: formData,
+        // No 'Content-Type' header needed for FormData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Error uploading screenshots: ${errorData.error || response.statusText}`);
+      }
+
+      const uploaded: Screenshot[] = await response.json();
+      setScreenshots([...screenshots, ...uploaded]); // Add new screenshots to the list
+      setSelectedFiles([]); // Clear selected files
+      setFilePreviews([]); // Clear previews
+      toast.success(`${uploaded.length} screenshot(s) uploaded successfully!`); // Display success toast
+
+    } catch (err) {
+      console.error('Error uploading screenshots:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to upload screenshots';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0); // Reset progress
+    }
+  };
+
 
   const openEditModal = (screenshot: Screenshot) => {
     setCurrentScreenshot(screenshot);
@@ -249,10 +326,79 @@ const AdminAppScreenshotsPage = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Manage Screenshots for "{app.name}"</h1>
 
-      {/* TODO: Add UI for uploading new screenshots */}
+      {/* Upload New Screenshots Section */}
+      <div className="mb-8 p-6 border rounded-md shadow-sm bg-gray-50">
+        <h2 className="text-xl font-semibold mb-4">Upload New Screenshots</h2>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleFileChange}
+          className="mb-4 block w-full text-sm text-gray-500
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-md file:border-0
+            file:text-sm file:font-semibold
+            file:bg-blue-50 file:text-blue-700
+            hover:file:bg-blue-100"
+        />
+
+        {filePreviews.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-lg font-medium mb-3">Selected Files:</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filePreviews.map((item, index) => (
+                <div key={index} className="border rounded-md p-4 bg-white shadow-sm">
+                  <Image src={item.preview} alt={`Preview "${index}"`} width={150} height={100} objectFit="contain" className="mb-3 rounded" />
+                  <p className="text-sm font-medium text-gray-700 truncate">{item.file.name}</p>
+                  <div className="mt-2">
+                    <label htmlFor={`screenName-${index}`} className="block text-sm font-medium text-gray-700">Screen Name</label>
+                    <input
+                      type="text"
+                      id={`screenName-${index}`}
+                      value={item.metadata.screen_name}
+                      onChange={(e) => handleMetadataChange(index, 'screen_name', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-1 text-sm"
+                    />
+                  </div>
+                  <div className="mt-2">
+                    <label htmlFor={`routePath-${index}`} className="block text-sm font-medium text-gray-700">Route Path</label>
+                    <input
+                      type="text"
+                      id={`routePath-${index}`}
+                      value={item.metadata.route_path}
+                      onChange={(e) => handleMetadataChange(index, 'route_path', e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-1 text-sm"
+                    />
+                  </div>
+                  <div className="mt-2">
+                    <label htmlFor={`description-${index}`} className="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea
+                      id={`description-${index}`}
+                      value={item.metadata.description}
+                      onChange={(e) => handleMetadataChange(index, 'description', e.target.value)}
+                      rows={2}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-1 text-sm"
+                    ></textarea>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 text-right">
+              <button
+                className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 disabled:opacity-50"
+                onClick={handleUploadScreenshots}
+                disabled={isUploading || selectedFiles.length === 0}
+              >
+                {isUploading ? `Uploading... (${uploadProgress}%)` : `Upload ${selectedFiles.length} File(s)`}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
 
       <div>
-        <h2 className="text-xl font-semibold mb-4">Screenshots</h2>
+        <h2 className="text-xl font-semibold mb-4">Existing Screenshots</h2>
         {screenshots.length === 0 ? (
           <p>No screenshots found for this app.</p>
         ) : (

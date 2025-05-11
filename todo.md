@@ -57,12 +57,12 @@
 
 ### 2.2. Screenshot Management UI (Admin - within an App's context)
 -   `[x] Create UI within the app management section for listing and managing screenshots of a selected app — @cline`
--   `[ ] Develop screenshot upload interface:
-    -   `[ ] Integrate `src/hooks/use-upload.tsx` for handling file selection and upload to `POST /api/apps/{appId}/screenshots` — @cline`
-    -   `[ ] Allow selection of multiple image files — @cline`
-    -   `[ ] Display previews of selected images before upload — @cline`
-    -   `[ ] For each image, provide form fields for metadata: `screen_name`, `route_path`, `description` — @cline`
-    -   `[ ] Display upload progress for each file or overall batch — @cline`
+-   `[x] Develop screenshot upload interface:
+    -   `[x] Integrate `src/hooks/use-upload.tsx` for handling file selection and upload to `POST /api/apps/{appId}/screenshots` — @cline`
+    -   `[x] Allow selection of multiple image files — @cline`
+    -   `[x] Display previews of selected images before upload — @cline`
+    -   `[x] For each image, provide form fields for metadata: `screen_name`, `route_path`, `description` — @cline`
+    -   `[x] Display upload progress for each file or overall batch — @cline`
 -   `[x] UI: Display uploaded screenshots with their metadata and options to edit/delete — @cline`
 -   `[x] UI: Form for editing screenshot metadata. On submit, call `PUT /api/screenshots/{screenshotId}` — @cline`
 -   `[x] UI: Confirmation dialog and logic for deleting a screenshot. On confirm, call `DELETE /api/screenshots/{screenshotId}` — @cline`
