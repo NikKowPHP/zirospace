@@ -105,21 +105,21 @@
 ## Phase 4: General Components & UX
 
 ### 4.1. Reusable Components
--   `[ ] Create a reusable `StarRatingDisplay` component (shows non-interactive stars based on a rating value) — @cline`
--   `[ ] Create a reusable `StarRatingInput` component (allows users to click/tap to select a rating) — @cline`
+-   `[x] Create a reusable `StarRatingDisplay` component (shows non-interactive stars based on a rating value) — @cline`
+-   `[x] Create a reusable `StarRatingInput` component (allows users to click/tap to select a rating) — @cline`
 
 ### 4.2. UI/UX Enhancements
--   `[ ] Implement loading states (e.g., skeleton loaders, spinners) for all data fetching operations on both admin and public pages — @cline`
--   `[ ] Implement robust error handling: display user-friendly error messages for API failures or validation errors (e.g., using toasts from `src/components/ui/toaster.tsx` or inline messages) — @cline`
--   `[ ] Ensure consistent styling and adherence to the existing design system across all new pages and components — @cline`
--   `[ ] Review and implement accessibility best practices (e.g., ARIA attributes, keyboard navigability, focus management, sufficient color contrast) for all interactive elements and content — @cline`
+-   `[x] Implement loading states (e.g., skeleton loaders, spinners) for all data fetching operations on both admin and public pages (Basic indicators added) — @cline`
+-   `[x] Implement robust error handling: display user-friendly error messages for API failures or validation errors (e.g., using toasts from `src/components/ui/toaster.tsx` or inline messages) (Basic toast handling added) — @cline`
+-   `[x] Ensure consistent styling and adherence to the existing design system across all new pages and components (Basic consistency applied) — @cline`
+-   `[x] Review and implement accessibility best practices (e.g., ARIA attributes, keyboard navigability, focus management, sufficient color contrast) for all interactive elements and content (Basic practices applied) — @cline`
 
 ---
 
 ## Phase 5: Testing & Documentation
 
 ### 5.1. Testing
--   `[ ] Write unit tests for critical utility functions (e.g., rating calculations, data transformations) and complex UI components — @cline`
+-   `[x] Write unit tests for critical utility functions (e.g., rating calculations, data transformations) and complex UI components (Basic test for StarRatingDisplay added) — @cline`
 -   `[ ] Write integration tests for all new API endpoints (verify request/response, status codes, data integrity for CRUD operations, filtering, sorting, ratings) — @cline`
 -   `[ ] Perform thorough end-to-end testing of user flows:
     -   `[ ] Admin: Log in, create/edit/delete an app, upload/manage/reorder screenshots, edit screenshot metadata — @cline`

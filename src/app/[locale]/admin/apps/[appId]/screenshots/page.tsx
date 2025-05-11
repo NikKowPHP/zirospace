@@ -1,11 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/auth-context'; // Assuming useAuth is the correct hook for client-side auth status
 import { App, Screenshot } from '@/domain/models/models'; // Assuming App and Screenshot models are defined
 import { Modal } from '@/components/ui/modal/modal'; // Assuming a Modal component exists
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'; // Import drag and drop components
+import toast from 'react-hot-toast'; // Import toast for notifications
+
 
 const AdminAppScreenshotsPage = () => {
   const { user, loading } = useAuth(); // Use the auth hook to check user status
@@ -65,7 +68,9 @@ const AdminAppScreenshotsPage = () => {
 
         } catch (err) {
           console.error('Error fetching data:', err);
-          setError(err instanceof Error ? err.message : 'Failed to fetch data');
+          const errorMessage = err instanceof Error ? err.message : 'Failed to fetch data';
+          setError(errorMessage);
+          toast.error(errorMessage); // Display error toast
         } finally {
           setPageLoading(false);
         }
@@ -81,6 +86,7 @@ const AdminAppScreenshotsPage = () => {
     setEditRoutePath(screenshot.route_path || '');
     setEditDescription(screenshot.description || '');
     setIsEditModalOpen(true);
+    setError(null); // Clear previous errors when opening modal
   };
 
   const closeEditModal = () => {
@@ -120,9 +126,12 @@ const AdminAppScreenshotsPage = () => {
       // Update the screenshot in the list
       setScreenshots(screenshots.map(s => (s.id === updatedScreenshot.id ? updatedScreenshot : s)));
       closeEditModal(); // Close modal on success
+      toast.success('Screenshot updated successfully!'); // Display success toast
     } catch (err) {
       console.error('Error saving screenshot:', err);
-      setError(err instanceof Error ? err.message : 'Failed to save screenshot');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save screenshot';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
     } finally {
       setIsSaving(false);
     }
@@ -131,6 +140,7 @@ const AdminAppScreenshotsPage = () => {
   const openDeleteModal = (screenshot: Screenshot) => {
     setScreenshotToDelete(screenshot);
     setIsDeleteModalOpen(true);
+    setError(null); // Clear previous errors when opening modal
   };
 
   const closeDeleteModal = () => {
@@ -157,9 +167,12 @@ const AdminAppScreenshotsPage = () => {
       // Remove the deleted screenshot from the list
       setScreenshots(screenshots.filter(s => s.id !== screenshotToDelete.id));
       closeDeleteModal(); // Close modal on success
+      toast.success('Screenshot deleted successfully!'); // Display success toast
     } catch (err) {
       console.error('Error deleting screenshot:', err);
-      setError(err instanceof Error ? err.message : 'Failed to delete screenshot');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete screenshot';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
     } finally {
       setIsDeleting(false);
     }
@@ -199,10 +212,13 @@ const AdminAppScreenshotsPage = () => {
       // Optionally refetch screenshots to get updated order_index from backend
       // Or rely on the state update from onDragEnd
       // For now, relying on state update
+      toast.success('Screenshot order saved successfully!'); // Display success toast
 
     } catch (err) {
       console.error('Error saving screenshot order:', err);
-      setError(err instanceof Error ? err.message : 'Failed to save screenshot order');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save screenshot order';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
     } finally {
       setIsReordering(false);
     }
@@ -224,6 +240,10 @@ const AdminAppScreenshotsPage = () => {
   if (!app) {
     return <div>App not found.</div>; // Handle case where app is not found
   }
+
+  // Correctly use the state variable currentScreenshot
+  // const currentScreenshot = screenshots[currentScreenshotIndex]; // Remove this line
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -249,7 +269,7 @@ const AdminAppScreenshotsPage = () => {
                           {...provided.dragHandleProps}
                           className="border p-4 mb-2 bg-white rounded shadow"
                         >
-                          <img src={screenshot.image_url} alt={`Screenshot "${screenshot.id}"`} width={100} />
+                          <Image src={screenshot.image_url} alt={`Screenshot "${screenshot.id}"`} width={100} height={100} /> {/* Escaped quotes */}
                           <p>Screen Name: {screenshot.screen_name}</p>
                           <p>Route: {screenshot.route_path}</p>
                           <p>Description: {screenshot.description}</p>

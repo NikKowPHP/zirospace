@@ -4,32 +4,10 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { App, Screenshot } from '@/domain/models/models'; // Assuming App and Screenshot models are defined
 // import { useAuth } from '@/contexts/auth-context'; // Uncomment if client-side auth status is needed
+import StarRatingInput from '@/components/ui/StarRatingInput'; // Import the reusable StarRatingInput component
+import toast from 'react-hot-toast'; // Import toast for notifications
 
-// Basic StarRatingInput component (will be refined in Phase 4)
-const StarRatingInput = ({ rating, onRatingChange, disabled }: { rating: number | null, onRatingChange: (rating: number) => void, disabled?: boolean }) => {
-  const [hoveredRating, setHoveredRating] = useState<number | null>(null);
 
-  return (
-    <div className="flex items-center">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <svg
-          key={star}
-          className={`w-6 h-6 cursor-pointer ${
-            (hoveredRating || rating || 0) >= star ? 'text-yellow-500' : 'text-gray-300'
-          } ${disabled ? 'cursor-not-allowed' : ''}`}
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          onMouseEnter={() => !disabled && setHoveredRating(star)}
-          onMouseLeave={() => !disabled && setHoveredRating(null)}
-          onClick={() => !disabled && onRatingChange(star)}
-        >
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.695h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 o00.951-.695l1.07-3.292z" />
-        </svg>
-      ))}
-    </div>
-  );
-};
 
 
 const PublicAppDetailPage = () => {
@@ -76,7 +54,9 @@ const PublicAppDetailPage = () => {
 
         } catch (err) {
           console.error('Error fetching data:', err);
-          setError(err instanceof Error ? err.message : 'Failed to fetch data');
+          const errorMessage = err instanceof Error ? err.message : 'Failed to fetch data';
+          setError(errorMessage);
+          toast.error(errorMessage); // Display error toast
         } finally {
           setPageLoading(false);
         }
@@ -126,10 +106,13 @@ const PublicAppDetailPage = () => {
       // For now, we'll just update the local state with the submitted rating
       // A more robust approach would be to refetch the screenshot or update the average based on API response
       setCurrentScreenshotRating(rating); // Optimistically update UI
+      toast.success('Screenshot rated successfully!'); // Display success toast
 
     } catch (err) {
       console.error('Error submitting screenshot rating:', err);
-      setError(err instanceof Error ? err.message : 'Failed to submit screenshot rating');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to submit screenshot rating';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
     } finally {
       setIsSubmittingScreenshotRating(false);
     }
@@ -158,10 +141,13 @@ const PublicAppDetailPage = () => {
       // For now, we'll just update the local state with the submitted rating
       // A more robust approach would be to refetch the app or update the average based on API response
       setCurrentAppRating(rating); // Optimistically update UI
+      toast.success('App rated successfully!'); // Display success toast
 
     } catch (err) {
       console.error('Error submitting app rating:', err);
-      setError(err instanceof Error ? err.message : 'Failed to submit app rating');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to submit app rating';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
     } finally {
       setIsSubmittingAppRating(false);
     }

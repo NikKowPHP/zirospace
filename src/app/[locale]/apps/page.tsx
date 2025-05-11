@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link'; // Import Link for navigation
 import { App } from '@/domain/models/models'; // Assuming App model is defined
+import toast from 'react-hot-toast'; // Import toast for notifications
+
 
 // AppCard component
 const AppCard = ({ app }: { app: App }) => {
@@ -37,7 +39,7 @@ const PublicAppsPage = () => {
       try {
         setPageLoading(true);
         setError(null);
-        // Include search term, sort by, and pagination parameters in the API request
+        // Include search term and sort by in the API request
         const response = await fetch(`/api/apps?searchTerm=${encodeURIComponent(searchTerm)}&sortBy=${encodeURIComponent(sortBy)}&page=${currentPage}&limit=${itemsPerPage}`);
         if (!response.ok) {
           throw new Error(`Error fetching apps: ${response.statusText}`);
@@ -47,7 +49,9 @@ const PublicAppsPage = () => {
         setApps(data);
       } catch (err) {
         console.error('Error fetching apps:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch apps');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to fetch apps';
+        setError(errorMessage);
+        toast.error(errorMessage); // Display error toast
       } finally {
         setPageLoading(false);
       }

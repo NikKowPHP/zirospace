@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/auth-context'; // Assuming useAuth is the correct hook for client-side auth status
 import { App } from '@/domain/models/models'; // Assuming App model is defined here or similar location
 import { Modal } from '@/components/ui/modal/modal'; // Assuming a Modal component exists
+import toast from 'react-hot-toast'; // Import toast for notifications
+
 
 const AdminAppsPage = () => {
   const { user, loading } = useAuth(); // Use the auth hook to check user status
@@ -49,7 +51,9 @@ const AdminAppsPage = () => {
           setApps(data);
         } catch (err) {
           console.error('Error fetching apps:', err);
-          setError(err instanceof Error ? err.message : 'Failed to fetch apps');
+          const errorMessage = err instanceof Error ? err.message : 'Failed to fetch apps';
+          setError(errorMessage);
+          toast.error(errorMessage); // Display error toast
         } finally {
           setPageLoading(false);
         }
@@ -62,7 +66,9 @@ const AdminAppsPage = () => {
   const handleCreateApp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAppName) {
-      setError('App name is required.');
+      const errorMessage = 'App name is required.';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
       return;
     }
 
@@ -86,9 +92,12 @@ const AdminAppsPage = () => {
       setApps([...apps, newApp]); // Add the new app to the list
       setNewAppName('');
       setNewAppDescription('');
+      toast.success('App created successfully!'); // Display success toast
     } catch (err) {
       console.error('Error creating app:', err);
-      setError(err instanceof Error ? err.message : 'Failed to create app');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create app';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
     } finally {
       setIsCreating(false);
     }
@@ -99,6 +108,7 @@ const AdminAppsPage = () => {
     setEditAppName(app.name);
     setEditAppDescription(app.description || '');
     setIsEditModalOpen(true);
+    setError(null); // Clear previous errors when opening modal
   };
 
   const closeEditModal = () => {
@@ -112,7 +122,9 @@ const AdminAppsPage = () => {
   const handleSaveApp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentApp || !editAppName) {
-      setError('App name is required.');
+      const errorMessage = 'App name is required.';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
       return;
     }
 
@@ -136,9 +148,12 @@ const AdminAppsPage = () => {
       // Update the app in the list
       setApps(apps.map(app => (app.id === updatedApp.id ? updatedApp : app)));
       closeEditModal(); // Close modal on success
+      toast.success('App updated successfully!'); // Display success toast
     } catch (err) {
       console.error('Error saving app:', err);
-      setError(err instanceof Error ? err.message : 'Failed to save app');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save app';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
     } finally {
       setIsSaving(false);
     }
@@ -147,6 +162,7 @@ const AdminAppsPage = () => {
   const openDeleteModal = (app: App) => {
     setAppToDelete(app);
     setIsDeleteModalOpen(true);
+    setError(null); // Clear previous errors when opening modal
   };
 
   const closeDeleteModal = () => {
@@ -173,9 +189,12 @@ const AdminAppsPage = () => {
       // Remove the deleted app from the list
       setApps(apps.filter(app => app.id !== appToDelete.id));
       closeDeleteModal(); // Close modal on success
+      toast.success('App deleted successfully!'); // Display success toast
     } catch (err) {
       console.error('Error deleting app:', err);
-      setError(err instanceof Error ? err.message : 'Failed to delete app');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete app';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
     } finally {
       setIsDeleting(false);
     }
