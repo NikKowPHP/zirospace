@@ -28,8 +28,8 @@
 -   `[x] Create API endpoint: `DELETE /api/apps/{appId}` (For admin to delete an app. Response: success/failure message) — @cline`
 
 ### 1.3. API Endpoint Development (CRUD for Screenshots & Upload)
--   `[ ] Review existing `src/hooks/use-upload.tsx` and `src/app/api/upload/route.ts` to understand current image upload capabilities and integration points — @cline`
--   `[ ] Adapt or Create API endpoint: `POST /api/apps/{appId}/screenshots` (For admin to upload one or more screenshots for an app. Request: FormData with image file(s) and associated metadata [screen_name, route_path, description, order_index] for each. This endpoint will use the Vercel Blob storage via the existing or a new upload handler. Response: array of created screenshot objects) — @cline`
+-   `[x] Review existing `src/hooks/use-upload.tsx` and `src/app/api/upload/route.ts` to understand current image upload capabilities and integration points — @cline`
+-   `[x] Adapt or Create API endpoint: `POST /api/apps/{appId}/screenshots` (For admin to upload one or more screenshots for an app. Request: FormData with image file(s) and associated metadata [screen_name, route_path, description, order_index] for each. This endpoint will use the Vercel Blob storage via the existing or a new upload handler. Response: array of created screenshot objects) — @cline`
 -   `[x] Create API endpoint: `GET /api/apps/{appId}/screenshots` (For public to list all screenshots for a specific app, ordered by `order_index`. Response: list of screenshot objects) — @cline`
 -   `[x] Create API endpoint: `GET /api/screenshots/{screenshotId}` (For public/admin to get details for a specific screenshot. Response: screenshot object) — @cline`
 -   `[x] Create API endpoint: `PUT /api/screenshots/{screenshotId}` (For admin to update screenshot metadata. Request body: fields to update. Response: updated screenshot object) — @cline`
