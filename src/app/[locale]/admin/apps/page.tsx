@@ -340,7 +340,7 @@ const AdminAppsPage = () => {
       <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
         <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
         {error && isDeleteModalOpen && <div className="text-red-600 mb-4">{error}</div>} {/* Display modal-specific error */}
-        <p>Are you sure you want to delete the app '{appToDelete?.name}'? This action cannot be undone.</p>
+        <p>Are you sure you want to delete the app &#39;{appToDelete?.name}&#39;? This action cannot be undone.</p>
         <div className="flex justify-end mt-6">
           <button
             type="button"

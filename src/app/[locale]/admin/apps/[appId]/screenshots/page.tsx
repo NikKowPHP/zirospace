@@ -324,7 +324,7 @@ const AdminAppScreenshotsPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Manage Screenshots for "{app.name}"</h1>
+      <h1 className="text-2xl font-bold mb-6">Manage Screenshots for &quot;{app.name}&quot;</h1>
 
       {/* Upload New Screenshots Section */}
       <div className="mb-8 p-6 border rounded-md shadow-sm bg-gray-50">
@@ -415,7 +415,7 @@ const AdminAppScreenshotsPage = () => {
                           {...provided.dragHandleProps}
                           className="border p-4 mb-2 bg-white rounded shadow"
                         >
-                          <Image src={screenshot.image_url} alt={`Screenshot "${screenshot.id}"`} width={100} height={100} /> {/* Escaped quotes */}
+                          <Image src={screenshot.image_url} alt={`Screenshot "${screenshot.id}"`} width={100} height={100} />
                           <p>Screen Name: {screenshot.screen_name}</p>
                           <p>Route: {screenshot.route_path}</p>
                           <p>Description: {screenshot.description}</p>
