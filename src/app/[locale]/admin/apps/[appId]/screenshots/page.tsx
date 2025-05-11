@@ -27,6 +27,8 @@ const AdminAppScreenshotsPage = () => {
   const [editRoutePath, setEditRoutePath] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [editErrors, setEditErrors] = useState<{ screen_name?: string, route_path?: string, description?: string }>({});
+
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [screenshotToDelete, setScreenshotToDelete] = useState<Screenshot | null>(null);
@@ -38,6 +40,7 @@ const AdminAppScreenshotsPage = () => {
   const [filePreviews, setFilePreviews] = useState<{ file: File, preview: string, metadata: { screen_name: string, route_path: string, description: string } }[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadErrors, setUploadErrors] = useState<{ [key: number]: { screen_name?: string, route_path?: string, description?: string } }>({});
 
 
   useEffect(() => {
@@ -89,6 +92,7 @@ const AdminAppScreenshotsPage = () => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
       setSelectedFiles(filesArray);
+      setUploadErrors({}); // Clear previous upload errors
 
       const previews = filesArray.map(file => ({
         file,
@@ -105,6 +109,17 @@ const AdminAppScreenshotsPage = () => {
       newPreviews[index].metadata[field] = value;
       return newPreviews;
     });
+    // Clear specific field error when user starts typing
+    setUploadErrors(prevErrors => {
+      const newErrors = { ...prevErrors };
+      if (newErrors[index] && newErrors[index][field]) {
+        delete newErrors[index][field];
+        if (Object.keys(newErrors[index]).length === 0) {
+          delete newErrors[index];
+        }
+      }
+      return newErrors;
+    });
   };
 
   const handleUploadScreenshots = async () => {
@@ -113,16 +128,31 @@ const AdminAppScreenshotsPage = () => {
       return;
     }
 
+    // Basic validation before upload
+    const errors: { [key: number]: { screen_name?: string, route_path?: string, description?: string } } = {};
+    filePreviews.forEach((item, index) => {
+      if (!item.metadata.screen_name.trim()) {
+        errors[index] = { ...errors[index], screen_name: 'Screen name is required.' };
+      }
+      // Add other validation rules as needed (e.g., route_path format)
+    });
+
+    if (Object.keys(errors).length > 0) {
+      setUploadErrors(errors);
+      toast.error('Please fill in all required metadata fields.');
+      return;
+    }
+
     setIsUploading(true);
     setUploadProgress(0);
-    setError(null);
+    setError(null); // Clear main error
 
     const formData = new FormData();
     selectedFiles.forEach((file, index) => {
       formData.append('files', file);
-      formData.append('screen_name', filePreviews[index].metadata.screen_name);
-      formData.append('route_path', filePreviews[index].metadata.route_path);
-      formData.append('description', filePreviews[index].metadata.description);
+      formData.append('screen_name', filePreviews[index].metadata.screen_name.trim());
+      formData.append('route_path', filePreviews[index].metadata.route_path.trim());
+      formData.append('description', filePreviews[index].metadata.description.trim());
       formData.append('order_index', (screenshots.length + index).toString()); // Simple ordering for new uploads
     });
 
@@ -143,12 +173,13 @@ const AdminAppScreenshotsPage = () => {
       setScreenshots([...screenshots, ...uploaded]); // Add new screenshots to the list
       setSelectedFiles([]); // Clear selected files
       setFilePreviews([]); // Clear previews
+      setUploadErrors({}); // Clear upload errors on success
       toast.success(`${uploaded.length} screenshot(s) uploaded successfully!`); // Display success toast
 
     } catch (err) {
       console.error('Error uploading screenshots:', err);
       const errorMessage = err instanceof Error ? err.message : 'Failed to upload screenshots';
-      setError(errorMessage);
+      setError(errorMessage); // Set main error for API issues
       toast.error(errorMessage); // Display error toast
     } finally {
       setIsUploading(false);
@@ -163,7 +194,8 @@ const AdminAppScreenshotsPage = () => {
     setEditRoutePath(screenshot.route_path || '');
     setEditDescription(screenshot.description || '');
     setIsEditModalOpen(true);
-    setError(null); // Clear previous errors when opening modal
+    setError(null); // Clear main error
+    setEditErrors({}); // Clear previous edit errors
   };
 
   const closeEditModal = () => {
@@ -172,15 +204,36 @@ const AdminAppScreenshotsPage = () => {
     setEditScreenName('');
     setEditRoutePath('');
     setEditDescription('');
-    setError(null); // Clear error when closing modal
+    setError(null); // Clear main error
+    setEditErrors({}); // Clear edit errors
   };
 
   const handleSaveScreenshot = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentScreenshot) return;
+    setError(null); // Clear main error
+    setEditErrors({}); // Clear previous edit errors
+
+    if (!currentScreenshot) {
+      const errorMessage = 'No screenshot selected for editing.';
+      setError(errorMessage);
+      toast.error(errorMessage);
+      return;
+    }
+
+    // Basic validation before saving
+    const errors: { screen_name?: string, route_path?: string, description?: string } = {};
+    if (!editScreenName.trim()) {
+      errors.screen_name = 'Screen name is required.';
+    }
+    // Add other validation rules as needed
+
+    if (Object.keys(errors).length > 0) {
+      setEditErrors(errors);
+      toast.error('Please fill in all required fields.');
+      return;
+    }
 
     setIsSaving(true);
-    setError(null);
 
     try {
       const response = await fetch(`/api/screenshots/${currentScreenshot.id}`, {
@@ -189,9 +242,9 @@ const AdminAppScreenshotsPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          screen_name: editScreenName,
-          route_path: editRoutePath,
-          description: editDescription,
+          screen_name: editScreenName.trim(),
+          route_path: editRoutePath.trim(),
+          description: editDescription.trim(),
         }),
       });
 
@@ -357,8 +410,9 @@ const AdminAppScreenshotsPage = () => {
                       id={`screenName-${index}`}
                       value={item.metadata.screen_name}
                       onChange={(e) => handleMetadataChange(index, 'screen_name', e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-1 text-sm"
+                      className={`mt-1 block w-full border ${uploadErrors[index]?.screen_name ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm p-1 text-sm`}
                     />
+                    {uploadErrors[index]?.screen_name && <p className="text-red-500 text-sm mt-1">{uploadErrors[index]?.screen_name}</p>}
                   </div>
                   <div className="mt-2">
                     <label htmlFor={`routePath-${index}`} className="block text-sm font-medium text-gray-700">Route Path</label>
@@ -367,8 +421,9 @@ const AdminAppScreenshotsPage = () => {
                       id={`routePath-${index}`}
                       value={item.metadata.route_path}
                       onChange={(e) => handleMetadataChange(index, 'route_path', e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-1 text-sm"
+                      className={`mt-1 block w-full border ${uploadErrors[index]?.route_path ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm p-1 text-sm`}
                     />
+                    {uploadErrors[index]?.route_path && <p className="text-red-500 text-sm mt-1">{uploadErrors[index]?.route_path}</p>}
                   </div>
                   <div className="mt-2">
                     <label htmlFor={`description-${index}`} className="block text-sm font-medium text-gray-700">Description</label>
@@ -377,8 +432,9 @@ const AdminAppScreenshotsPage = () => {
                       value={item.metadata.description}
                       onChange={(e) => handleMetadataChange(index, 'description', e.target.value)}
                       rows={2}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-1 text-sm"
+                      className={`mt-1 block w-full border ${uploadErrors[index]?.description ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm p-1 text-sm`}
                     ></textarea>
+                    {uploadErrors[index]?.description && <p className="text-red-500 text-sm mt-1">{uploadErrors[index]?.description}</p>}
                   </div>
                 </div>
               ))}
@@ -461,7 +517,7 @@ const AdminAppScreenshotsPage = () => {
       {/* Edit Screenshot Modal */}
       <Modal isOpen={isEditModalOpen} onClose={closeEditModal}>
         <h2 className="text-xl font-semibold mb-4">Edit Screenshot</h2>
-        {error && isEditModalOpen && <div className="text-red-600 mb-4">{error}</div>} {/* Display modal-specific error */}
+        {error && isEditModalOpen && <div className="text-red-600 mb-4">{error}</div>} {/* Display main API error */}
         <form onSubmit={handleSaveScreenshot}>
           <div className="mb-4">
             <label htmlFor="editScreenName" className="block text-sm font-medium text-gray-700">Screen Name</label>
@@ -469,9 +525,13 @@ const AdminAppScreenshotsPage = () => {
               type="text"
               id="editScreenName"
               value={editScreenName}
-              onChange={(e) => setEditScreenName(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+              onChange={(e) => {
+                setEditScreenName(e.target.value);
+                setEditErrors(prevErrors => ({ ...prevErrors, screen_name: undefined })); // Clear specific error on input change
+              }}
+              className={`mt-1 block w-full border ${editErrors.screen_name ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm p-2`}
             />
+            {editErrors.screen_name && <p className="text-red-500 text-sm mt-1">{editErrors.screen_name}</p>}
           </div>
           <div className="mb-4">
             <label htmlFor="editRoutePath" className="block text-sm font-medium text-gray-700">Route Path</label>
@@ -479,19 +539,27 @@ const AdminAppScreenshotsPage = () => {
               type="text"
               id="editRoutePath"
               value={editRoutePath}
-              onChange={(e) => setEditRoutePath(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+              onChange={(e) => {
+                setEditRoutePath(e.target.value);
+                setEditErrors(prevErrors => ({ ...prevErrors, route_path: undefined })); // Clear specific error on input change
+              }}
+              className={`mt-1 block w-full border ${editErrors.route_path ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm p-2`}
             />
+            {editErrors.route_path && <p className="text-red-500 text-sm mt-1">{editErrors.route_path}</p>}
           </div>
           <div className="mb-4">
             <label htmlFor="editDescription" className="block text-sm font-medium text-gray-700">Description</label>
             <textarea
               id="editDescription"
               value={editDescription}
-              onChange={(e) => setEditDescription(e.target.value)}
+              onChange={(e) => {
+                setEditDescription(e.target.value);
+                setEditErrors(prevErrors => ({ ...prevErrors, description: undefined })); // Clear specific error on input change
+              }}
               rows={3}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+              className={`mt-1 block w-full border ${editErrors.description ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm p-2`}
             ></textarea>
+            {editErrors.description && <p className="text-red-500 text-sm mt-1">{editErrors.description}</p>}
           </div>
           <div className="flex justify-end">
             <button

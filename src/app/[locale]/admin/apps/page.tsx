@@ -65,15 +65,16 @@ const AdminAppsPage = () => {
 
   const handleCreateApp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newAppName) {
-      const errorMessage = 'App name is required.';
+    setError(null); // Clear previous errors
+
+    if (!newAppName.trim()) {
+      const errorMessage = 'App name cannot be empty.';
       setError(errorMessage);
-      toast.error(errorMessage); // Display error toast
+      toast.error(errorMessage);
       return;
     }
 
     setIsCreating(true);
-    setError(null);
 
     try {
       const response = await fetch('/api/apps', {
@@ -81,7 +82,7 @@ const AdminAppsPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: newAppName, description: newAppDescription }),
+        body: JSON.stringify({ name: newAppName.trim(), description: newAppDescription.trim() }),
       });
 
       if (!response.ok) {
@@ -121,15 +122,23 @@ const AdminAppsPage = () => {
 
   const handleSaveApp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentApp || !editAppName) {
-      const errorMessage = 'App name is required.';
+    setError(null); // Clear previous errors
+
+    if (!currentApp) {
+      const errorMessage = 'No app selected for editing.';
       setError(errorMessage);
-      toast.error(errorMessage); // Display error toast
+      toast.error(errorMessage);
+      return;
+    }
+
+    if (!editAppName.trim()) {
+      const errorMessage = 'App name cannot be empty.';
+      setError(errorMessage);
+      toast.error(errorMessage);
       return;
     }
 
     setIsSaving(true);
-    setError(null);
 
     try {
       const response = await fetch(`/api/apps/${currentApp.id}`, {
@@ -137,7 +146,7 @@ const AdminAppsPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: editAppName, description: editAppDescription }),
+        body: JSON.stringify({ name: editAppName.trim(), description: editAppDescription.trim() }),
       });
 
       if (!response.ok) {
@@ -226,21 +235,29 @@ const AdminAppsPage = () => {
               type="text"
               id="appName"
               value={newAppName}
-              onChange={(e) => setNewAppName(e.target.value)}
+              onChange={(e) => {
+                setNewAppName(e.target.value);
+                setError(null); // Clear error on input change
+              }}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               required
             />
+            {error && !newAppName.trim() && <p className="text-red-500 text-sm mt-1">{error}</p>} {/* Display validation error */}
           </div>
           <div className="mb-4">
             <label htmlFor="appDescription" className="block text-sm font-medium text-gray-700">Description</label>
             <textarea
               id="appDescription"
               value={newAppDescription}
-              onChange={(e) => setNewAppDescription(e.target.value)}
+              onChange={(e) => {
+                setNewAppDescription(e.target.value);
+                setError(null); // Clear error on input change
+              }}
               rows={3}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
             ></textarea>
           </div>
+          {error && newAppName.trim() && <div className="text-red-600 mb-4">{error}</div>} {/* Display API error */}
           <button
             type="submit"
             className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 disabled:opacity-50"
@@ -281,8 +298,9 @@ const AdminAppsPage = () => {
                   >
                     Delete
                   </button>
-                  {/* TODO: Implement Manage Screenshots functionality */}
-                  <button className="text-green-600 hover:underline">Manage Screenshots</button>
+                  <a href={`/admin/apps/${app.id}/screenshots`} className="text-green-600 hover:underline">
+                    Manage Screenshots
+                  </a>
                 </td>
               </tr>
             ))}
@@ -301,17 +319,24 @@ const AdminAppsPage = () => {
               type="text"
               id="editAppName"
               value={editAppName}
-              onChange={(e) => setEditAppName(e.target.value)}
+              onChange={(e) => {
+                setEditAppName(e.target.value);
+                setError(null); // Clear error on input change
+              }}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
               required
             />
+            {error && isEditModalOpen && !editAppName.trim() && <p className="text-red-500 text-sm mt-1">{error}</p>} {/* Display validation error */}
           </div>
           <div className="mb-4">
             <label htmlFor="editAppDescription" className="block text-sm font-medium text-gray-700">Description</label>
             <textarea
               id="editAppDescription"
               value={editAppDescription}
-              onChange={(e) => setEditAppDescription(e.target.value)}
+              onChange={(e) => {
+                setEditAppDescription(e.target.value);
+                setError(null); // Clear error on input change
+              }}
               rows={3}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
             ></textarea>

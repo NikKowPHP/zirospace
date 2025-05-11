@@ -159,21 +159,22 @@
 ---
 
 ## Phase 8: Admin Panel - CRUD Operations Refinement
+-   `[x] Phase 8: Admin Panel - CRUD Operations Refinement completed. — @cline`
 
 ### 8.1. App CRUD Enhancements (Admin UI)
--   `[ ] Admin UI - Apps: Review and refine existing list view for apps (e.g., `/admin/apps`) to ensure all CRUD operations are clearly accessible and user-friendly. — @cline`
--   `[ ] Admin UI - Apps: Enhance 'Create App' form with clear input fields (name, description, etc.) and robust validation. Ensure it calls `POST /api/apps` and handles responses/errors. — @cline`
--   `[ ] Admin UI - Apps: Enhance 'Edit App' form, pre-filling existing data. Ensure it calls `PUT /api/apps/{appId}` and handles responses/errors. — @cline`
--   `[ ] Admin UI - Apps: Implement a clear and safe 'Delete App' process, including a confirmation modal. Ensure it calls `DELETE /api/apps/{appId}` and handles responses/errors. — @cline`
--   `[ ] Admin UI - Apps: Ensure state management for the app list (e.g., optimistic updates, refetching after CUD operations) is robust. — @cline`
+-   `[x] Admin UI - Apps: Review and refine existing list view for apps (e.g., `/admin/apps`) to ensure all CRUD operations are clearly accessible and user-friendly. — @cline`
+-   `[x] Admin UI - Apps: Enhance 'Create App' form with clear input fields (name, description, etc.) and robust validation. Ensure it calls `POST /api/apps` and handles responses/errors. — @cline`
+-   `[x] Admin UI - Apps: Enhance 'Edit App' form, pre-filling existing data. Ensure it calls `PUT /api/apps/{appId}` and handles responses/errors. — @cline`
+-   `[x] Admin UI - Apps: Implement a clear and safe 'Delete App' process, including a confirmation modal. Ensure it calls `DELETE /api/apps/{appId}` and handles responses/errors. — @cline`
+-   `[x] Admin UI - Apps: Ensure state management for the app list (e.g., optimistic updates, refetching after CUD operations) is robust. — @cline`
 
 ### 8.2. Screenshot CRUD Enhancements (Admin UI)
--   `[ ] Admin UI - Screenshots: Review and refine existing list view for screenshots within an app's management page (e.g., `/admin/apps/{appId}/screenshots`). — @cline`
--   `[ ] Admin UI - Screenshots: Enhance 'Upload Screenshot(s)' interface:
-    -   `[ ] Ensure clear visual feedback during upload (progress, success, error). — @cline`
-    -   `[ ] Improve metadata input fields (screen_name, route_path, description) for clarity and validation. — @cline`
-    -   `[ ] Confirm robust handling of `POST /api/apps/{appId}/screenshots` calls. — @cline`
--   `[ ] Admin UI - Screenshots: Enhance 'Edit Screenshot' metadata form, pre-filling existing data. Ensure it calls `PUT /api/screenshots/{screenshotId}` and handles responses/errors. — @cline`
--   `[ ] Admin UI - Screenshots: Implement a clear and safe 'Delete Screenshot' process, including a confirmation modal. Ensure it calls `DELETE /api/screenshots/{screenshotId}`. — @cline`
--   `[ ] Admin UI - Screenshots: Verify reordering functionality (`POST /api/apps/{appId}/screenshots/reorder`) is intuitive and updates correctly. — @cline`
--   `[ ] Admin UI - Screenshots: Ensure state management for the screenshot list is robust (e.g., optimistic updates, refetching after CUD operations). — @cline`
+-   `[x] Admin UI - Screenshots: Review and refine existing list view for screenshots within an app's management page (e.g., `/admin/apps/{appId}/screenshots`). — @cline`
+-   `[x] Admin UI - Screenshots: Enhance 'Upload Screenshot(s)' interface:
+    -   `[x] Ensure clear visual feedback during upload (progress, success, error). — @cline`
+    -   `[x] Improve metadata input fields (screen_name, route_path, description) for clarity and validation. — @cline`
+    -   `[x] Confirm robust handling of `POST /api/apps/{appId}/screenshots` calls. — @cline`
+-   `[x] Admin UI - Screenshots: Enhance 'Edit Screenshot' metadata form, pre-filling existing data. Ensure it calls `PUT /api/screenshots/{screenshotId}` and handles responses/errors. — @cline`
+-   `[x] Admin UI - Screenshots: Implement a clear and safe 'Delete Screenshot' process, including a confirmation modal. Ensure it calls `DELETE /api/screenshots/{screenshotId}`. — @cline`
+-   `[x] Admin UI - Screenshots: Verify reordering functionality (`POST /api/apps/{appId}/screenshots/reorder`) is intuitive and updates correctly. — @cline`
+-   `[x] Admin UI - Screenshots: Ensure state management for the screenshot list is robust (e.g., optimistic updates, refetching after CUD operations). — @cline`
