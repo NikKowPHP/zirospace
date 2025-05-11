@@ -12,17 +12,17 @@
 
 ### 1.1. Database Schema Definition
 -   `[x] Define `apps` table schema (id, name, description, thumbnail_url, average_rating, created_at, updated_at) — @cline`
--   `[ ] Define `screenshots` table schema (id, app_id (FK to apps), image_url, screen_name, route_path, description, order_index, average_rating, created_at, updated_at) — @cline`
--   `[ ] Define `app_ratings` table schema (id, app_id (FK to apps), user_id (nullable, for identifying unique raters if needed), rating_value (e.g., 1-5), created_at) — @cline`
--   `[ ] Define `screenshot_ratings` table schema (id, screenshot_id (FK to screenshots), user_id (nullable), rating_value (e.g., 1-5), created_at) — @cline`
+-   `[x] Define `screenshots` table schema (id, app_id (FK to apps), image_url, screen_name, route_path, description, order_index, average_rating, created_at, updated_at) — @cline`
+-   `[x] Define `app_ratings` table schema (id, app_id (FK to apps), user_id (nullable, for identifying unique raters if needed), rating_value (e.g., 1-5), created_at) — @cline`
+-   `[x] Define `screenshot_ratings` table schema (id, screenshot_id (FK to screenshots), user_id (nullable), rating_value (e.g., 1-5), created_at) — @cline`
 -   `[x] Create database migrations for the new tables based on the defined schemas — @cline`
 -   `[ ] Seed initial data for `apps` and `screenshots` for development and testing purposes (optional) — @cline`
 
 ### 1.2. API Endpoint Development (CRUD for Apps)
 -   `[x] Create API endpoint: `POST /api/apps` (For admin to create a new app entry. Request body: name, description. Response: created app object) — @cline`
 -   `[x] Create API endpoint: `GET /api/apps` (For public to list all apps. Support query parameters for filtering [e.g., by category if added later] and sorting [e.g., `sortBy=rating_desc`, `sortBy=name_asc`]. Response: paginated list of apps) — @cline`
--   `[ ] Implement filtering for GET /api/apps — @cline`
--   `[ ] Implement pagination for GET /api/apps — @cline`
+-   `[x] Implement filtering for GET /api/apps — @cline`
+-   `[x] Implement pagination for GET /api/apps — @cline`
 -   `[x] Create API endpoint: `GET /api/apps/{appId}` (For public to get details for a specific app. Response: app object with its details) — @cline`
 -   `[x] Create API endpoint: `PUT /api/apps/{appId}` (For admin to update app details. Request body: fields to update. Response: updated app object) — @cline`
 -   `[x] Create API endpoint: `DELETE /api/apps/{appId}` (For admin to delete an app. Response: success/failure message) — @cline`

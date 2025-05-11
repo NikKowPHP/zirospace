@@ -52,18 +52,37 @@ export async function GET(request: Request) {
       .select('*')
       .order(orderBy, { ascending: orderDirection === 'asc' });
 
-    // TODO: Implement filtering based on query parameters
+    // Implement filtering based on query parameters
+    const filter = searchParams.get('filter');
+    if (filter) {
+      query.or(`name.ilike.%${filter}%,description.ilike.%${filter}%`);
+    }
 
-    const { data: apps, error } = await query;
+    const { error } = await query;
 
     if (error) {
       console.error('Error fetching apps:', error);
       return NextResponse.json({ error: 'Error fetching apps' }, { status: 500 });
     }
 
-    // TODO: Implement pagination
+    // Implement pagination
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const pageSize = parseInt(searchParams.get('pageSize') || '10', 10);
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize - 1;
 
-    return NextResponse.json(apps, { status: 200 });
+    const { data: paginatedApps, error: paginationError } = await supabaseAdmin!
+      .from('apps')
+      .select('*')
+      .order(orderBy, { ascending: orderDirection === 'asc' })
+      .range(start, end);
+
+    if (paginationError) {
+      console.error('Error fetching paginated apps:', paginationError);
+      return NextResponse.json({ error: 'Error fetching paginated apps' }, { status: 500 });
+    }
+
+    return NextResponse.json(paginatedApps, { status: 200 });
   } catch (error) {
     console.error('Error fetching apps:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
