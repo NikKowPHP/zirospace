@@ -44,9 +44,11 @@ const PublicAppsPage = () => {
         if (!response.ok) {
           throw new Error(`Error fetching apps: ${response.statusText}`);
         }
-        const data: App[] = await response.json();
-        // TODO: Get total pages from API response headers or body
+        const result = await response.json();
+        console.log('Fetched apps data:', result); // Log the fetched data
+        const { data, total } = result; // Destructure data and total from the response body
         setApps(data);
+        setTotalPages(Math.ceil(total / itemsPerPage)); // Calculate and set total pages
       } catch (err) {
         console.error('Error fetching apps:', err);
         const errorMessage = err instanceof Error ? err.message : 'Failed to fetch apps';
