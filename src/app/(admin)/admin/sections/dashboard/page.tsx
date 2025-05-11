@@ -116,6 +116,21 @@ export default function AdminDashboard() {
         </Link>
 
         <Link
+          href="/admin/apps"
+          className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
+        >
+          <h2 className="text-xl font-medium text-gray-900 mb-2">
+            Apps
+          </h2>
+          <p className="text-gray-600 mb-4">
+            Manage your applications and their screenshots.
+          </p>
+          <Button variant="primary" className="mt-auto w-full sm:w-auto">
+            Manage Apps
+          </Button>
+        </Link>
+
+        <Link
           href="/admin/sections/hero"
           className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
         >
@@ -134,4 +149,4 @@ export default function AdminDashboard() {
       </div>
     </div>
   )
-} 
+}

@@ -84,8 +84,16 @@ export default async function AdminLayout({
             <span className="font-medium">Youtube</span>
           </Link>
 
-          <Link 
-            href="/admin/sections/hero" 
+          <Link
+            href="/admin/apps"
+            className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <Images className="w-5 h-5" /> {/* Using Images icon for Apps */}
+            <span className="font-medium">Apps</span>
+          </Link>
+
+          <Link
+            href="/admin/sections/hero"
             className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <ImageIcon className="w-5 h-5" />
@@ -103,4 +111,4 @@ export default async function AdminLayout({
       </div>
       </AdminProvider>
   )
-} 
+}

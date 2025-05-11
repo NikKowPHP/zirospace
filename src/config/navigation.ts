@@ -29,6 +29,11 @@ export const navigationConfig = {
       title: 'blog',
       href: '/blog',
       isRoute: true,
+    },
+    {
+      title: 'apps',
+      href: '/apps',
+      isRoute: true,
     }
   ],
   languages: [
@@ -42,4 +47,4 @@ export const navigationConfig = {
     },
 
   ],
-} as const 
+} as const

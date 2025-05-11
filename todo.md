@@ -142,3 +142,16 @@
 -   `[ ] Deploy the feature to the staging/production environment (presumably Vercel) — @cline`
 -   `[ ] Conduct post-deployment smoke testing on the live environment to ensure core functionalities are working as expected — @cline`
 -   `[ ] Monitor application logs for any immediate issues post-deployment — @cline`
+
+---
+
+## Phase 7: Navigation & UI Finalization
+
+### 7.1. Navigation Links
+-   `[x] Add link to public `/apps` route in the main application navbar (`src/components/layout/navbar/navbar.tsx`) — @cline`
+-   `[x] Add link to admin `/admin/apps` route in the Admin Panel Dashboard UI (e.g., `src/app/[locale]/admin/page.tsx` or relevant dashboard component) — @cline`
+-   `[x] Add link to admin `/admin/apps` route in the Admin Panel Layout Sidebar navigation (e.g., `src/app/[locale]/admin/layout.tsx` or `src/config/navigation.ts`) — @cline`
+-   `[x] Review and ensure all new navigation links are functional and correctly routed — @cline`
+
+### 7.2. AI-Friendly Structuring Review (Self-Correction Task)
+-   `[x] Review the entire `todo.md` for clarity, consistency, and actionable steps to ensure it's well-structured for AI-driven development. Mark as complete after review. — @cline`
