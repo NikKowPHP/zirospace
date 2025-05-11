@@ -52,8 +52,8 @@
 -   `[x] Create admin page/section for managing apps (e.g., `/admin/apps`) — @cline`
 -   `[x] UI: Display a table or list of existing apps with options to edit/delete and manage screenshots — @cline`
 -   `[x] UI: Form for creating a new app (inputs for name, description). On submit, call `POST /api/apps` — @cline`
--   `[ ] UI: Form for editing an existing app's details. On submit, call `PUT /api/apps/{appId}` — @cline`
--   `[ ] UI: Confirmation dialog and logic for deleting an app. On confirm, call `DELETE /api/apps/{appId}` — @cline`
+-   `[x] UI: Form for editing an existing app's details. On submit, call `PUT /api/apps/{appId}` — @cline`
+-   `[x] UI: Confirmation dialog and logic for deleting an app. On confirm, call `DELETE /api/apps/{appId}` — @cline`
 
 ### 2.2. Screenshot Management UI (Admin - within an App's context)
 -   `[ ] Create UI within the app management section for listing and managing screenshots of a selected app — @cline`
