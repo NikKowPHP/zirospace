@@ -85,7 +85,7 @@ export default async function AdminLayout({
           </Link>
 
           <Link
-            href="/admin/apps"
+            href="/admin/sections/apps"
             className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <Images className="w-5 h-5" /> {/* Using Images icon for Apps */}
