@@ -155,7 +155,7 @@ const PublicAppDetailPage = () => {
 
 
   if (pageLoading) {
-    return <div>Loading...</div>; // Loading state
+    return <div className='max-w-5xl mx-auto py-[150px] justify-center items-center text-center'>Loading...</div>; // Loading state
   }
 
   if (error) {
@@ -169,7 +169,10 @@ const PublicAppDetailPage = () => {
   const currentScreenshot = screenshots[currentScreenshotIndex];
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-5xl mx-auto px-4 py-[150px]">
+      <div>
+
+      
       <h1 className="text-2xl font-bold mb-4">{app.name}</h1>
       <p className="text-gray-700 mb-4">{app.description}</p>
       
@@ -241,7 +244,7 @@ const PublicAppDetailPage = () => {
           )}
         </div>
       )}
-
+</div>
     </div>
   );
 };
