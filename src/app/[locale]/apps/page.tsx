@@ -11,7 +11,10 @@ const AppCard = ({ app }: { app: App }) => {
     <Link href={`/apps/${app.id}`} passHref>
       {' '}
       {/* Add link to app detail page */}
-      <div className="border p-4 rounded-lg shadow cursor-pointer hover:shadow-md transition-shadow">
+      <div
+      key={app.id}
+      className="p-[20px] rounded-xl  bg-gray-100 shadow-sm flex flex-col gap-[16px] "
+    >
         {' '}
         {/* Add cursor and hover effect */}
         {app.thumbnail_url && (
