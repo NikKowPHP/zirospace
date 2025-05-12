@@ -12,13 +12,18 @@
 
 ### 1.1. Database Schema Definition
 -   `[x] Define `apps` table schema (id, name, description, thumbnail_url, average_rating, created_at, updated_at) — @cline`
+-   `[ ] Define `tags` table schema (id, name) — @cline`
+-   `[ ] Define `app_tags` linking table schema (app_id, tag_id) — @cline`
 -   `[x] Define `screenshots` table schema (id, app_id (FK to apps), image_url, screen_name, route_path, description, order_index, average_rating, created_at, updated_at) — @cline`
 -   `[x] Define `app_ratings` table schema (id, app_id (FK to apps), user_id (nullable, for identifying unique raters if needed), rating_value (e.g., 1-5), created_at) — @cline`
 -   `[x] Define `screenshot_ratings` table schema (id, screenshot_id (FK to screenshots), user_id (nullable), rating_value (e.g., 1-5), created_at) — @cline`
 -   `[x] Create database migrations for the new tables based on the defined schemas — @cline`
 -   `[ ] Seed initial data for `apps` and `screenshots` for development and testing purposes (optional) — @cline`
+-   `[ ] Seed initial data for `tags` (optional) — @cline`
 
 ### 1.2. API Endpoint Development (CRUD for Apps)
+-   `[ ] Modify `GET /api/apps` to include tags for each app — @cline`
+-   `[ ] Implement filtering by tags for `GET /api/apps` — @cline`
 -   `[x] Create API endpoint: `POST /api/apps` (For admin to create a new app entry. Request body: name, description. Response: created app object) — @cline`
 -   `[x] Create API endpoint: `GET /api/apps` (For public to list all apps. Support query parameters for filtering [e.g., by category if added later] and sorting [e.g., `sortBy=rating_desc`, `sortBy=name_asc`]. Response: paginated list of apps) — @cline`
 -   `[x] Implement filtering for GET /api/apps — @cline`
@@ -85,8 +90,11 @@
 -   `[x] Implement sorting controls UI (e.g., dropdown to sort by name, rating, date added). Update data fetching based on sort selection — @cline`
 -   `[x] Implement pagination if the list of apps can be long (Backend total pages TODO) — @cline`
 -   `[x] Ensure the app listing page is responsive across various screen sizes — @cline`
+-   `[ ] Add UI component for selecting and filtering apps by tags on `/apps` page — @cline`
+-   `[ ] Implement frontend logic to fetch filtered apps based on selected tags — @cline`
 
 ### 3.2. App Detail Page (e.g., `/apps/{appId}`)
+-   `[ ] Display tags associated with the app on the app detail page — @cline`
 -   `[x] Create Next.js dynamic route page component (e.g., `src/app/[locale]/apps/[appId]/page.tsx`) — @cline`
 -   `[x] Implement data fetching logic to get specific app details (from `GET /api/apps/{appId}`) and its screenshots (from `GET /api/apps/{appId}/screenshots`) — @cline`
 -   `[x] Display main app information: name, full description, overall average rating — @cline`
@@ -174,7 +182,8 @@
     -   `[x] Ensure clear visual feedback during upload (progress, success, error). — @cline`
     -   `[x] Improve metadata input fields (screen_name, route_path, description) for clarity and validation. — @cline`
     -   `[x] Confirm robust handling of `POST /api/apps/{appId}/screenshots` calls. — @cline`
--   `[x] Admin UI - Screenshots: Enhance 'Edit Screenshot' metadata form, pre-filling existing data. Ensure it calls `PUT /api/screenshots/{screenshotId}` and handles responses/errors. — @cline`
--   `[x] Admin UI - Screenshots: Implement a clear and safe 'Delete Screenshot' process, including a confirmation modal. Ensure it calls `DELETE /api/screenshots/{screenshotId}`. — @cline`
--   `[x] Admin UI - Screenshots: Verify reordering functionality (`POST /api/apps/{appId}/screenshots/reorder`) is intuitive and updates correctly. — @cline`
--   `[x] Admin UI - Screenshots: Ensure state management for the screenshot list is robust (e.g., optimistic updates, refetching after CUD operations). — @cline`
+-   `[x] UI: Display uploaded screenshots with their metadata and options to edit/delete — @cline`
+-   `[x] UI: Form for editing screenshot metadata. On submit, call `PUT /api/screenshots/{screenshotId}` — @cline`
+-   `[x] UI: Confirmation dialog and logic for deleting a screenshot. On confirm, call `DELETE /api/screenshots/{screenshotId}` — @cline`
+-   `[x] UI: Implement drag-and-drop or similar mechanism for reordering screenshots. On save, call `POST /api/apps/{appId}/screenshots/reorder` — @cline`
+-   `[x] UI: Ensure state management for the screenshot list is robust (e.g., optimistic updates, refetching after CUD operations) — @cline`
