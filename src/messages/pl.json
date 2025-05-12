@@ -29,7 +29,8 @@
     "philosophy": "Filozofia",
     "FAQs": "FAQ",
     "blog": "Blog",
-    "learnMore": "Dowiedz się więcej"
+    "learnMore": "Dowiedz się więcej",
+    "apps": "Aplikacje"
   },
   "caseStudy": {
     "ctaText": {
@@ -250,4 +251,3 @@
     }
   }
 }
-

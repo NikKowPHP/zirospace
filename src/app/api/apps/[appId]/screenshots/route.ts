@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase'; // Import supabaseAdmin
-import { upload } from '@vercel/blob/client'; // Using client upload for now, assuming /api/upload-token handles server-side
+import { put } from '@vercel/blob';
 
 // TODO: Address the @vercel/blob/server import issue to implement POST
 
@@ -52,9 +52,8 @@ export async function POST(request: NextRequest, { params }: { params: { appId: 
       // Upload file to Vercel Blob
       // Assuming /api/upload-token handles the server-side part for @vercel/blob/client
       const filename = `apps/${appId}/screenshots/${Date.now()}-${file.name}`;
-      const blob = await upload(filename, file, {
+      const blob = await put(filename, file, {
         access: 'public',
-        handleUploadUrl: '/api/upload-token', // Use the existing upload token route
       });
 
       // Save screenshot data to the database
