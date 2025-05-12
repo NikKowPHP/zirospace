@@ -6,6 +6,8 @@ import { App, Screenshot } from '@/domain/models/models'; // Assuming App and Sc
 // import { useAuth } from '@/contexts/auth-context'; // Uncomment if client-side auth status is needed
 import StarRatingInput from '@/components/ui/StarRatingInput'; // Import the reusable StarRatingInput component
 import toast from 'react-hot-toast'; // Import toast for notifications
+import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 
 
@@ -160,9 +162,11 @@ const PublicAppDetailPage = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-10 py-10 my-[150px] bg-gray-50 rounded-primary-lg">
+    <div className="max-w-5xl mx-auto px-10 py-10 my-[100px] bg-gray-50 rounded-primary-lg">
       <div>
-
+      <Link href="/apps" className="mb-6 inline-flex items-center px-4 py-2  text-gray-700 rounded-md hover:bg-gray-300 transition-colors duration-200">
+        <ArrowLeft className='w-6 h-6 mr-2'/> Back to Apps
+      </Link>
       
       <h1 className="text-2xl font-bold mb-4">{app.name}</h1>
       <p className="text-gray-700 mb-4">{app.description}</p>
