@@ -280,7 +280,7 @@ const AdminAppsPage = () => {
             </tr>
           </thead>
           <tbody>
-            {apps.map(app => (
+            {Array.isArray(apps) && apps.map(app => (
               <tr key={app.id}>
                 <td className="py-2 px-4 border-b">{app.name}</td>
                 <td className="py-2 px-4 border-b">{app.description}</td>
