@@ -160,7 +160,7 @@ const PublicAppDetailPage = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-[150px]">
+    <div className="max-w-5xl mx-auto px-10 py-10 my-[150px] bg-gray-50 rounded-primary-lg">
       <div>
 
       
@@ -195,7 +195,7 @@ const PublicAppDetailPage = () => {
                   <img
                     src={screenshot.image_url}
                     alt={`Screenshot "${screenshot.id}"`}
-                    className="w-full h-48 object-cover rounded-lg"
+                    className="w-full h-[350px] object-cover rounded-lg"
                   />
                 </div>
               </div>
@@ -205,7 +205,7 @@ const PublicAppDetailPage = () => {
       )}
 
       {selectedScreenshot && (
-        <div className="mt-8 p-4 bg-gray-100 rounded-lg">
+        <div className="mt-8 p-4 bg-gray-100 rounded-lg flex flex-col justify-start items-start max-w-xl">
           <h3 className="text-lg font-semibold mb-2">Screenshot Details</h3>
           <p>Screen Name: {selectedScreenshot.screen_name || 'N/A'}</p>
           <p>Route: {selectedScreenshot.route_path || 'N/A'}</p>

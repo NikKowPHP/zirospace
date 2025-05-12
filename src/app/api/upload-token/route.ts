@@ -1,6 +1,6 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
-import logger from '@/utils/logger';
+import logger from '@/lib/logger';
 
 export async function POST(request: Request) {
   // You could add auth checking here to ensure only authorized users can upload
