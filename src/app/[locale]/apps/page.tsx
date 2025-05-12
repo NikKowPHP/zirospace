@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react' // Import useRef
 import Link from 'next/link' // Import Link for navigation
 import { App } from '@/domain/models/models' // Assuming App model is defined
 import toast from 'react-hot-toast' // Import toast for notifications
@@ -54,13 +54,62 @@ const PublicAppsPage = () => {
   const [currentPage, setCurrentPage] = useState(1) // State for current page
   const [itemsPerPage] = useState(9) // State for items per page (example: 9 apps per page)
   const [totalPages, setTotalPages] = useState(1) // State for total pages (will need to get this from API response headers or body)
+  const initialLoad = useRef(true); // Ref to track initial load
 
+  useEffect(() => {
+    // Skip debounce on initial load
+    if (initialLoad.current) {
+      initialLoad.current = false;
+      return;
+    }
+
+    const handler = setTimeout(() => {
+      const fetchApps = async () => {
+        try {
+          setPageLoading(true)
+          setError(null)
+          // Include search term and sort by in the API request
+          const response = await fetch(
+            `/api/apps?searchTerm=${encodeURIComponent(
+              searchTerm
+            )}&sortBy=${encodeURIComponent(
+              sortBy
+            )}&page=${currentPage}&limit=${itemsPerPage}`
+          )
+          if (!response.ok) {
+            throw new Error(`Error fetching apps: ${response.statusText}`)
+          }
+          const result = await response.json()
+          console.log('Fetched apps data:', result) // Log the fetched data
+          const { data, total } = result // Destructure data and total from the response body
+          setApps(data)
+          setTotalPages(Math.ceil(total / itemsPerPage)) // Calculate and set total pages
+        } catch (err) {
+          console.error('Error fetching apps:', err)
+          const errorMessage =
+            err instanceof Error ? err.message : 'Failed to fetch apps'
+          setError(errorMessage)
+          toast.error(errorMessage) // Display error toast
+        } finally {
+          setPageLoading(false)
+        }
+      }
+
+      fetchApps()
+    }, 1000) // 2000ms debounce delay
+
+    // Cleanup function to clear the timeout
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [searchTerm, sortBy, currentPage, itemsPerPage]) // Refetch when search term, sort by, or page changes
+
+  // Effect for initial data fetch without debounce
   useEffect(() => {
     const fetchApps = async () => {
       try {
         setPageLoading(true)
         setError(null)
-        // Include search term and sort by in the API request
         const response = await fetch(
           `/api/apps?searchTerm=${encodeURIComponent(
             searchTerm
@@ -72,23 +121,24 @@ const PublicAppsPage = () => {
           throw new Error(`Error fetching apps: ${response.statusText}`)
         }
         const result = await response.json()
-        console.log('Fetched apps data:', result) // Log the fetched data
-        const { data, total } = result // Destructure data and total from the response body
+        const { data, total } = result
         setApps(data)
-        setTotalPages(Math.ceil(total / itemsPerPage)) // Calculate and set total pages
+        setTotalPages(Math.ceil(total / itemsPerPage))
       } catch (err) {
         console.error('Error fetching apps:', err)
         const errorMessage =
           err instanceof Error ? err.message : 'Failed to fetch apps'
         setError(errorMessage)
-        toast.error(errorMessage) // Display error toast
+        toast.error(errorMessage)
       } finally {
         setPageLoading(false)
       }
     }
 
-    fetchApps()
-  }, [searchTerm, sortBy, currentPage, itemsPerPage]) // Refetch when search term, sort by, or page changes
+    if (initialLoad.current) {
+      fetchApps();
+    }
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
