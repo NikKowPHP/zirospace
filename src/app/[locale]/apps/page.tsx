@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link' // Import Link for navigation
 import { App } from '@/domain/models/models' // Assuming App model is defined
 import toast from 'react-hot-toast' // Import toast for notifications
+import { ChevronLeft, ChevronRight } from 'lucide-react'; // Import icons
 
 // AppCard component
 const AppCard = ({ app }: { app: App }) => {
@@ -158,21 +159,21 @@ const PublicAppsPage = () => {
         {/* Pagination Controls */}
         <div className="flex justify-center mt-8">
           <button
-            className="px-4 py-2 mr-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow hover:bg-gray-400 disabled:opacity-50"
+            className="p-2 mr-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow hover:bg-gray-400 disabled:opacity-50"
             onClick={handlePreviousPage}
             disabled={currentPage === 1 || pageLoading}
           >
-            Previous Page
+            <ChevronLeft size={20} />
           </button>
           <span className="self-center">
             Page {currentPage} of {totalPages}
           </span>
           <button
-            className="px-4 py-2 ml-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow hover:bg-gray-400 disabled:opacity-50"
+            className="p-2 ml-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow hover:bg-gray-400 disabled:opacity-50"
             onClick={handleNextPage}
             disabled={currentPage === totalPages || pageLoading}
           >
-            Next Page
+            <ChevronRight size={20} />
           </button>
         </div>
       </div>
