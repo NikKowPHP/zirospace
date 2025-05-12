@@ -6,6 +6,16 @@ import { App } from '@/domain/models/models' // Assuming App model is defined
 import toast from 'react-hot-toast' // Import toast for notifications
 import { ChevronLeft, ChevronRight } from 'lucide-react'; // Import icons
 
+// Simple Skeleton Loader Component
+const SkeletonCard = () => (
+  <div className="p-[20px] rounded-xl bg-gray-200 shadow-sm flex flex-col gap-[16px] animate-pulse">
+    <div className="w-full h-40 object-cover rounded-md mb-4 bg-gray-300"></div>
+    <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+    <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+    <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+  </div>
+);
+
 // AppCard component
 const AppCard = ({ app }: { app: App }) => {
   return (
@@ -92,14 +102,6 @@ const PublicAppsPage = () => {
     }
   }
 
-  if (pageLoading) {
-    return <div>Loading...</div> // Loading state
-  }
-
-  if (error) {
-    return <div>Error: {error}</div> // Error state
-  }
-
   return (
     <div className="max-w-5xl mx-auto px-10 py-10 my-[100px] bg-gray-50 rounded-primary-lg">
       <div>
@@ -148,8 +150,19 @@ const PublicAppsPage = () => {
           </div>
         </div>
 
+        {error && (
+          <div className="text-red-600 mb-4">
+            Error: {error} {/* Error state */}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {apps.length === 0 ? (
+          {pageLoading ? (
+            // Display skeleton loaders while loading
+            Array.from({ length: itemsPerPage }).map((_, index) => (
+              <SkeletonCard key={index} />
+            ))
+          ) : apps.length === 0 ? (
             <p>No apps found.</p>
           ) : (
             apps.map((app) => <AppCard key={app.id} app={app} />)
@@ -157,7 +170,7 @@ const PublicAppsPage = () => {
         </div>
 
         {/* Pagination Controls */}
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-12">
           <button
             className="p-2 mr-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow hover:bg-gray-400 disabled:opacity-50"
             onClick={handlePreviousPage}
