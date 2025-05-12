@@ -82,6 +82,7 @@ export interface App {
   average_rating?: number;
   created_at: string; // Assuming timestamps are strings
   updated_at: string; // Assuming timestamps are strings
+  tags?: { id: number; name: string }[];
 }
 
 export interface Screenshot {

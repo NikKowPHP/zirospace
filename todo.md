@@ -12,8 +12,8 @@
 
 ### 1.1. Database Schema Definition
 -   `[x] Define `apps` table schema (id, name, description, thumbnail_url, average_rating, created_at, updated_at) — @cline`
--   `[ ] Define `tags` table schema (id, name) — @cline`
--   `[ ] Define `app_tags` linking table schema (app_id, tag_id) — @cline`
+-   `[x] Define `tags` table schema (id, name) — @cline`
+-   `[x] Define `app_tags` linking table schema (app_id, tag_id) — @cline`
 -   `[x] Define `screenshots` table schema (id, app_id (FK to apps), image_url, screen_name, route_path, description, order_index, average_rating, created_at, updated_at) — @cline`
 -   `[x] Define `app_ratings` table schema (id, app_id (FK to apps), user_id (nullable, for identifying unique raters if needed), rating_value (e.g., 1-5), created_at) — @cline`
 -   `[x] Define `screenshot_ratings` table schema (id, screenshot_id (FK to screenshots), user_id (nullable), rating_value (e.g., 1-5), created_at) — @cline`
@@ -22,10 +22,10 @@
 -   `[ ] Seed initial data for `tags` (optional) — @cline`
 
 ### 1.2. API Endpoint Development (CRUD for Apps)
--   `[ ] Modify `GET /api/apps` to include tags for each app — @cline`
--   `[ ] Implement filtering by tags for `GET /api/apps` — @cline`
+-   `[x] Modify `GET /api/apps` to include tags for each app — @cline`
+-   `[x] Implement filtering by tags for `GET /api/apps` — @cline`
 -   `[x] Create API endpoint: `POST /api/apps` (For admin to create a new app entry. Request body: name, description. Response: created app object) — @cline`
--   `[x] Create API endpoint: `GET /api/apps` (For public to list all apps. Support query parameters for filtering [e.g., by category if added later] and sorting [e.g., `sortBy=rating_desc`, `sortBy=name_asc`]. Response: paginated list of apps) — @cline`
+-   `[x] Create API endpoint: `GET /api/apps` (For public to list all apps. Support query parameters for filtering [e.g., by category if added later] and sorting [e.g., sortBy=rating_desc`, `sortBy=name_asc`]. Response: paginated list of apps) — @cline`
 -   `[x] Implement filtering for GET /api/apps — @cline`
 -   `[x] Implement pagination for GET /api/apps — @cline`
 -   `[x] Create API endpoint: `GET /api/apps/{appId}` (For public to get details for a specific app. Response: app object with its details) — @cline`
@@ -90,8 +90,8 @@
 -   `[x] Implement sorting controls UI (e.g., dropdown to sort by name, rating, date added). Update data fetching based on sort selection — @cline`
 -   `[x] Implement pagination if the list of apps can be long (Backend total pages TODO) — @cline`
 -   `[x] Ensure the app listing page is responsive across various screen sizes — @cline`
--   `[ ] Add UI component for selecting and filtering apps by tags on `/apps` page — @cline`
--   `[ ] Implement frontend logic to fetch filtered apps based on selected tags — @cline`
+-   `[x] Add UI component for selecting and filtering apps by tags on `/apps` page — @cline`
+-   `[x] Implement frontend logic to fetch filtered apps based on selected tags — @cline`
 
 ### 3.2. App Detail Page (e.g., `/apps/{appId}`)
 -   `[ ] Display tags associated with the app on the app detail page — @cline`

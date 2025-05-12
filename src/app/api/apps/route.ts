@@ -55,9 +55,13 @@ export async function GET(request: Request) {
     const start = (page - 1) * limit;
     const end = start + limit - 1;
 
+    // Tag filtering
+    const tagsParam = searchParams.get('tags');
+    const tagIds = tagsParam ? tagsParam.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id)) : [];
+
     let queryBuilder = supabaseAdmin!
       .from('apps')
-      .select('*', { count: 'exact' }) // Request total count for pagination metadata
+      .select('*, tags(id, name)', { count: 'exact' }) // Fetch apps and their tags, request total count
       .order(orderBy, { ascending: orderDirection === 'asc' });
 
     // Filtering - use 'searchTerm' as per client request
@@ -65,6 +69,13 @@ export async function GET(request: Request) {
     if (searchTerm && searchTerm.trim() !== '') {
       const decodedSearchTerm = decodeURIComponent(searchTerm);
       queryBuilder = queryBuilder.or(`name.ilike.%${decodedSearchTerm}%,description.ilike.%${decodedSearchTerm}%`);
+    }
+
+    // Apply tag filtering if tagIds are provided
+    if (tagIds.length > 0) {
+      // This filter finds apps that have *at least one* of the specified tags.
+      // Filtering for apps that have *all* specified tags is more complex and might require a different approach (e.g., RPC function).
+      queryBuilder = queryBuilder.filter('tags.id', 'in', `(${tagIds.join(',')})`);
     }
 
     // Apply range for pagination

@@ -20,13 +20,11 @@ const SkeletonCard = () => (
 const AppCard = ({ app }: { app: App }) => {
   return (
     <Link href={`/apps/${app.id}`} passHref>
-      {' '}
       {/* Add link to app detail page */}
       <div
-      key={app.id}
-      className="p-[20px] rounded-xl  bg-gray-100 shadow-sm flex flex-col gap-[16px] "
-    >
-        {' '}
+        key={app.id}
+        className="p-[20px] rounded-xl  bg-gray-100 shadow-sm flex flex-col gap-[16px] "
+      >
         {/* Add cursor and hover effect */}
         {app.thumbnail_url && (
           <img
@@ -37,6 +35,18 @@ const AppCard = ({ app }: { app: App }) => {
         )}
         <h3 className="text-lg font-semibold">{app.name}</h3>
         <p className="text-gray-600 text-sm mb-2">{app.description}</p>
+        {app.tags && app.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {app.tags.map((tag) => (
+              <span
+                key={tag.id}
+                className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
+              >
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        )}
         <p className="text-sm text-gray-700">
           Rating: {app.average_rating ? app.average_rating.toFixed(1) : 'N/A'}
         </p>
@@ -49,96 +59,86 @@ const PublicAppsPage = () => {
   const [apps, setApps] = useState<App[]>([])
   const [pageLoading, setPageLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [selectedTags, setSelectedTags] = useState<number[]>([]) // State for selected tags
   const [searchTerm, setSearchTerm] = useState('') // State for search term
   const [sortBy, setSortBy] = useState('name_asc') // State for sorting
   const [currentPage, setCurrentPage] = useState(1) // State for current page
   const [itemsPerPage] = useState(9) // State for items per page (example: 9 apps per page)
   const [totalPages, setTotalPages] = useState(1) // State for total pages (will need to get this from API response headers or body)
+  const [availableTags, setAvailableTags] = useState<{ id: number; name: string }[]>([]) // State for available tags
   const initialLoad = useRef(true); // Ref to track initial load
+
+  // Fetch available tags
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await fetch('/api/tags')
+        if (!response.ok) {
+          throw new Error(`Error fetching tags: ${response.statusText}`)
+        }
+        const tags = await response.json()
+        console.log('Fetched tags:', tags) // Log the fetched tags
+        setAvailableTags(tags)
+      } catch (error) {
+        console.error('Error fetching tags:', error)
+        toast.error('Failed to load tags')
+      }
+    }
+
+    fetchTags()
+  }, [])
+
+  const fetchApps = async (tags: number[]) => {
+    try {
+      setPageLoading(true)
+      setError(null)
+
+      const tagParams = tags.length > 0 ? `&tags=${tags.join(',')}` : ''
+
+      // Include search term, sort by, and tags in the API request
+      const response = await fetch(
+        `/api/apps?searchTerm=${encodeURIComponent(
+          searchTerm
+        )}&sortBy=${encodeURIComponent(
+          sortBy
+        )}&page=${currentPage}&limit=${itemsPerPage}${tagParams}`
+      )
+      if (!response.ok) {
+        throw new Error(`Error fetching apps: ${response.statusText}`)
+      }
+      const result = await response.json()
+      console.log('Fetched apps data:', result) // Log the fetched data
+      const { data, total } = result // Destructure data and total from the response body
+      setApps(data)
+      setTotalPages(Math.ceil(total / itemsPerPage)) // Calculate and set total pages
+    } catch (err) {
+      console.error('Error fetching apps:', err)
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch apps'
+      setError(errorMessage)
+      toast.error(errorMessage) // Display error toast
+    } finally {
+      setPageLoading(false)
+    }
+  }
 
   useEffect(() => {
     // Skip debounce on initial load
     if (initialLoad.current) {
       initialLoad.current = false;
+      fetchApps(selectedTags);
       return;
     }
 
     const handler = setTimeout(() => {
-      const fetchApps = async () => {
-        try {
-          setPageLoading(true)
-          setError(null)
-          // Include search term and sort by in the API request
-          const response = await fetch(
-            `/api/apps?searchTerm=${encodeURIComponent(
-              searchTerm
-            )}&sortBy=${encodeURIComponent(
-              sortBy
-            )}&page=${currentPage}&limit=${itemsPerPage}`
-          )
-          if (!response.ok) {
-            throw new Error(`Error fetching apps: ${response.statusText}`)
-          }
-          const result = await response.json()
-          console.log('Fetched apps data:', result) // Log the fetched data
-          const { data, total } = result // Destructure data and total from the response body
-          setApps(data)
-          setTotalPages(Math.ceil(total / itemsPerPage)) // Calculate and set total pages
-        } catch (err) {
-          console.error('Error fetching apps:', err)
-          const errorMessage =
-            err instanceof Error ? err.message : 'Failed to fetch apps'
-          setError(errorMessage)
-          toast.error(errorMessage) // Display error toast
-        } finally {
-          setPageLoading(false)
-        }
-      }
-
-      fetchApps()
+      fetchApps(selectedTags);
     }, 1000) // 2000ms debounce delay
 
     // Cleanup function to clear the timeout
     return () => {
       clearTimeout(handler)
     }
-  }, [searchTerm, sortBy, currentPage, itemsPerPage]) // Refetch when search term, sort by, or page changes
-
-  // Effect for initial data fetch without debounce
-  useEffect(() => {
-    const fetchApps = async () => {
-      try {
-        setPageLoading(true)
-        setError(null)
-        const response = await fetch(
-          `/api/apps?searchTerm=${encodeURIComponent(
-            searchTerm
-          )}&sortBy=${encodeURIComponent(
-            sortBy
-          )}&page=${currentPage}&limit=${itemsPerPage}`
-        )
-        if (!response.ok) {
-          throw new Error(`Error fetching apps: ${response.statusText}`)
-        }
-        const result = await response.json()
-        const { data, total } = result
-        setApps(data)
-        setTotalPages(Math.ceil(total / itemsPerPage))
-      } catch (err) {
-        console.error('Error fetching apps:', err)
-        const errorMessage =
-          err instanceof Error ? err.message : 'Failed to fetch apps'
-        setError(errorMessage)
-        toast.error(errorMessage)
-      } finally {
-        setPageLoading(false)
-      }
-    }
-
-    if (initialLoad.current) {
-      fetchApps();
-    }
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, [searchTerm, sortBy, currentPage, itemsPerPage, selectedTags]) // Refetch when search term, sort by, or page changes
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -159,6 +159,34 @@ const PublicAppsPage = () => {
 
         {/* Filtering and Sorting Controls */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">
+          {/* Tag Filtering Control */}
+          <div>
+            <label
+              htmlFor="tags"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Filter by Tags
+            </label>
+            {/* Placeholder for Multi-Select Dropdown */}
+            <select
+              multiple
+              id="tags"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+              onChange={(e) => {
+                const selectedOptions = Array.from(e.target.selectedOptions, (option) =>
+                  parseInt(option.value, 10)
+                )
+                setSelectedTags(selectedOptions)
+              }}
+            >
+              {availableTags.map((tag) => (
+                <option key={tag.id} value={tag.id}>
+                  {tag.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Filtering Control */}
           <div className="flex-grow">
             <label
