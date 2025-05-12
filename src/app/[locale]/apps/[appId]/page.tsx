@@ -18,8 +18,7 @@ const PublicAppDetailPage = () => {
   const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
   const [pageLoading, setPageLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0); // State to track current screenshot in gallery
-
+  const [selectedScreenshot, setSelectedScreenshot] = useState<Screenshot | null>(null);
   const [currentScreenshotRating, setCurrentScreenshotRating] = useState<number | null>(null);
   const [isSubmittingScreenshotRating, setIsSubmittingScreenshotRating] = useState(false);
 
@@ -67,56 +66,14 @@ const PublicAppDetailPage = () => {
   }, [appId]); // Refetch when appId changes
 
   useEffect(() => {
-    // Update current screenshot rating when current screenshot changes
-    if (screenshots.length > 0) {
-      setCurrentScreenshotRating(screenshots[currentScreenshotIndex]?.average_rating || null);
+    // Update current screenshot rating when selected screenshot changes
+    if (selectedScreenshot) {
+      setCurrentScreenshotRating(selectedScreenshot.average_rating || null);
+    } else {
+      setCurrentScreenshotRating(null);
     }
-  }, [currentScreenshotIndex, screenshots]);
+  }, [selectedScreenshot]);
 
-
-  const handlePreviousScreenshot = () => {
-    setCurrentScreenshotIndex((prevIndex) => (prevIndex === 0 ? screenshots.length - 1 : prevIndex - 1));
-  };
-
-  const handleNextScreenshot = () => {
-    setCurrentScreenshotIndex((prevIndex) => (prevIndex === screenshots.length - 1 ? 0 : prevIndex + 1));
-  };
-
-  const handleScreenshotRatingChange = async (rating: number) => {
-    if (!screenshots[currentScreenshotIndex]) return;
-
-    setIsSubmittingScreenshotRating(true);
-    setError(null); // Clear previous errors
-
-    try {
-      const screenshotId = screenshots[currentScreenshotIndex].id;
-      const response = await fetch(`/api/screenshots/${screenshotId}/ratings`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ rating_value: rating }), // TODO: Add user_id if needed
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error submitting screenshot rating: ${response.statusText}`);
-      }
-
-      // Assuming the API returns the updated average rating or a success message
-      // For now, we'll just update the local state with the submitted rating
-      // A more robust approach would be to refetch the screenshot or update the average based on API response
-      setCurrentScreenshotRating(rating); // Optimistically update UI
-      toast.success('Screenshot rated successfully!'); // Display success toast
-
-    } catch (err) {
-      console.error('Error submitting screenshot rating:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to submit screenshot rating';
-      setError(errorMessage);
-      toast.error(errorMessage); // Display error toast
-    } finally {
-      setIsSubmittingScreenshotRating(false);
-    }
-  };
 
   const handleAppRatingChange = async (rating: number) => {
     if (!app) return;
@@ -153,6 +110,42 @@ const PublicAppDetailPage = () => {
     }
   };
 
+  const handleScreenshotRatingChange = async (rating: number) => {
+    if (!selectedScreenshot) return;
+
+    setIsSubmittingScreenshotRating(true);
+    setError(null); // Clear previous errors
+
+    try {
+      const screenshotId = selectedScreenshot.id;
+      const response = await fetch(`/api/screenshots/${screenshotId}/ratings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ rating_value: rating }), // TODO: Add user_id if needed
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error submitting screenshot rating: ${response.statusText}`);
+      }
+
+      // Assuming the API returns the updated average rating or a success message
+      // For now, we'll just update the local state with the submitted rating
+      // A more robust approach would be to refetch the screenshot or update the average based on API response
+      setCurrentScreenshotRating(rating); // Optimistically update UI
+      toast.success('Screenshot rated successfully!'); // Display success toast
+
+    } catch (err) {
+      console.error('Error submitting screenshot rating:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to submit screenshot rating';
+      setError(errorMessage);
+      toast.error(errorMessage); // Display error toast
+    } finally {
+      setIsSubmittingScreenshotRating(false);
+    }
+  };
+
 
   if (pageLoading) {
     return <div className='max-w-5xl mx-auto py-[150px] justify-center items-center text-center'>Loading...</div>; // Loading state
@@ -165,8 +158,6 @@ const PublicAppDetailPage = () => {
   if (!app) {
     return <div>App not found.</div>; // Handle case where app is not found
   }
-
-  const currentScreenshot = screenshots[currentScreenshotIndex];
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-[150px]">
@@ -194,54 +185,51 @@ const PublicAppDetailPage = () => {
       ) : (
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Screenshots</h2>
-          <div className="relative">
-            <img
-              src={currentScreenshot?.image_url}
-              alt={`Screenshot "${currentScreenshot?.id}"`}
-              className="w-full h-96 object-contain"
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {screenshots.map((screenshot) => (
+              <div key={screenshot.id} className="relative">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => setSelectedScreenshot(screenshot)}
+                >
+                  <img
+                    src={screenshot.image_url}
+                    alt={`Screenshot "${screenshot.id}"`}
+                    className="w-full h-48 object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {selectedScreenshot && (
+        <div className="mt-8 p-4 bg-gray-100 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">Screenshot Details</h3>
+          <p>Screen Name: {selectedScreenshot.screen_name || 'N/A'}</p>
+          <p>Route: {selectedScreenshot.route_path || 'N/A'}</p>
+          <p>Description: {selectedScreenshot.description || 'N/A'}</p>
+          <p>Rating: {selectedScreenshot.average_rating ? selectedScreenshot.average_rating.toFixed(1) : 'N/A'}</p>
+
+          {/* UI for submitting screenshot rating */}
+          <div className="flex items-center mt-2">
+            <span className="mr-2 text-sm font-medium text-gray-700">Rate this screenshot:</span>
+            <StarRatingInput
+              rating={currentScreenshotRating}
+              onRatingChange={handleScreenshotRatingChange}
+              disabled={isSubmittingScreenshotRating}
             />
-            {screenshots.length > 1 && (
-              <>
-                <button
-                  className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
-                  onClick={handlePreviousScreenshot}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <button
-                  className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
-                  onClick={handleNextScreenshot}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </>
-            )}
+            {isSubmittingScreenshotRating && <span className="ml-2 text-sm text-gray-600">Submitting...</span>}
           </div>
 
-          {currentScreenshot && (
-            <div className="mt-4 p-4 bg-gray-100 rounded-lg">
-              <h3 className="text-lg font-semibold mb-2">Screenshot Details</h3>
-              <p>Screen Name: {currentScreenshot.screen_name || 'N/A'}</p>
-              <p>Route: {currentScreenshot.route_path || 'N/A'}</p>
-              <p>Description: {currentScreenshot.description || 'N/A'}</p>
-              <p>Rating: {currentScreenshot.average_rating ? currentScreenshot.average_rating.toFixed(1) : 'N/A'}</p>
-              
-              {/* UI for submitting screenshot rating */}
-              <div className="flex items-center mt-2">
-                <span className="mr-2 text-sm font-medium text-gray-700">Rate this screenshot:</span>
-                <StarRatingInput
-                  rating={currentScreenshotRating}
-                  onRatingChange={handleScreenshotRatingChange}
-                  disabled={isSubmittingScreenshotRating}
-                />
-                {isSubmittingScreenshotRating && <span className="ml-2 text-sm text-gray-600">Submitting...</span>}
-              </div>
-            </div>
-          )}
+          {/* Add close button for details */}
+          <button
+            className="mt-4 px-4 py-2 bg-gray-800 text-white rounded-lg"
+            onClick={() => setSelectedScreenshot(null)}
+          >
+            Close Details
+          </button>
         </div>
       )}
 </div>
