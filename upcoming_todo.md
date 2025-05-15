@@ -1,19 +1,19 @@
 # Updates Todo
 
-- [ ] **Task: Integrate YouTube Banner into Footer (Mobile View)** — @cline
+- [x] **Task: Integrate YouTube Banner into Footer (Mobile View)** — @cline
   - [x] Identify footer component file(s)
   - [x] Design mobile-specific layout for YouTube banner integration within the footer
   - [x] Implement responsive CSS to ensure banner displays correctly on various mobile screen sizes
   - [x] Add YouTube banner (image/link/embed) to the footer component
   - [x] Test footer appearance and banner functionality on multiple mobile devices or emulators
-- [ ] **Task: Refine Case Study Card Interaction (Overlap Effect)** — @cline
-  - [ ] Locate the case study card component and its associated styles/scripts
-  - [ ] Analyze current card animation and interaction logic
-  - [ ] Remove any existing scaling effects on card hover/interaction
-  - [ ] Implement overlapping behavior:
-    - [ ] Adjust CSS (e.g., `position`, `z-index`) to make cards stack
-    - [ ] Ensure each active/new card completely covers the previous card in the stack
-  - [ ] Test card interaction thoroughly, verifying the overlap effect and absence of scaling
+- [x] **Task: Refine Case Study Card Interaction (Overlap Effect)** — @cline
+  - [x] Locate the case study card component and its associated styles/scripts
+  - [x] Analyze current card animation and interaction logic
+  - [x] Remove any existing scaling effects on card hover/interaction
+  - [x] Implement overlapping behavior:
+    - [x] Adjust CSS (e.g., `position`, `z-index`) to make cards stack
+    - [x] Ensure each active/new card completely covers the previous card in the stack
+  - [x] Test card interaction thoroughly, verifying the overlap effect and absence of scaling
 - [ ] **Task: Redesign Blog Page (Substack-inspired)** — @cline
   - [ ] Research Substack's blog landing page:
     - [ ] Analyze layout (header, post listing, sidebar, footer)
