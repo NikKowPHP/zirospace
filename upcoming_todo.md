@@ -1,0 +1,42 @@
+# Updates Todo
+
+- [ ] **Task: Integrate YouTube Banner into Footer (Mobile View)** — @cline
+  - [x] Identify footer component file(s)
+  - [x] Design mobile-specific layout for YouTube banner integration within the footer
+  - [x] Implement responsive CSS to ensure banner displays correctly on various mobile screen sizes
+  - [x] Add YouTube banner (image/link/embed) to the footer component
+  - [x] Test footer appearance and banner functionality on multiple mobile devices or emulators
+- [ ] **Task: Refine Case Study Card Interaction (Overlap Effect)** — @cline
+  - [ ] Locate the case study card component and its associated styles/scripts
+  - [ ] Analyze current card animation and interaction logic
+  - [ ] Remove any existing scaling effects on card hover/interaction
+  - [ ] Implement overlapping behavior:
+    - [ ] Adjust CSS (e.g., `position`, `z-index`) to make cards stack
+    - [ ] Ensure each active/new card completely covers the previous card in the stack
+  - [ ] Test card interaction thoroughly, verifying the overlap effect and absence of scaling
+- [ ] **Task: Redesign Blog Page (Substack-inspired)** — @cline
+  - [ ] Research Substack's blog landing page:
+    - [ ] Analyze layout (header, post listing, sidebar, footer)
+    - [ ] Note key features (e.g., minimalist design, typography, post previews, author info, subscription calls-to-action)
+  - [ ] Design new blog page layout mockups/wireframes based on Substack inspiration
+    - [ ] Define structure for header and navigation specific to the blog
+    - [ ] Plan post listing style (e.g., title, snippet, date, author, featured image)
+    - [ ] Decide on sidebar content (if any: popular posts, categories, search, newsletter signup)
+  - [ ] Implement the new UI for the blog landing page
+    - [ ] Create/update React components for blog sections
+    - [ ] Style components using Tailwind CSS (or existing styling solution)
+  - [ ] Ensure the new blog page is fully responsive across devices
+- [ ] **Task: Redesign Blog Article Page (Substack-inspired)** — @cline
+  - [ ] Research Substack's article page:
+    - [ ] Analyze layout (clean reading area, title, byline, date, sharing, comments)
+    - [ ] Note typography choices and content presentation
+  - [ ] Design new blog article page layout mockups/wireframes
+    - [ ] Focus on readability for the main content area
+    - [ ] Plan display for meta-information (author, date, categories/tags)
+    - [ ] Incorporate social sharing buttons
+    - [ ] Consider sections for related articles or author bio
+    - [ ] Plan for comments section integration
+  - [ ] Implement the new UI for the blog article page
+    - [ ] Create/update React components for article display
+    - [ ] Style components for optimal reading experience
+  - [ ] Ensure the new article page is fully responsive and accessible
