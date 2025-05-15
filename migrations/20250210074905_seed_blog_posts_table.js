@@ -6,7 +6,7 @@ exports.up = async function(knex) {
   const blogPostsEn = [
     {
       slug: 'first-post',
-      title: 'First Blog Post',
+      title: 'AI Meets Your Plate: The Future of Personalised Nutrition',
       image_url: '/images/case-studies/gsense/gsense.avif',
       image_alt: 'First Blog Post',
       excerpt: '<p><em>Excerpt:</em> This is a comprehensive introduction to our first blog post, covering a range of topics and designed to engage readers from start to finish.</p>',
