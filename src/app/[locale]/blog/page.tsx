@@ -1,7 +1,6 @@
 import { type Locale } from '@/i18n'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getTranslations } from 'next-intl/server'
 import { getBlogPostService } from '@/lib/services/blog-post.service'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Suspense } from 'react'
@@ -78,7 +77,7 @@ export default async function BlogPage({ params }: PageProps) {
   const blogPosts = await blogPostService.getBlogPosts(locale)
 
   return (
-    <>
+    <div className=' '>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
@@ -128,11 +127,7 @@ export default async function BlogPage({ params }: PageProps) {
                 // position={1}
               />
             ))}
-          <ul
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[32px]"
-            itemScope
-            itemType="https://schema.org/ItemList"
-          >
+          <ul className="" itemScope itemType="https://schema.org/ItemList">
             {blogPosts.map((post, index) => (
               <BlogPostItem
                 key={post.slug}
@@ -144,7 +139,7 @@ export default async function BlogPage({ params }: PageProps) {
           </ul>
         </Suspense>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -157,46 +152,47 @@ const BlogPostItem = ({
   locale: Locale
   position: number
 }) => {
+  const formatedDate = new Date(post.createdAt).toLocaleDateString(locale, {
+    month: 'short',
+    day: 'numeric',
+  })
   return (
     <li
-      className="rounded-xl"
+      className=""
       itemScope
       itemType="https://schema.org/BlogPosting"
       itemProp="itemListElement"
     >
-      <Link
-        href={`/${locale}/blog/${post.slug}`}
-        className="flex flex-col gap-[8px] relative"
-        itemProp="url"
-      >
-        {post.imageurl && (
-          <div itemProp="image" className="max-w-sm">
-            <Image
-              className="h-auto rounded-xl"
-              // src={post.imageurl}
-              src="https://picsum.photos/300/200"
-              alt={post.imageAlt || post.title}
-              width={350}
-              height={300}
-              loading="lazy"
-            />
+      <Link href={`/${locale}/blog/${post.slug}`} className="" itemProp="url">
+        <div className="flex border-b  py-[32px] gap-[32px] justify-between">
+          <div className="flex flex-col gap-[4px]">
+            <h2 className=" font-semibold  text-[19px]" itemProp="headline">
+              {post.title}
+            </h2>
+            <p className="text-[15px]">
+              {/* {post.excerpt} */}
+              Empowering Healthcare Innovation Through Human-Centered Design and
+              Collaborative Solutions
+            </p>
+            {/* MAR 28 DATE DYNAMIC */}
+            <span className="uppercase text-[11px] text-[#868787]">
+              {formatedDate} <span>•</span>{' '}
+              <span className="uppercase">NIKHIL SINGH</span>
+            </span>
           </div>
-        )}
-        <h2
-          className="text-xl font-semibold text-center text-[22px]"
-          itemProp="headline"
-        >
-          {post.title}
-        </h2>
-        <div
-          className="absolute top-8 left-8 px-[10px] py-[5px] bg-white rounded-full"
-          itemProp="datePublished"
-        >
-          {new Date(post.createdAt).toLocaleDateString(locale, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
+          {post.imageurl && (
+            <div itemProp="image" className="max-w-sm">
+              <Image
+                className="h-auto rounded-md"
+                // src={post.imageurl}
+                src="https://picsum.photos/250/150"
+                alt={post.imageAlt || post.title}
+                width={250}
+                height={200}
+                loading="lazy"
+              />
+            </div>
+          )}
         </div>
         <meta itemProp="position" content={String(position)} />
       </Link>
@@ -221,16 +217,17 @@ const PinnedBlogPost = ({
       className="flex flex-col gap-[8px]"
       itemProp="url"
     >
-      <div className="flex justify-start items-center gap-[32px] rounded-md  mb-10 ">
+      <div className="flex flex-col sm:flex-row justify-start items-center gap-[32px] rounded-md  mb-[32px] ">
         {post.imageurl && (
-          <div itemProp="image" className="w-[458px]">
+          <div itemProp="image" className="w-full sm:w-[350px] md:w-[458px] aspect-video overflow-hidden relative">
             <Image
-              className="rounded-xl"
+              className="rounded-xl w-full h-auto"
               // src={post.imageurl}
               src="https://picsum.photos/458/305"
               alt={post.imageAlt || post.title}
-              width={458}
-              height={305}
+              style={{ objectFit: 'cover' }}
+              fill
+              
               loading="lazy"
             />
           </div>
@@ -245,11 +242,12 @@ const PinnedBlogPost = ({
           <p className="text-[17px] text-center ">{post.excerpt}</p>
           {/* MAR 28 DATE DYNAMIC */}
           <span className="uppercase text-[11px] text-[#868787]">
-            {formatedDate} <span>•</span> <span className='uppercase'>NIKHIL SINGH</span>
+            {formatedDate} <span>•</span>{' '}
+            <span className="uppercase">NIKHIL SINGH</span>
           </span>
         </div>
       </div>
-      <hr className="mb-10" />
+      <hr className="" />
     </Link>
   )
 }
