@@ -75,7 +75,6 @@ const blogPostService = await getBlogPostService()
 
 export default async function BlogPage({ params }: PageProps) {
   const { locale } = await params
-  const t = await getTranslations('blog')
   const blogPosts = await blogPostService.getBlogPosts(locale)
 
   return (
@@ -119,16 +118,16 @@ export default async function BlogPage({ params }: PageProps) {
           }
         >
           {/* PINNED POST */}
-            {blogPosts
-              .filter((post) => post.isPinned)
-              .map((post) => (
-                <PinnedBlogPost
-                  key={post.slug}
-                  post={post}
-                  locale={locale}
-                  // position={1}
-                />
-              ))}
+          {blogPosts
+            .filter((post) => post.isPinned)
+            .map((post) => (
+              <PinnedBlogPost
+                key={post.slug}
+                post={post}
+                locale={locale}
+                // position={1}
+              />
+            ))}
           <ul
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[32px]"
             itemScope
@@ -212,41 +211,45 @@ const PinnedBlogPost = ({
   post: BlogPost
   locale: Locale
 }) => {
+  const formatedDate = new Date(post.createdAt).toLocaleDateString(locale, {
+    month: 'short',
+    day: 'numeric',
+  })
   return (
- 
-      <Link
-        href={`/${locale}/blog/${post.slug}`}
-        className="flex flex-col gap-[8px]"
-        itemProp="url"
-      >
-        <div className="flex justify-start items-center gap-[32px] rounded-md  mb-10 ">
-          {post.imageurl && (
-            <div itemProp="image" className='w-[458px]'>
-              <Image
-                className="rounded-xl"
-                // src={post.imageurl}
-                src="https://picsum.photos/458/305"
-
-                alt={post.imageAlt || post.title}
-                width={458}
-                height={305}
-                loading="lazy"
-              />
-            </div>
-          )}
-        <div className='flex flex-1 flex-col items-center gap-[8px] p-10'>
-
+    <Link
+      href={`/${locale}/blog/${post.slug}`}
+      className="flex flex-col gap-[8px]"
+      itemProp="url"
+    >
+      <div className="flex justify-start items-center gap-[32px] rounded-md  mb-10 ">
+        {post.imageurl && (
+          <div itemProp="image" className="w-[458px]">
+            <Image
+              className="rounded-xl"
+              // src={post.imageurl}
+              src="https://picsum.photos/458/305"
+              alt={post.imageAlt || post.title}
+              width={458}
+              height={305}
+              loading="lazy"
+            />
+          </div>
+        )}
+        <div className="flex flex-1 flex-col items-center gap-[8px] p-10">
           <h2
-            className=" font-semibold text-center text-[22px]"
+            className=" font-semibold text-center text-[30px]"
             itemProp="headline"
           >
             {post.title}
           </h2>
-          <p className='text-[17px] text-center '>{post.excerpt}</p>
-         
-          </div>
+          <p className="text-[17px] text-center ">{post.excerpt}</p>
+          {/* MAR 28 DATE DYNAMIC */}
+          <span className="uppercase text-[11px] text-[#868787]">
+            {formatedDate} <span>•</span> <span className='uppercase'>NIKHIL SINGH</span>
+          </span>
         </div>
-        <hr className='mb-10' />
-      </Link>
+      </div>
+      <hr className="mb-10" />
+    </Link>
   )
 }
