@@ -33,7 +33,7 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
         return baseStickyTopOffset + effectiveIndex * spacing + adjustedOffset;
     }, [baseStickyTopOffset, effectiveIndex, adjustedOffset]);
 
-    const scale = useTransform(scrollY, [2800, 4000], [1, 0.89]);
+    // const scale = useTransform(scrollY, [2800, 4000], [1, 0.89]);
 
     // Fixed scroll tracking with debounce effect
     useEffect(() => {
@@ -60,8 +60,8 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
             style={{
                 zIndex: index + 1,
                 top: `${stickyTopOffset}px`,
-                transformOrigin: 'center center',
-                scale
+                // transformOrigin: 'center center',
+                // scale
             }}
         >
             <CaseStudyCard caseStudy={caseStudy} locale={locale} />
@@ -109,11 +109,10 @@ export const CaseStudiesTitleSubtitle = ({ title, description }: { title: string
     });
 
 
-    const scale = useTransform(scrollY, [2800, 3200], [1, 0.8])
     const opacity = useTransform(scrollY, [2800, 3200], [1, 0])
     return (
         <motion.div ref={targetRef}
-            style={{ scale, opacity }}
+            style={{ opacity }}
             className='sticky top-[300px] mb-[36px] flex flex-col items-center justify-center gap-[12px] '>
             <h1
                 className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-primary"
