@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import logger from '@/lib/logger'
 import { getYoutubeAction } from '@/app/(admin)/admin/sections/youtube/actions/youtubeServerActions'
-import { useVisibility } from '@/contexts/VisibilityContext'
 import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 
 const YouTube = dynamic(
@@ -20,33 +19,11 @@ declare global {
   }
 }
 
-export const FloatVideo = () => {
-  const MOBILE_BREAKPOINT = 768;
+export const FooterVideo = () => {
   const [showVideo, setShowVideo] = useState(false)
   const [videoId, setVideoId] = useState('')
-  const { isOurProcessVisible } = useVisibility(); // Get the visibility state
-const [isMobile, setIsMobile] = useState(false);
 
   const thumbnailUrl = isProd && videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '/images/case-studies/gsense/gsense.avif'
-
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    }
-      if (typeof window !== 'undefined') {
-        checkScreenSize();
-        window.addEventListener('resize', checkScreenSize);
-      }
-    if (isMobile) {
-      setShowVideo(false);
-      logger.log('Mobile screen detected - hiding video');
-    }  
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('resize', checkScreenSize);
-      }
-    }
-  }, [isMobile])
 
   useEffect(() => {
     const fetchYoutubeUrl = async () => {
@@ -76,12 +53,8 @@ const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleLoad = () => {
-      if (!isOurProcessVisible && !isMobile) {
         setShowVideo(true);
         logger.log('Page fully loaded - starting video');
-      } else {
-         logger.log('Page fully loaded - OurProcess is visible, video hidden initially');
-      }
     };
 
     if (document.readyState === 'complete' && videoId) {
@@ -93,7 +66,7 @@ const [isMobile, setIsMobile] = useState(false);
       return () => window.removeEventListener('load', handleLoad);
     }
     return undefined;
-  }, [videoId, isOurProcessVisible, isMobile]);
+  }, [videoId ]);
 
   const videoVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
@@ -103,9 +76,8 @@ const [isMobile, setIsMobile] = useState(false);
   return (
     // AnimatePresence handles the mounting/unmounting animation
     <AnimatePresence>
-      {!isOurProcessVisible  && ( // Conditionally render based on visibility
         <motion.section
-          className="hidden md:block fixed bottom-[65px] right-[10px] z-50"
+          className="  md:hidden flex items-center justify-center  "
           variants={videoVariants}
           initial="hidden"
           animate="visible"
@@ -160,7 +132,6 @@ const [isMobile, setIsMobile] = useState(false);
             )}
           </div>
         </motion.section>
-      )}
     </AnimatePresence>
   )
 }
