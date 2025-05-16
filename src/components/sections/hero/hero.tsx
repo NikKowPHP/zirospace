@@ -6,7 +6,7 @@ export const HeroSection = async ({ locale }: { locale: string }) => {
 
   return (
     <section
-      className="md:w-screen md:max-w-[100vw]  sm:-mx-6 lg:-mx-8 flex flex-col justify-center items-center   space-y-6 sm:space-y-8 min-h-screen px-4 sm:px-6"
+      className="md:w-screen md:max-w-[100vw] -mt-[75px]  sm:-mx-6 lg:-mx-8 flex flex-col justify-center items-center   space-y-6 sm:space-y-8 min-h-screen px-4 sm:px-6"
 
       itemScope
       itemType="https://schema.org/WebPageElement"
