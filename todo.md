@@ -131,12 +131,12 @@
 
 -   `[x] Create reusable `StarRatingDisplay` component — @cline`
 -   `[x] Create reusable `StarRatingInput` component — @cline`
--   `[ ] Task: Review and enhance loading states across all new admin and public pages for better user experience (e.g., use consistent skeleton loaders). — @cline`
+-   `[x] Task: Review and enhance loading states across all new admin and public pages for better user experience (e.g., use consistent skeleton loaders). — @cline`
 -   `[ ] Task: Review and enhance error handling:
-    -   `[ ] Ensure all API call errors are caught and displayed gracefully to the user (toasts, inline messages).
-    -   `[ ] Provide specific error messages where possible.
+    -   `[x] Ensure all API call errors are caught and displayed gracefully to the user (toasts, inline messages).
+    -   `[x] Provide specific error messages where possible.
 -   `[x] Ensure consistent styling and adherence to the existing design system (Basic consistency applied). — @cline`
--   `[ ] Task: Conduct a thorough accessibility review (WCAG compliance) for all new UI elements and flows. Address issues found (keyboard navigation, ARIA, focus, contrast). — @cline`
+-   `[x] Task: Conduct a thorough accessibility review (WCAG compliance) for all new UI elements and flows. Address issues found (keyboard navigation, ARIA, focus, contrast). — @cline`
 
 ---
 

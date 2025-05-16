@@ -271,6 +271,7 @@ const PublicAppsPage = () => {
             className="p-2 mr-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow hover:bg-gray-400 disabled:opacity-50"
             onClick={handlePreviousPage}
             disabled={currentPage === 1 || pageLoading}
+            aria-label="Previous Page"
           >
             <ChevronLeft size={20} />
           </button>
@@ -281,6 +282,7 @@ const PublicAppsPage = () => {
             className="p-2 ml-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow hover:bg-gray-400 disabled:opacity-50"
             onClick={handleNextPage}
             disabled={currentPage === totalPages || pageLoading}
+            aria-label="Next Page"
           >
             <ChevronRight size={20} />
           </button>

@@ -9,8 +9,31 @@ import toast from 'react-hot-toast'; // Import toast for notifications
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
-
-
+const SkeletonAppDetail = () => (
+  <div className="max-w-5xl mx-auto px-10 py-10 my-[100px] bg-gray-50 rounded-primary-lg animate-pulse">
+    <div className="mb-6 h-8 bg-gray-200 rounded w-1/2"></div>
+    <div className="mb-4 h-6 bg-gray-200 rounded w-3/4"></div>
+    <div className="mb-4 h-4 bg-gray-200 rounded w-1/4"></div>
+    <div className="mb-6 h-10 bg-gray-200 rounded w-1/3"></div>
+    <div className="mb-8">
+      <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div key={index} className="relative">
+            <div className="w-full h-[350px] bg-gray-200 rounded-lg"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div className="mt-8 p-4 bg-gray-200 rounded-lg flex flex-col justify-start items-start max-w-xl">
+      <div className="h-6 bg-gray-300 rounded w-1/2 mb-2"></div>
+      <div className="h-4 bg-gray-300 rounded w-1/4 mb-2"></div>
+      <div className="h-4 bg-gray-300 rounded w-1/4 mb-2"></div>
+      <div className="h-4 bg-gray-300 rounded w-1/4 mb-2"></div>
+      <div className="mt-4 px-4 py-2 bg-gray-300 text-white rounded-lg w-1/4"></div>
+    </div>
+  </div>
+);
 
 const PublicAppDetailPage = () => {
   const params = useParams();
@@ -150,11 +173,11 @@ const PublicAppDetailPage = () => {
 
 
   if (pageLoading) {
-    return <div className='max-w-5xl mx-auto py-[150px] justify-center items-center text-center'>Loading...</div>; // Loading state
+    return <SkeletonAppDetail />; // Loading state
   }
 
   if (error) {
-    return <div>Error: {error}</div>; // Error state
+    return <div className="max-w-5xl mx-auto px-10 py-10 my-[100px] bg-gray-50 rounded-primary-lg"><div className="text-red-600">Error: {error}</div></div>; // Error state
   }
 
   if (!app) {
@@ -210,7 +233,7 @@ const PublicAppDetailPage = () => {
                 >
                   <img
                     src={screenshot.image_url}
-                    alt={`Screenshot "${screenshot.id}"`}
+                    alt={`Screenshot of ${app.name}: ${screenshot.screen_name || screenshot.id}`}
                     className="w-full h-[350px] object-cover rounded-lg"
                   />
                 </div>
