@@ -169,6 +169,18 @@ const PublicAppDetailPage = () => {
       </Link>
       
       <h1 className="text-2xl font-bold mb-4">{app.name}</h1>
+       {app.tags && app.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {app.tags.map((tag) => (
+              <span
+                key={tag.id}
+                className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
+              >
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        )}
       <p className="text-gray-700 mb-4">{app.description}</p>
       
       {/* UI for submitting overall app rating */}

@@ -121,7 +121,7 @@
 ### 3.2. App Detail Page (`/apps/{appId}`)
 -   `[x] Create Next.js dynamic route page component (`src/app/[locale]/apps/[appId]/page.tsx`) — @cline`
 -   `[x] Implement data fetching for specific app details and its screenshots — @cline`
--   `[ ] UI: Display the tags associated with the app prominently (fetched via the enhanced `GET /api/apps/{appId}`).
+-   `[x] UI: Display the tags associated with the app prominently (fetched via the enhanced `GET /api/apps/{appId}`).
 -   `[x] Display main app information, screenshot gallery/carousel, screenshot metadata, and ratings UI — @cline`
 -   `[x] Ensure responsiveness — @cline`
 
