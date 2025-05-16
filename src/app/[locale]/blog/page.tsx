@@ -93,7 +93,7 @@ export default async function BlogPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <div
-        className="mx-auto max-w-5xl py-[100px]"
+        className="mx-auto max-w-5xl py-[100px] "
         itemScope
         itemType="https://schema.org/Blog"
       >
@@ -170,9 +170,9 @@ const BlogPostItem = ({
               {post.title}
             </h2>
             <p className="text-[15px]">
-              {/* {post.excerpt} */}
-              Empowering Healthcare Innovation Through Human-Centered Design and
-              Collaborative Solutions
+              {post.excerpt}
+              {/* Empowering Healthcare Innovation Through Human-Centered Design and */}
+              {/* Collaborative Solutions */}
             </p>
             {/* MAR 28 DATE DYNAMIC */}
             <span className="uppercase text-[11px] text-[#868787]">
@@ -184,8 +184,8 @@ const BlogPostItem = ({
             <div itemProp="image" className="max-w-sm">
               <Image
                 className="h-auto rounded-md"
-                // src={post.imageurl}
-                src="https://picsum.photos/250/150"
+                src={post.imageurl}
+                // src="https://picsum.photos/250/150"
                 alt={post.imageAlt || post.title}
                 width={250}
                 height={200}
@@ -222,8 +222,8 @@ const PinnedBlogPost = ({
           <div itemProp="image" className="w-full sm:w-[350px] md:w-[458px] aspect-video overflow-hidden relative">
             <Image
               className="rounded-xl w-full h-auto"
-              // src={post.imageurl}
-              src="https://picsum.photos/458/305"
+              src={post.imageurl}
+              // src="https://picsum.photos/458/305"
               alt={post.imageAlt || post.title}
               style={{ objectFit: 'cover' }}
               fill

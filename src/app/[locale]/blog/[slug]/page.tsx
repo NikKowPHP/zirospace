@@ -5,7 +5,7 @@ import styles from './blog-post.module.css'
 import { blogPostService } from '@/lib/services/blog-post.service'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { siteUrl } from '@/config/constants';
-
+import "@/styles/blog.css"
 interface PageProps {
   params: {
     slug: string
@@ -99,7 +99,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         }}
       />
       <article 
-        className="blog-post py-8 py-[100px] max-w-4xl mx-auto flex flex-col gap-[35px]"
+        className="blog-post  py-[100px] max-w-5xl mx-auto flex flex-col gap-[35px] spectral-regular"
         itemScope
         itemType="https://schema.org/Article"
       >
@@ -112,7 +112,26 @@ export default async function BlogPostPage({ params }: PageProps) {
         <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
         
         <header className="flex flex-col gap-8">
-          <div className="text-sm text-gray-600 flex items-center justify-center gap-4">
+        
+          
+          <h1 
+            className="text-[32px] leading-[1.2] font-bold mb-[12px] "
+            itemProp="name"
+          >
+            {post.title}
+          </h1>
+
+          {post.excerpt && (
+            <p 
+              className="text-[18px] text-gray-500 "
+              itemProp="abstract"
+              dangerouslySetInnerHTML={{ 
+                __html: post.excerpt.trim() 
+              }}
+            >
+            </p>
+          )}
+            <div className="text-[11px] text-gray-600 flex  gap-4 pb-[15px] border-b ">
             <time dateTime={post.createdAt}>
               {new Date(post.createdAt).toLocaleDateString(locale, {
                 year: 'numeric',
@@ -124,25 +143,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             <span>{readingTime} min read</span>
           </div>
           
-          <h1 
-            className="text-3xl font-bold mb-4 text-center"
-            itemProp="name"
-          >
-            {post.title}
-          </h1>
-
-          {post.excerpt && (
-            <p 
-              className="text-xl text-gray-600 text-center max-w-2xl mx-auto"
-              itemProp="abstract"
-              dangerouslySetInnerHTML={{ 
-                __html: post.excerpt.trim() 
-              }}
-            >
-            </p>
-          )}
-          
-          <div className="  w-full flex items-center justify-center">
+          <div className="w-full flex items-center justify-center pt-[10px]">
 
 
           {/* <div itemProp="image " className='  w-full aspect-[16/9]'>
@@ -156,7 +157,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
 
           <div itemProp='image' className="max-w-full mx-auto">
-              <div className="relative w-full aspect-[16/9] h-[400px] sm:h-[400px] mb-16">
+              <div className="relative w-[400px] sm:w-[450px]  h-[400px] sm:h-[450px] mb-16">
                 <Image
                   src={post.imageurl}
                   alt={post.imageAlt || post.title}
