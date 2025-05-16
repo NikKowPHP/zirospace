@@ -45,7 +45,7 @@ export function LanguageSwitcher() {
   }
 
   return (
-    <div className="fixed bottom-8 right-8 z-50">
+    <div className="fixed bottom-8  left-1/2 transform -translate-x-1/2 z-50">
       <div className="inline-flex rounded-full bg-gray-100 p-1">
         {languages.map((lang, index) => (
           <button
