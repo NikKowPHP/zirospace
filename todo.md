@@ -91,11 +91,11 @@
 -   `[x] Task: Add robust client-side validation to screenshot metadata forms (e.g., screen name required, route path format if applicable). — @cline`
 
 ### 2.3. Tag Management UI (Admin - New Section)
--   `[ ] Create admin page/section for managing global tags (e.g., `/admin/sections/tags`) — @cline`
--   `[ ] UI: Fetch and display a table/list of existing tags from `GET /api/tags` with options to edit/delete.
--   `[ ] UI: Form for creating a new tag (input for name). On submit, call `POST /api/tags`. Handle success/error feedback.
--   `[ ] UI: Inline editing or modal form for updating an existing tag's name. On submit, call `PUT /api/tags/{tagId}`. Handle success/error feedback.
--   `[ ] UI: Confirmation dialog and logic for deleting a tag. On confirm, call `DELETE /api/tags/{tagId}`. Handle success/error feedback, especially if the tag is in use.
+-   `[x] Create admin page/section for managing global tags (e.g., `/admin/sections/tags`) — @cline`
+-   `[x] UI: Fetch and display a table/list of existing tags from `GET /api/tags` with options to edit/delete. — @cline`
+-   `[x] UI: Form for creating a new tag (input for name). On submit, call `POST /api/tags`. Handle success/error feedback. — @cline`
+-   `[x] UI: Inline editing or modal form for updating an existing tag's name. On submit, call `PUT /api/tags/{tagId}`. Handle success/error feedback. — @cline`
+-   `[x] UI: Confirmation dialog and logic for deleting a tag. On confirm, call `DELETE /api/tags/{tagId}`. Handle success/error feedback, especially if the tag is in use. — @cline`
 
 ---
 
@@ -219,7 +219,7 @@
 ## Phase 8: Navigation & UI Finalization (Review)
 -   `[x] Add link to public `/apps` in main navbar — @cline`
 -   `[x] Add link to admin `/admin/sections/apps` in Admin Dashboard & Sidebar — @cline`
--   `[ ] Task: Add link to admin `/admin/sections/tags` (or chosen path) in Admin Dashboard & Sidebar once the page is created.
+-   `[x] Task: Add link to admin `/admin/sections/tags` (or chosen path) in Admin Dashboard & Sidebar once the page is created. — @cline`
 -   `[x] AI-Friendly Structuring Review of this todo.md — @cline`
 
 ---
