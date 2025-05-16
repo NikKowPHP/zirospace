@@ -196,7 +196,7 @@ const cleanedExcerpt = stripHtmlTags(post.excerpt);
             </span>
           </div>
           {post.imageurl && (
-            <div itemProp="image" className="max-w-sm">
+            <div itemProp="image" className="w-full sm:w-[250px] md:w-[250px] aspect-video  relative">
               <Image
                 className="h-auto rounded-md"
                 src={post.imageurl}
