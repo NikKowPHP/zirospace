@@ -68,17 +68,17 @@
 ### 2.1. App Management UI (Admin)
 -   `[x] Create admin page for managing apps (`/admin/sections/apps`) — @cline`
 -   `[x] UI: Display list of existing apps — @cline`
--   `[ ] UI: Enhance "Create App" form (`src/app/(admin)/admin/sections/apps/page.tsx`):
-    -   `[ ] Fetch available tags from `GET /api/tags`.
-    -   `[ ] Implement a multi-select component (e.g., using checkboxes or a dedicated library) for assigning tags.
-    -   `[ ] Send selected `tag_ids` array to `POST /api/apps`.
-    -   `[ ] Add client-side validation and clear error/success feedback.
--   `[ ] UI: Enhance "Edit App" form/modal:
-    -   `[ ] Fetch available tags from `GET /api/tags`.
-    -   `[ ] Pre-select/pre-fill currently assigned tags for the app being edited.
-    -   `[ ] Implement a multi-select component for modifying tag assignments.
-    -   `[ ] Send updated `tag_ids` array to `PUT /api/apps/{appId}`.
-    -   `[ ] Add client-side validation and clear error/success feedback.
+-   `[x] UI: Enhance "Create App" form (`src/app/(admin)/admin/sections/apps/page.tsx`) — @cline`:
+    -   `[x] Fetch available tags from `GET /api/tags`.
+    -   `[x] Implement a multi-select component (e.g., using checkboxes or a dedicated library) for assigning tags.
+    -   `[x] Send selected `tag_ids` array to `POST /api/apps`.
+    -   `[x] Add client-side validation and clear error/success feedback.
+-   `[x] UI: Enhance "Edit App" form/modal — @cline`:
+    -   `[x] Fetch available tags from `GET /api/tags`.
+    -   `[x] Pre-select/pre-fill currently assigned tags for the app being edited.
+    -   `[x] Implement a multi-select component for modifying tag assignments.
+    -   `[x] Send updated `tag_ids` array to `PUT /api/apps/{appId}`.
+    -   `[x] Add client-side validation and clear error/success feedback.
 -   `[x] UI: Implement "Delete App" process with confirmation modal — @cline`
 
 ### 2.2. Screenshot Management UI (Admin)

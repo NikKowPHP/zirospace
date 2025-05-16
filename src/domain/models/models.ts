@@ -113,3 +113,8 @@ export interface CaseStudyImage {
     createdAt?: Date;
     updatedAt?: Date;
   }
+
+export interface Tag {
+  id: string; // Assuming tag id is a string
+  name: string;
+}

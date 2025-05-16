@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/auth-context'; // Assuming useAuth is the correct hook for client-side auth status
-import { App } from '@/domain/models/models'; // Assuming App model is defined here or similar location
+import { App, Tag } from '@/domain/models/models'; // Assuming App model is defined here or similar location
 import { Modal } from '@/components/ui/modal/modal'; // Assuming a Modal component exists
 import toast from 'react-hot-toast'; // Import toast for notifications
 
@@ -16,17 +16,20 @@ const AdminAppsPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [newAppName, setNewAppName] = useState('');
   const [newAppDescription, setNewAppDescription] = useState('');
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [isCreating, setIsCreating] = useState(false);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentApp, setCurrentApp] = useState<App | null>(null);
   const [editAppName, setEditAppName] = useState('');
   const [editAppDescription, setEditAppDescription] = useState('');
+  const [editSelectedTagIds, setEditSelectedTagIds] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [appToDelete, setAppToDelete] = useState<App | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
 
 
   useEffect(() => {
@@ -61,11 +64,66 @@ const AdminAppsPage = () => {
 
       fetchApps();
     }
+  }, [user, loading, router]);
+
+  useEffect(() => {
+    // Fetch apps when user is authenticated
+    if (user) {
+      const fetchApps = async () => {
+        try {
+          setPageLoading(true);
+          setError(null);
+          const response = await fetch('/api/apps'); // Fetch apps from the API
+          if (!response.ok) {
+            throw new Error(`Error fetching apps: ${response.statusText}`);
+          }
+          const data: App[] = await response.json();
+          setApps(data);
+        } catch (err) {
+          console.error('Error fetching apps:', err);
+          const errorMessage = err instanceof Error ? err.message : 'Failed to fetch apps';
+          setError(errorMessage);
+          toast.error(errorMessage); // Display error toast
+        } finally {
+          setPageLoading(false);
+        }
+      };
+
+      fetchApps();
+    }
   }, [user]); // Refetch when user status changes (e.e., logs in)
+
+  useEffect(() => {
+    // Fetch available tags
+    const fetchTags = async () => {
+      try {
+        const response = await fetch('/api/tags');
+        if (!response.ok) {
+          throw new Error(`Error fetching tags: ${response.statusText}`);
+        }
+        const data: Tag[] = await response.json();
+        setAvailableTags(data);
+      } catch (err) {
+        console.error('Error fetching tags:', err);
+        const errorMessage = err instanceof Error ? err.message : 'Failed to fetch tags';
+        toast.error(errorMessage);
+      }
+    };
+
+    fetchTags();
+  }, []); // Fetch tags only once on component mount
+
 
   const handleCreateApp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null); // Clear previous errors
+
+    if (!newAppName.trim()) {
+      const errorMessage = 'App name cannot be empty.';
+      setError(errorMessage);
+      toast.error(errorMessage);
+      return;
+    }
 
     if (!newAppName.trim()) {
       const errorMessage = 'App name cannot be empty.';
@@ -82,7 +140,11 @@ const AdminAppsPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: newAppName.trim(), description: newAppDescription.trim() }),
+        body: JSON.stringify({
+          name: newAppName.trim(),
+          description: newAppDescription.trim(),
+          tag_ids: selectedTagIds, // Include selected tag IDs
+        }),
       });
 
       if (!response.ok) {
@@ -93,6 +155,7 @@ const AdminAppsPage = () => {
       setApps([...apps, newApp]); // Add the new app to the list
       setNewAppName('');
       setNewAppDescription('');
+      setSelectedTagIds([]); // Clear selected tags
       toast.success('App created successfully!'); // Display success toast
     } catch (err) {
       console.error('Error creating app:', err);
@@ -104,10 +167,19 @@ const AdminAppsPage = () => {
     }
   };
 
+  const handleTagSelection = (tagId: string) => {
+    setSelectedTagIds(prevSelected =>
+      prevSelected.includes(tagId)
+        ? prevSelected.filter(id => id !== tagId)
+        : [...prevSelected, tagId]
+    );
+  };
+
   const openEditModal = (app: App) => {
     setCurrentApp(app);
     setEditAppName(app.name);
     setEditAppDescription(app.description || '');
+    setEditSelectedTagIds(app.tags?.map(tag => tag.id.toString()) || []); // Populate selected tags
     setIsEditModalOpen(true);
     setError(null); // Clear previous errors when opening modal
   };
@@ -146,7 +218,11 @@ const AdminAppsPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: editAppName.trim(), description: editAppDescription.trim() }),
+        body: JSON.stringify({
+          name: editAppName.trim(),
+          description: editAppDescription.trim(),
+          tag_ids: editSelectedTagIds, // Include updated selected tag IDs
+        }),
       });
 
       if (!response.ok) {
@@ -209,6 +285,14 @@ const AdminAppsPage = () => {
     }
   };
 
+  const handleEditTagSelection = (tagId: string) => {
+    setEditSelectedTagIds((prevSelected: string[]) =>
+      prevSelected.includes(tagId)
+        ? prevSelected.filter((id: string) => id !== tagId)
+        : [...prevSelected, tagId]
+    );
+  };
+
 
   if (loading || (user && pageLoading)) {
     return <div>Loading...</div>; // Loading state
@@ -257,6 +341,27 @@ const AdminAppsPage = () => {
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
             ></textarea>
           </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {availableTags.map(tag => (
+                <div key={tag.id} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`tag-${tag.id}`}
+                    checked={selectedTagIds.includes(tag.id)}
+                    onChange={() => handleTagSelection(tag.id)}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor={`tag-${tag.id}`} className="ml-2 block text-sm text-gray-900">
+                    {tag.name}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {error && newAppName.trim() && <div className="text-red-600 mb-4">{error}</div>} {/* Display API error */}
           <button
             type="submit"
@@ -341,6 +446,27 @@ const AdminAppsPage = () => {
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
             ></textarea>
           </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {availableTags.map(tag => (
+                <div key={tag.id} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={`edit-tag-${tag.id}`}
+                    checked={editSelectedTagIds.includes(tag.id)}
+                    onChange={() => handleEditTagSelection(tag.id)}
+                    className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label htmlFor={`edit-tag-${tag.id}`} className="ml-2 block text-sm text-gray-900">
+                    {tag.name}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="flex justify-end">
             <button
               type="button"
