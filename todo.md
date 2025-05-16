@@ -106,17 +106,17 @@
 -   `[x] Implement client-side data fetching for apps from `GET /api/apps` — @cline`
 -   `[x] Design and implement `AppCard` component:
     -   `[x] Display app title, thumbnail, average rating, and link to detail page.
-    -   `[ ] **ENHANCE:** Display a few key tags on the `AppCard`.
+    -   `[x] **ENHANCE:** Display a few key tags on the `AppCard`.
 -   `[x] Implement grid/list layout for `AppCard`s — @cline`
 -   `[ ] UI: Filtering by Tags:
-    -   `[ ] Fetch available tags from `GET /api/tags` and display them as clickable filter options (e.g., buttons, checkboxes, multi-select dropdown).
-    -   `[ ] When tags are selected/deselected, update the `tags` query parameter in the URL (e.g., `?tags=1,2,3`).
-    -   `[ ] Trigger a refetch of the app list from `GET /api/apps` with the updated `tags` query parameter.
-    -   `[ ] Provide a "Clear Filters" option.
+    -   `[x] Fetch available tags from `GET /api/tags` and display them as clickable filter options (e.g., buttons, checkboxes, multi-select dropdown).
+    -   `[x] When tags are selected/deselected, update the `tags` query parameter in the URL (e.g., `?tags=1,2,3`).
+    -   `[x] Trigger a refetch of the app list from `GET /api/apps` with the updated `tags` query parameter.
+    -   `[x] Provide a "Clear Filters" option.
 -   `[x] Implement sorting controls UI — @cline`
 -   `[x] Implement pagination (ensure total pages count from API is used) — @cline`
 -   `[x] Ensure the app listing page is responsive — @cline`
--   `[ ] Task: Add ARIA attributes for filtering and sorting controls for accessibility. — @cline`
+-   `[x] Task: Add ARIA attributes for filtering and sorting controls for accessibility. — @cline`
 
 ### 3.2. App Detail Page (`/apps/{appId}`)
 -   `[x] Create Next.js dynamic route page component (`src/app/[locale]/apps/[appId]/page.tsx`) — @cline`

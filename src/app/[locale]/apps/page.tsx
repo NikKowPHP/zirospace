@@ -37,7 +37,7 @@ const AppCard = ({ app }: { app: App }) => {
         <p className="text-gray-600 text-sm mb-2">{app.description}</p>
         {app.tags && app.tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {app.tags.map((tag) => (
+            {app.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag.id}
                 className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
@@ -178,6 +178,7 @@ const PublicAppsPage = () => {
                 )
                 setSelectedTags(selectedOptions)
               }}
+              aria-label="Filter by Tags"
             >
               {availableTags.map((tag) => (
                 <option key={tag.id} value={tag.id}>
@@ -185,6 +186,22 @@ const PublicAppsPage = () => {
                 </option>
               ))}
             </select>
+          </div>
+
+          {/* Clear Filters Button */}
+          <div>
+            <button
+              onClick={() => {
+                setSelectedTags([])
+                setSearchTerm('')
+                setSortBy('name_asc')
+                setCurrentPage(1)
+              }}
+              className="mt-6 px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow hover:bg-gray-300"
+              aria-label="Clear Filters"
+            >
+              Clear Filters
+            </button>
           </div>
 
           {/* Filtering Control */}
@@ -218,6 +235,7 @@ const PublicAppsPage = () => {
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+              aria-label="Sort By"
             >
               <option value="name_asc">Name (A-Z)</option>
               <option value="name_desc">Name (Z-A)</option>
