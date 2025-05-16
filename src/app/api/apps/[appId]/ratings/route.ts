@@ -35,7 +35,7 @@ export async function POST(request: Request, { params }: { params: { appId: stri
       const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
 
       const { error: updateError } = await supabaseAdmin!
-        .from('apps')
+        .from('zirospace_apps')
         .update({ average_rating: averageRating })
         .eq('id', appId);
 

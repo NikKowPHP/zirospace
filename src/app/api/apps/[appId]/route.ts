@@ -15,7 +15,7 @@ export async function GET(request: Request, { params }: { params: { appId: strin
     const { appId } = params;
 
     const { data: app, error } = await supabaseAdmin!
-      .from('apps')
+      .from('zirospace_apps')
       .select('*')
       .eq('id', appId)
       .single();
@@ -46,7 +46,7 @@ export async function PUT(request: Request, { params }: { params: { appId: strin
     const updates = await request.json();
 
     const { data: updatedApp, error } = await supabaseAdmin!
-      .from('apps')
+      .from('zirospace_apps')
       .update(updates)
       .eq('id', appId)
       .select()
@@ -77,7 +77,7 @@ export async function DELETE(request: Request, { params }: { params: { appId: st
     const { appId } = params;
 
     const { error } = await supabaseAdmin!
-      .from('apps')
+      .from('zirospace_apps')
       .delete()
       .eq('id', appId);
 

@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     }
 
     const { data: newApp, error } = await supabaseAdmin!
-      .from('apps')
+      .from('zirospace_apps')
       .insert([{ name, description }])
       .select()
       .single();
@@ -60,7 +60,7 @@ export async function GET(request: Request) {
     const tagIds = tagsParam ? tagsParam.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id)) : [];
 
     let queryBuilder = supabaseAdmin!
-      .from('apps')
+      .from('zirospace_apps')
       .select('*, tags(id, name)', { count: 'exact' }) // Fetch apps and their tags, request total count
       .order(orderBy, { ascending: orderDirection === 'asc' });
 
