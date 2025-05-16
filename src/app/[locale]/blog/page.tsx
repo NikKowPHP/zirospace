@@ -196,14 +196,15 @@ const cleanedExcerpt = stripHtmlTags(post.excerpt);
             </span>
           </div>
           {post.imageurl && (
-            <div itemProp="image" className="w-full sm:w-[250px] md:w-[250px] h-[200px]  relative">
+           <div itemProp="image" className="w-full sm:w-[250px]  aspect-video overflow-hidden relative">
               <Image
-                className="h-[200px] w-full rounded-md"
+                className="rounded-xl w-full h-auto"
                 src={post.imageurl}
                 // src="https://picsum.photos/250/150"
                 alt={post.imageAlt || post.title}
-                width={250}
-                height={200}
+                style={{ objectFit: 'cover' }}
+              fill
+
                 loading="lazy"
               />
             </div>
