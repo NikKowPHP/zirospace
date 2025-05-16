@@ -12,7 +12,7 @@ export async function POST(request: Request, { params }: { params: { appId: stri
 
     // Insert the new rating
     const { error: insertError } = await supabaseAdmin!
-      .from('app_ratings')
+      .from('zirospace_app_ratings')
       .insert([{ app_id: parseInt(appId), user_id: user_id || null, rating_value: rating_value }]);
 
     if (insertError) {
@@ -22,7 +22,7 @@ export async function POST(request: Request, { params }: { params: { appId: stri
 
     // Calculate and update the average rating for the app
     const { data: ratings, error: fetchError } = await supabaseAdmin!
-      .from('app_ratings')
+      .from('zirospace_app_ratings')
       .select('rating_value')
       .eq('app_id', appId);
 

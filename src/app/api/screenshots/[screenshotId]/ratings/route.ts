@@ -12,7 +12,7 @@ export async function POST(request: Request, { params }: { params: { screenshotI
 
     // Insert the new rating
     const { error: insertError } = await supabaseAdmin!
-      .from('screenshot_ratings')
+      .from('zirospace_screenshot_ratings')
       .insert([{ screenshot_id: parseInt(screenshotId), user_id: user_id || null, rating_value: rating_value }]);
 
     if (insertError) {
@@ -22,7 +22,7 @@ export async function POST(request: Request, { params }: { params: { screenshotI
 
     // Calculate and update the average rating for the screenshot
     const { data: ratings, error: fetchError } = await supabaseAdmin!
-      .from('screenshot_ratings')
+      .from('zirospace_screenshot_ratings')
       .select('rating_value')
       .eq('screenshot_id', screenshotId);
 
@@ -35,7 +35,7 @@ export async function POST(request: Request, { params }: { params: { screenshotI
       const averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
 
       const { error: updateError } = await supabaseAdmin!
-        .from('screenshots')
+        .from('zirospace_screenshots')
         .update({ average_rating: averageRating })
         .eq('id', screenshotId);
 

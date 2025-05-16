@@ -27,7 +27,7 @@ export async function POST(request: Request, { params }: { params: { appId: stri
     // Update the order_index for each screenshot
     const updatePromises = screenshotIdsInOrder.map((screenshotId, index) => {
       return supabaseAdmin!
-        .from('screenshots')
+        .from('zirospace_screenshots')
         .update({ order_index: index })
         .eq('id', screenshotId)
         .eq('app_id', appId); // Ensure the screenshot belongs to the correct app

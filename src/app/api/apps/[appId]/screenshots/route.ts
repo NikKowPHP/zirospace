@@ -9,7 +9,7 @@ export async function GET(request: Request, { params }: { params: { appId: strin
     const { appId } = params;
 
     const { data: screenshots, error } = await supabaseAdmin!
-      .from('screenshots')
+      .from('zirospace_screenshots')
       .select('*')
       .eq('app_id', appId)
       .order('order_index', { ascending: true }); // Order by order_index
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest, { params }: { params: { appId: 
 
       // Save screenshot data to the database
       const { data, error } = await supabaseAdmin!
-        .from('screenshots')
+        .from('zirospace_screenshots')
         .insert([
           {
             app_id: appId,

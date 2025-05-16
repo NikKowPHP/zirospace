@@ -15,7 +15,7 @@ export async function GET(request: Request, { params }: { params: { screenshotId
     const { screenshotId } = params;
 
     const { data: screenshot, error } = await supabaseAdmin!
-      .from('screenshots')
+      .from('zirospace_screenshots')
       .select('*')
       .eq('id', screenshotId)
       .single();
@@ -46,7 +46,7 @@ export async function PUT(request: Request, { params }: { params: { screenshotId
     const updates = await request.json();
 
     const { data: updatedScreenshot, error } = await supabaseAdmin!
-      .from('screenshots')
+      .from('zirospace_screenshots')
       .update(updates)
       .eq('id', screenshotId)
       .select()
@@ -77,7 +77,7 @@ export async function DELETE(request: Request, { params }: { params: { screensho
     const { screenshotId } = params;
 
     const { error } = await supabaseAdmin!
-      .from('screenshots')
+      .from('zirospace_screenshots')
       .delete()
       .eq('id', screenshotId);
 
