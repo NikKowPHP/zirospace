@@ -11,6 +11,19 @@ interface PageProps {
   }
 }
 
+ const stripHtmlTags =(htmlString: string) => {
+  if (!htmlString) {
+    return ''; // Handle null, undefined, or empty strings
+  }
+  // Use a regular expression to find and replace HTML tags
+  // <   : Matches the opening angle bracket
+  // [^>] : Matches any character EXCEPT a closing angle bracket
+  // *   : Matches the previous character zero or more times
+  // >   : Matches the closing angle bracket
+  // g   : Global flag - replace all occurrences, not just the first
+  return htmlString.replace(/<[^>]*>/g, '');
+}
+
 // Blog JSON-LD
 const blogJsonLd = {
   '@context': 'https://schema.org',
@@ -156,6 +169,8 @@ const BlogPostItem = ({
     month: 'short',
     day: 'numeric',
   })
+const cleanedExcerpt = stripHtmlTags(post.excerpt);
+
   return (
     <li
       className=""
@@ -170,7 +185,7 @@ const BlogPostItem = ({
               {post.title}
             </h2>
             <p className="text-[15px]">
-              {post.excerpt}
+              {cleanedExcerpt}
               {/* Empowering Healthcare Innovation Through Human-Centered Design and */}
               {/* Collaborative Solutions */}
             </p>
@@ -211,6 +226,7 @@ const PinnedBlogPost = ({
     month: 'short',
     day: 'numeric',
   })
+  const cleanedExcerpt = stripHtmlTags(post.excerpt);
   return (
     <Link
       href={`/${locale}/blog/${post.slug}`}
@@ -239,7 +255,7 @@ const PinnedBlogPost = ({
           >
             {post.title}
           </h2>
-          <p className="text-[17px] text-center ">{post.excerpt}</p>
+          <p className="text-[17px] text-center ">{cleanedExcerpt}</p>
           {/* MAR 28 DATE DYNAMIC */}
           <span className="uppercase text-[11px] text-[#868787]">
             {formatedDate} <span>•</span>{' '}
