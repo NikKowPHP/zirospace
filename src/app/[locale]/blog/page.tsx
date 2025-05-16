@@ -196,9 +196,9 @@ const cleanedExcerpt = stripHtmlTags(post.excerpt);
             </span>
           </div>
           {post.imageurl && (
-            <div itemProp="image" className="w-full sm:w-[250px] md:w-[250px] aspect-video  relative">
+            <div itemProp="image" className="w-full sm:w-[250px] md:w-[250px] h-[200px]  relative">
               <Image
-                className="h-auto rounded-md"
+                className="h-[200px] w-full rounded-md"
                 src={post.imageurl}
                 // src="https://picsum.photos/250/150"
                 alt={post.imageAlt || post.title}
