@@ -1,6 +1,25 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase'; // Import supabaseAdmin
 
+interface ZirospaceAppTag {
+  zirospace_tags: {
+    id: number;
+    name: string;
+  };
+}
+
+interface ZirospaceApp {
+  // Assuming other app properties exist, add them here if needed for type safety
+  // For now, we'll just include the nested tags structure
+  zirospace_app_tags: ZirospaceAppTag[];
+  // Add other properties like id, name, description, etc. if you want full type coverage
+  id: number;
+  name: string;
+  description: string | null;
+  // Add other columns from zirospace_apps table
+}
+
+
 // Helper function to check for authenticated admin user
 async function isAuthenticatedAdmin(): Promise<boolean> {
   // In a real application, you would check for a valid session or token
@@ -17,21 +36,39 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { name, description } = await request.json();
+    const { name, description, tag_ids } = await request.json();
 
     if (!name) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
-    const { data: newApp, error } = await supabaseAdmin!
+    const { data: newApp, error: appError } = await supabaseAdmin!
       .from('zirospace_apps')
       .insert([{ name, description }])
       .select()
       .single();
 
-    if (error) {
-      console.error('Error creating app:', error);
+    if (appError) {
+      console.error('Error creating app:', appError);
       return NextResponse.json({ error: 'Error creating app' }, { status: 500 });
+    }
+
+    // If tag_ids are provided, create associations in zirospace_app_tags
+    if (tag_ids && Array.isArray(tag_ids) && tag_ids.length > 0) {
+      const appTagAssociations = tag_ids.map(tagId => ({
+        app_id: newApp.id,
+        tag_id: tagId,
+      }));
+
+      const { error: appTagError } = await supabaseAdmin!
+        .from('zirospace_app_tags')
+        .insert(appTagAssociations);
+
+      if (appTagError) {
+        console.error('Error creating app tag associations:', appTagError);
+        // Depending on requirements, you might want to roll back the app creation here
+        // For now, we'll just log the error and return the created app
+      }
     }
 
     return NextResponse.json(newApp, { status: 201 });
@@ -61,7 +98,7 @@ export async function GET(request: Request) {
 
     let queryBuilder = supabaseAdmin!
       .from('zirospace_apps')
-      .select('*, tags(id, name)', { count: 'exact' }) // Fetch apps and their tags, request total count
+      .select('*, zirospace_app_tags(zirospace_tags(id, name))', { count: 'exact' }) // Fetch apps and their tags, request total count
       .order(orderBy, { ascending: orderDirection === 'asc' });
 
     // Filtering - use 'searchTerm' as per client request
@@ -81,13 +118,20 @@ export async function GET(request: Request) {
     // Apply range for pagination
     queryBuilder = queryBuilder.range(start, end);
 
-    const { data: apps, error, count } = await queryBuilder;
+    const { data, error, count } = await queryBuilder;
 
     if (error) {
       console.error('Error fetching apps from Supabase:', error);
       console.error('Request URL:', request.url);
       return NextResponse.json({ error: 'Error fetching apps', details: error.message }, { status: 500 });
     }
+
+    // Map the data to flatten the tags structure
+    const apps = data.map((app: ZirospaceApp) => ({
+      ...app,
+      tags: app.zirospace_app_tags.map(appTag => appTag.zirospace_tags),
+      zirospace_app_tags: undefined, // Remove the original nested structure
+    }));
 
     return NextResponse.json({
         data: apps,

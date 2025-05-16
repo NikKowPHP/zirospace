@@ -22,19 +22,19 @@
 -   `[ ] Task: Ensure appropriate database indexes are created for performance on frequently queried columns (e.g., `app_id`, `slug`, `order_index`, `name` in tags) — @cline`
 
 ### 1.2. API Endpoint Development (Apps)
--   `[ ] **FIX & ENHANCE:** Update `GET /api/apps` (in `src/app/api/apps/route.ts`):
-    -   `[ ] Modify Supabase query to correctly fetch associated tags: `zirospace_apps(*, zirospace_app_tags(zirospace_tags(id, name)))`.
-    -   `[ ] Implement data mapping to transform nested Supabase tag response to a flat `tags: [{id: number, name: string}, ...]` array on the app object.
+-   `[x] **FIX & ENHANCE:** Update `GET /api/apps` (in `src/app/api/apps/route.ts`) — @cline`
+    -   `[x] Modify Supabase query to correctly fetch associated tags: `zirospace_apps(*, zirospace_app_tags(zirospace_tags(id, name)))`.
+    -   `[x] Implement data mapping to transform nested Supabase tag response to a flat `tags: [{id: number, name: string}, ...]` array on the app object.
     -   `[x] Implement filtering by name/description (already done).
-    -   `[ ] **ENHANCE:** Implement robust server-side filtering by `tag_ids` (if multiple tags are provided, consider if it's AND or OR logic for filtering).
+    -   `[x] **ENHANCE:** Implement robust server-side filtering by `tag_ids` (if multiple tags are provided, consider if it's AND or OR logic for filtering). (Implemented OR logic) — @cline`
     -   `[x] Implement pagination (already done).
     -   `[x] Implement sorting (already done).
 -   `[x] Create API endpoint: `POST /api/apps` (Create app) — @cline`
-    -   `[ ] **ENHANCE:** Modify to accept `tag_ids: number[]` and create associations in `zirospace_app_tags`.
+    -   `[x] **ENHANCE:** Modify to accept `tag_ids: number[]` and create associations in `zirospace_app_tags`. — @cline`
 -   `[x] Create API endpoint: `GET /api/apps/{appId}` (Get app details) — @cline`
-    -   `[ ] **ENHANCE:** Ensure this endpoint also correctly fetches and maps associated tags for the specific app using the join table.
+    -   `[x] **ENHANCE:** Ensure this endpoint also correctly fetches and maps associated tags for the specific app using the join table. — @cline`
 -   `[x] Create API endpoint: `PUT /api/apps/{appId}` (Update app) — @cline`
-    -   `[ ] **ENHANCE:** Modify to accept `tag_ids: number[]` and update associations in `zirospace_app_tags` (clear old, insert new).
+    -   `[x] **ENHANCE:** Modify to accept `tag_ids: number[]` and update associations in `zirospace_app_tags` (clear old, insert new). — @cline`
 -   `[x] Create API endpoint: `DELETE /api/apps/{appId}` (Delete app, ensure cascading deletes for `zirospace_app_tags` and `zirospace_screenshots` are working) — @cline`
 
 ### 1.3. API Endpoint Development (Screenshots & Upload)
@@ -52,10 +52,10 @@
 -   `[x] Implement backend logic to calculate and update `average_rating` — @cline`
 
 ### 1.5. API Endpoint Development (Tags - CRUD for Admin)
--   `[ ] Create API endpoint: `GET /api/tags` (Fetch all available tags. Response: `[{id: number, name: string}, ...]`) — @cline`
--   `[ ] Create API endpoint: `POST /api/tags` (Admin: Create a new tag. Request: `{name: string}`. Response: created tag object. Handle potential duplicate names.) — @cline`
--   `[ ] Create API endpoint: `PUT /api/tags/{tagId}` (Admin: Update a tag name. Request: `{name: string}`. Response: updated tag object. Handle potential duplicate names.) — @cline`
--   `[ ] Create API endpoint: `DELETE /api/tags/{tagId}` (Admin: Delete a tag. Ensure associations in `zirospace_app_tags` are also removed. Response: success/failure) — @cline`
+-   `[x] Create API endpoint: `GET /api/tags` (Fetch all available tags. Response: `[{id: number, name: string}, ...]`) — @cline`
+-   `[x] Create API endpoint: `POST /api/tags` (Admin: Create a new tag. Request: `{name: string}`. Response: created tag object. Handle potential duplicate names.) — @cline`
+-   `[x] Create API endpoint: `PUT /api/tags/{tagId}` (Admin: Update a tag name. Request: `{name: string}`. Response: updated tag object. Handle potential duplicate names.) — @cline`
+-   `[x] Create API endpoint: `DELETE /api/tags/{tagId}` (Admin: Delete a tag. Ensure associations in `zirospace_app_tags` are also removed. Response: success/failure) — @cline`
 
 ### 1.6. Authentication & Authorization
 -   `[x] Ensure all admin-specific API endpoints are protected with basic authentication check — @cline`
