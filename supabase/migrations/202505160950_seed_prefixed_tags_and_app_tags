@@ -1,0 +1,54 @@
+-- Seed 'zirospace_tags'
+INSERT INTO public.zirospace_tags (name)
+VALUES
+  ('Productivity'),
+  ('Utility'),
+  ('Social'),
+  ('Health & Fitness'),
+  ('Finance'),
+  ('Entertainment'),
+  ('Education'),
+  ('Medical'),
+  ('Lifestyle')
+ON CONFLICT (name) DO NOTHING; -- Avoid errors if tags already exist due to re-running seeds
+
+-- Seed 'zirospace_app_tags'
+-- This assumes your apps with IDs 1, 2, 3 from the old 'apps' table
+-- now exist in 'zirospace_apps' with the same IDs.
+-- If IDs changed during migration or are not guaranteed, you'd select app_id by name.
+
+-- Link "ZiroSpace App 1" (assuming ID 1) to "Productivity" and "Utility"
+WITH 
+  app1 AS (SELECT id FROM public.zirospace_apps WHERE name = 'ZiroSpace App 1' LIMIT 1),
+  tag_prod AS (SELECT id FROM public.zirospace_tags WHERE name = 'Productivity' LIMIT 1),
+  tag_util AS (SELECT id FROM public.zirospace_tags WHERE name = 'Utility' LIMIT 1),
+  tag_medical AS (SELECT id FROM public.zirospace_tags WHERE name = 'Medical' LIMIT 1)
+INSERT INTO public.zirospace_app_tags (app_id, tag_id)
+SELECT (SELECT id FROM app1), (SELECT id FROM tag_prod) WHERE (SELECT id FROM app1) IS NOT NULL AND (SELECT id FROM tag_prod) IS NOT NULL
+UNION ALL
+SELECT (SELECT id FROM app1), (SELECT id FROM tag_util) WHERE (SELECT id FROM app1) IS NOT NULL AND (SELECT id FROM tag_util) IS NOT NULL
+UNION ALL
+SELECT (SELECT id FROM app1), (SELECT id FROM tag_medical) WHERE (SELECT id FROM app1) IS NOT NULL AND (SELECT id FROM tag_medical) IS NOT NULL
+ON CONFLICT (app_id, tag_id) DO NOTHING;
+
+-- Link "ZiroSpace App 2" (assuming ID 2) to "Social" and "Health & Fitness"
+WITH 
+  app2 AS (SELECT id FROM public.zirospace_apps WHERE name = 'ZiroSpace App 2' LIMIT 1),
+  tag_social AS (SELECT id FROM public.zirospace_tags WHERE name = 'Social' LIMIT 1),
+  tag_health AS (SELECT id FROM public.zirospace_tags WHERE name = 'Health & Fitness' LIMIT 1)
+INSERT INTO public.zirospace_app_tags (app_id, tag_id)
+SELECT (SELECT id FROM app2), (SELECT id FROM tag_social) WHERE (SELECT id FROM app2) IS NOT NULL AND (SELECT id FROM tag_social) IS NOT NULL
+UNION ALL
+SELECT (SELECT id FROM app2), (SELECT id FROM tag_health) WHERE (SELECT id FROM app2) IS NOT NULL AND (SELECT id FROM tag_health) IS NOT NULL
+ON CONFLICT (app_id, tag_id) DO NOTHING;
+
+-- Link "ZiroSpace App 3" (assuming ID 3) to "Entertainment" and "Lifestyle"
+WITH 
+  app3 AS (SELECT id FROM public.zirospace_apps WHERE name = 'ZiroSpace App 3' LIMIT 1),
+  tag_ent AS (SELECT id FROM public.zirospace_tags WHERE name = 'Entertainment' LIMIT 1),
+  tag_life AS (SELECT id FROM public.zirospace_tags WHERE name = 'Lifestyle' LIMIT 1)
+INSERT INTO public.zirospace_app_tags (app_id, tag_id)
+SELECT (SELECT id FROM app3), (SELECT id FROM tag_ent) WHERE (SELECT id FROM app3) IS NOT NULL AND (SELECT id FROM tag_ent) IS NOT NULL
+UNION ALL
+SELECT (SELECT id FROM app3), (SELECT id FROM tag_life) WHERE (SELECT id FROM app3) IS NOT NULL AND (SELECT id FROM tag_life) IS NOT NULL
+ON CONFLICT (app_id, tag_id) DO NOTHING;
