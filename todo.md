@@ -88,7 +88,7 @@
 -   `[x] UI: Implement form for editing screenshot metadata — @cline`
 -   `[x] UI: Implement "Delete Screenshot" process with confirmation modal — @cline`
 -   `[x] UI: Implement drag-and-drop for reordering screenshots — @cline`
--   `[ ] Task: Add robust client-side validation to screenshot metadata forms (e.g., screen name required, route path format if applicable). — @cline`
+-   `[x] Task: Add robust client-side validation to screenshot metadata forms (e.g., screen name required, route path format if applicable). — @cline`
 
 ### 2.3. Tag Management UI (Admin - New Section)
 -   `[ ] Create admin page/section for managing global tags (e.g., `/admin/sections/tags`) — @cline`

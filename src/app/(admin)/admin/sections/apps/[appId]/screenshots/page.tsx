@@ -132,9 +132,11 @@ const AdminAppScreenshotsPage = () => {
     const errors: { [key: number]: { screen_name?: string, route_path?: string, description?: string } } = {};
     filePreviews.forEach((item, index) => {
       if (!item.metadata.screen_name.trim()) {
-        errors[index] = { ...errors[index], screen_name: 'Screen name is required.' };
+        errors[index] = { ...errors[index], screen_name: 'Screen name cannot be empty.' };
       }
-      // Add other validation rules as needed (e.g., route_path format)
+      if (item.metadata.route_path && !item.metadata.route_path.startsWith('/')) {
+        errors[index] = { ...errors[index], route_path: 'Route path must start with a "/".' };
+      }
     });
 
     if (Object.keys(errors).length > 0) {
@@ -223,9 +225,11 @@ const AdminAppScreenshotsPage = () => {
     // Basic validation before saving
     const errors: { screen_name?: string, route_path?: string, description?: string } = {};
     if (!editScreenName.trim()) {
-      errors.screen_name = 'Screen name is required.';
+      errors.screen_name = 'Screen name cannot be empty.';
     }
-    // Add other validation rules as needed
+    if (editRoutePath && !editRoutePath.startsWith('/')) {
+      errors.route_path = 'Route path must start with a "/".';
+    }
 
     if (Object.keys(errors).length > 0) {
       setEditErrors(errors);
