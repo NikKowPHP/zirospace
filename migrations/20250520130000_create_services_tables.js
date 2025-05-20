@@ -15,7 +15,7 @@ exports.up = function(knex) {
       table.text('image_alt');
       table.text('meta_title');
       table.text('meta_description');
-      table.specificType('keywords', 'text[]');
+      table.text('keywords');
       table.boolean('is_published').defaultTo(true);
       table.integer('order_index').defaultTo(0);
       table.text('created_at');
@@ -32,7 +32,7 @@ exports.up = function(knex) {
       table.text('image_alt');
       table.text('meta_title');
       table.text('meta_description');
-      table.specificType('keywords', 'text[]');
+      table.text('keywords');
       table.boolean('is_published').defaultTo(true);
       table.integer('order_index').defaultTo(0);
       table.text('created_at');

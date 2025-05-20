@@ -1,5 +1,7 @@
 'use client'
 
+import { Service } from '@/domain/models/service.model';
+
 import {
   createContext,
   useContext,
@@ -25,6 +27,7 @@ interface AdminContextType {
   caseStudySliders: CaseStudySlider[]
   testimonials: Record<Locale, Testimonial[]>
   blogPosts: Record<Locale, BlogPost[]>
+  services: Record<Locale, Service[]>
   banners: Record<Locale, Banner[]>
   loading: boolean
   error: string | null
@@ -76,6 +79,11 @@ interface AdminContextType {
   getCaseStudySliders: () => Promise<void>
   getBlogPosts: (locale: Locale) => Promise<void>
   getBlogPost: (id: string, locale: string) => Promise<BlogPost | null>
+  getServices: (locale: Locale) => Promise<void>
+  getServiceById: (id: string, locale: Locale) => Promise<Service | null>
+  createService: (data: Partial<Service>, locale: Locale) => Promise<void>
+  updateService: (id: string, data: Partial<Service>, locale: Locale) => Promise<void>
+  deleteService: (id: string, locale: Locale) => Promise<void>
 }
 
 interface AdminProviderProps {
@@ -97,10 +105,13 @@ export function AdminProvider({
   initialBlogPosts,
   initialBanners,
 }: AdminProviderProps) {
-  const [caseStudies, setCaseStudies] = useState<Record<Locale, CaseStudy[]>>(
-    initialCaseStudies || { en: [], pl: [] }
-  )
-  const [caseStudySliders, setCaseStudySliders] = useState<CaseStudySlider[]>(
+ const [caseStudies, setCaseStudies] = useState<Record<Locale, CaseStudy[]>>(
+  initialCaseStudies || { en: [], pl: [] }
+ )
+ const [services, setServices] = useState<Record<Locale, Service[]>>(
+   { en: [], pl: [] }
+ );
+ const [caseStudySliders, setCaseStudySliders] = useState<CaseStudySlider[]>(
     initialCaseStudySliders || []
   )
   const [testimonials, setTestimonials] = useState<
@@ -144,7 +155,7 @@ export function AdminProvider({
     if (initialBanners) {
       setBanners(initialBanners)
     }
-  }, [initialBanners])
+  }, [initialBanners]);
 
   const createCaseStudy = async (data: Partial<CaseStudy>, locale: Locale) => {
     setLoading(true)

@@ -33,10 +33,15 @@ export class ServiceLocalRepository implements IServiceRepository {
           }
         });
       });
-      return rows.map(ServiceMapper.toDomain);
-    } catch (error: any) { // Keep as any for now
+      return rows.map(row => {
+        if (typeof row?.keywords === 'string') {
+          row.keywords = JSON.parse(row.keywords);
+        }
+        return ServiceMapper.toDomain(row);
+      });
+    } catch (error: unknown) {
       logger.error(`Error fetching services for locale ${locale}:`, error);
-      throw new Error(`Failed to fetch services: ${error.message}`);
+      throw new Error(`Failed to fetch services: ${(error as Error).message}`);
     }
   }
 
@@ -53,10 +58,13 @@ export class ServiceLocalRepository implements IServiceRepository {
           }
         });
       });
+      if (typeof row?.keywords === 'string') {
+        row.keywords = JSON.parse(row.keywords);
+      }
       return row ? ServiceMapper.toDomain(row) : null;
-    } catch (error: any) { // Keep as any for now
+    } catch (error: unknown) {
       logger.error(`Error fetching service with slug ${slug} for locale ${locale}:`, error);
-      throw new Error(`Failed to fetch service by slug: ${error.message}`);
+      throw new Error(`Failed to fetch service by slug: ${(error as Error).message}`);
     }
   }
 
@@ -73,10 +81,13 @@ export class ServiceLocalRepository implements IServiceRepository {
           }
         });
       });
+      if (typeof row?.keywords === 'string') {
+        row.keywords = JSON.parse(row.keywords);
+      }
       return row ? ServiceMapper.toDomain(row) : null;
-    } catch (error: any) { // Keep as any for now
+    } catch (error: unknown) {
       logger.error(`Error fetching service with id ${id} for locale ${locale}:`, error);
-      throw new Error(`Failed to fetch service by id: ${error.message}`);
+      throw new Error(`Failed to fetch service by id: ${(error as Error).message}`);
     }
   }
 
@@ -96,7 +107,12 @@ export class ServiceLocalRepository implements IServiceRepository {
 
       const columns = Object.keys(serviceToInsert).join(', ');
       const placeholders = Object.keys(serviceToInsert).map(() => '?').join(', ');
-      const values = Object.values(serviceToInsert);
+      const values = Object.entries(serviceToInsert).map(([key, value]) => {
+        if (key === 'keywords' && typeof value === 'object') {
+          return JSON.stringify(value);
+        }
+        return value;
+      });
 
       const query = `INSERT INTO ${tableName} (${columns}) VALUES (${placeholders})`;
 
@@ -117,9 +133,9 @@ export class ServiceLocalRepository implements IServiceRepository {
       }
       return createdService;
 
-    } catch (error: any) { // Keep as any for now
+    } catch (error: unknown) {
       logger.error(`Error creating service for locale ${locale}:`, error);
-      throw new Error(`Failed to create service: ${error.message}`);
+      throw new Error(`Failed to create service: ${(error as Error).message}`);
     }
   }
 
@@ -127,7 +143,7 @@ export class ServiceLocalRepository implements IServiceRepository {
     try {
       const tableName = this.getTableName(locale);
       const updates: string[] = [];
-      const params: any[] = []; // Keep as any[] for now
+      const params: (string | number | boolean)[] = [];
 
       // Add updated_at timestamp
       const serviceUpdateWithTimestamp = {
@@ -138,7 +154,11 @@ export class ServiceLocalRepository implements IServiceRepository {
       for (const [key, value] of Object.entries(serviceUpdateWithTimestamp)) {
         if (value !== undefined) {
           updates.push(`${key} = ?`);
-          params.push(value);
+          if (key === 'keywords' && typeof value === 'object') {
+            params.push(JSON.stringify(value) as string);
+          } else {
+            params.push(value as string | number | boolean);
+          }
         }
       }
 
@@ -163,9 +183,9 @@ export class ServiceLocalRepository implements IServiceRepository {
       // Fetch the updated service to return the domain model
       return this.getServiceById(id, locale);
 
-    } catch (error: any) { // Keep as any for now
+    } catch (error: unknown) {
       logger.error(`Error updating service with id ${id} for locale ${locale}:`, error);
-      throw new Error(`Failed to update service: ${error.message}`);
+      throw new Error(`Failed to update service: ${(error as Error).message}`);
     }
   }
 
@@ -186,9 +206,9 @@ export class ServiceLocalRepository implements IServiceRepository {
 
       return result > 0; // Return true if at least one row was deleted
 
-    } catch (error: any) { // Keep as any for now
+    } catch (error: unknown) {
       logger.error(`Error deleting service with id ${id} for locale ${locale}:`, error);
-      throw new Error(`Failed to delete service: ${error.message}`);
+      throw new Error(`Failed to delete service: ${(error as Error).message}`);
     }
   }
 }
