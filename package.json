@@ -62,6 +62,7 @@
     "@types/quill": "^2.0.14",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sqlite3": "^5.1.0",
     "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.1.3",

@@ -85,6 +85,8 @@ export interface CaseStudyImage {
     createdAt?: Date;
     updatedAt?: Date;
   }
+
+  export * from './service.model';
   
   export interface CaseStudySlider {
     readonly id: string;
