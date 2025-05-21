@@ -14,7 +14,6 @@ import { Locale } from '@/i18n'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { BlogPost } from '@/domain/models/blog-post.model'
-import logger from '@/lib/logger'
 import { Banner } from '@/domain/models/banner.model'
 
 interface OrderUpdate {
@@ -180,8 +179,8 @@ export function AdminProvider({
       }
       const data = await response.json();
       setServices((prev) => ({ ...prev, [locale]: data }));
-    } catch (error: any) {
-      setError(error.message || 'Failed to fetch services');
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Failed to fetch services');
     } finally {
       setLoading(false);
     }
@@ -197,8 +196,8 @@ export function AdminProvider({
       }
       const data = await response.json();
       return data;
-    } catch (error: any) {
-      setError(error.message || 'Failed to fetch service');
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : 'Failed to fetch service');
       return null;
     } finally {
       setLoading(false);
@@ -227,8 +226,8 @@ export function AdminProvider({
         ...prev,
         [locale]: [...prev[locale], newService],
       }));
-    } catch (err: any) {
-      setError(err.message || 'Failed to create service');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to create service');
     } finally {
       setLoading(false);
     }
@@ -258,8 +257,8 @@ export function AdminProvider({
           service.id === id ? updatedService : service
         ),
       }));
-    } catch (err: any) {
-      setError(err.message || 'Failed to update service');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to update service');
     } finally {
       setLoading(false);
     }
@@ -285,8 +284,8 @@ export function AdminProvider({
         ...prev,
         [locale]: prev[locale].filter((service) => service.id !== id),
       }));
-    } catch (err: any) {
-      setError(err.message || 'Failed to delete service');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to delete service');
     } finally {
       setLoading(false);
     }
@@ -314,7 +313,7 @@ export function AdminProvider({
         ...prev,
         [locale]: [...prev[locale], newCaseStudy],
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to create case study'
       )
@@ -354,7 +353,7 @@ export function AdminProvider({
           cs.id === id ? updatedCaseStudy : cs
         ),
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to update case study'
       )
@@ -385,7 +384,7 @@ export function AdminProvider({
         ...prev,
         [locale]: prev[locale].filter((cs) => cs.id !== id),
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to delete case study'
       )
@@ -408,7 +407,7 @@ export function AdminProvider({
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to update case study order')
       }
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to update case study order')
       throw err
     } finally {
@@ -440,7 +439,7 @@ export function AdminProvider({
       const newCaseStudySlider = await response.json()
       console.log('newCaseStudySlider', newCaseStudySlider)
       setCaseStudySliders((prev) => [...prev, newCaseStudySlider])
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error
           ? err.message
@@ -477,7 +476,7 @@ export function AdminProvider({
       setCaseStudySliders((prev) =>
         prev.map((cs) => (cs.id === id ? updatedCaseStudySlider : cs))
       )
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error
           ? err.message
@@ -506,7 +505,7 @@ export function AdminProvider({
       }
 
       setCaseStudySliders((prev) => prev.filter((cs) => cs.id !== id))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error
           ? err.message
@@ -543,7 +542,7 @@ export function AdminProvider({
         ...prev,
         [locale]: [...prev[locale], newTestimonial],
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to create testimonial'
       )
@@ -581,7 +580,7 @@ export function AdminProvider({
           cs.id === id ? updatedTestimonial : cs
         ),
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to update testimonial'
       )
@@ -610,7 +609,7 @@ export function AdminProvider({
         ...prev,
         [locale]: prev[locale].filter((cs) => cs.id !== id),
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to delete testimonial'
       )
@@ -642,7 +641,7 @@ export function AdminProvider({
         ...prev,
         [locale]: [...prev[locale], newBlogPost],
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to create blog post'
       )
@@ -680,7 +679,7 @@ export function AdminProvider({
           cs.id === id ? updatedBlogPost : cs
         ),
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to update blog post'
       )
@@ -709,7 +708,7 @@ export function AdminProvider({
         ...prev,
         [locale]: prev[locale].filter((cs) => cs.id !== id),
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to delete blog post'
       )
@@ -743,7 +742,7 @@ export function AdminProvider({
           return cs
         }),
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to pin blog post'
       )
@@ -775,7 +774,7 @@ export function AdminProvider({
         ...prev,
         [locale]: [...prev[locale], newBanner],
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to create banner'
       )
@@ -813,7 +812,7 @@ export function AdminProvider({
           cs.id === id ? updatedBanner : cs
         ),
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to update banner'
       )
@@ -842,7 +841,7 @@ export function AdminProvider({
         ...prev,
         [locale]: prev[locale].filter((cs) => cs.id !== id),
       }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to delete banner'
       )
@@ -862,7 +861,7 @@ export function AdminProvider({
       }
       const data = await response.json()
       setTestimonials((prev) => ({ ...prev, [locale]: data }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to fetch testimonials'
       )
@@ -881,7 +880,7 @@ export function AdminProvider({
       }
       const data = await response.json()
       setCaseStudySliders(data)
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error
           ? err.message
@@ -902,7 +901,7 @@ export function AdminProvider({
       }
       const data = await response.json()
       setBlogPosts((prev) => ({ ...prev, [locale]: data }))
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to fetch blog posts'
       )
@@ -921,7 +920,7 @@ export function AdminProvider({
       }
       const data = await response.json()
       return data
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
         err instanceof Error ? err.message : 'Failed to fetch blog post'
       )
