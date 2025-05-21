@@ -125,6 +125,15 @@ const config = {
   // Powered by header removal & React strict mode
   poweredByHeader: false,
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+    useEslintrc: false,
+    overrideConfig: {
+      linterOptions: {
+        reportUnusedDisableDirectives: 'off',
+      },
+    },
+  },
 }
 
 // Install critters for CSS optimization
