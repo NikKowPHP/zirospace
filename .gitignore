@@ -48,3 +48,5 @@ next-env.d.ts
 .vscode
 
 repomix-output.xml
+
+src/lib/data/sql/sqlite.db
