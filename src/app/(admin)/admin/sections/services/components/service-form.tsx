@@ -31,11 +31,18 @@ export function ServiceForm({
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    trigger,
+    getValues,
   } = useForm<Partial<Service>>({
-    defaultValues: service,
-  })
-  const [content, setContent] = useState(service?.contentHtml || '')
-  const [excerpt, setExcerpt] = useState(service?.excerpt || '')
+    defaultValues: {
+      ...service,
+      orderIndex: service?.orderIndex ?? 0,
+      isPublished: service?.isPublished ?? true,
+    },
+  });
+  const [content, setContent] = useState(service?.contentHtml || '');
+  const [excerpt, setExcerpt] = useState(service?.excerpt || '');
   const [keywords, setKeywords] = useState(service?.keywords?.join(', ') || '')
   const { quill: quillContent, quillRef: quillRefContent } = useQuill({ theme: 'snow' })
   const { quill: quillExcerpt, quillRef: quillRefExcerpt } = useQuill({ theme: 'snow' })
@@ -97,7 +104,13 @@ export function ServiceForm({
         <Input
           type="text"
           id="slug"
-          {...register('slug', { required: 'Slug is required' })}
+          {...register('slug', {
+            required: 'Slug is required',
+            pattern: {
+              value: /^[a-z0-9-]+$/,
+              message: 'Slug must contain only lowercase letters, numbers, and hyphens'
+            }
+          })}
           className="w-full"
         />
         {errors.slug && (
@@ -110,7 +123,14 @@ export function ServiceForm({
         <Input
           type="text"
           id="imageUrl"
-          {...register('imageUrl')}
+          {...register('imageUrl', {
+            onChange: (e) => {
+              if (e.target.value && !getValues('imageAlt')) {
+                setValue('imageAlt', '');
+                trigger('imageAlt');
+              }
+            },
+          })}
           className="w-full"
         />
       </div>
@@ -120,9 +140,14 @@ export function ServiceForm({
         <Input
           type="text"
           id="imageAlt"
-          {...register('imageAlt')}
+          {...register('imageAlt', {
+            required: getValues('imageUrl') ? 'Image Alt Text is required when Image URL is present' : false,
+          })}
           className="w-full"
         />
+        {errors.imageAlt && (
+          <p className="text-red-600">{errors.imageAlt.message}</p>
+        )}
       </div>
 
       <div>
