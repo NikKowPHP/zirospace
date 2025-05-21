@@ -20,7 +20,7 @@ export interface ServiceDTO {
   /** Optional meta description for SEO. */
   meta_description?: string;
   /** Optional keywords for SEO. */
-  keywords?: string[];
+  keywords?: string[] | string;
   /** Indicates if the service is published. */
   is_published: boolean;
   /** Optional order index for sorting. */

@@ -4,14 +4,14 @@ I have completed the following tasks:
 - [x] Verify the chosen SQLite migration file (e.g., `migrations/20250520130000_create_services_tables.js`) defines the `keywords` column as `table.text('keywords')`.
 - [x] Run `npm run migrate:latest` to apply the single, corrected SQLite migration for services tables.
 - [x] Update `test_db.js` to include queries for `services_en` and `services_pl` tables.
-- [ ] Implement `JSON.parse` for the `keywords` field in `ServiceLocalRepository` `getServices` method.
-- [ ] Implement `JSON.parse` for the `keywords` field in `ServiceLocalRepository` `getServiceBySlug` method.
-- [ ] Implement `JSON.parse` for the `keywords` field in `ServiceLocalRepository` `getServiceById` method.
+- [x] Implement `JSON.parse` for the `keywords` field in `ServiceLocalRepository` `getServices` method.
+- [x] Implement `JSON.parse` for the `keywords` field in `ServiceLocalRepository` `getServiceBySlug` method.
+- [x] Implement `JSON.parse` for the `keywords` field in `ServiceLocalRepository` `getServiceById` method.
 - [x] Verify `ServiceMapper` correctly handles `keywords` as `string[]` for domain and DTO, aligning with `ServiceLocalRepository` JSON string storage.
 - [x] Create SQL seed script with `INSERT` statements for `zirospace_services_en` table in Supabase migrations.
 - [x] Create SQL seed script with `INSERT` statements for `zirospace_services_pl` table in Supabase migrations.
-- [ ] Modify `AdminProvider` in `src/contexts/admin-context.tsx` to use the `initialServices` prop for initializing its `services` state.
-- [ ] Write unit tests for `ServiceMapper` in `src/infrastructure/mappers/service.mapper.ts` covering all mapping scenarios.
+- [x] Modify `AdminProvider` in `src/contexts/admin-context.tsx` to use the `initialServices` prop for initializing its `services` state.
+- [x] Write unit tests for `ServiceMapper` in `src/infrastructure/mappers/service.mapper.ts` covering all mapping scenarios.
 - [x] Add JSDoc/TSDoc comments to `Service` interface properties in `src/domain/models/service.model.ts`.
 - [x] Add JSDoc/TSDoc comments to `ServiceDTO` interface properties in `src/infrastructure/dto/service.dto.ts`.
 - [x] Add JSDoc/TSDoc comments to `IServiceRepository` interface and its methods in `src/lib/interfaces/service.interface.ts`.

@@ -105,6 +105,7 @@ export function AdminProvider({
   initialTestimonials,
   initialBlogPosts,
   initialBanners,
+  initialServices, // Added initialServices here
 }: AdminProviderProps) {
   const [caseStudies, setCaseStudies] = useState<Record<Locale, CaseStudy[]>>(
     initialCaseStudies || { en: [], pl: [] }
@@ -121,7 +122,9 @@ export function AdminProvider({
   const [banners, setBanners] = useState<Record<Locale, Banner[]>>(
     initialBanners || { en: [], pl: [] }
   )
-  const [services, setServices] = useState<Record<Locale, Service[]>>({ en: [], pl: [] });
+  const [services, setServices] = useState<Record<Locale, Service[]>>(
+    initialServices || { en: [], pl: [] } // Initialize with initialServices
+  );
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -155,6 +158,17 @@ export function AdminProvider({
       setBanners(initialBanners)
     }
   }, [initialBanners]);
+
+  // Initialize services when initialServices changes
+  useEffect(() => {
+    if (initialServices) {
+      setServices(initialServices);
+    }
+  }, [initialServices]);
+
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
 
   const getServices = useCallback(async (locale: Locale) => {
     setLoading(true);
