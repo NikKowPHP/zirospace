@@ -63,14 +63,14 @@ This feature will allow creating and managing individual service pages, similar 
         - Implement `unstable_cache` for `getServices` and `getServiceBySlug`, using a new cache tag.
 
 ### 1.5. Service Layer
-    - [ ] Create `src/lib/services/service.service.ts`.
+    - [X] Create `src/lib/services/service.service.ts`.
         - Implement methods that call the appropriate repository (local or remote based on `MOCK_REPOSITORIES`).
         - Handle any business logic, e.g., automatically generating a slug from the title if not provided, trimming string fields.
         - Ensure keywords are handled correctly (array in domain, string/JSON in SQLite, array in PostgreSQL).
     - [X] Update `CACHE_TAGS` in `src/lib/utils/cache.ts`: add `SERVICES: 'services'`.
 
 ### 1.6. API Routes
-    - [ ] **Main Service API Route**: Create `src/app/api/admin/services/route.ts`.
+    - [X] **Main Service API Route**: Create `src/app/api/admin/services/route.ts`.
         - `POST`: Handles creation of a new service. Calls `serviceService.createService`. Revalidates `CACHE_TAGS.SERVICES`.
         - `GET`: Handles fetching a single service by ID and locale (passed as query params). Calls `serviceService.getServiceById`.
         - `PUT`: Handles updating a service by ID (passed as query param). Calls `serviceService.updateService`. Revalidates `CACHE_TAGS.SERVICES`.
@@ -80,39 +80,39 @@ This feature will allow creating and managing individual service pages, similar 
 ## Phase 2: Admin Panel Integration
 
 ### 2.1. Admin Context
-    - [ ] Update `AdminContextType` in `src/contexts/admin-context.tsx`:
+    - [X] Update `AdminContextType` in `src/contexts/admin-context.tsx`:
         - Add `services: Record<Locale, Service[]>`.
         - Add `getServices(locale: Locale): Promise<void>`.
         - Add `getServiceById(id: string, locale: Locale): Promise<Service | null>`.
         - Add `createService(data: Partial<Service>, locale: Locale): Promise<void>`.
         - Add `updateService(id: string, data: Partial<Service>, locale: Locale): Promise<void>`.
         - Add `deleteService(id: string, locale: Locale): Promise<void>`.
-    - [ ] Implement these new states and methods in `AdminProvider`, mirroring existing patterns for other content types.
+    - [X] Implement these new states and methods in `AdminProvider`, mirroring existing patterns for other content types.
     - [ ] Fetch initial services data in `AdminProvider` props if the services admin page is loaded.
 
 ### 2.2. Admin Navigation
-    - [ ] Add a "Services" link to the admin sidebar in `src/app/(admin)/admin/sections/layout.tsx`.
+    - [X] Add a "Services" link to the admin sidebar in `src/app/(admin)/admin/sections/layout.tsx`.
         - Choose an appropriate Lucide icon (e.g., `Briefcase`, `FileText`, or `LayoutList`).
 
 ### 2.3. Services Management UI
-    - [ ] Create admin page directory: `src/app/(admin)/admin/sections/services/`.
-    - [ ] Create `src/app/(admin)/admin/sections/services/page.tsx`:
+    - [X] Create admin page directory: `src/app/(admin)/admin/sections/services/`.
+    - [X] Create `src/app/(admin)/admin/sections/services/page.tsx`:
         - This page will render `ServiceList`.
         - It should fetch initial services data for the `AdminProvider` when server-rendered.
-    - [ ] **Service List Component**: Create `src/app/(admin)/admin/sections/services/service-list.tsx`.
+    - [X] **Service List Component**: Create `src/app/(admin)/admin/sections/services/service-list.tsx`.
         - Display a table of services (columns: Title, Slug, Excerpt, Published Status, Actions).
         - Include buttons: "Add Service", "Edit", "Delete" for each service.
         - Implement a locale switcher (EN/PL).
         - Use `useAdmin()` to get services and action handlers.
         - Similar structure to `BlogPostList`.
-    - [ ] **Service Form Component**: Create `src/app/(admin)/admin/sections/services/components/service-form.tsx`.
+    - [X] **Service Form Component**: Create `src/app/(admin)/admin/sections/services/components/service-form.tsx`.
         - Form fields for all `Service` model properties: Title, Subtitle, Slug, Excerpt, ContentHTML (use Quill editor), Image URL, Image Alt, Meta Title, Meta Description, Keywords (as a comma-separated string or a tag input), Published (checkbox), Order Index.
         - Handle form submission for creating or updating a service.
         - Similar structure to `BlogPostForm`.
-    - [ ] **Create Service Page**: `src/app/(admin)/admin/sections/services/create/page.tsx`.
+    - [X] **Create Service Page**: `src/app/(admin)/admin/sections/services/create/page.tsx`.
         - Renders `ServiceForm` for creating new service entries.
         - Handles submission via `useAdmin().createService`.
-    - [ ] **Edit Service Page**: `src/app/(admin)/admin/sections/services/edit/[id]/page.tsx`.
+    - [X] **Edit Service Page**: `src/app/(admin)/admin/sections/services/edit/[id]/page.tsx`.
         - Fetches the specific service data using `useAdmin().getServiceById(id, locale)`.
         - Renders `ServiceForm` pre-filled with the service data for editing.
         - Handles submission via `useAdmin().updateService`.
@@ -120,25 +120,25 @@ This feature will allow creating and managing individual service pages, similar 
 ## Phase 3: Frontend Display & SEO
 
 ### 3.1. Individual Service Page
-    - [ ] Create dynamic route: `src/app/[locale]/services/[slug]/page.tsx`.
-    - [ ] In `page.tsx`, fetch service data using `serviceService.getServiceBySlug(slug, locale)`.
-    - [ ] Display the service's content: `title`, `subtitle` (if any), `imageUrl` (if any), and `contentHtml` (using `dangerouslySetInnerHTML` after sanitization if necessary, or ensure content is safe from editor).
-    - [ ] Include publication date (`createdAt`).
-    - [ ] If service not found or not published (if `isPublished` logic is added to fetch), return `notFound()`.
-    - [ ] **SEO**: Implement `generateMetadata` function:
+    - [X] Create dynamic route: `src/app/[locale]/services/[slug]/page.tsx`.
+    - [X] In `page.tsx`, fetch service data using `serviceService.getServiceBySlug(slug, locale)`.
+    - [X] Display the service's content: `title`, `subtitle` (if any), `imageUrl` (if any), and `contentHtml` (using `dangerouslySetInnerHTML` after sanitization if necessary, or ensure content is safe from editor).
+    - [X] Include publication date (`createdAt`).
+    - [X] If service not found or not published (if `isPublished` logic is added to fetch), return `notFound()`.
+    - [X] **SEO**: Implement `generateMetadata` function:
         - Set page `title` (using `service.metaTitle` or `service.title`).
         - Set page `description` (using `service.metaDescription` or `service.excerpt`).
         - Set `keywords` (using `service.keywords`).
         - Configure OpenGraph and Twitter card metadata (title, description, image).
-    - [ ] **Structured Data**: Add JSON-LD script for `Article` or `Service` schema.
+    - [X] **Structured Data**: Add JSON-LD script for `Article` or `Service` schema.
         - Include fields like `headline`, `description`, `image`, `datePublished`, `author`, `publisher`.
-    - [ ] Style the page appropriately, perhaps similar to `blog-post.module.css` or a new dedicated style.
+    - [X] Style the page appropriately, perhaps similar to `blog-post.module.css` or a new dedicated style.
 
 ### 3.2. Sitemap & Robots.txt
-    - [ ] Update `src/app/sitemap.ts`:
+    - [X] Update `src/app/sitemap.ts`:
         - Fetch all published services for each locale.
         - Add URLs for each service page (e.g., `${baseUrl}/${locale}/services/${service.slug}`) to the sitemap.
-    - [ ] Update `src/app/robots.ts`:
+    - [X] Update `src/app/robots.ts`:
         - Ensure `/services/` and `/services/*` paths are allowed for crawlers.
 
 ## Phase 4: Testing & Refinement
@@ -156,7 +156,7 @@ This feature will allow creating and managing individual service pages, similar 
         - Verify page titles, meta descriptions, and keywords in the browser's dev tools.
         - Use Google's Rich Results Test or Schema Markup Validator to check JSON-LD.
     - [ ] **Responsive Design**: Test admin forms and frontend service pages on various screen sizes.
-    - [ ] **i18n**: Ensure content switching works in admin and frontend (if applicable to service content itself beyond just locale-specific tables).
+        - [ ] **i18n**: Ensure content switching works in admin and frontend (if applicable to service content itself beyond just locale-specific tables).
     - [ ] **Cache Revalidation**: Confirm that creating, updating, or deleting a service correctly revalidates the cache and reflects changes on the frontend.
 
 ### 1.2. Database Migrations (SQLite for local dev - `MOCK_REPOSITORIES=true`)

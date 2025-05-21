@@ -69,6 +69,14 @@ export default async function AdminLayout({
           </Link>
 
           <Link 
+            href="/admin/sections/services" 
+            className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <FileText className="w-5 h-5" />
+            <span className="font-medium">Services</span>
+          </Link>
+
+          <Link 
             href="/admin/sections/banners" 
             className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
@@ -103,4 +111,4 @@ export default async function AdminLayout({
       </div>
       </AdminProvider>
   )
-} 
+}

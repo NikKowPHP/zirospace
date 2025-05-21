@@ -93,6 +93,7 @@ interface AdminProviderProps {
   initialTestimonials?: Record<Locale, Testimonial[]>
   initialBlogPosts?: Record<Locale, BlogPost[]>
   initialBanners?: Record<Locale, Banner[]>
+  initialServices?: Record<Locale, Service[]>
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined)
@@ -108,9 +109,6 @@ export function AdminProvider({
  const [caseStudies, setCaseStudies] = useState<Record<Locale, CaseStudy[]>>(
   initialCaseStudies || { en: [], pl: [] }
  )
- const [services, setServices] = useState<Record<Locale, Service[]>>(
-   { en: [], pl: [] }
- );
  const [caseStudySliders, setCaseStudySliders] = useState<CaseStudySlider[]>(
     initialCaseStudySliders || []
   )
@@ -123,6 +121,7 @@ export function AdminProvider({
   const [banners, setBanners] = useState<Record<Locale, Banner[]>>(
     initialBanners || { en: [], pl: [] }
   )
+  const [services, setServices] = useState<Record<Locale, Service[]>>({ en: [], pl: [] });
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -156,6 +155,128 @@ export function AdminProvider({
       setBanners(initialBanners)
     }
   }, [initialBanners]);
+
+  const getServices = useCallback(async (locale: Locale) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/admin/services?locale=${locale}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch services');
+      }
+      const data = await response.json();
+      setServices((prev) => ({ ...prev, [locale]: data }));
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch services');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const getServiceById = useCallback(async (id: string, locale: string): Promise<Service | null> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/admin/services?id=${id}&locale=${locale}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch service');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      setError(error.message || 'Failed to fetch service');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const createService = async (data: Partial<Service>, locale: Locale) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/admin/services`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data, locale }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: 'Failed to create service' }));
+        throw new Error(errorData.error || 'Failed to create service');
+      }
+
+      const newService = await response.json();
+      setServices((prev) => ({
+        ...prev,
+        [locale]: [...prev[locale], newService],
+      }));
+    } catch (err: any) {
+      setError(err.message || 'Failed to create service');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateService = async (id: string, data: Partial<Service>, locale: Locale) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/admin/services?id=${id}&locale=${locale}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: 'Failed to update service' }));
+        throw new Error(errorData.error || 'Failed to update service');
+      }
+
+      const updatedService = await response.json();
+      setServices((prev) => ({
+        ...prev,
+        [locale]: prev[locale].map((service) =>
+          service.id === id ? updatedService : service
+        ),
+      }));
+    } catch (err: any) {
+      setError(err.message || 'Failed to update service');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteService = async (id: string, locale: Locale) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/admin/services?id=${id}&locale=${locale}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: 'Failed to delete service' }));
+        throw new Error(errorData.error || 'Failed to delete service');
+      }
+
+      setServices((prev) => ({
+        ...prev,
+        [locale]: prev[locale].filter((service) => service.id !== id),
+      }));
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete service');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const createCaseStudy = async (data: Partial<CaseStudy>, locale: Locale) => {
     setLoading(true)
@@ -819,6 +940,12 @@ export function AdminProvider({
         getCaseStudySliders,
         getBlogPosts,
         getBlogPost,
+        services,
+        getServices,
+        getServiceById,
+        createService,
+        updateService,
+        deleteService,
       }}
     >
       {children}

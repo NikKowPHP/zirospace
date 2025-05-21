@@ -14,6 +14,8 @@ export default function robots(): MetadataRoute.Robots {
           '/blog/*',
           '/case-studies',
           '/case-studies/*',
+          '/services',
+          '/services/*',
         ],
         disallow: [],
       },
@@ -30,4 +32,4 @@ export default function robots(): MetadataRoute.Robots {
     sitemap: `${baseUrl}/sitemap.xml`,
     host: baseUrl,
   }
-} 
+}
