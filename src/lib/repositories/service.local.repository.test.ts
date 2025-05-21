@@ -1,8 +1,6 @@
 import { ServiceLocalRepository } from './service.local.repository';
 import { ServiceDTO } from '../../infrastructure/dto/service.dto';
-import { Service } from '@/domain/models/service.model';
 import { Database } from 'sqlite3';
-import { getDatabaseFilePath } from '@/lib/config/database.config';
 
 // Mock the database connection
 jest.mock('sqlite3', () => {
@@ -16,70 +14,78 @@ jest.mock('sqlite3', () => {
   };
 });
 
-jest.mock('@/lib/config/database.config', () => ({
-  getDatabaseFilePath: jest.fn().mockReturnValue(':memory:'),
-}));
-
 describe('ServiceLocalRepository', () => {
   let serviceLocalRepository: ServiceLocalRepository;
-  let dbMock: any;
+  let dbMock: {
+    all: jest.Mock;
+    get: jest.Mock;
+    run: jest.Mock;
+  };
 
   beforeEach(() => {
     serviceLocalRepository = new ServiceLocalRepository();
-    dbMock = new Database(getDatabaseFilePath());
+    dbMock = (Database as jest.Mock).mock.instances[0] as any;
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
+  it('should return the correct table name based on the locale', () => {
+    expect(serviceLocalRepository['getTableName']('en')).toBe('services_en');
+    expect(serviceLocalRepository['getTableName']('pl')).toBe('services_pl');
+  });
+
   it('should get all services for a given locale', async () => {
     const mockServices: ServiceDTO[] = [
-      { id: '1', slug: 'test-service-1', title: 'Test Service 1', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now' },
-      { id: '2', slug: 'test-service-2', title: 'Test Service 2', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now' },
+      { id: '1', slug: 'test-service-1', title: 'Test Service 1', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now', keywords: '[]' },
+      { id: '2', slug: 'test-service-2', title: 'Test Service 2', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now', keywords: '[]' },
     ];
-    dbMock.all.mockImplementation((query, params, callback) => {
+    dbMock.all.mockImplementation((query: string, params: any[], callback: (err: Error | null, rows: ServiceDTO[]) => void) => {
       callback(null, mockServices);
     });
 
     const services = await serviceLocalRepository.getServices('en');
 
     expect(dbMock.all).toHaveBeenCalledTimes(1);
+    expect(dbMock.all).toHaveBeenCalledWith('SELECT * FROM services_en', [], expect.any(Function));
     expect(services.length).toBe(2);
     expect(services[0].id).toBe('1');
   });
 
   it('should get a service by its slug for a given locale', async () => {
-    const mockService: ServiceDTO = { id: '1', slug: 'test-service', title: 'Test Service', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now' };
-    dbMock.get.mockImplementation((query, params, callback) => {
+    const mockService: ServiceDTO = { id: '1', slug: 'test-service', title: 'Test Service', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now', keywords: '[]' };
+    dbMock.get.mockImplementation((query: string, params: any[], callback: (err: Error | null, row: ServiceDTO) => void) => {
       callback(null, mockService);
     });
 
     const service = await serviceLocalRepository.getServiceBySlug('test-service', 'en');
 
     expect(dbMock.get).toHaveBeenCalledTimes(1);
-    expect(service.id).toBe('1');
+    expect(dbMock.get).toHaveBeenCalledWith('SELECT * FROM services_en WHERE slug = ?', ['test-service'], expect.any(Function));
+    expect(service?.id).toBe('1');
   });
 
   it('should get a service by its ID for a given locale', async () => {
-    const mockService: ServiceDTO = { id: '1', slug: 'test-service', title: 'Test Service', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now' };
-    dbMock.get.mockImplementation((query, params, callback) => {
+    const mockService: ServiceDTO = { id: '1', slug: 'test-service', title: 'Test Service', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now', keywords: '[]' };
+    dbMock.get.mockImplementation((query: string, params: any[], callback: (err: Error | null, row: ServiceDTO) => void) => {
       callback(null, mockService);
     });
 
     const service = await serviceLocalRepository.getServiceById('1', 'en');
 
     expect(dbMock.get).toHaveBeenCalledTimes(1);
-    expect(service.id).toBe('1');
+    expect(dbMock.get).toHaveBeenCalledWith('SELECT * FROM services_en WHERE id = ?', ['1'], expect.any(Function));
+    expect(service?.id).toBe('1');
   });
 
   it('should create a new service', async () => {
-    const mockService: Partial<ServiceDTO> = { slug: 'test-service', title: 'Test Service', content_html: 'content', is_published: true };
-    dbMock.run.mockImplementation((query, params, callback) => {
+    const mockService: Partial<ServiceDTO> = { slug: 'test-service', title: 'Test Service', content_html: 'content', is_published: true, keywords: [] };
+    dbMock.run.mockImplementation((query: string, params: any[], callback: (err: Error | null) => void) => {
       callback(null);
     });
-    dbMock.get.mockImplementation((query, params, callback) => {
-      callback(null, { id: '1', ...mockService });
+    dbMock.get.mockImplementation((query: string, params: any[], callback: (err: Error | null, row: ServiceDTO) => void) => {
+      callback(null, { id: '1', ...mockService, created_at: 'now', updated_at: 'now' } as ServiceDTO);
     });
 
     const service = await serviceLocalRepository.createService(mockService, 'en');
@@ -91,28 +97,28 @@ describe('ServiceLocalRepository', () => {
 
   it('should update an existing service', async () => {
     const mockService: Partial<ServiceDTO> = { title: 'Updated Test Service' };
-    dbMock.run.mockImplementation((query, params, callback) => {
+    dbMock.run.mockImplementation((query: string, params: any[], callback: (err: Error | null) => void) => {
       callback(null);
     });
-    dbMock.get.mockImplementation((query, params, callback) => {
-      callback(null, { id: '1', slug: 'test-service', title: 'Updated Test Service', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now' });
+    dbMock.get.mockImplementation((query: string, params: any[], callback: (err: Error | null, row: ServiceDTO) => void) => {
+      callback(null, { id: '1', slug: 'test-service', title: 'Updated Test Service', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now', keywords: '[]' } as ServiceDTO);
     });
 
     const service = await serviceLocalRepository.updateService('1', mockService, 'en');
 
     expect(dbMock.run).toHaveBeenCalledTimes(1);
     expect(dbMock.get).toHaveBeenCalledTimes(1);
-    expect(service.title).toBe('Updated Test Service');
+    expect(service?.title).toBe('Updated Test Service');
   });
 
   it('should delete a service', async () => {
-    dbMock.run.mockImplementation((query, params, callback) => {
+    dbMock.run.mockImplementation((query: string, params: any[], callback: (err: Error | null) => void) => {
       callback(null);
     });
 
     const result = await serviceLocalRepository.deleteService('1', 'en');
 
     expect(dbMock.run).toHaveBeenCalledTimes(1);
-    expect(result).toBe(undefined);
+    expect(result).toBe(true);
   });
 });

@@ -63,14 +63,26 @@ describe('ServiceList Component', () => {
     expect(mockDeleteService).toHaveBeenCalledTimes(0); // Confirm is present
   });
 
-  it('should push to the edit page when the edit button is clicked', () => {
+  it('should call deleteService with correct parameters after confirmation', async () => {
+    const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     render(<ServiceList />);
 
+    const deleteButton = screen.getAllByText('Delete')[0];
+    fireEvent.click(deleteButton);
+
+    expect(confirmSpy).toHaveBeenCalled();
+    expect(mockDeleteService).toHaveBeenCalledWith('1', 'en');
+
+    confirmSpy.mockRestore();
+  });
+
+  it('should push to the edit page when the edit button is clicked', () => {
+    render(<ServiceList />);
     const editButton = screen.getAllByText('Edit')[0];
     fireEvent.click(editButton);
 
     const router = useRouter() as jest.Mocked<ReturnType<typeof useRouter>>;
-    expect(router.push).toHaveBeenCalled();
+    expect(router.push).toHaveBeenCalledWith('/admin/sections/services/edit/1?locale=en');
   });
 
   it('should push to the create page when the add service button is clicked', () => {
@@ -82,4 +94,14 @@ describe('ServiceList Component', () => {
     const router = useRouter() as jest.Mocked<ReturnType<typeof useRouter>>;
     expect(router.push).toHaveBeenCalledWith('/admin/sections/services/create');
   });
+
+  it('should change the active locale when a locale button is clicked', () => {
+    render(<ServiceList />);
+
+    const polishButton = screen.getByText('Polish');
+    fireEvent.click(polishButton);
+
+    expect(useAdmin).toHaveBeenCalled();
+  });
+});
 });

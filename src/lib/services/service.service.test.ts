@@ -1,4 +1,3 @@
-import { serviceService } from './service.service';
 import { IServiceRepository } from '../interfaces/service.interface';
 import { Service } from '../../domain/models/service.model';
 import { ServiceDTO } from '../../infrastructure/dto/service.dto';
@@ -95,5 +94,25 @@ describe('ServiceService', () => {
 
     expect(mockServiceRepository.createService).toHaveBeenCalledWith(expect.objectContaining({ slug: 'test-service' }), 'en');
     expect(service.slug).toBe('test-service');
+  });
+
+  it('should trim string fields on create', async () => {
+    const mockServiceDTO: Partial<ServiceDTO> = { title: '  Test Service  ', subtitle: '  Test Subtitle  ' };
+    const mockCreatedService: Service = { id: '3', slug: 'test-service', title: 'Test Service', subtitle: 'Test Subtitle', contentHtml: 'content', isPublished: true, createdAt: 'now', updatedAt: 'now' };
+    (mockServiceRepository.createService as jest.Mock).mockResolvedValue(mockCreatedService);
+
+    await serviceService.createService(mockServiceDTO, 'en');
+
+    expect(mockServiceRepository.createService).toHaveBeenCalledWith(expect.objectContaining({ title: 'Test Service', subtitle: 'Test Subtitle' }), 'en');
+  });
+
+  it('should trim string fields on update', async () => {
+    const mockServiceDTO: Partial<ServiceDTO> = { title: '  Updated Test Service  ', subtitle: '  Updated Test Subtitle  ' };
+    const mockUpdatedService: Service = { id: '1', slug: 'test-service', title: 'Updated Test Service', subtitle: 'Updated Test Subtitle', contentHtml: 'content', isPublished: true, createdAt: 'now', updatedAt: 'now' };
+    (mockServiceRepository.updateService as jest.Mock).mockResolvedValue(mockUpdatedService);
+
+    await serviceService.updateService('1', mockServiceDTO, 'en');
+
+    expect(mockServiceRepository.updateService).toHaveBeenCalledWith('1', expect.objectContaining({ title: 'Updated Test Service', subtitle: 'Updated Test Subtitle' }), 'en');
   });
 });
