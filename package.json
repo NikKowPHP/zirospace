@@ -16,6 +16,7 @@
     "docker:proxy": "docker-compose -f docker-compose.proxy.yml up",
     "docker:mac:run": "docker-compose -f docker-compose.mac.yml up",
     "migrate:latest": "npx knex migrate:latest --knexfile knexfile.js",
+    "seed:run": "npx knex seed:run --knexfile knexfile.mjs",
     "migrate:fresh": "npx knex migrate:fresh --knexfile knexfile.js"
   },
   "dependencies": {

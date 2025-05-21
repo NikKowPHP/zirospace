@@ -1,7 +1,7 @@
 // test_db.js
-import knexConfig from './knexfile';
-import knex from 'knex';
-const db = knex(knexConfig.development);
+import knexConfig from './knexfile.mjs'
+import knex from 'knex'
+const db = knex(knexConfig.development)
 
 async function testQueries() {
   try {
@@ -16,9 +16,7 @@ async function testQueries() {
     const sliderResults = await db('case_study_sliders').select('*')
     console.log('case_study_sliders:', sliderResults)
 
-    const sliderImagesResults = await db('case_study_slider_images').select(
-      '*'
-    )
+    const sliderImagesResults = await db('case_study_slider_images').select('*')
     console.log('case_study_slider_images:', sliderImagesResults)
 
     // Join Slider and Images
@@ -48,7 +46,6 @@ async function testQueries() {
     const blogPostsPlResults = await db('blog_posts_pl').select('*')
     console.log('blog_posts_pl:', blogPostsPlResults)
 
-
     const bannersEnResults = await db('zirospace_banners_en').select('*')
     console.log('zirospace_banners_en:', bannersEnResults)
 
@@ -61,9 +58,10 @@ async function testQueries() {
     const servicesPlResults = await db('services_pl').select('*')
     console.log('services_pl:', servicesPlResults)
 
-    console.log('Error querying database:', error)
+  } catch (error) {
+    console.error('Error querying database:', error);
   } finally {
-    knex.destroy()
+    db.destroy()
   }
 }
 

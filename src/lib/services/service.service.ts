@@ -3,7 +3,7 @@ import { Service } from '../../domain/models/service.model';
 import { ServiceDTO } from '../../infrastructure/dto/service.dto';
 import { generateSlug } from '../utils/slugify';
 import { serviceRepository } from '../repositories/service.repository';
-
+import { serviceLocalRepository } from '../repositories/service.local.repository';
 /**
  * @class ServiceService
  * @desc Service class for managing services.
@@ -11,14 +11,14 @@ import { serviceRepository } from '../repositories/service.repository';
 class ServiceService {
   private readonly repository: IServiceRepository;
 
-  /**
-   * @constructor
-   * @param {IServiceRepository} repository - The service repository to use.
-   */
-  constructor(repository: IServiceRepository) {
-    this.repository = repository;
+ 
+  constructor() {
+    if(process.env.MOCK_REPOSITORIES === 'true') {
+      this.repository= serviceLocalRepository
+    } else {
+      this.repository= serviceRepository
+    }
   }
-
   /**
    * @public
    * @async
@@ -128,7 +128,7 @@ class ServiceService {
 
 
 // Export the singleton instance
-export const serviceService = new ServiceService(serviceRepository);
+export const serviceService = new ServiceService();
 
 // Export the class as default
 export default ServiceService;

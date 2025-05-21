@@ -2,9 +2,7 @@ import { IServiceRepository } from '../interfaces/service.interface';
 import { Service } from '../../domain/models/service.model';
 import { ServiceDTO } from '../../infrastructure/dto/service.dto';
 import { ServiceMapper } from '../../infrastructure/mappers/service.mapper';
-import { supabase } from '@/lib/supabase'; // Change import
-import { unstable_cache } from 'next/cache';
-import { CACHE_TAGS } from '@/lib/utils/cache';
+import { supabase } from '@/lib/supabase';
 import logger from '@/lib/logger';
 
 // const supabase = createClient(); // Remove this line
@@ -16,16 +14,8 @@ export class ServiceRepository implements IServiceRepository {
 
   async getServices(locale: string): Promise<Service[]> {
     const tableName = this.getTableName(locale);
-    const { data, error } = await unstable_cache(
-      async () => {
-        logger.info(`Fetching services for locale: ${locale}`);
-        return supabase.from(tableName).select('*');
-      },
-      [`services-${locale}`],
-      {
-        tags: [CACHE_TAGS.SERVICES, `${CACHE_TAGS.SERVICES}-${locale}`],
-      }
-    )();
+    logger.log(`Fetching services for locale: ${locale} (without unstable_cache)`);
+    const { data, error } = await supabase.from(tableName).select('*');
 
     if (error) {
       logger.error(`Error fetching services from Supabase for locale ${locale}:`, error);
@@ -37,23 +27,17 @@ export class ServiceRepository implements IServiceRepository {
 
   async getServiceBySlug(slug: string, locale: string): Promise<Service | null> {
     const tableName = this.getTableName(locale);
-    const { data, error } = await unstable_cache(
-      async () => {
-        logger.info(`Fetching service by slug "${slug}" for locale: ${locale}`);
-        return supabase.from(tableName).select('*').eq('slug', slug).single();
-      },
-      [`service-${locale}-${slug}`],
-      {
-        tags: [CACHE_TAGS.SERVICES, `${CACHE_TAGS.SERVICES}-${locale}`, `${CACHE_TAGS.SERVICES}-${locale}-${slug}`],
-      }
-    )();
+    logger.log(`Fetching service by slug "${slug}" for locale: ${locale} (without unstable_cache)`);
+    const { data, error } = await supabase.from(tableName).select('*').eq('slug', slug).single();
 
     if (error) {
       if (error.code === 'PGRST116') { // No rows found
         return null;
       }
       logger.error(`Error fetching service by slug "${slug}" from Supabase for locale ${locale}:`, error);
-      throw new Error(`Failed to fetch service by slug: ${error.message}`);
+      // Include more details from the error object in the thrown error message
+      const errorMessage = `Failed to fetch service by slug: ${error.message}${error.details ? ' Details: ' + error.details : ''}`;
+      throw new Error(errorMessage);
     }
 
     return data ? ServiceMapper.toDomain(data as ServiceDTO) : null;
