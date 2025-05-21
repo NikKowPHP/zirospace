@@ -125,4 +125,19 @@ class ServiceService {
   }
 }
 
+// Export the class as default
+export default ServiceService;
+
+// Export the singleton instance
+// Export the class as named export
+export { ServiceService };
+
+// Export the singleton instance
+// Export the class as named export
+export { ServiceService };
+
+// Export the singleton instance
 export const serviceService = new ServiceService(serviceRepository);
+export default ServiceService;
+export { ServiceService };
+export { ServiceService };

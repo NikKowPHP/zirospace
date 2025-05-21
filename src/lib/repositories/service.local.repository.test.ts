@@ -14,17 +14,19 @@ jest.mock('sqlite3', () => {
   };
 });
 
+type MockDatabase = {
+  all: jest.Mock;
+  get: jest.Mock;
+  run: jest.Mock;
+};
+
 describe('ServiceLocalRepository', () => {
   let serviceLocalRepository: ServiceLocalRepository;
-  let dbMock: {
-    all: jest.Mock;
-    get: jest.Mock;
-    run: jest.Mock;
-  };
+  let dbMock: MockDatabase;
 
   beforeEach(() => {
     serviceLocalRepository = new ServiceLocalRepository();
-    dbMock = (Database as jest.Mock).mock.instances[0] as any;
+    dbMock = (Database as unknown as jest.Mock).mock.instances[0] as MockDatabase;
   });
 
   afterEach(() => {
@@ -38,12 +40,45 @@ describe('ServiceLocalRepository', () => {
 
   it('should get all services for a given locale', async () => {
     const mockServices: ServiceDTO[] = [
-      { id: '1', slug: 'test-service-1', title: 'Test Service 1', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now', keywords: '[]' },
-      { id: '2', slug: 'test-service-2', title: 'Test Service 2', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now', keywords: '[]' },
+      {
+        id: '1',
+        slug: 'test-service-1',
+        title: 'Test Service 1',
+        content_html: 'content',
+        is_published: true,
+        created_at: 'now',
+        updated_at: 'now',
+        keywords: '["test","service"]'
+      },
+      {
+        id: '2',
+        slug: 'test-service-2',
+        title: 'Test Service 2',
+        content_html: 'content',
+        is_published: false,  // Test different published state
+        created_at: 'now',
+        updated_at: 'now',
+        keywords: '[]'
+      },
     ];
-    dbMock.all.mockImplementation((query: string, params: any[], callback: (err: Error | null, rows: ServiceDTO[]) => void) => {
+    dbMock.all.mockImplementation((
+      query: string,
+      params: (string | number | boolean)[],
+      callback: (err: Error | null, rows: ServiceDTO[]) => void
+    ) => {
       callback(null, mockServices);
     });
+
+    // Test empty case
+    dbMock.all.mockImplementationOnce((
+      query: string,
+      params: (string | number | boolean)[],
+      callback: (err: Error | null, rows: ServiceDTO[]) => void
+    ) => {
+      callback(null, []);
+    });
+    const emptyServices = await serviceLocalRepository.getServices('en');
+    expect(emptyServices).toEqual([]);
 
     const services = await serviceLocalRepository.getServices('en');
 
@@ -55,7 +90,11 @@ describe('ServiceLocalRepository', () => {
 
   it('should get a service by its slug for a given locale', async () => {
     const mockService: ServiceDTO = { id: '1', slug: 'test-service', title: 'Test Service', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now', keywords: '[]' };
-    dbMock.get.mockImplementation((query: string, params: any[], callback: (err: Error | null, row: ServiceDTO) => void) => {
+    dbMock.get.mockImplementation((
+      query: string,
+      params: (string | number | boolean)[],
+      callback: (err: Error | null, row: ServiceDTO) => void
+    ) => {
       callback(null, mockService);
     });
 
@@ -68,7 +107,11 @@ describe('ServiceLocalRepository', () => {
 
   it('should get a service by its ID for a given locale', async () => {
     const mockService: ServiceDTO = { id: '1', slug: 'test-service', title: 'Test Service', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now', keywords: '[]' };
-    dbMock.get.mockImplementation((query: string, params: any[], callback: (err: Error | null, row: ServiceDTO) => void) => {
+    dbMock.get.mockImplementation((
+      query: string,
+      params: (string | number | boolean)[],
+      callback: (err: Error | null, row: ServiceDTO) => void
+    ) => {
       callback(null, mockService);
     });
 
@@ -81,10 +124,18 @@ describe('ServiceLocalRepository', () => {
 
   it('should create a new service', async () => {
     const mockService: Partial<ServiceDTO> = { slug: 'test-service', title: 'Test Service', content_html: 'content', is_published: true, keywords: [] };
-    dbMock.run.mockImplementation((query: string, params: any[], callback: (err: Error | null) => void) => {
+    dbMock.run.mockImplementation((
+      query: string,
+      params: (string | number | boolean)[],
+      callback: (err: Error | null) => void
+    ) => {
       callback(null);
     });
-    dbMock.get.mockImplementation((query: string, params: any[], callback: (err: Error | null, row: ServiceDTO) => void) => {
+    dbMock.get.mockImplementation((
+      query: string,
+      params: (string | number | boolean)[],
+      callback: (err: Error | null, row: ServiceDTO) => void
+    ) => {
       callback(null, { id: '1', ...mockService, created_at: 'now', updated_at: 'now' } as ServiceDTO);
     });
 
@@ -97,10 +148,18 @@ describe('ServiceLocalRepository', () => {
 
   it('should update an existing service', async () => {
     const mockService: Partial<ServiceDTO> = { title: 'Updated Test Service' };
-    dbMock.run.mockImplementation((query: string, params: any[], callback: (err: Error | null) => void) => {
+    dbMock.run.mockImplementation((
+      query: string,
+      params: (string | number | boolean)[],
+      callback: (err: Error | null) => void
+    ) => {
       callback(null);
     });
-    dbMock.get.mockImplementation((query: string, params: any[], callback: (err: Error | null, row: ServiceDTO) => void) => {
+    dbMock.get.mockImplementation((
+      query: string,
+      params: (string | number | boolean)[],
+      callback: (err: Error | null, row: ServiceDTO) => void
+    ) => {
       callback(null, { id: '1', slug: 'test-service', title: 'Updated Test Service', content_html: 'content', is_published: true, created_at: 'now', updated_at: 'now', keywords: '[]' } as ServiceDTO);
     });
 
@@ -112,7 +171,11 @@ describe('ServiceLocalRepository', () => {
   });
 
   it('should delete a service', async () => {
-    dbMock.run.mockImplementation((query: string, params: any[], callback: (err: Error | null) => void) => {
+    dbMock.run.mockImplementation((
+      query: string,
+      params: string[], // Only ID is passed which is a string
+      callback: (err: Error | null) => void
+    ) => {
       callback(null);
     });
 
