@@ -106,10 +106,10 @@ export function AdminProvider({
   initialBlogPosts,
   initialBanners,
 }: AdminProviderProps) {
- const [caseStudies, setCaseStudies] = useState<Record<Locale, CaseStudy[]>>(
-  initialCaseStudies || { en: [], pl: [] }
- )
- const [caseStudySliders, setCaseStudySliders] = useState<CaseStudySlider[]>(
+  const [caseStudies, setCaseStudies] = useState<Record<Locale, CaseStudy[]>>(
+    initialCaseStudies || { en: [], pl: [] }
+  )
+  const [caseStudySliders, setCaseStudySliders] = useState<CaseStudySlider[]>(
     initialCaseStudySliders || []
   )
   const [testimonials, setTestimonials] = useState<
@@ -632,7 +632,6 @@ export function AdminProvider({
       setError(
         err instanceof Error ? err.message : 'Failed to create blog post'
       )
-      logger.error(`Failed to create blog post ${err}`)
       throw err
     } finally {
       setLoading(false)
@@ -647,23 +646,24 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      console.log('updateBlogPost', {data, locale})
-      const response = await fetch(`/api/admin/blog-post?id=${id}&locale=${locale}`, {
+      const response = await fetch(`/api/admin/blog-post/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data }),
+        body: JSON.stringify({ data, locale }),
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: 'Failed to update blog post' }))
         throw new Error(errorData.error || 'Failed to update blog post')
       }
 
       const updatedBlogPost = await response.json()
       setBlogPosts((prev) => ({
         ...prev,
-        [locale]: prev[locale].map((bp) =>
-          bp.id === id ? updatedBlogPost : bp
+        [locale]: prev[locale].map((cs) =>
+          cs.id === id ? updatedBlogPost : cs
         ),
       }))
     } catch (err) {
@@ -680,10 +680,10 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      console.log('perfoming delete', id, locale)
-      const response = await fetch(`/api/admin/blog-post?id=${id}&locale=${locale}`, {
+      const response = await fetch(`/api/admin/blog-post/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ locale }),
       })
 
       if (!response.ok) {
@@ -709,9 +709,10 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/admin/blog-post/pin?id=${id}&locale=${locale}`, {
+      const response = await fetch(`/api/admin/blog-post/${id}/pin`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ locale }),
       })
 
       if (!response.ok) {
@@ -719,12 +720,14 @@ export function AdminProvider({
         throw new Error(errorData.error || 'Failed to pin blog post')
       }
 
-      const updatedBlogPost = await response.json()
       setBlogPosts((prev) => ({
         ...prev,
-        [locale]: prev[locale].map((bp) =>
-          bp.id === id ? updatedBlogPost : bp
-        ),
+        [locale]: prev[locale].map((cs) => {
+          if (cs.id === id) {
+            return { ...cs, isPinned: true }
+          }
+          return cs
+        }),
       }))
     } catch (err) {
       setError(
@@ -792,8 +795,8 @@ export function AdminProvider({
       const updatedBanner = await response.json()
       setBanners((prev) => ({
         ...prev,
-        [locale]: prev[locale].map((banner) =>
-          banner.id === id ? updatedBanner : banner
+        [locale]: prev[locale].map((cs) =>
+          cs.id === id ? updatedBanner : cs
         ),
       }))
     } catch (err) {
@@ -823,7 +826,7 @@ export function AdminProvider({
 
       setBanners((prev) => ({
         ...prev,
-        [locale]: prev[locale].filter((banner) => banner.id !== id),
+        [locale]: prev[locale].filter((cs) => cs.id !== id),
       }))
     } catch (err) {
       setError(
@@ -835,8 +838,6 @@ export function AdminProvider({
     }
   }
 
-  const clearError = () => setError(null)
-
   const getTestimonials = useCallback(async (locale: Locale) => {
     setLoading(true)
     setError(null)
@@ -847,8 +848,10 @@ export function AdminProvider({
       }
       const data = await response.json()
       setTestimonials((prev) => ({ ...prev, [locale]: data }))
-    } catch (error: any) {
-      setError(error.message || 'Failed to fetch testimonials')
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to fetch testimonials'
+      )
     } finally {
       setLoading(false)
     }
@@ -858,17 +861,18 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      console.log('fetching case study sliders')
       const response = await fetch(`/api/admin/case-study-sliders`)
       if (!response.ok) {
         throw new Error('Failed to fetch case study sliders')
       }
-     
       const data = await response.json()
-      console.log('case study sliders data', data)
       setCaseStudySliders(data)
-    } catch (error: any) {
-      setError(error.message || 'Failed to fetch case study sliders')
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Failed to fetch case study sliders'
+      )
     } finally {
       setLoading(false)
     }
@@ -878,14 +882,16 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/admin/blog-posts?locale=${locale}`)
+      const response = await fetch(`/api/admin/blog-post?locale=${locale}`)
       if (!response.ok) {
         throw new Error('Failed to fetch blog posts')
       }
       const data = await response.json()
       setBlogPosts((prev) => ({ ...prev, [locale]: data }))
-    } catch (error: any) {
-      setError(error.message || 'Failed to fetch blog posts')
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to fetch blog posts'
+      )
     } finally {
       setLoading(false)
     }
@@ -901,8 +907,11 @@ export function AdminProvider({
       }
       const data = await response.json()
       return data
-    } catch (error: any) {
-      setError(error.message || 'Failed to fetch blog post')
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to fetch blog post'
+      )
+      return null
     } finally {
       setLoading(false)
     }
@@ -915,6 +924,7 @@ export function AdminProvider({
         caseStudySliders,
         testimonials,
         blogPosts,
+        services,
         banners,
         loading,
         error,
@@ -940,7 +950,6 @@ export function AdminProvider({
         getCaseStudySliders,
         getBlogPosts,
         getBlogPost,
-        services,
         getServices,
         getServiceById,
         createService,
@@ -955,7 +964,7 @@ export function AdminProvider({
 
 export const useAdmin = () => {
   const context = useContext(AdminContext)
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAdmin must be used within an AdminProvider')
   }
   return context

@@ -1,27 +1,28 @@
 // test_db.js
-const knexConfig = require('./knexfile')
-const knex = require('knex')(knexConfig.development)
+import knexConfig from './knexfile';
+import knex from 'knex';
+const db = knex(knexConfig.development);
 
 async function testQueries() {
   try {
     // Case Studies
-    const enResults = await knex('case_studies_en').select('*')
+    const enResults = await db('case_studies_en').select('*')
     console.log('case_studies_en:', enResults)
 
-    const plResults = await knex('case_studies_pl').select('*')
+    const plResults = await db('case_studies_pl').select('*')
     console.log('case_studies_pl:', plResults)
 
     // Case Study Sliders
-    const sliderResults = await knex('case_study_sliders').select('*')
+    const sliderResults = await db('case_study_sliders').select('*')
     console.log('case_study_sliders:', sliderResults)
 
-    const sliderImagesResults = await knex('case_study_slider_images').select(
+    const sliderImagesResults = await db('case_study_slider_images').select(
       '*'
     )
     console.log('case_study_slider_images:', sliderImagesResults)
 
     // Join Slider and Images
-    const joinedSliderData = await knex('case_study_sliders')
+    const joinedSliderData = await db('case_study_sliders')
       .select(
         'case_study_sliders.*',
         'case_study_slider_images.image',
@@ -35,24 +36,30 @@ async function testQueries() {
     console.log('Joined Slider Data:', joinedSliderData)
 
     // Testimonials
-    const testimonialsEnResults = await knex('testimonials_en').select('*')
+    const testimonialsEnResults = await db('testimonials_en').select('*')
     console.log('testimonials_en:', testimonialsEnResults)
 
-    const testimonialsPlResults = await knex('testimonials_pl').select('*')
+    const testimonialsPlResults = await db('testimonials_pl').select('*')
     console.log('testimonials_pl:', testimonialsPlResults)
 
-    const blogPostsEnResults = await knex('blog_posts_en').select('*')
+    const blogPostsEnResults = await db('blog_posts_en').select('*')
     console.log('blog_posts_en:', blogPostsEnResults)
 
-    const blogPostsPlResults = await knex('blog_posts_pl').select('*')
+    const blogPostsPlResults = await db('blog_posts_pl').select('*')
     console.log('blog_posts_pl:', blogPostsPlResults)
 
 
-    const bannersEnResults = await knex('zirospace_banners_en').select('*')
+    const bannersEnResults = await db('zirospace_banners_en').select('*')
     console.log('zirospace_banners_en:', bannersEnResults)
 
-    const bannersPlResults = await knex('zirospace_banners_pl').select('*')
+    const bannersPlResults = await db('zirospace_banners_pl').select('*')
     console.log('zirospace_banners_pl:', bannersPlResults)
+
+    const servicesEnResults = await db('services_en').select('*')
+    console.log('services_en:', servicesEnResults)
+
+    const servicesPlResults = await db('services_pl').select('*')
+    console.log('services_pl:', servicesPlResults)
 
     console.log('Error querying database:', error)
   } finally {
