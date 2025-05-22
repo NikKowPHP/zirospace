@@ -6,6 +6,10 @@ import { getDatabaseFilePath } from '@/lib/config/database.config';
 import { Database, RunResult } from 'sqlite3'; // Import RunResult
 import logger from '@/lib/logger';
 
+// REMOVE THESE LINES FROM MODULE SCOPE:
+// const dbPath = getDatabaseFilePath();
+// const db = new Database(dbPath);
+
 
 
 export class ServiceLocalRepository implements IServiceRepository {
@@ -225,6 +229,5 @@ export class ServiceLocalRepository implements IServiceRepository {
     }
   }
 }
-
 // export singleton
 export const serviceLocalRepository = new ServiceLocalRepository();

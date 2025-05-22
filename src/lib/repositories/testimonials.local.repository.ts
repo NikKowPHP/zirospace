@@ -6,11 +6,15 @@ import { Testimonial } from '@/domain/models/testimonial.model';
 import { TestimonialDTO } from '@/infrastructure/dto/testimonial.dto';
 import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper';
 import logger from '@/lib/logger'
-const dbPath = getDatabaseFilePath();
-const db = new Database(dbPath);
+
+// REMOVE THESE LINES FROM MODULE SCOPE:
+// const dbPath = getDatabaseFilePath();
+// const db = new Database(dbPath);
 
 export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, string> implements ITestimonialRepository {
   constructor() {
+    const dbPath = getDatabaseFilePath();
+    const db = new Database(dbPath);
     super("testimonials", db);
   }
 
@@ -111,7 +115,7 @@ export class TestimonialRepositoryLocal extends SqlLiteAdapter<Testimonial, stri
       // Add updated_at to the updates
       updates.push(`"updated_at" = ?`);
       params.push(new Date().toISOString());
-      
+
       // Add the id for the WHERE clause
       params.push(id);
 

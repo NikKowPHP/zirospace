@@ -4,8 +4,10 @@ import logger from '@/lib/logger';
 import { HeroModel } from '@/domain/models/models';
 import { IHeroRepository } from './hero.repository';
 
-const dbPath = getDatabaseFilePath();
-const db = new Database(dbPath);
+// REMOVE THESE LINES FROM MODULE SCOPE:
+// const dbPath = getDatabaseFilePath();
+// const db = new Database(dbPath);
+
 
 const FIXED_HERO_ID_EN = 'hero_en_1';
 const FIXED_HERO_ID_PL = 'hero_pl_1';
@@ -14,7 +16,8 @@ export class HeroRepositoryLocal implements IHeroRepository {
   private db: Database;
 
   constructor() {
-    this.db = db;
+    const dbPath = getDatabaseFilePath();
+    this.db = new Database(dbPath);
   }
 
   private getTableName(locale: string): string {
