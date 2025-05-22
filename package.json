@@ -15,9 +15,9 @@
     "build:prod": "next build && next-bundle-analyzer",
     "docker:proxy": "docker-compose -f docker-compose.proxy.yml up",
     "docker:mac:run": "docker-compose -f docker-compose.mac.yml up",
-    "migrate:latest": "npx knex migrate:latest --knexfile knexfile.js",
-    "seed:run": "npx knex seed:run --knexfile knexfile.mjs",
-    "migrate:fresh": "npx knex migrate:fresh --knexfile knexfile.js"
+    "migrate:latest": "npx knex migrate:latest --knexfile knexfile.mjs",
+     "seed:run": "npx knex seed:run --knexfile knexfile.mjs",
+     "migrate:fresh": "npx knex migrate:fresh --knexfile knexfile.mjs"
   },
   "dependencies": {
     "@google-analytics/data": "^4.12.0",
