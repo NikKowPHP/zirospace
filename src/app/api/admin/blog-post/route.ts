@@ -4,7 +4,7 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 import { getBlogPostService } from '@/lib/services/blog-post.service'
 import { BlogPostMapper } from '@/infrastructure/mappers/blog-post.mapper'
 import logger from '@/lib/logger'
-const blogPostService = await getBlogPostService()
+const blogPostService =  getBlogPostService()
 
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()

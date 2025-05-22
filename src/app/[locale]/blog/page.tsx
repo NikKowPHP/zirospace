@@ -83,7 +83,7 @@ const breadcrumbJsonLd = {
   ],
 }
 
-const blogPostService = await getBlogPostService()
+const blogPostService =  getBlogPostService()
 
 export default async function BlogPage({ params }: PageProps) {
   const { locale } = await params
