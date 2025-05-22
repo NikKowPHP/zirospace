@@ -49,4 +49,4 @@ next-env.d.ts
 
 repomix-output.xml
 
-src/lib/data/sql/sqlite.db
+# src/lib/data/sql/sqlite.db
