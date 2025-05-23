@@ -279,7 +279,6 @@ export function AdminProvider({
        toast.error(message); 
       }
   }
-        
 
   const deleteService = async (id: string, locale: Locale) => {
     setLoading(true);

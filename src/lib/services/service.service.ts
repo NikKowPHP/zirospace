@@ -106,6 +106,7 @@ class ServiceService {
     if (service.meta_title) service.meta_title = service.meta_title.trim();
     if (service.meta_description) service.meta_description = service.meta_description.trim();
 
+    logger.log('Updating service with ID:', id, 'and locale:', locale);
     // Keywords are handled by the repository/mapper, no service-level logic needed here
 
     return this.repository.updateService(id, service, locale);

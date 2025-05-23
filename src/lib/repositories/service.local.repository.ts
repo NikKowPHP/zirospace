@@ -178,6 +178,7 @@ export class ServiceLocalRepository implements IServiceRepository {
           }
         }
       }
+      logger.warn(`Updates to apply: ${updates.join(', ')}`);
 
       if (updates.length === 0) {
         return this.getServiceById(id, locale); // No updates to apply
