@@ -42,7 +42,7 @@ const putServiceSchema = z.object({
     keywords: z.array(z.string()).optional(),
     order_index: z.number().optional(),
   }),
-  locale: z.string(),
+
 });
 
 // Define Zod schema for GET/PUT/DELETE request params
@@ -233,10 +233,18 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     const { id: validatedId, locale: validatedLocale } = validatedParams.data;
 
     const body = await request.json();
+    // Log raw request body
+    logger.log('PUT service: Raw request body', body);
+
+    // Validate only the data part of the body, locale is validated from query params
     const validatedBody = putServiceSchema.parse({ data: body });
+    // Log validated request body
+    logger.log('PUT service: Validated request body', validatedBody);
+
     const { data } = validatedBody;
 
     logger.log(`Updating service: ${validatedId} ${validatedLocale} with data: ${JSON.stringify(data)}`);
+    // Use validatedLocale from query params
     const updatedService = await serviceService.updateService(validatedId, data, validatedLocale);
 
     if (!updatedService) {
