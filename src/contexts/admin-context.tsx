@@ -15,6 +15,7 @@ import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Banner } from '@/domain/models/banner.model'
+import { toast } from 'react-hot-toast'
 
 interface OrderUpdate {
   id: string
@@ -226,8 +227,10 @@ export function AdminProvider({
         ...prev,
         [locale]: [...prev[locale], newService],
       }));
+      displayHotToast("Service created successfully!","success")
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to create service');
+      displayHotToast("Service creation failed!", "error")
     } finally {
       setLoading(false);
     }
@@ -257,12 +260,26 @@ export function AdminProvider({
           service.id === id ? updatedService : service
         ),
       }));
+      displayHotToast("Service updated successfully!","success")
+
+
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to update service');
+      displayHotToast("Service update failed!", "error")
     } finally {
       setLoading(false);
     }
   };
+
+  const displayHotToast = (message: string, type: string) => {
+    if(type == "success"){
+        toast.success(message);
+    }
+      else{
+       toast.error(message); 
+      }
+  }
+        
 
   const deleteService = async (id: string, locale: Locale) => {
     setLoading(true);

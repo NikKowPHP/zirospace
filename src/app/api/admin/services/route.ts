@@ -27,6 +27,7 @@ const postServiceSchema = z.object({
 });
 
 // Define Zod schema for PUT request body
+// put can be undefined 
 const putServiceSchema = z.object({
   data: z.object({
     title: z.string().min(3, { message: "Title must be at least 3 characters" }).optional(),
@@ -42,7 +43,7 @@ const putServiceSchema = z.object({
     keywords: z.array(z.string()).optional(),
     order_index: z.number().optional(),
   }),
-
+locale: z.string().optional(),
 });
 
 // Define Zod schema for GET/PUT/DELETE request params
@@ -51,39 +52,11 @@ const serviceIdLocaleSchema = z.object({
   locale: z.string(),
 });
 
-/**
- * @openapi
- * /api/admin/services:
- *   post:
- *     summary: Create a new service
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               data:
- *                 type: object
- *                 $ref: '#/components/schemas/ServiceDTO'
- *               locale:
- *                 type: string
- *     responses:
- *       200:
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Service'
- *       400:
- *         description: Validation error
- *       500:
- *         description: Failed to create service
- */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
     const validatedBody = postServiceSchema.parse(body);
+    logger.log('body', body)
 
     const { data, locale } = validatedBody;
     console.log('Processing service creation', data);
@@ -113,39 +86,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-/**
- * @openapi
- * /api/admin/services:
- *   get:
- *     summary: Get a service by ID
- *     parameters:
- *       - in: query
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: The ID of the service to retrieve
- *       - in: query
- *         name: locale
- *         required: true
- *         schema:
- *           type: string
- *         description: The locale of the service to retrieve
- *     responses:
- *       200:
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Service'
- *       400:
- *         description: Validation error
- *       404:
- *         description: Service not found
- *       500:
- *         description: Failed to fetch service
- */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -174,49 +114,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-/**
- * @openapi
- * /api/admin/services:
- *   put:
- *     summary: Update an existing service
- *     parameters:
- *       - in: query
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: The ID of the service to update
- *       - in: query
- *         name: locale
- *         required: true
- *         schema:
- *           type: string
- *         description: The locale of the service to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               data:
- *                 type: object
- *                 $ref: '#/components/schemas/ServiceDTO'
- *     responses:
- *       200:
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Service'
- *       400:
- *         description: Validation error
- *       404:
- *         description: Service not found
- *       500:
- *         description: Failed to update service
- */
 export async function PUT(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -237,7 +134,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     logger.log('PUT service: Raw request body', body);
 
     // Validate only the data part of the body, locale is validated from query params
-    const validatedBody = putServiceSchema.parse({ data: body });
+    const validatedBody = putServiceSchema.parse( body );
     // Log validated request body
     logger.log('PUT service: Validated request body', validatedBody);
 
@@ -263,35 +160,6 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-/**
- * @openapi
- * /api/admin/services:
- *   delete:
- *     summary: Delete a service
- *     parameters:
- *       - in: query
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: The ID of the service to delete
- *       - in: query
- *         name: locale
- *         required: true
- *         schema:
- *           type: string
- *         description: The locale of the service to delete
- *     responses:
- *       200:
- *         description: Successful operation
- *       400:
- *         description: Validation error
- *       404:
- *         description: Service not found
- *       500:
- *         description: Failed to delete service
- */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams;
