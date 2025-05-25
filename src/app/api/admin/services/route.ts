@@ -12,14 +12,14 @@ const postServiceSchema = z.object({
     id: z.string().optional(),
     title: z.string().min(3, { message: "Title must be at least 3 characters" }),
     slug: z.string().optional(),
-    subtitle: z.string().optional(),
+    subtitle: z.string().nullable().optional(), // Changed to nullable().optional()
     content_html: z.string().optional(),
-    excerpt: z.string().optional(),
-    image_url: z.string().optional(),
-    image_alt: z.string().optional(),
+    excerpt: z.string().nullable().optional(), // Changed to nullable().optional()
+    image_url: z.string().nullable().optional(), // Changed to nullable().optional()
+    image_alt: z.string().nullable().optional(), // Changed to nullable().optional()
     is_published: z.boolean().default(false),
-    meta_title: z.string().optional(),
-    meta_description: z.string().optional(),
+    meta_title: z.string().nullable().optional(), // Changed to nullable().optional()
+    meta_description: z.string().nullable().optional(), // Changed to nullable().optional()
     keywords: z.array(z.string()).optional(),
     order_index: z.number().optional(),
   }),
@@ -31,14 +31,14 @@ const putServiceSchema = z.object({
   data: z.object({
     title: z.string().min(3, { message: "Title must be at least 3 characters" }).optional(),
     slug: z.string().optional(),
-    subtitle: z.string().optional(),
+    subtitle: z.string().nullable().optional(),
     contentHtml: z.string().optional(),
-    excerpt: z.string().optional(),
-    imageUrl: z.string().nullable().optional(), // Made nullable
-    imageAlt: z.string().nullable().optional(), // Made nullable
+    excerpt: z.string().nullable().optional(),
+    imageUrl: z.string().nullable().optional(),
+    imageAlt: z.string().nullable().optional(),
     isPublished: z.boolean().optional(),
-    metaTitle: z.string().nullable().optional(), // Made nullable
-    metaDescription: z.string().optional(),
+    metaTitle: z.string().nullable().optional(),
+    metaDescription: z.string().nullable().optional(),
     keywords: z.array(z.string()).optional(),
     orderIndex: z.number().optional(),
   }),
