@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidateTag } from 'next/cache';
-import { CACHE_TAGS } from '@/lib/utils/cache';
+import { revalidateTag } from 'next/cache'; // Ensured this import is present
+import { CACHE_TAGS } from '@/lib/utils/cache'; // Ensured this import is present
 import { serviceService } from '@/lib/services/service.service';
 import { ServiceMapper } from '@/infrastructure/mappers/service.mapper';
 import logger from '@/lib/logger';
@@ -12,14 +12,14 @@ const postServiceSchema = z.object({
     id: z.string().optional(),
     title: z.string().min(3, { message: "Title must be at least 3 characters" }),
     slug: z.string().optional(),
-    subtitle: z.string().nullable().optional(), // Changed to nullable().optional()
+    subtitle: z.string().nullable().optional(),
     content_html: z.string().optional(),
-    excerpt: z.string().nullable().optional(), // Changed to nullable().optional()
-    image_url: z.string().nullable().optional(), // Changed to nullable().optional()
-    image_alt: z.string().nullable().optional(), // Changed to nullable().optional()
+    excerpt: z.string().nullable().optional(),
+    image_url: z.string().nullable().optional(),
+    image_alt: z.string().nullable().optional(),
     is_published: z.boolean().default(false),
-    meta_title: z.string().nullable().optional(), // Changed to nullable().optional()
-    meta_description: z.string().nullable().optional(), // Changed to nullable().optional()
+    meta_title: z.string().nullable().optional(),
+    meta_description: z.string().nullable().optional(),
     keywords: z.array(z.string()).optional(),
     order_index: z.number().optional(),
   }),
@@ -27,28 +27,27 @@ const postServiceSchema = z.object({
 });
 
 // Define Zod schema for PUT request body
-// put can be undefined 
 const putServiceSchema = z.object({
   data: z.object({
     title: z.string().min(3, { message: "Title must be at least 3 characters" }).optional(),
     slug: z.string().optional(),
     subtitle: z.string().nullable().optional(),
-    contentHtml: z.string().optional(),
+    contentHtml: z.string().optional(), // Matches Service model for clarity
     excerpt: z.string().nullable().optional(),
-    imageUrl: z.string().nullable().optional(),
-    imageAlt: z.string().nullable().optional(),
+    imageUrl: z.string().nullable().optional(), // Matches Service model for clarity
+    imageAlt: z.string().nullable().optional(), // Matches Service model for clarity
     isPublished: z.boolean().optional(),
     metaTitle: z.string().nullable().optional(),
     metaDescription: z.string().nullable().optional(),
     keywords: z.array(z.string()).optional(),
     orderIndex: z.number().optional(),
   }),
-  // Removed locale from body schema as it's a query parameter
+  // locale is expected as a query parameter for PUT
 });
 
 // Define Zod schema for GET/PUT/DELETE request params
 const serviceIdLocaleSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().uuid(), // Assuming UUIDs, adjust if different and if your IDs are not UUIDs
   locale: z.string(),
 });
 
@@ -70,7 +69,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const newService = await serviceService.createService(data, locale);
 
-    revalidateTag(CACHE_TAGS.SERVICES);
+    revalidateTag(CACHE_TAGS.SERVICES); // Ensured revalidateTag is called
 
     return NextResponse.json(newService);
   } catch (error: unknown) {
@@ -126,19 +125,14 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
 
     logger.log(`PUT request received with id=${id}, locale=${locale}`);
 
-    // const validatedParams = serviceIdLocaleSchema.safeParse({ id: String(id), locale: String(locale) });
-
     const body = await request.json();
-    // Validate the incoming data using the updated schema
     const validatedBody = putServiceSchema.parse(body);
-    const { data: domainData } = validatedBody; // Removed locale from destructuring
+    const { data: domainData } = validatedBody;
 
     logger.log(`data after validation ${JSON.stringify(domainData)}`);
 
-    // Map domain model data to persistence DTO before passing to service
     const persistenceData = ServiceMapper.toPersistence(domainData);
 
-    // Use the locale from searchParams
     const updatedService = await serviceService.updateService(id, persistenceData, locale);
     logger.log(`updatedService ${JSON.stringify(updatedService)} `)
 
@@ -146,7 +140,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
     }
 
-    revalidateTag(CACHE_TAGS.SERVICES);
+    revalidateTag(CACHE_TAGS.SERVICES); // Ensured revalidateTag is called
     return NextResponse.json(updatedService);
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
@@ -164,8 +158,6 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     const id = searchParams.get('id') as string;
     const locale = searchParams.get('locale') as string;
 
-
-
     const validatedParams = serviceIdLocaleSchema.safeParse({ id, locale });
 
     if (!validatedParams.success) {
@@ -181,8 +173,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
     }
 
-    // Revalidate cache
-    revalidateTag(CACHE_TAGS.SERVICES);
+    revalidateTag(CACHE_TAGS.SERVICES); // Ensured revalidateTag is called and uncommented
 
     return NextResponse.json({ success: true });
   } catch (error: unknown) {

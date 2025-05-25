@@ -1,6 +1,8 @@
+// src/contexts/admin-context.tsx
 'use client'
 
 import { Service } from '@/domain/models/service.model';
+import { useRouter } from 'next/navigation'; // Added import
 
 import {
   createContext,
@@ -15,7 +17,7 @@ import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Banner } from '@/domain/models/banner.model'
-import toast from 'react-hot-toast'
+import toast from 'react-hot-toast' // Already present
 
 interface OrderUpdate {
   id: string
@@ -105,8 +107,9 @@ export function AdminProvider({
   initialTestimonials,
   initialBlogPosts,
   initialBanners,
-  initialServices, // Added initialServices here
+  initialServices,
 }: AdminProviderProps) {
+  const router = useRouter(); // Initialized router
   const [caseStudies, setCaseStudies] = useState<Record<Locale, CaseStudy[]>>(
     initialCaseStudies || { en: [], pl: [] }
   )
@@ -123,12 +126,11 @@ export function AdminProvider({
     initialBanners || { en: [], pl: [] }
   )
   const [services, setServices] = useState<Record<Locale, Service[]>>(
-    initialServices || { en: [], pl: [] } // Initialize with initialServices
+    initialServices || { en: [], pl: [] }
   );
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Initialize case studies when initialCaseStudies changes
   useEffect(() => {
     if (initialCaseStudies) {
       setCaseStudies(initialCaseStudies)
@@ -159,7 +161,6 @@ export function AdminProvider({
     }
   }, [initialBanners]);
 
-  // Initialize services when initialServices changes
   useEffect(() => {
     if (initialServices) {
       setServices(initialServices);
@@ -193,7 +194,8 @@ export function AdminProvider({
     try {
       const response = await fetch(`/api/admin/services?id=${id}&locale=${locale}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch service');
+        const errorData = await response.json().catch(() => ({ details: 'Failed to fetch service details' }));
+        throw new Error(errorData.details || 'Failed to fetch service');
       }
       const data = await response.json();
       return data;
@@ -206,659 +208,702 @@ export function AdminProvider({
   }, []);
 
   const createService = async (data: Partial<Service>, locale: Locale) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/admin/services`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
-      });
-
+    const promise = fetch(`/api/admin/services`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to create service' }));
-        throw new Error(errorData.error || 'Failed to create service');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create service' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to create service');
       }
+      return response.json();
+    });
 
-      const newService = await response.json();
+    try {
+      setLoading(true);
+      setError(null);
+      const newService = await toast.promise(promise, {
+        loading: 'Creating service...',
+        success: 'Service created successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setServices((prev) => ({
         ...prev,
-        [locale]: [...prev[locale], newService],
+        [locale]: [...(prev[locale] || []), newService],
       }));
-      toast(toast.success('Service created successfully!'));
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to create service');
-      toast(toast.error(err instanceof Error ? err.message : 'Failed to create service'));
+      router.refresh(); // Added router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      // Error already handled by toast
     } finally {
       setLoading(false);
     }
   };
 
   const updateService = async (id: string, data: Partial<Service>, locale: Locale) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/admin/services?id=${id}&locale=${locale}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data }),
-      });
-
+    const promise = fetch(`/api/admin/services?id=${id}&locale=${locale}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to update service' }));
-        throw new Error(errorData.error || 'Failed to update service');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to update service' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to update service');
       }
+      return response.json();
+    });
 
-      const updatedService = await response.json();
+    try {
+      setLoading(true);
+      setError(null);
+      const updatedService = await toast.promise(promise, {
+        loading: 'Updating service...',
+        success: 'Service updated successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setServices((prev) => ({
         ...prev,
-        [locale]: prev[locale].map((service) =>
+        [locale]: (prev[locale] || []).map((service) =>
           service.id === id ? updatedService : service
         ),
       }));
-      toast(toast.success('Service updated successfully!'));
-
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to update service');
-      toast(toast.error(err instanceof Error ? err.message : 'Failed to update service'));
+      router.refresh(); // Added router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      // Error already handled by toast
     } finally {
       setLoading(false);
     }
   };
-
 
   const deleteService = async (id: string, locale: Locale) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/admin/services?id=${id}&locale=${locale}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
+    const promise = fetch(`/api/admin/services?id=${id}&locale=${locale}`, {
+      method: 'DELETE',
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to delete service' }));
-        throw new Error(errorData.error || 'Failed to delete service');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to delete service' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to delete service');
       }
+      return response.json(); // Expect { success: true }
+    });
 
+    try {
+      setLoading(true);
+      setError(null);
+      await toast.promise(promise, {
+        loading: 'Deleting service...',
+        success: 'Service deleted successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setServices((prev) => ({
         ...prev,
-        [locale]: prev[locale].filter((service) => service.id !== id),
+        [locale]: (prev[locale] || []).filter((service) => service.id !== id),
       }));
-      toast(toast.success('Service deleted successfully!'));
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to delete service');
-      toast(toast.error(err instanceof Error ? err.message : 'Failed to delete service'));
+      router.refresh(); // Added router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      // Error already handled by toast
     } finally {
       setLoading(false);
     }
   };
 
+  // --- Case Study Management ---
   const createCaseStudy = async (data: Partial<CaseStudy>, locale: Locale) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/case-studies`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
-      })
-
+    const promise = fetch(`/api/admin/case-studies`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to create case study' }))
-        throw new Error(errorData.error || 'Failed to create case study')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create case study' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to create case study');
       }
+      return response.json();
+    });
 
-      const newCaseStudy = await response.json()
+    try {
+      setLoading(true);
+      setError(null);
+      const newCaseStudy = await toast.promise(promise, {
+        loading: 'Creating case study...',
+        success: 'Case study created successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setCaseStudies((prev) => ({
         ...prev,
-        [locale]: [...prev[locale], newCaseStudy],
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to create case study'
-      )
-      throw err
+        [locale]: [...(prev[locale] || []), newCaseStudy],
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const updateCaseStudy = async (
-    id: string,
-    data: Partial<CaseStudy>,
-    locale: Locale
-  ) => {
-    setLoading(true)
-    setError(null)
-    try {
-      console.log('update data', { data, id })
-      const response = await fetch(`/api/admin/case-studies/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
-      })
-
+  const updateCaseStudy = async (id: string, data: Partial<CaseStudy>, locale: Locale) => {
+    const promise = fetch(`/api/admin/case-studies/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to update case study' }))
-        throw new Error(errorData.error || 'Failed to update case study')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to update case study' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to update case study');
       }
+      return response.json();
+    });
 
-      const updatedCaseStudy = await response.json()
-      console.log('updatedCaseStudy', updatedCaseStudy)
+    try {
+      setLoading(true);
+      setError(null);
+      const updatedCaseStudy = await toast.promise(promise, {
+        loading: 'Updating case study...',
+        success: 'Case study updated successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setCaseStudies((prev) => ({
         ...prev,
-        [locale]: prev[locale].map((cs) =>
+        [locale]: (prev[locale] || []).map((cs) =>
           cs.id === id ? updatedCaseStudy : cs
         ),
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to update case study'
-      )
-      throw err
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const deleteCaseStudy = async (id: string, locale: Locale) => {
-    setLoading(true)
-    setError(null)
-    try {
-      console.log('deleting case study', id, locale)
-      const response = await fetch(`/api/admin/case-studies/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ locale }),
-      })
-
+    const promise = fetch(`/api/admin/case-studies/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to delete case study')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to delete case study' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to delete case study');
       }
+      return response.json();
+    });
 
-      // Update state by removing deleted case study
+    try {
+      setLoading(true);
+      setError(null);
+      await toast.promise(promise, {
+        loading: 'Deleting case study...',
+        success: 'Case study deleted successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setCaseStudies((prev) => ({
         ...prev,
-        [locale]: prev[locale].filter((cs) => cs.id !== id),
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to delete case study'
-      )
-      throw err
+        [locale]: (prev[locale] || []).filter((cs) => cs.id !== id),
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const updateCaseStudyOrder = async (orders: OrderUpdate[], locale: Locale) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/case-studies-order`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orders, locale }),
-      })
+    const promise = fetch(`/api/admin/case-studies-order`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orders, locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to update case study order')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to update order' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to update order');
       }
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to update case study order')
-      throw err
+      return response.json();
+    });
+
+    try {
+      setLoading(true);
+      setError(null);
+      await toast.promise(promise, {
+        loading: 'Updating case study order...',
+        success: 'Order updated successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-
-
-  const createCaseStudySlider = async (
-    data: Partial<CaseStudySlider>
-  ) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/case-study-sliders`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data }),
-      })
-
+  // --- Case Study Slider Management ---
+  const createCaseStudySlider = async (data: Partial<CaseStudySlider>) => {
+    const promise = fetch(`/api/admin/case-study-sliders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to create case study slider' }))
-        throw new Error(errorData.error || 'Failed to create case study slider')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create slider' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to create slider');
       }
+      return response.json();
+    });
 
-      const newCaseStudySlider = await response.json()
-      console.log('newCaseStudySlider', newCaseStudySlider)
-      setCaseStudySliders((prev) => [...prev, newCaseStudySlider])
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to create case study slider'
-      )
-      throw err
+    try {
+      setLoading(true);
+      setError(null);
+      const newSlider = await toast.promise(promise, {
+        loading: 'Creating case study slider...',
+        success: 'Slider created successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
+      setCaseStudySliders((prev) => [...prev, newSlider]);
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const updateCaseStudySlider = async (
-    id: string,
-    data: Partial<CaseStudySlider>
-  ) => {
-    setLoading(true)
-    setError(null)
-    try {
-      console.log('updateCaseStudySlider', { id, data })
-      const response = await fetch(`/api/admin/case-study-sliders/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, id }),
-      })
-
+  const updateCaseStudySlider = async (id: string, data: Partial<CaseStudySlider>) => {
+    const promise = fetch(`/api/admin/case-study-sliders/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, id }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to update case study slider' }))
-        throw new Error(errorData.error || 'Failed to update case study slider')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to update slider' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to update slider');
       }
+      return response.json();
+    });
 
-      const updatedCaseStudySlider = await response.json()
+    try {
+      setLoading(true);
+      setError(null);
+      const updatedSlider = await toast.promise(promise, {
+        loading: 'Updating case study slider...',
+        success: 'Slider updated successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setCaseStudySliders((prev) =>
-        prev.map((cs) => (cs.id === id ? updatedCaseStudySlider : cs))
-      )
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to update case study slider'
-      )
-      throw err
+        prev.map((slider) => (slider.id === id ? updatedSlider : slider))
+      );
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const deleteCaseStudySlider = async (id: string) => {
-    setLoading(true)
-    setError(null)
-    try {
-      console.log('deleting case study slider', id)
-      const response = await fetch(`/api/admin/case-study-sliders/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id }),
-      })
-
+    const promise = fetch(`/api/admin/case-study-sliders/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to delete case study slider')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to delete slider' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to delete slider');
       }
+      return response.json();
+    });
 
-      setCaseStudySliders((prev) => prev.filter((cs) => cs.id !== id))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to delete case study slider'
-      )
-      throw err
+    try {
+      setLoading(true);
+      setError(null);
+      await toast.promise(promise, {
+        loading: 'Deleting case study slider...',
+        success: 'Slider deleted successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
+      setCaseStudySliders((prev) => prev.filter((slider) => slider.id !== id));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const createTestimonial = async (
-    data: Partial<Testimonial>,
-    locale: Locale
-  ) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/testimonials`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
-      })
-
+  // --- Testimonial Management ---
+  const createTestimonial = async (data: Partial<Testimonial>, locale: Locale) => {
+    const promise = fetch(`/api/admin/testimonials`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to create testimonial' }))
-        throw new Error(errorData.error || 'Failed to create testimonial')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create testimonial' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to create testimonial');
       }
+      return response.json();
+    });
 
-      const newTestimonial = await response.json()
+    try {
+      setLoading(true);
+      setError(null);
+      const newTestimonial = await toast.promise(promise, {
+        loading: 'Creating testimonial...',
+        success: 'Testimonial created successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setTestimonials((prev) => ({
         ...prev,
-        [locale]: [...prev[locale], newTestimonial],
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to create testimonial'
-      )
-      throw err
+        [locale]: [...(prev[locale] || []), newTestimonial],
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const updateTestimonial = async (
-    id: string,
-    data: Partial<Testimonial>,
-    locale: Locale
-  ) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/testimonials/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
-      })
-
+  const updateTestimonial = async (id: string, data: Partial<Testimonial>, locale: Locale) => {
+    const promise = fetch(`/api/admin/testimonials/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to update testimonial' }))
-        throw new Error(errorData.error || 'Failed to update testimonial')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to update testimonial' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to update testimonial');
       }
+      return response.json();
+    });
 
-      const updatedTestimonial = await response.json()
+    try {
+      setLoading(true);
+      setError(null);
+      const updatedTestimonial = await toast.promise(promise, {
+        loading: 'Updating testimonial...',
+        success: 'Testimonial updated successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setTestimonials((prev) => ({
         ...prev,
-        [locale]: prev[locale].map((cs) =>
-          cs.id === id ? updatedTestimonial : cs
+        [locale]: (prev[locale] || []).map((t) =>
+          t.id === id ? updatedTestimonial : t
         ),
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to update testimonial'
-      )
-      throw err
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const deleteTestimonial = async (id: string, locale: Locale) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/testimonials/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ locale }),
-      })
-
+    const promise = fetch(`/api/admin/testimonials/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to delete testimonial')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to delete testimonial' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to delete testimonial');
       }
+      return response.json();
+    });
 
+    try {
+      setLoading(true);
+      setError(null);
+      await toast.promise(promise, {
+        loading: 'Deleting testimonial...',
+        success: 'Testimonial deleted successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setTestimonials((prev) => ({
         ...prev,
-        [locale]: prev[locale].filter((cs) => cs.id !== id),
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to delete testimonial'
-      )
-      throw err
+        [locale]: (prev[locale] || []).filter((t) => t.id !== id),
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
+  // --- Blog Post Management ---
   const createBlogPost = async (data: Partial<BlogPost>, locale: Locale) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/blog-post`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
-      })
-
+    const promise = fetch(`/api/admin/blog-post`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to create blog post' }))
-        throw new Error(errorData.error || 'Failed to create blog post')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create blog post' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to create blog post');
       }
+      return response.json();
+    });
 
-      const newBlogPost = await response.json()
+    try {
+      setLoading(true);
+      setError(null);
+      const newPost = await toast.promise(promise, {
+        loading: 'Creating blog post...',
+        success: 'Blog post created successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setBlogPosts((prev) => ({
         ...prev,
-        [locale]: [...prev[locale], newBlogPost],
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to create blog post'
-      )
-      throw err
+        [locale]: [...(prev[locale] || []), newPost],
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const updateBlogPost = async (
-    id: string,
-    data: Partial<BlogPost>,
-    locale: string
-  ) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/blog-post/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
-      })
-
+  const updateBlogPost = async (id: string, data: Partial<BlogPost>, locale: string) => {
+    const promise = fetch(`/api/admin/blog-post?id=${id}&locale=${locale}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to update blog post' }))
-        throw new Error(errorData.error || 'Failed to update blog post')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to update blog post' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to update blog post');
       }
+      return response.json();
+    });
 
-      const updatedBlogPost = await response.json()
+    try {
+      setLoading(true);
+      setError(null);
+      const updatedPost = await toast.promise(promise, {
+        loading: 'Updating blog post...',
+        success: 'Blog post updated successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setBlogPosts((prev) => ({
         ...prev,
-        [locale]: prev[locale].map((cs) =>
-          cs.id === id ? updatedBlogPost : cs
+        [locale]: (prev[locale] || []).map((post) =>
+          post.id === id ? updatedPost : post
         ),
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to update blog post'
-      )
-      throw err
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const deleteBlogPost = async (id: string, locale: Locale) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/blog-post/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ locale }),
-      })
-
+    const promise = fetch(`/api/admin/blog-post?id=${id}&locale=${locale}`, {
+      method: 'DELETE',
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to delete blog post')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to delete blog post' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to delete blog post');
       }
+      return response.json();
+    });
 
+    try {
+      setLoading(true);
+      setError(null);
+      await toast.promise(promise, {
+        loading: 'Deleting blog post...',
+        success: 'Blog post deleted successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setBlogPosts((prev) => ({
         ...prev,
-        [locale]: prev[locale].filter((cs) => cs.id !== id),
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to delete blog post'
-      )
-      throw err
+        [locale]: (prev[locale] || []).filter((post) => post.id !== id),
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const pinBlogPost = async (id: string, locale: Locale) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/blog-post/${id}/pin`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ locale }),
-      })
+    const currentPosts = blogPosts[locale] || [];
+    const postToPin = currentPosts.find(p => p.id === id);
+    if (!postToPin) {
+      setError(`Blog post with id ${id} not found.`);
+      toast.error(`Blog post with id ${id} not found.`);
+      return;
+    }
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to pin blog post')
-      }
+    const updatedBlogPostsForLocale = currentPosts.map(p => ({
+      ...p,
+      isPinned: p.id === id ? true : false,
+    }));
 
-      setBlogPosts((prev) => ({
-        ...prev,
-        [locale]: prev[locale].map((cs) => {
-          if (cs.id === id) {
-            return { ...cs, isPinned: true }
+    setBlogPosts(prev => ({ ...prev, [locale]: updatedBlogPostsForLocale }));
+
+    const operations = [];
+    const currentlyPinned = currentPosts.find(p => p.isPinned && p.id !== id);
+    if (currentlyPinned) {
+      operations.push(
+        fetch(`/api/admin/blog-post?id=${currentlyPinned.id}&locale=${locale}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: { isPinned: false } }),
+        }).then(async res => {
+          if (!res.ok) {
+            const errorData = await res.json().catch(() => ({ error: 'Failed to unpin previous post' }));
+            throw new Error(errorData.details || errorData.error || 'Failed to unpin previous post');
           }
-          return cs
-        }),
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to pin blog post'
-      )
-      throw err
-    } finally {
-      setLoading(false)
+          return res.json();
+        })
+      );
     }
-  }
 
-  const createBanner = async (data: Partial<Banner>, locale: Locale) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/banners`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to create banner' }))
-        throw new Error(errorData.error || 'Failed to create banner')
-      }
-
-      const newBanner = await response.json()
-      setBanners((prev) => ({
-        ...prev,
-        [locale]: [...prev[locale], newBanner],
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to create banner'
-      )
-      throw err
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const updateBanner = async (
-    id: string,
-    data: Partial<Banner>,
-    locale: Locale
-  ) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/banners/${id}`, {
+    operations.push(
+      fetch(`/api/admin/blog-post?id=${id}&locale=${locale}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data, locale }),
+        body: JSON.stringify({ data: { isPinned: true } }),
+      }).then(async res => {
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({ error: 'Failed to pin post' }));
+          throw new Error(errorData.details || errorData.error || 'Failed to pin post');
+        }
+        return res.json();
       })
+    );
 
+    try {
+      setLoading(true);
+      setError(null);
+      await toast.promise(
+        Promise.all(operations),
+        {
+          loading: 'Updating pin status...',
+          success: 'Pin status updated successfully!',
+          error: (err) => `Error: ${err.message}`,
+        }
+      );
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      setBlogPosts(prev => ({ ...prev, [locale]: currentPosts }));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Banner Management ---
+  const createBanner = async (data: Partial<Banner>, locale: Locale) => {
+    const promise = fetch(`/api/admin/banners`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ error: 'Failed to update banner' }))
-        throw new Error(errorData.error || 'Failed to update banner')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to create banner' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to create banner');
       }
+      return response.json();
+    });
 
-      const updatedBanner = await response.json()
+    try {
+      setLoading(true);
+      setError(null);
+      const newBanner = await toast.promise(promise, {
+        loading: 'Creating banner...',
+        success: 'Banner created successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setBanners((prev) => ({
         ...prev,
-        [locale]: prev[locale].map((cs) =>
-          cs.id === id ? updatedBanner : cs
-        ),
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to update banner'
-      )
-      throw err
+        [locale]: [...(prev[locale] || []), newBanner],
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
+  const updateBanner = async (id: string, data: Partial<Banner>, locale: Locale) => {
+    const promise = fetch(`/api/admin/banners/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data, locale }),
+    }).then(async (response) => {
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to update banner' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to update banner');
+      }
+      return response.json();
+    });
+
+    try {
+      setLoading(true);
+      setError(null);
+      const updatedBanner = await toast.promise(promise, {
+        loading: 'Updating banner...',
+        success: 'Banner updated successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
+      setBanners((prev) => ({
+        ...prev,
+        [locale]: (prev[locale] || []).map((b) =>
+          b.id === id ? updatedBanner : b
+        ),
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const deleteBanner = async (id: string, locale: Locale) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch(`/api/admin/banners/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ locale }),
-      })
-
+    const promise = fetch(`/api/admin/banners/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ locale }),
+    }).then(async (response) => {
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to delete banner')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to delete banner' }));
+        throw new Error(errorData.details || errorData.error || 'Failed to delete banner');
       }
+      return response.json();
+    });
 
+    try {
+      setLoading(true);
+      setError(null);
+      await toast.promise(promise, {
+        loading: 'Deleting banner...',
+        success: 'Banner deleted successfully!',
+        error: (err) => `Error: ${err.message}`,
+      });
       setBanners((prev) => ({
         ...prev,
-        [locale]: prev[locale].filter((cs) => cs.id !== id),
-      }))
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to delete banner'
-      )
-      throw err
+        [locale]: (prev[locale] || []).filter((b) => b.id !== id),
+      }));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const getTestimonials = useCallback(async (locale: Locale) => {
     setLoading(true)
@@ -904,7 +949,7 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/admin/blog-post?locale=${locale}`)
+      const response = await fetch(`/api/admin/blog-post?locale=${locale}`) // API route singular
       if (!response.ok) {
         throw new Error('Failed to fetch blog posts')
       }
@@ -923,7 +968,7 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/admin/blog-post?id=${id}&locale=${locale}`)
+      const response = await fetch(`/api/admin/blog-post?id=${id}&locale=${locale}`) // API route singular
       if (!response.ok) {
         throw new Error('Failed to fetch blog post')
       }
