@@ -43,7 +43,7 @@ const putServiceSchema = z.object({
     keywords: z.array(z.string()).optional(),
     orderIndex: z.number().optional(),
   }),
-  locale: z.string(),
+  // Removed locale from body schema as it's a query parameter
 });
 
 // Define Zod schema for GET/PUT/DELETE request params
@@ -129,11 +129,18 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     // const validatedParams = serviceIdLocaleSchema.safeParse({ id: String(id), locale: String(locale) });
 
     const body = await request.json();
-    const validatedBody = putServiceSchema.parse({ data: body });
-    const { data } = validatedBody;
+    // Validate the incoming data using the updated schema
+    const validatedBody = putServiceSchema.parse(body);
+    const { data: domainData } = validatedBody; // Removed locale from destructuring
 
-    logger.log(`Updating service: ${validatedId} ${validatedLocale} with data: ${JSON.stringify(data)}`);
-    const updatedService = await serviceService.updateService(validatedId, data, validatedLocale);
+    logger.log(`data after validation ${JSON.stringify(domainData)}`);
+
+    // Map domain model data to persistence DTO before passing to service
+    const persistenceData = ServiceMapper.toPersistence(domainData);
+
+    // Use the locale from searchParams
+    const updatedService = await serviceService.updateService(id, persistenceData, locale);
+    logger.log(`updatedService ${JSON.stringify(updatedService)} `)
 
     if (!updatedService) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });

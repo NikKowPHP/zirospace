@@ -15,6 +15,7 @@ import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Banner } from '@/domain/models/banner.model'
+import toast from 'react-hot-toast'
 
 interface OrderUpdate {
   id: string
@@ -226,8 +227,10 @@ export function AdminProvider({
         ...prev,
         [locale]: [...prev[locale], newService],
       }));
+      toast(toast.success('Service created successfully!'));
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to create service');
+      toast(toast.error(err instanceof Error ? err.message : 'Failed to create service'));
     } finally {
       setLoading(false);
     }
@@ -257,8 +260,11 @@ export function AdminProvider({
           service.id === id ? updatedService : service
         ),
       }));
+      toast(toast.success('Service updated successfully!'));
+
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to update service');
+      toast(toast.error(err instanceof Error ? err.message : 'Failed to update service'));
     } finally {
       setLoading(false);
     }
