@@ -17,7 +17,7 @@ interface PageProps {
 export async function generateMetadata({ params }: { params: { slug: string; locale: Locale } }) {
   const { slug, locale } = params
   const caseStudy = await caseStudyService.getCaseStudyBySlug(slug, locale)
-  
+
   if (!caseStudy) return {}
 
   return {
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: { slug: string; loc
       publishedTime: caseStudy.createdAt,
       images: [
         {
-          url: caseStudy.images.length > 0 ?  caseStudy.images[0].url : 'http',
+          url: caseStudy.images.length > 0 ? caseStudy.images[0].url : 'http',
           width: 1200,
           height: 630,
           alt: caseStudy.images[0].alt,
@@ -62,7 +62,7 @@ function CaseStudyLoading() {
   return (
     <div className="bg-white pt-20 animate-pulse">
       <div className="container mx-auto pt-32 pb-16">
-        <div className="max-w-[90rem] mx-auto mb-[50px]">
+        <div className="max-w-5xl mx-auto mb-[50px]">
           <div className="relative w-full aspect-[16/9] mb-16 bg-gray-200 rounded-lg" />
           <div className="grid lg:grid-cols-[2fr,1fr] gap-16">
             <div>
@@ -112,7 +112,8 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
     const caseStudy = await caseStudyService.getCaseStudyBySlug(slug, locale)
     if (!caseStudy) return notFound()
 
-    const [heroImage, ...otherImages] = caseStudy.images
+    let [heroImage, ...otherImages] = caseStudy.images
+
 
     // Create JSON-LD structured data
     const caseStudyJsonLd = {
@@ -174,110 +175,107 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
       }
     }
 
+    const calculateReadingTime = () => {
+      // Calculate reading time
+      const wordsPerMinute = 200;
+      let totalWords = caseStudy.description.trim().split(/\s+/).length;
+
+      // Adding word count from Image alt texts
+      caseStudy.images.forEach((image) => {
+        if (image.alt) {
+          totalWords += image.alt.trim().split(/\s+/).length;
+        }
+      });
+
+      const readingTime = Math.ceil(totalWords / wordsPerMinute);
+
+      return readingTime;
+    }
+
+    const readingTime = calculateReadingTime(); // Calculate reading time here
     return (
       <>
-        <article 
-          className="bg-white pt-28 mb-[50px] relative "
-          itemScope 
+        <article
+          className="blog-caseStudy  py-[100px] max-w-5xl mx-auto flex flex-col gap-[35px] spectral-regular"
+          itemScope
           itemType="https://schema.org/Article"
         >
-          {/* Breadcrumb navigation */}
-          {/* <nav aria-label="Breadcrumb" className="mb-4">
-            <ol className="flex space-x-2 text-sm text-gray-500">
-              <li><Link href={`/${locale}`}>Home</Link></li>
-              <li>/</li>
-              <li aria-current="page">{caseStudy.title}</li>
-            </ol>
-          </nav> */}
-
+          <meta itemProp="headline" content={caseStudy.title} />
+          <meta itemProp="description" content={caseStudy.title} />
+          <meta itemProp="inLanguage" content={locale} />
+          <meta itemProp="datePublished" content={caseStudy.createdAt.toString()} />
+          <meta itemProp="dateModified" content={caseStudy.createdAt.toString()} />
+          <meta itemProp="author" content="ZIRO Healthcare Solutions" />
+          <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
           {/* Hero Section */}
-          <header className=" pt-32 pb-[50px]">
-            <div className="max-w-[90rem] mx-auto">
-              <div className="relative w-full aspect-[16/9] mb-16">
-                <Image
-                  src={heroImage.url}
-                  alt={heroImage.alt}
-                  fill
-                  quality={100} 
-                  className="object-cover rounded-primary-lg"
-                  priority
-                  itemProp="image"
-                  unoptimized
-                />
+
+
+          <header className="flex flex-col ">
+
+
+            <div className="flex flex-col gap-8">
+              <h1
+                className="text-[32px] leading-[1.2] font-bold mb-[12px] "
+                itemProp="name"
+              >
+                {caseStudy.title}
+              </h1>
+
+              {caseStudy.subtitle && (
+                <p
+                  className="text-[18px] text-gray-500 "
+                  itemProp="abstract"
+                  dangerouslySetInnerHTML={{
+                    __html: caseStudy.subtitle.trim()
+                  }}
+                >
+                </p>
+              )}
+              <div className="text-[11px] text-gray-600 flex  gap-4 pb-[15px] border-b ">
+                <time dateTime={caseStudy.createdAt.toString()}>
+                  {new Date(caseStudy.createdAt).toLocaleDateString(locale, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </time>
+                <span>•</span>
+                <span>{readingTime} min read</span>
+              </div>
+            </div>
+
+            <div className="w-full flex items-center justify-center py-[35px] border-b">
+
+
+              <div itemProp='image' className="w-full h-[500px] mx-auto">
+                <div className="relative h-[500px] w-full  mb-16">
+                  <Image
+                    src={heroImage.url}
+                    alt={heroImage.alt ? heroImage.alt : `${caseStudy.title} Case Study Hero Image`}
+                    fill
+                    className="rounded-primary-lg object-cover"
+                    priority
+                    itemProp="image"
+                    quality={100}
+                    unoptimized
+                  />
+                </div>
               </div>
             </div>
           </header>
 
-          {/* Project Info Section */}
-          <section className="container mx-auto px-4 md:px-6 lg:px-8">
-            <div className="max-w-[90rem] mx-auto">
-              <div className="mb-[50px]">
-                <h1 
-                  className="text-4xl md:text-5xl lg:text-[92px] font-medium mb-14"
-                  itemProp="headline"
-                >
-                  {caseStudy.title}
-                </h1>
-                <div itemProp="description">
-                  <p className="text-[24px] text-gray-700 leading-relaxed">
-                    {caseStudy.description}
-                  </p>
-                </div>
-              </div>
 
-              {/* Project Details */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
-                <div>
-                  <h2 className="text-lg font-medium mb-4">Year</h2>
-                  <p className="text-gray-700" itemProp="datePublished">
-                    {new Date(caseStudy.createdAt as unknown as string).getFullYear()}
-                  </p>
-                </div>
-                {/* <div>
-                  <h2 className="text-lg font-medium mb-4">Industry</h2>
-                  <div className="flex flex-wrap gap-2" itemProp="keywords">
-                    {caseStudy.tags.map((tag) => (
-                      <span key={tag} className="text-gray-700">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div> */}
-                {/* <div>
-                  <h2 className="text-lg font-medium mb-4">Project Direction</h2>
-                  <div className="space-y-1">
-                    {caseStudy.tags.map((tag) => (
-                      <p key={tag} className="text-gray-700">
-                        {tag}
-                      </p>
-                    ))}
-                  </div>
-                </div> */}
-              </div>
 
-              {/* <div className=" mb-[50px]">
-                <Button
-                  href={caseStudy.ctaUrl}
-                  variant="primary"
-                  target="_blank"
-                  size="lg"
-                  rel="noopener noreferrer"
-                >
-                  {caseStudy.ctaText}
-                  <span className="ml-2">→</span>
-                </Button>
-              </div> */}
 
-            </div>
-          </section>
+
 
           {/*  Image Gallery */}
           <section className="container mx-auto px-4 md:px-6 lg:px-8">
-            <div className="max-w-[90rem] mx-auto">
+            <div className="max-w-5xl mx-auto">
               <div className="space-y-[20px]">
                 {otherImages.map((image: { url: string; alt: string }, index: number) => {
                   const { isFullWidth, isSplitColumn } = getImageLayout(index)
-                  
+
                   // If it's a split column image and it's the first of the pair (even index)
                   if (isSplitColumn && index % 2 === 0) {
                     return (

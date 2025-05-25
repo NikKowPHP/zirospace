@@ -88,18 +88,18 @@ export default async function BlogPostPage({ params }: PageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ 
+        dangerouslySetInnerHTML={{
           __html: JSON.stringify(createArticleJsonLd(post, locale))
         }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ 
+        dangerouslySetInnerHTML={{
           __html: JSON.stringify(createBreadcrumbJsonLd(post, locale))
         }}
       />
-      <article 
-        className="blog-post  py-[100px] max-w-5xl mx-auto flex flex-col gap-[35px] spectral-regular"
+      <article
+        className="blog-post  py-[100px] max-w-3xl mx-auto flex flex-col gap-[35px] spectral-regular"
         itemScope
         itemType="https://schema.org/Article"
       >
@@ -110,11 +110,11 @@ export default async function BlogPostPage({ params }: PageProps) {
         <meta itemProp="dateModified" content={post.createdAt} />
         <meta itemProp="author" content="ZIRO Healthcare Solutions" />
         <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
-        
+
         <header className="flex flex-col gap-8">
-        
-          
-          <h1 
+
+
+          <h1
             className="text-[32px] leading-[1.2] font-bold mb-[12px] "
             itemProp="name"
           >
@@ -122,16 +122,16 @@ export default async function BlogPostPage({ params }: PageProps) {
           </h1>
 
           {post.excerpt && (
-            <p 
+            <p
               className="text-[18px] text-gray-500 "
               itemProp="abstract"
-              dangerouslySetInnerHTML={{ 
-                __html: post.excerpt.trim() 
+              dangerouslySetInnerHTML={{
+                __html: post.excerpt.trim()
               }}
             >
             </p>
           )}
-            <div className="text-[11px] text-gray-600 flex  gap-4 pb-[15px] border-b ">
+          <div className="text-[11px] text-gray-600 flex  gap-4 pb-[15px] border-b ">
             <time dateTime={post.createdAt}>
               {new Date(post.createdAt).toLocaleDateString(locale, {
                 year: 'numeric',
@@ -142,11 +142,11 @@ export default async function BlogPostPage({ params }: PageProps) {
             <span>•</span>
             <span>{readingTime} min read</span>
           </div>
-          
+
           <div className="w-full flex items-center justify-center pt-[10px]">
 
 
-          {/* <div itemProp="image " className='  w-full aspect-[16/9]'>
+            {/* <div itemProp="image " className='  w-full aspect-[16/9]'>
             <Image
               src={post.imageurl}
               alt={post.imageAlt || post.title}
@@ -156,7 +156,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div> */}
 
 
-          <div itemProp='image' className="max-w-full mx-auto">
+            <div itemProp='image' className="max-w-full mx-auto">
               <div className="relative w-[400px] sm:w-[450px]  h-[400px] sm:h-[450px] mb-16">
                 <Image
                   src={post.imageurl}
@@ -176,8 +176,8 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div
           className={styles.blogPostContent}
           itemProp="articleBody"
-          dangerouslySetInnerHTML={{ 
-            __html: post.contentHtml.trim() 
+          dangerouslySetInnerHTML={{
+            __html: post.contentHtml.trim()
           }}
         />
 
@@ -195,7 +195,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 ))}
               </div>
             )} */}
-            
+
             <div className="text-sm text-gray-600">
               Last updated: {' '}
               <time dateTime={post.createdAt}>
@@ -217,7 +217,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 export async function generateMetadata({ params }: PageProps) {
   const { slug, locale } = params
   const post = await blogPostService.getBlogPostBySlug(slug, locale)
-  
+
   if (!post) {
     return {}
   }
