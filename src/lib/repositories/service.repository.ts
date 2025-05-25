@@ -85,6 +85,7 @@ export class ServiceRepository implements IServiceRepository {
 
   async updateService(id: string, service: Partial<ServiceDTO>, locale: string): Promise<Service | null> {
     const tableName = this.getTableName(locale);
+logger.log(`ServiceRepository.updateService: updating table ${tableName} with id ${id}, data: ${JSON.stringify(service)}`);
     // Supabase handles updated_at with default values
     const { data, error } = await supabase
       .from(tableName)

@@ -32,17 +32,17 @@ const putServiceSchema = z.object({
     title: z.string().min(3, { message: "Title must be at least 3 characters" }).optional(),
     slug: z.string().optional(),
     subtitle: z.string().optional(),
-    content_html: z.string().optional(),
+    contentHtml: z.string().optional(),
     excerpt: z.string().optional(),
-    image_url: z.string().optional(),
-    image_alt: z.string().optional(),
-    is_published: z.boolean().optional(),
-    meta_title: z.string().optional(),
-    meta_description: z.string().optional(),
+    imageUrl: z.string().nullable().optional(), // Made nullable
+    imageAlt: z.string().nullable().optional(), // Made nullable
+    isPublished: z.boolean().optional(),
+    metaTitle: z.string().nullable().optional(), // Made nullable
+    metaDescription: z.string().optional(),
     keywords: z.array(z.string()).optional(),
-    order_index: z.number().optional(),
+    orderIndex: z.number().optional(),
   }),
-  locale: z.string(),
+  // Removed locale from body schema as it's a query parameter
 });
 
 // Define Zod schema for GET/PUT/DELETE request params
@@ -51,35 +51,6 @@ const serviceIdLocaleSchema = z.object({
   locale: z.string(),
 });
 
-/**
- * @openapi
- * /api/admin/services:
- *   post:
- *     summary: Create a new service
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               data:
- *                 type: object
- *                 $ref: '#/components/schemas/ServiceDTO'
- *               locale:
- *                 type: string
- *     responses:
- *       200:
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Service'
- *       400:
- *         description: Validation error
- *       500:
- *         description: Failed to create service
- */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
@@ -113,39 +84,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-/**
- * @openapi
- * /api/admin/services:
- *   get:
- *     summary: Get a service by ID
- *     parameters:
- *       - in: query
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: The ID of the service to retrieve
- *       - in: query
- *         name: locale
- *         required: true
- *         schema:
- *           type: string
- *         description: The locale of the service to retrieve
- *     responses:
- *       200:
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Service'
- *       400:
- *         description: Validation error
- *       404:
- *         description: Service not found
- *       500:
- *         description: Failed to fetch service
- */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -174,70 +112,33 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-/**
- * @openapi
- * /api/admin/services:
- *   put:
- *     summary: Update an existing service
- *     parameters:
- *       - in: query
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: The ID of the service to update
- *       - in: query
- *         name: locale
- *         required: true
- *         schema:
- *           type: string
- *         description: The locale of the service to update
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               data:
- *                 type: object
- *                 $ref: '#/components/schemas/ServiceDTO'
- *     responses:
- *       200:
- *         description: Successful operation
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Service'
- *       400:
- *         description: Validation error
- *       404:
- *         description: Service not found
- *       500:
- *         description: Failed to update service
- */
 export async function PUT(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const id = searchParams.get('id') as string;
-    const locale = searchParams.get('locale') as string;
+    const id = searchParams.get('id');
+    const locale = searchParams.get('locale');
 
-    const validatedParams = serviceIdLocaleSchema.safeParse({ id, locale });
-
-    if (!validatedParams.success) {
-      logger.error('Validation error updating service:', validatedParams.error.issues);
-      return NextResponse.json({ error: 'Validation error', details: validatedParams.error.issues }, { status: 400 });
+    if (!id || !locale) {
+      return NextResponse.json({ error: 'Missing id or locale' }, { status: 400 });
     }
 
-    const { id: validatedId, locale: validatedLocale } = validatedParams.data;
+    logger.log(`PUT request received with id=${id}, locale=${locale}`);
+
+    // const validatedParams = serviceIdLocaleSchema.safeParse({ id: String(id), locale: String(locale) });
 
     const body = await request.json();
-    const validatedBody = putServiceSchema.parse({ data: body });
-    const { data } = validatedBody;
+    // Validate the incoming data using the updated schema
+    const validatedBody = putServiceSchema.parse(body);
+    const { data: domainData } = validatedBody; // Removed locale from destructuring
 
-    logger.log(`Updating service: ${validatedId} ${validatedLocale} with data: ${JSON.stringify(data)}`);
-    const updatedService = await serviceService.updateService(validatedId, data, validatedLocale);
+    logger.log(`data after validation ${JSON.stringify(domainData)}`);
+
+    // Map domain model data to persistence DTO before passing to service
+    const persistenceData = ServiceMapper.toPersistence(domainData);
+
+    // Use the locale from searchParams
+    const updatedService = await serviceService.updateService(id, persistenceData, locale);
+    logger.log(`updatedService ${updatedService} `)
 
     if (!updatedService) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
@@ -250,7 +151,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       logger.error('Validation error updating service:', error.issues);
       return NextResponse.json({ error: 'Validation error', details: error.issues }, { status: 400 });
     }
-    logger.error(`Error updating service: ${error}`);
+    logger.error(`Error updating service: ${error} `);
     return NextResponse.json({ error: 'Failed to update service' }, { status: 500 });
   }
 }
@@ -299,7 +200,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
 
     const { id: validatedId, locale: validatedLocale } = validatedParams.data;
 
-    logger.log(`Deleting service: ${validatedId} for locale: ${validatedLocale}`);
+    logger.log(`Deleting service: ${validatedId} for locale: ${validatedLocale} `);
     const deletedService = await serviceService.deleteService(validatedId, validatedLocale);
     if (!deletedService) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
@@ -310,7 +211,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
-    logger.error(`Error deleting service: ${error}`);
+    logger.error(`Error deleting service: ${error} `);
     return NextResponse.json({ error: 'Failed to delete service' }, { status: 500 });
   }
 }

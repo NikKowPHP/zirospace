@@ -12,11 +12,11 @@ export interface Service {
   /** Optional excerpt of the service content. */
   excerpt?: string;
   /** Optional URL of the service image. */
-  imageUrl?: string;
+  imageUrl?: string | null;
   /** Optional alt text for the service image. */
-  imageAlt?: string;
+  imageAlt?: string | null;
   /** Optional meta title for SEO. */
-  metaTitle?: string;
+  metaTitle?: string | null;
   /** Optional meta description for SEO. */
   metaDescription?: string;
   /** Optional keywords for SEO. */

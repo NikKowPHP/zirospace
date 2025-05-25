@@ -2,6 +2,7 @@ import { serviceService } from '@/lib/services/service.service';
 import { Locale } from '@/i18n';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import Image from 'next/image';
 
 interface Props {
   params: { locale: Locale; slug: string };
@@ -49,12 +50,19 @@ export default async function ServicePage({ params: { locale, slug } }: Props) {
   }
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-5">{service.title}</h1>
+    <div className="max-w-5xl mx-auto py-10">
+      <h1 className="text-3xl text-center font-bold mb-5">{service.title}</h1>
       {service.subtitle && <h2 className="text-xl mb-3">{service.subtitle}</h2>}
       {service.imageUrl && (
-        <img src={service.imageUrl} alt={service.imageAlt} className="mb-5 rounded-lg shadow-md" />
+        <div className="relative w-full h-96 mb-5">
+
+
+          <Image
+            src={service.imageUrl} alt={service.imageAlt || 'service image'} fill className="mb-5 rounded-lg shadow-md " />
+        </div>
+
       )}
+
       <div dangerouslySetInnerHTML={{ __html: service.contentHtml }} />
     </div>
   );

@@ -6,14 +6,14 @@ import { getDatabaseFilePath } from '@/lib/config/database.config';
 import { Database, RunResult } from 'sqlite3'; // Import RunResult
 import logger from '@/lib/logger';
 
-const dbPath = getDatabaseFilePath();
-const db = new Database(dbPath);
-
 export class ServiceLocalRepository implements IServiceRepository {
-  private db: Database;
+  private db: Database | undefined;
 
   constructor() {
-    this.db = db;
+    if (process.env.MOCK_REPOSITORIES === 'true') {
+      const dbPath = getDatabaseFilePath();
+      this.db = new Database(dbPath);
+    }
   }
 
   private getTableName(locale: string): string {
