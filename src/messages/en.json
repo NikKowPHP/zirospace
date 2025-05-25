@@ -101,6 +101,11 @@
 
   "contactUsFormSection": {
     "title": "Start Your Digital Health Journey With Us",
+    "name": "Name",
+    "email": "Email",
+    "telephone": "Telephone",
+    "message": "Message",
+    "submit" : "Submit"
   },
   "ziroPhilosophy": {
 
