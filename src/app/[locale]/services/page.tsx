@@ -1,6 +1,10 @@
 import { serviceService } from '@/lib/services/service.service';
 import { Locale } from '@/i18n';
 import { Metadata } from 'next';
+import { Service } from '@/domain/models/service.model';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Divide } from 'lucide-react';
 
 interface Props {
   params: { locale: Locale };
@@ -14,6 +18,19 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Our Services | ZIRO`,
   };
+}
+
+const stripHtmlTags = (htmlString: string) => {
+  if (!htmlString) {
+    return ''; // Handle null, undefined, or empty strings
+  }
+  // Use a regular expression to find and replace HTML tags
+  // <   : Matches the opening angle bracket
+  // [^>] : Matches any character EXCEPT a closing angle bracket
+  // *   : Matches the previous character zero or more times
+  // >   : Matches the closing angle bracket
+  // g   : Global flag - replace all occurrences, not just the first
+  return htmlString.replace(/<[^>]*>/g, '');
 }
 
 async function getServices(locale: Locale) {
@@ -32,18 +49,71 @@ export default async function ServicesPage({ params: { locale } }: Props) {
   const services = await getServices(locale);
 
   return (
-    <div className="max-w-5xl mx-auto py-10">
+    <div className="max-w-3xl py-10 mx-auto ">
       <h1 className="text-3xl text-center font-bold mb-5">Our Services</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+
+      <ul className="" itemScope itemType="https://schema.org/ItemList">
         {services.map((service) => (
-          <div key={service.slug} className="bg-white rounded-lg shadow-md p-4">
-            <a href={`/${locale}/services/${service.slug}`}>
-              <h2 className="text-xl font-semibold mb-2">{service.title}</h2>
-              <p className="text-gray-700">{service.excerpt}</p>
-            </a>
-          </div>
+          <ServiceItem key={service.id} service={service} locale={locale} position={service.orderIndex ?? 0} />
         ))}
-      </div>
+      </ul>
+
+
     </div>
   );
+}
+
+
+
+
+const ServiceItem = ({
+  service,
+  locale,
+  position,
+}: {
+  service: Service
+  locale: Locale
+  position: number
+}) => {
+  const cleanedExcerpt = stripHtmlTags(service.excerpt ? service.excerpt : '');
+
+  return (
+    <li
+      className=""
+      itemScope
+      itemType="https://schema.org/BlogPosting"
+      itemProp="itemListElement"
+    >
+      <Link href={`/${locale}/services/${service.slug}`} className="" itemProp="url">
+        <div className="flex border-b  py-[32px] gap-[32px] justify-between">
+          <div className="flex flex-col gap-[4px]">
+            <h2 className=" font-semibold  text-[19px]" itemProp="headline">
+              {service.title}
+            </h2>
+            <p className="text-[15px]">
+              {cleanedExcerpt}
+              {/* Empowering Healthcare Innovation Through Human-Centered Design and */}
+              {/* Collaborative Solutions */}
+            </p>
+          </div>
+          {service.imageUrl && (
+            <div itemProp="image" className="w-full sm:w-[250px]  aspect-video overflow-hidden relative">
+              <Image
+                className="rounded-xl w-full h-auto"
+                src={service.imageUrl}
+                // src="https://picsum.photos/250/150"
+                alt={service.imageAlt || service.title}
+                style={{ objectFit: 'cover' }}
+                fill
+
+                loading="lazy"
+              />
+            </div>
+          )}
+        </div>
+        <meta itemProp="position" content={String(position)} />
+      </Link>
+    </li>
+  )
 }
