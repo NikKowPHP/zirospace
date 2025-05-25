@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
@@ -28,6 +28,7 @@ export function ServiceForm({
   loading,
 }: ServiceFormProps) {
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -70,6 +71,7 @@ export function ServiceForm({
   }, [quillExcerpt, service?.excerpt])
 
   const submitHandler = async (data: Partial<Service>) => {
+    console.log('isPublished state:', data.isPublished);
     const keywordsArray = keywords.split(',').map(k => k.trim()).filter(k => k !== '');
     await onSubmit({ ...data, contentHtml: content, excerpt: excerpt, keywords: keywordsArray });
   }
@@ -191,11 +193,20 @@ export function ServiceForm({
       </div>
 
       <div>
-        <Label htmlFor="isPublished">Published</Label>
-        <Switch
-          id="isPublished"
-          {...register('isPublished')}
-        />
+        <div>
+          <Label htmlFor="isPublished" className="mr-2">Published</Label>
+          <Controller
+            name="isPublished"
+            control={control}
+            render={({ field }) => (
+              <Switch
+                id="isPublished"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            )}
+          />
+        </div>
       </div>
 
       <div>
