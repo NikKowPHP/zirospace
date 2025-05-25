@@ -270,14 +270,6 @@ export function AdminProvider({
     }
   };
 
-  const displayHotToast = (message: string, type: string) => {
-    if(type == "success"){
-        toast.success(message);
-    }
-      else{
-       toast.error(message); 
-      }
-  }
 
   const deleteService = async (id: string, locale: Locale) => {
     setLoading(true);

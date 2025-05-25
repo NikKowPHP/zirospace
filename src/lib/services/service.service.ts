@@ -3,6 +3,7 @@ import { Service } from '../../domain/models/service.model';
 import { ServiceDTO } from '../../infrastructure/dto/service.dto';
 import { generateSlug } from '../utils/slugify';
 import { serviceRepository } from '../repositories/service.repository';
+import logger from '@/lib/logger';
 /**
  * @class ServiceService
  * @desc Service class for managing services.

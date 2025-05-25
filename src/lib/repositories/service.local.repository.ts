@@ -22,10 +22,14 @@ export class ServiceLocalRepository implements IServiceRepository {
 
   async getServices(locale: string): Promise<Service[]> {
     try {
+      if (!this.db) {
+        throw new Error('ServiceLocalRepository is not initialized. MOCK_REPOSITORIES must be true.');
+      }
+
       const tableName = this.getTableName(locale);
       const query = `SELECT * FROM ${tableName}`;
       const rows: ServiceDTO[] = await new Promise((resolve, reject) => {
-        this.db.all(query, [], (err: Error | null, rows: ServiceDTO[]) => { // Add type annotation for err
+        this.db!.all(query, [], (err: Error | null, rows: ServiceDTO[]) => { // Add type annotation for err
           if (err) {
             reject(err);
           } else {
@@ -47,10 +51,14 @@ export class ServiceLocalRepository implements IServiceRepository {
 
   async getServiceBySlug(slug: string, locale: string): Promise<Service | null> {
     try {
+      if (!this.db) {
+        throw new Error('ServiceLocalRepository is not initialized. MOCK_REPOSITORIES must be true.');
+      }
+
       const tableName = this.getTableName(locale);
       const query = `SELECT * FROM ${tableName} WHERE slug = ?`;
       const row: ServiceDTO | undefined = await new Promise((resolve, reject) => {
-        this.db.get(query, [slug], (err: Error | null, row: ServiceDTO) => { // Add type annotation for err
+        this.db!.get(query, [slug], (err: Error | null, row: ServiceDTO) => { // Add type annotation for err
           if (err) {
             reject(err);
           } else {
@@ -70,10 +78,14 @@ export class ServiceLocalRepository implements IServiceRepository {
 
   async getServiceById(id: string, locale: string): Promise<Service | null> {
     try {
+      if (!this.db) {
+        throw new Error('ServiceLocalRepository is not initialized. MOCK_REPOSITORIES must be true.');
+      }
+
       const tableName = this.getTableName(locale);
       const query = `SELECT * FROM ${tableName} WHERE id = ?`;
       const row: ServiceDTO | undefined = await new Promise((resolve, reject) => {
-        this.db.get(query, [id], (err: Error | null, row: ServiceDTO) => { // Add type annotation for err
+        this.db!.get(query, [id], (err: Error | null, row: ServiceDTO) => { // Add type annotation for err
           if (err) {
             reject(err);
           } else {
@@ -115,9 +127,12 @@ export class ServiceLocalRepository implements IServiceRepository {
       });
 
       const query = `INSERT INTO ${tableName} (${columns}) VALUES (${placeholders})`;
+      if (!this.db) {
+        throw new Error('ServiceLocalRepository is not initialized. MOCK_REPOSITORIES must be true.');
+      }
 
       await new Promise<void>((resolve, reject) => {
-        this.db.run(query, values, function (err: Error | null) { // Add type annotation for err
+        this.db!.run(query, values, function(err: Error | null) { // Add type annotation for err
           if (err) {
             reject(err);
           } else {
@@ -140,6 +155,9 @@ export class ServiceLocalRepository implements IServiceRepository {
   }
 
   async updateService(id: string, service: Partial<ServiceDTO>, locale: string): Promise<Service | null> {
+    if (!this.db) {
+      throw new Error('ServiceLocalRepository is not initialized. MOCK_REPOSITORIES must be true.');
+    }
     try {
       const tableName = this.getTableName(locale);
       const updates: string[] = [];
@@ -161,7 +179,7 @@ export class ServiceLocalRepository implements IServiceRepository {
           }
         }
       }
-      logger.warn(`Updates to apply: ${updates.join(', ')}`);
+      logger.log(`Updates to apply: ${updates.join(', ')}`);
 
       if (updates.length === 0) {
         return this.getServiceById(id, locale); // No updates to apply
@@ -172,7 +190,7 @@ export class ServiceLocalRepository implements IServiceRepository {
       const query = `UPDATE ${tableName} SET ${updates.join(', ')} WHERE id = ?`;
 
       await new Promise<void>((resolve, reject) => {
-        this.db.run(query, params, function (err: Error | null) { // Add type annotation for err
+        this.db!.run(query, params, function(err: Error | null) { // Add type annotation for err
           if (err) {
             reject(err);
           } else {
@@ -191,12 +209,15 @@ export class ServiceLocalRepository implements IServiceRepository {
   }
 
   async deleteService(id: string, locale: string): Promise<boolean> {
+    if (!this.db) {
+      throw new Error('ServiceLocalRepository is not initialized. MOCK_REPOSITORIES must be true.');
+    }
     try {
       const tableName = this.getTableName(locale);
       const query = `DELETE FROM ${tableName} WHERE id = ?`;
 
       const result = await new Promise<number>((resolve, reject) => { // Specify return type as number
-        this.db.run(query, [id], function (this: RunResult, err: Error | null) { // Add type annotation for this and err
+        this.db!.run(query, [id], function(this: RunResult, err: Error | null) { // Add type annotation for this and err
           if (err) {
             reject(err);
           } else {
