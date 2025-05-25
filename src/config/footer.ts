@@ -3,22 +3,27 @@ export const footerConfig = {
     {
       title: 'process',
       href: 'our-process',
+      isRoute: false,
     },
     {
       title: 'services',
       href: 'our-services',
+      isRoute: false,
     },
     {
       title: 'explore services',
-      href: '/services'
+      href: '/services',
+      isRoute: true,
     },
     {
       title: 'why Ziro?',
       href: 'why-ziro',
+      isRoute: false,
     },
     {
       title: 'FAQs',
       href: 'faqs',
+      isRoute: false,
     }
 
   ],

@@ -19,16 +19,20 @@ export function Footer() {
   }
 
   // Handler for footer links
-  const handleFooterLink = (item: { title: string; href: string }) => {
-    // If the current page is not the homepage, redirect first
-    if (pathname !== '/') {
-      router.push('/')
-      // Delay scrolling to allow the homepage sections to render
-      setTimeout(() => {
-        scrollElement(item.href)
-      }, 100)
+  const handleFooterLink = (item: { title: string; href: string; isRoute?: boolean }) => {
+    if (item.isRoute) {
+      router.push(item.href);
     } else {
-      scrollElement(item.href)
+      // If the current page is not the homepage, redirect first
+      if (pathname !== '/') {
+        router.push('/')
+        // Delay scrolling to allow the homepage sections to render
+        setTimeout(() => {
+          scrollElement(item.href)
+        }, 100)
+      } else {
+        scrollElement(item.href)
+      }
     }
   }
 
@@ -141,9 +145,7 @@ export function Footer() {
             >
               {/* Main Navigation */}
               <div className="flex flex-col gap-4 justify-start  items-start">
-                {/* <h2 className="font-medium text-gray-900 text-sm mb-2">
-                  {t('navigation.')}
-                </h2> */}
+
                 {footerConfig.mainNav.map((item, index) => (
                   <button
                     key={index}
@@ -153,6 +155,7 @@ export function Footer() {
                     {item.title}
                   </button>
                 ))}
+
               </div>
 
               {/* Social Links */}
