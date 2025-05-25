@@ -7,8 +7,8 @@ export const navigationConfig = {
     },
     {
       title: 'services',
-      href: '/services',
-      isRoute: true,
+      href: 'our-services',
+      isRoute: false,
     },
     {
       title: 'whyZiro',

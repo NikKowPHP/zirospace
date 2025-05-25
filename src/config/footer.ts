@@ -9,6 +9,10 @@ export const footerConfig = {
       href: 'our-services',
     },
     {
+      title: 'explore services',
+      href: '/services'
+    },
+    {
       title: 'why Ziro?',
       href: 'why-ziro',
     },
