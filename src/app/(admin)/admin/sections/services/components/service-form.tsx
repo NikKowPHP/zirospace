@@ -12,6 +12,7 @@ import { useQuill } from 'react-quilljs'
 import 'quill/dist/quill.snow.css'
 import { Textarea } from '@/components/ui/textarea/textarea'
 import { Switch } from '@/components/ui/switch/switch'
+import logger from '@/lib/logger' // Import logger
 
 interface ServiceFormProps {
   service?: Service
@@ -71,7 +72,7 @@ export function ServiceForm({
   }, [quillExcerpt, service?.excerpt])
 
   const submitHandler = async (data: Partial<Service>) => {
-    console.log('isPublished state:', data.isPublished);
+    logger.log('Submitting ServiceForm. isPublished:', data.isPublished); // Log on submit
     const keywordsArray = keywords.split(',').map(k => k.trim()).filter(k => k !== '');
     await onSubmit({ ...data, contentHtml: content, excerpt: excerpt, keywords: keywordsArray });
   }
@@ -202,7 +203,10 @@ export function ServiceForm({
               <Switch
                 id="isPublished"
                 checked={field.value}
-                onCheckedChange={field.onChange}
+                onCheckedChange={(checked) => { // Add logging on toggle change
+                  logger.log('isPublished toggled to:', checked);
+                  field.onChange(checked);
+                }}
               />
             )}
           />

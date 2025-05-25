@@ -138,7 +138,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
 
     // Use the locale from searchParams
     const updatedService = await serviceService.updateService(id, persistenceData, locale);
-    logger.log(`updatedService ${updatedService} `)
+    logger.log(`updatedService ${JSON.stringify(updatedService)} `)
 
     if (!updatedService) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
@@ -156,40 +156,13 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-/**
- * @openapi
- * /api/admin/services:
- *   delete:
- *     summary: Delete a service
- *     parameters:
- *       - in: query
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: The ID of the service to delete
- *       - in: query
- *         name: locale
- *         required: true
- *         schema:
- *           type: string
- *         description: The locale of the service to delete
- *     responses:
- *       200:
- *         description: Successful operation
- *       400:
- *         description: Validation error
- *       404:
- *         description: Service not found
- *       500:
- *         description: Failed to delete service
- */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams;
     const id = searchParams.get('id') as string;
     const locale = searchParams.get('locale') as string;
+
+
 
     const validatedParams = serviceIdLocaleSchema.safeParse({ id, locale });
 

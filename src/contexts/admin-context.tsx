@@ -15,6 +15,7 @@ import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Banner } from '@/domain/models/banner.model'
+import toast from 'react-hot-toast'
 
 interface OrderUpdate {
   id: string
@@ -226,8 +227,10 @@ export function AdminProvider({
         ...prev,
         [locale]: [...prev[locale], newService],
       }));
+      toast(toast.success('Service created successfully!'));
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to create service');
+      toast(toast.error(err instanceof Error ? err.message : 'Failed to create service'));
     } finally {
       setLoading(false);
     }
@@ -257,8 +260,11 @@ export function AdminProvider({
           service.id === id ? updatedService : service
         ),
       }));
+      toast(toast.success('Service updated successfully!'));
+
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to update service');
+      toast(toast.error(err instanceof Error ? err.message : 'Failed to update service'));
     } finally {
       setLoading(false);
     }
@@ -284,8 +290,10 @@ export function AdminProvider({
         ...prev,
         [locale]: prev[locale].filter((service) => service.id !== id),
       }));
+      toast(toast.success('Service deleted successfully!'));
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Failed to delete service');
+      toast(toast.error(err instanceof Error ? err.message : 'Failed to delete service'));
     } finally {
       setLoading(false);
     }
@@ -331,7 +339,7 @@ export function AdminProvider({
     setLoading(true)
     setError(null)
     try {
-      console.log('update data', { data, id})
+      console.log('update data', { data, id })
       const response = await fetch(`/api/admin/case-studies/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -415,7 +423,7 @@ export function AdminProvider({
     }
   }
 
-  
+
 
   const createCaseStudySlider = async (
     data: Partial<CaseStudySlider>

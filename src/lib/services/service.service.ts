@@ -10,7 +10,7 @@ import { serviceRepository } from '../repositories/service.repository';
 class ServiceService {
   private readonly repository: IServiceRepository;
 
- 
+
   constructor() {
     if (process.env.MOCK_REPOSITORIES === 'true') {
       // Use synchronous require for server-side code
@@ -122,6 +122,7 @@ class ServiceService {
    * @returns {Promise<boolean>} A promise that resolves to true if the service was deleted, false otherwise.
    */
   async deleteService(id: string, locale: string): Promise<boolean> {
+
     return this.repository.deleteService(id, locale);
   }
 }

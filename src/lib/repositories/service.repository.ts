@@ -85,7 +85,7 @@ export class ServiceRepository implements IServiceRepository {
 
   async updateService(id: string, service: Partial<ServiceDTO>, locale: string): Promise<Service | null> {
     const tableName = this.getTableName(locale);
-logger.log(`ServiceRepository.updateService: updating table ${tableName} with id ${id}, data: ${JSON.stringify(service)}`);
+    logger.log(`ServiceRepository.updateService: updating table ${tableName} with id ${id}, data: ${JSON.stringify(service)}`);
     // Supabase handles updated_at with default values
     const { data, error } = await supabase
       .from(tableName)
@@ -93,6 +93,8 @@ logger.log(`ServiceRepository.updateService: updating table ${tableName} with id
       .eq('id', id)
       .select()
       .single();
+
+    logger.log(`ServiceRepository.updateService: returned data: ${JSON.stringify(data)}`);
 
     if (error) {
       if (error.code === 'PGRST116') { // No rows found to update
