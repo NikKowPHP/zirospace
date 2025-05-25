@@ -4,7 +4,6 @@ import { Metadata } from 'next';
 import { Service } from '@/domain/models/service.model';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Divide } from 'lucide-react';
 
 interface Props {
   params: { locale: Locale };
