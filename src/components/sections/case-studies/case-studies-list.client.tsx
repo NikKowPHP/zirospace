@@ -29,7 +29,7 @@ export const AnimatedCaseStudyCard = ({ caseStudy, locale, index }: {
     }, []);
 
     const stickyTopOffset = useMemo(() => {
-        const spacing = 20;
+        const spacing = 0;
         return baseStickyTopOffset + effectiveIndex * spacing + adjustedOffset;
     }, [baseStickyTopOffset, effectiveIndex, adjustedOffset]);
 

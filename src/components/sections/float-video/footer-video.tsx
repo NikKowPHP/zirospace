@@ -38,9 +38,12 @@ export const FooterVideo = () => {
   }, [])
 
   const opts = {
-    height: '150',
-    width: '200',
+
+    height: '100%',
+    width: '100%',
+
     playerVars: {
+
       autoplay: 1,
       mute: 1,
       controls: 0,
@@ -53,8 +56,8 @@ export const FooterVideo = () => {
 
   useEffect(() => {
     const handleLoad = () => {
-        setShowVideo(true);
-        logger.log('Page fully loaded - starting video');
+      setShowVideo(true);
+      logger.log('Page fully loaded - starting video');
     };
 
     if (document.readyState === 'complete' && videoId) {
@@ -66,7 +69,7 @@ export const FooterVideo = () => {
       return () => window.removeEventListener('load', handleLoad);
     }
     return undefined;
-  }, [videoId ]);
+  }, [videoId]);
 
   const videoVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
@@ -76,40 +79,40 @@ export const FooterVideo = () => {
   return (
     // AnimatePresence handles the mounting/unmounting animation
     <AnimatePresence>
-        <motion.section
-          className="  md:hidden flex items-center justify-center  "
-          variants={videoVariants}
-          initial="hidden"
-          animate="visible"
-          exit="hidden" // Apply hidden variant on exit
-          transition={{ duration: 0.3, ease: "easeInOut" }} // Adjust duration/easing
-        >
-          <div className="w-[200px] h-[150px] rounded-lg overflow-hidden shadow-lg cursor-pointer">
-            {!showVideo ? (
-              <div
-                className="relative w-full h-full"
-                onClick={() => setShowVideo(true)}
-                role="button"
-                aria-label="Play video"
-              >
-                <Image
-                  src={thumbnailUrl}
-                  alt="Video thumbnail"
-                  fill
-                  className="object-cover"
-                  sizes="200px"
-                  loading="lazy"
-                  key={thumbnailUrl} // Add key to force re-render if URL changes
-                  unoptimized={!isProd} // Use optimized images in prod if possible
-                />
-                <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity hover:bg-black/20">
-                  <svg className="w-12 h-12 text-white" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M8 5v14l11-7z"/>
-                  </svg>
-                </div>
+      <motion.section
+        className="  md:hidden flex items-center justify-center  "
+        variants={videoVariants}
+        initial="hidden"
+        animate="visible"
+        exit="hidden" // Apply hidden variant on exit
+        transition={{ duration: 0.3, ease: "easeInOut" }} // Adjust duration/easing
+      >
+        <div className="w-full relative pt-[56.25%] rounded-lg overflow-hidden shadow-lg cursor-pointer">
+          {!showVideo ? (
+            <div
+              className="absolute inset-0 w-full"
+              onClick={() => setShowVideo(true)}
+              role="button"
+              aria-label="Play video"
+            >
+              <Image
+                src={thumbnailUrl}
+                alt="Video thumbnail"
+                fill
+                className="object-cover"
+                loading="lazy"
+                key={thumbnailUrl} // Add key to force re-render if URL changes
+                unoptimized={!isProd} // Use optimized images in prod if possible
+              />
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-opacity hover:bg-black/20">
+                <svg className="w-12 h-12 text-white" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M8 5v14l11-7z" />
+                </svg>
               </div>
-            ) : (
-              videoId ? ( // Only render YouTube if videoId is available
+            </div>
+          ) : (
+            videoId ? ( // Only render YouTube if videoId is available
+              <div className='absolute inset-0'>
                 <YouTube
                   videoId={videoId}
                   opts={opts}
@@ -126,12 +129,13 @@ export const FooterVideo = () => {
                   }}
                   onError={(e) => logger.log('YouTube player error:', e)}
                 />
-              ) : (
-                 <div className="w-[200px] h-[150px] bg-gray-100 animate-pulse flex items-center justify-center text-gray-500">Loading Video...</div>
-              )
-            )}
-          </div>
-        </motion.section>
+              </div>
+            ) : (
+              <div className="w-[200px] h-[150px] bg-gray-100 animate-pulse flex items-center justify-center text-gray-500">Loading Video...</div>
+            )
+          )}
+        </div>
+      </motion.section>
     </AnimatePresence>
   )
 }

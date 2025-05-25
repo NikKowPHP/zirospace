@@ -59,12 +59,12 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-[20px] mx-auto px-[10px] max-w-5xl left-0 right-0 z-50 bg-gray-200/50 backdrop-blur-xl transition-all duration-300 ease-in-out border border-white/5 ${isMobileMenuOpen ? 'rounded-[40px]' : 'rounded-[50px]'
+      className={`sticky top-[20px] mx-auto px-[15px] max-w-5xl left-0 right-0 z-50 bg-gray-200/50 backdrop-blur-xl transition-all duration-300 ease-in-out border border-white/5 ${isMobileMenuOpen ? 'rounded-[40px]' : 'rounded-[50px]'
         }`}
       itemScope
       itemType="https://schema.org/WPHeader"
     >
-      <div className=" mx-auto px-[5px]">
+      <div className=" mx-auto ">
         <div
           className={`flex min-h-[72px] items-center justify-between overflow-hidden duration-300 ease-in-out `}
         >
@@ -111,7 +111,7 @@ export function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-[20px]">
+          <div className="flex items-center gap-[20px] pr-[2px] ">
             <Button
               size="sm"
               variant='bookcall'
