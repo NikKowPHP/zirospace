@@ -6,33 +6,16 @@ import { getDatabaseFilePath } from '@/lib/config/database.config';
 import { Database, RunResult } from 'sqlite3'; // Import RunResult
 import logger from '@/lib/logger';
 
-// REMOVE THESE LINES FROM MODULE SCOPE:
-// const dbPath = getDatabaseFilePath();
-// const db = new Database(dbPath);
-
-
-
 export class ServiceLocalRepository implements IServiceRepository {
-  private db: Database;
+  private db: Database | undefined;
 
   constructor() {
-    const dbPath = getDatabaseFilePath(); // Get path inside constructor
-    logger.log(`ServiceLocalRepository: Attempting to initialize SQLite DB at ${dbPath}`);
-    try {
-      this.db = new Database(dbPath, (err) => { // Instantiate DB inside constructor
-        if (err) {
-          logger.error(`ServiceLocalRepository: FAILED to open SQLite DB at ${dbPath}`, err);
-          // This error will propagate if MOCK_REPOSITORIES is true and the DB file is missing.
-          // During a production build (MOCK_REPOSITORIES=false), this constructor shouldn't even be called.
-          throw err;
-        }
-        logger.log(`ServiceLocalRepository: SQLite DB opened successfully at ${dbPath}`);
-      });
-    } catch (e) {
-        logger.error(`ServiceLocalRepository: Critical exception during new Database() at ${dbPath}`, e);
-        throw e;
+    if (process.env.MOCK_REPOSITORIES === 'true') {
+      const dbPath = getDatabaseFilePath();
+      this.db = new Database(dbPath);
     }
   }
+
   private getTableName(locale: string): string {
     return `services_${locale}`;
   }

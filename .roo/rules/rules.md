@@ -1,4 +1,3 @@
-**Attention @roo: Project TODO List & Execution Plan**
 
 Hello @roo,
 
@@ -19,7 +18,7 @@ For each TODO item listed below, please:
 After processing all individual TODOs, please provide:
 
 8.  **Suggested Order of Execution:** If there's a logical or dependent order in which these tasks should be tackled, please suggest it.
-9.  **Overall Questions:** Any overarching questions you have about the project or the TODO list as a whole.
+
 
 ---
 

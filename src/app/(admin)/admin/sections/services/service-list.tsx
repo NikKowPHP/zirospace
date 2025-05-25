@@ -16,6 +16,7 @@ export function ServiceList() {
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this service?')) {
       try {
+        logger.log(`Deleting service with id: ${id} and locale  and locale : ${activeLocale}`)
         await deleteService(id, activeLocale)
       } catch (error) {
         logger.log('Failed to delete service:', error)
@@ -31,21 +32,19 @@ export function ServiceList() {
         <div className="flex space-x-4">
           <button
             onClick={() => setActiveLocale('en')}
-            className={`px-6 py-3 rounded-full transition-colors ${
-              activeLocale === 'en'
-                ? 'bg-primary text-white'
-                : 'bg-secondary text-gray-700 hover:bg-secondary/80'
-            }`}
+            className={`px-6 py-3 rounded-full transition-colors ${activeLocale === 'en'
+              ? 'bg-primary text-white'
+              : 'bg-secondary text-gray-700 hover:bg-secondary/80'
+              }`}
           >
             English
           </button>
           <button
             onClick={() => setActiveLocale('pl')}
-            className={`px-6 py-3 rounded-full transition-colors ${
-              activeLocale === 'pl'
-                ? 'bg-primary text-white'
-                : 'bg-secondary text-gray-700 hover:bg-secondary/80'
-            }`}
+            className={`px-6 py-3 rounded-full transition-colors ${activeLocale === 'pl'
+              ? 'bg-primary text-white'
+              : 'bg-secondary text-gray-700 hover:bg-secondary/80'
+              }`}
           >
             Polish
           </button>
@@ -120,7 +119,7 @@ export function ServiceList() {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDelete(service.id.toString())}
+                    onClick={() => handleDelete(service.id)}
                     className="text-red-600 hover:text-red-900 disabled:opacity-50"
                     disabled={loading}
                   >

@@ -6,19 +6,19 @@ export interface Service {
   /** Title of the service. */
   title: string;
   /** Optional subtitle for the service. */
-  subtitle?: string;
+  subtitle?: string | null;
   /** HTML content of the service. */
   contentHtml: string;
   /** Optional excerpt of the service content. */
-  excerpt?: string;
+  excerpt?: string | null;
   /** Optional URL of the service image. */
-  imageUrl?: string;
+  imageUrl?: string | null;
   /** Optional alt text for the service image. */
-  imageAlt?: string;
+  imageAlt?: string | null;
   /** Optional meta title for SEO. */
-  metaTitle?: string;
+  metaTitle?: string | null;
   /** Optional meta description for SEO. */
-  metaDescription?: string;
+  metaDescription?: string | null;
   /** Optional keywords for SEO. */
   keywords?: string[];
   /** Indicates if the service is published. */

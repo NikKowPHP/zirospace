@@ -12,14 +12,14 @@ const postServiceSchema = z.object({
     id: z.string().optional(),
     title: z.string().min(3, { message: "Title must be at least 3 characters" }),
     slug: z.string().optional(),
-    subtitle: z.string().optional(),
+    subtitle: z.string().nullable().optional(), // Changed to nullable().optional()
     content_html: z.string().optional(),
-    excerpt: z.string().optional(),
-    image_url: z.string().optional(),
-    image_alt: z.string().optional(),
+    excerpt: z.string().nullable().optional(), // Changed to nullable().optional()
+    image_url: z.string().nullable().optional(), // Changed to nullable().optional()
+    image_alt: z.string().nullable().optional(), // Changed to nullable().optional()
     is_published: z.boolean().default(false),
-    meta_title: z.string().optional(),
-    meta_description: z.string().optional(),
+    meta_title: z.string().nullable().optional(), // Changed to nullable().optional()
+    meta_description: z.string().nullable().optional(), // Changed to nullable().optional()
     keywords: z.array(z.string()).optional(),
     order_index: z.number().optional(),
   }),
@@ -32,18 +32,18 @@ const putServiceSchema = z.object({
   data: z.object({
     title: z.string().min(3, { message: "Title must be at least 3 characters" }).optional(),
     slug: z.string().optional(),
-    subtitle: z.string().optional(),
-    content_html: z.string().optional(),
-    excerpt: z.string().optional(),
-    image_url: z.string().optional(),
-    image_alt: z.string().optional(),
-    is_published: z.boolean().optional(),
-    meta_title: z.string().optional(),
-    meta_description: z.string().optional(),
+    subtitle: z.string().nullable().optional(),
+    contentHtml: z.string().optional(),
+    excerpt: z.string().nullable().optional(),
+    imageUrl: z.string().nullable().optional(),
+    imageAlt: z.string().nullable().optional(),
+    isPublished: z.boolean().optional(),
+    metaTitle: z.string().nullable().optional(),
+    metaDescription: z.string().nullable().optional(),
     keywords: z.array(z.string()).optional(),
-    order_index: z.number().optional(),
+    orderIndex: z.number().optional(),
   }),
-locale: z.string().optional(),
+  locale: z.string(),
 });
 
 // Define Zod schema for GET/PUT/DELETE request params
@@ -117,31 +117,22 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 export async function PUT(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const id = searchParams.get('id') as string;
-    const locale = searchParams.get('locale') as string;
+    const id = searchParams.get('id');
+    const locale = searchParams.get('locale');
 
-    const validatedParams = serviceIdLocaleSchema.safeParse({ id, locale });
-
-    if (!validatedParams.success) {
-      logger.error('Validation error updating service:', validatedParams.error.issues);
-      return NextResponse.json({ error: 'Validation error', details: validatedParams.error.issues }, { status: 400 });
+    if (!id || !locale) {
+      return NextResponse.json({ error: 'Missing id or locale' }, { status: 400 });
     }
 
-    const { id: validatedId, locale: validatedLocale } = validatedParams.data;
+    logger.log(`PUT request received with id=${id}, locale=${locale}`);
+
+    // const validatedParams = serviceIdLocaleSchema.safeParse({ id: String(id), locale: String(locale) });
 
     const body = await request.json();
-    // Log raw request body
-    logger.log('PUT service: Raw request body', body);
-
-    // Validate only the data part of the body, locale is validated from query params
-    const validatedBody = putServiceSchema.parse( body );
-    // Log validated request body
-    logger.log('PUT service: Validated request body', validatedBody);
-
+    const validatedBody = putServiceSchema.parse({ data: body });
     const { data } = validatedBody;
 
     logger.log(`Updating service: ${validatedId} ${validatedLocale} with data: ${JSON.stringify(data)}`);
-    // Use validatedLocale from query params
     const updatedService = await serviceService.updateService(validatedId, data, validatedLocale);
 
     if (!updatedService) {
@@ -155,7 +146,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       logger.error('Validation error updating service:', error.issues);
       return NextResponse.json({ error: 'Validation error', details: error.issues }, { status: 400 });
     }
-    logger.error(`Error updating service: ${error}`);
+    logger.error(`Error updating service: ${error} `);
     return NextResponse.json({ error: 'Failed to update service' }, { status: 500 });
   }
 }
@@ -166,6 +157,8 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     const id = searchParams.get('id') as string;
     const locale = searchParams.get('locale') as string;
 
+
+
     const validatedParams = serviceIdLocaleSchema.safeParse({ id, locale });
 
     if (!validatedParams.success) {
@@ -175,7 +168,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
 
     const { id: validatedId, locale: validatedLocale } = validatedParams.data;
 
-    logger.log(`Deleting service: ${validatedId} for locale: ${validatedLocale}`);
+    logger.log(`Deleting service: ${validatedId} for locale: ${validatedLocale} `);
     const deletedService = await serviceService.deleteService(validatedId, validatedLocale);
     if (!deletedService) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 });
@@ -186,7 +179,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
-    logger.error(`Error deleting service: ${error}`);
+    logger.error(`Error deleting service: ${error} `);
     return NextResponse.json({ error: 'Failed to delete service' }, { status: 500 });
   }
 }

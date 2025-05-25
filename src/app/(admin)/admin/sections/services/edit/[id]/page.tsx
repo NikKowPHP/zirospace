@@ -12,8 +12,8 @@ interface Props {
   params: { id: string }
 }
 
-export default function EditServicePage({params}: Props) {
-  const { updateService, loading, getServiceById  } = useAdmin()
+export default function EditServicePage({ params }: Props) {
+  const { updateService, loading, getServiceById } = useAdmin()
   const router = useRouter()
   const searchParams = useSearchParams()
   const locale = searchParams.get('locale') || 'en';
@@ -25,13 +25,15 @@ export default function EditServicePage({params}: Props) {
     if (id) {
       setId(id)
     }
-  
+
     getServiceById(id, locale as Locale).then(service => setService(service || null))
   }, [params, getServiceById, locale])
 
   const handleUpdate = async (data: Partial<Service>) => {
     if (!service) return;
     try {
+      logger.log('Updating service in handleUpdate:', data);
+      logger.log('isPublished value in handleUpdate:', data.isPublished); // Add logging for isPublished
       await updateService(id, data, locale as Locale)
       router.push('/admin/sections/services')
     } catch (error) {
@@ -39,10 +41,10 @@ export default function EditServicePage({params}: Props) {
     }
   }
 
-  if(!service && loading) {
+  if (!service && loading) {
     return <div>Loading...</div>
   }
-  if(!service) {
+  if (!service) {
     return <div>Service not found</div>
   }
 

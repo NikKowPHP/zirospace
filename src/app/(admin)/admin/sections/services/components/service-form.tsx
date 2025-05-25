@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
@@ -12,6 +12,7 @@ import { useQuill } from 'react-quilljs'
 import 'quill/dist/quill.snow.css'
 import { Textarea } from '@/components/ui/textarea/textarea'
 import { Switch } from '@/components/ui/switch/switch'
+import logger from '@/lib/logger' // Import logger
 
 interface ServiceFormProps {
   service?: Service
@@ -28,6 +29,7 @@ export function ServiceForm({
   loading,
 }: ServiceFormProps) {
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -70,6 +72,7 @@ export function ServiceForm({
   }, [quillExcerpt, service?.excerpt])
 
   const submitHandler = async (data: Partial<Service>) => {
+    logger.log('Submitting ServiceForm. isPublished:', data.isPublished); // Log on submit
     const keywordsArray = keywords.split(',').map(k => k.trim()).filter(k => k !== '');
     await onSubmit({ ...data, contentHtml: content, excerpt: excerpt, keywords: keywordsArray });
   }
@@ -191,11 +194,23 @@ export function ServiceForm({
       </div>
 
       <div>
-        <Label htmlFor="isPublished">Published</Label>
-        <Switch
-          id="isPublished"
-          {...register('isPublished')}
-        />
+        <div>
+          <Label htmlFor="isPublished" className="mr-2">Published</Label>
+          <Controller
+            name="isPublished"
+            control={control}
+            render={({ field }) => (
+              <Switch
+                id="isPublished"
+                checked={field.value}
+                onCheckedChange={(checked) => { // Add logging on toggle change
+                  logger.log('isPublished toggled to:', checked);
+                  field.onChange(checked);
+                }}
+              />
+            )}
+          />
+        </div>
       </div>
 
       <div>

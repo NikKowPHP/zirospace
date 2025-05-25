@@ -3,7 +3,6 @@ import { Service } from '../../domain/models/service.model';
 import { ServiceDTO } from '../../infrastructure/dto/service.dto';
 import { generateSlug } from '../utils/slugify';
 import { serviceRepository } from '../repositories/service.repository';
-import { serviceLocalRepository } from '../repositories/service.local.repository';
 /**
  * @class ServiceService
  * @desc Service class for managing services.
@@ -11,12 +10,14 @@ import { serviceLocalRepository } from '../repositories/service.local.repository
 class ServiceService {
   private readonly repository: IServiceRepository;
 
- 
+
   constructor() {
-    if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.repository= serviceLocalRepository
+    if (process.env.MOCK_REPOSITORIES === 'true') {
+      // Use synchronous require for server-side code
+      const { serviceLocalRepository } = require('../repositories/service.local.repository');
+      this.repository = serviceLocalRepository;
     } else {
-      this.repository= serviceRepository
+      this.repository = serviceRepository;
     }
   }
   /**
@@ -122,6 +123,7 @@ class ServiceService {
    * @returns {Promise<boolean>} A promise that resolves to true if the service was deleted, false otherwise.
    */
   async deleteService(id: string, locale: string): Promise<boolean> {
+
     return this.repository.deleteService(id, locale);
   }
 }
