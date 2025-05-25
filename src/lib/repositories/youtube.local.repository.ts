@@ -3,15 +3,13 @@ import { getDatabaseFilePath } from "@/lib/config/database.config";
 import { Database } from "sqlite3";
 import logger from "@/lib/logger";
 
-const dbPath = getDatabaseFilePath();
-const db = new Database(dbPath);
-
 export class YoutubeRepositoryLocal {
   private db: Database;
   private tableName: string = "youtube"; // Ensure your table is named "youtube"
 
   constructor() {
-    this.db = db;
+    const dbPath = getDatabaseFilePath();
+    this.db = new Database(dbPath);
   }
 
   /**

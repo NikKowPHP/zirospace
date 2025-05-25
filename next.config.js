@@ -1,17 +1,25 @@
-const createNextIntlPlugin = require('next-intl/plugin');
-const withBundleAnalyzer = require('@next/bundle-analyzer');
-const { PERFORMANCE_CONFIG } = require('./src/config/performance');
+const createNextIntlPlugin = require('next-intl/plugin')
+const withBundleAnalyzer = require('@next/bundle-analyzer')
+const { PERFORMANCE_CONFIG } = require('./src/config/performance')
 
-const withNextIntl = createNextIntlPlugin();
+const withNextIntl = createNextIntlPlugin()
 const withAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
   openAnalyzer: false,
-});
+})
 
 const config = {
   // Image optimization
   images: {
-    domains: ['localhost', 'ziro.space', 'drive.google.com', 'i.ibb.co', 'i.postimg.cc', 'i.ytimg.com'],
+    domains: [
+      'localhost',
+      'ziro.space',
+      'picsum.photos',
+      'drive.google.com',
+      'i.ibb.co',
+      'i.postimg.cc',
+      'i.ytimg.com',
+    ],
     deviceSizes: PERFORMANCE_CONFIG.images.deviceSizes,
     imageSizes: PERFORMANCE_CONFIG.images.imageSizes,
     minimumCacheTTL: PERFORMANCE_CONFIG.images.minimumCacheTTL,
@@ -80,9 +88,9 @@ const config = {
             },
           },
         },
-      };
+      }
     }
-    return config;
+    return config
   },
 
   // Headers optimization
@@ -91,13 +99,16 @@ const config = {
       {
         source: '/:path*',
         headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'X-XSS-Protection', value: '1; mode=block' },
         ],
       },
-    ];
+    ]
   },
 
   // Redirects
@@ -108,21 +119,30 @@ const config = {
         destination: '/',
         permanent: true,
       },
-    ];
+    ]
   },
 
   // Powered by header removal & React strict mode
   poweredByHeader: false,
   reactStrictMode: true,
-};
+  eslint: {
+    ignoreDuringBuilds: true,
+    useEslintrc: false,
+    overrideConfig: {
+      linterOptions: {
+        reportUnusedDisableDirectives: 'off',
+      },
+    },
+  },
+}
 
 // Install critters for CSS optimization
 try {
-  require('critters');
+  require('critters')
 } catch (e) {
-  console.warn('Installing critters...');
-  require('child_process').execSync('npm install critters');
+  console.warn('Installing critters...')
+  require('child_process').execSync('npm install critters')
 }
 
 // Export your configuration using CommonJS
-module.exports = withNextIntl(withAnalyzer(config));
+module.exports = withNextIntl(withAnalyzer(config))

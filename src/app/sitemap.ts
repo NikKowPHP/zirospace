@@ -2,8 +2,10 @@ import { MetadataRoute } from 'next'
 import { locales } from '@/i18n'
 import { blogPostService } from '@/lib/services/blog-post.service'
 import { caseStudyService } from '@/lib/services/case-study.service'
+import { serviceService } from '@/lib/services/service.service'
 import { siteUrl } from '@/config/constants';
 type ChangeFrequency = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never'
+import { Service } from '@/domain/models/service.model';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteUrl;
@@ -74,10 +76,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   ])
 
+  // Get all service pages for each locale
+  const serviceUrls = await Promise.all(
+    locales.map(async (locale) => {
+      const services = await serviceService.getServices(locale)
+      return services.map((service: Service) => ({
+        url: `${baseUrl}/${locale}/services/${service.slug}`,
+        lastModified: service.createdAt,
+        changeFrequency: 'weekly' as ChangeFrequency,
+        priority: 0.7,
+      }))
+    })
+  )
+
+  // Flatten the service URLs array
+  const flattenedServiceUrls = serviceUrls.flat()
+
   return [
     ...localizedUrls,
     ...flattenedBlogUrls,
     ...flattenedCaseStudyUrls,
-    ...healthcareRoutes
+    ...healthcareRoutes,
+    ...flattenedServiceUrls
   ]
 }

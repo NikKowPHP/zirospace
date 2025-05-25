@@ -2,16 +2,19 @@ import { HeroModel } from '@/domain/models/models'
 import {
   heroRepository, IHeroRepository
  } from '@/lib/repositories/hero.repository'
+import { heroRepositoryLocal } from '@/lib/repositories/hero.local.repository'
 import  logger  from '@/lib/logger'
 
 export class HeroService {
   private heroRepository: IHeroRepository
   constructor() {
-    // if(process.env.MOCK_REPOSITORIES === 'true') {
-    //   this.bannerRepository = bannerRepositoryLocal
-    // } else {
-    this.heroRepository = heroRepository
-    // }
+    if(process.env.MOCK_REPOSITORIES === 'true' || process.env.NEXT_PUBLIC_MOCK_REPOSITORIES === 'true') {
+      logger.log('Using Local Hero Repository (SQLite)');
+      this.heroRepository = heroRepositoryLocal;
+    } else {
+      logger.log('Using Supabase Hero Repository');
+      this.heroRepository = heroRepository;
+    }
   }
 
   getHeroSection = async (locale: string): Promise<HeroModel | null> => {

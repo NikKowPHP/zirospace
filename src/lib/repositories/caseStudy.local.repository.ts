@@ -12,8 +12,12 @@ const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);
 
 export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> implements ICaseStudyRepository {
+  protected db: Database;
   constructor() {
+    const dbPath = getDatabaseFilePath();
+    const db = new Database(dbPath);
     super("case_studies", db);
+    this.db = db;
   }
 
   getCaseStudies = async (locale: Locale): Promise<CaseStudy[]> => {

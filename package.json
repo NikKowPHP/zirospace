@@ -15,8 +15,9 @@
     "build:prod": "next build && next-bundle-analyzer",
     "docker:proxy": "docker-compose -f docker-compose.proxy.yml up",
     "docker:mac:run": "docker-compose -f docker-compose.mac.yml up",
-    "migrate:latest": "npx knex migrate:latest --knexfile knexfile.js",
-    "migrate:fresh": "npx knex migrate:fresh --knexfile knexfile.js"
+    "migrate:latest": "npx knex migrate:latest --knexfile knexfile.mjs",
+     "seed:run": "npx knex seed:run --knexfile knexfile.mjs",
+     "migrate:fresh": "npx knex migrate:fresh --knexfile knexfile.mjs"
   },
   "dependencies": {
     "@google-analytics/data": "^4.12.0",
@@ -37,6 +38,7 @@
     "critters": "^0.0.23",
     "framer-motion": "^12.6.3",
     "knex": "^3.1.0",
+    "lenis": "^1.2.3",
     "lucide-react": "^0.474.0",
     "next": "^14.2.24",
     "next-intl": "^3.26.3",
@@ -57,11 +59,14 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^29.5.14",
     "@types/next": "^8.0.7",
     "@types/node": "^20",
     "@types/quill": "^2.0.14",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sqlite3": "^5.1.0",
     "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.1.3",

@@ -16,9 +16,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-COPY docker/db/entrypoint.sh /docker-entrypoint-initdb.d/entrypoint.sh
 
-RUN chmod +x /docker-entrypoint-initdb.d/entrypoint.sh
 
 EXPOSE 3025
 

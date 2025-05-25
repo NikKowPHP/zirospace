@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactNode, useEffect } from 'react'
-import Lenis from '@studio-freight/lenis'
+import Lenis from 'lenis'
 import { useSmoothScrollStore } from '@/hooks/use-smooth-scroll'
 
 export function SmoothScroll({ children }: { children: ReactNode }) {

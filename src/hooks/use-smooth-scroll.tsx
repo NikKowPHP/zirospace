@@ -1,7 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import Lenis from '@studio-freight/lenis'
+import Lenis from 'lenis'
 
 type SmoothScrollStore = {
   lenis: Lenis | null

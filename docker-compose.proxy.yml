@@ -19,9 +19,9 @@ services:
       - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
       - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
       - DATABASE_URL=sqlite.db
-    dns:
-      - 8.8.8.8
-      - 8.8.4.4
+    # dns: # Commented out or removed
+    #   - 8.8.8.8
+    #   - 8.8.4.4
     restart: unless-stopped
     volumes:
       - ./src:/app/src
@@ -58,4 +58,4 @@ networks:
 
 # volumes section can be removed if only postgres-data was defined and is no longer needed
 # volumes:
-#   postgres-data: 
+#   postgres-data:

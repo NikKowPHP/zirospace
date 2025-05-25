@@ -1,5 +1,5 @@
+// File: src/app/[locale]/page.tsx
 import { Suspense } from 'react'
-
 import { type Locale } from '@/i18n'
 import {
   HeroSection,
@@ -17,11 +17,14 @@ import {
 } from '@/helpers/componentsLoad'
 import { companyConfig } from '@/config/company'
 import { siteUrl } from '@/config/constants'
+import { VisibilityProvider } from '@/contexts/VisibilityContext' // Import Provider
+import { VisibilityManager } from '@/components/visibility-manager' // Import Manager
+
 interface HomePageProps {
   params: Promise<{ locale: Locale }>
 }
 
-// Centralize JSON-LD data
+// Centralize JSON-LD data (remains the same)
 const jsonLdData = {
   organization: {
     '@context': 'https://schema.org',
@@ -71,82 +74,88 @@ export default async function HomePage({ params }: HomePageProps) {
   const { locale } = await params
 
   return (
-    <>
-      <div
-        className="relative  min-h-screen bg-white"
-        itemScope
-        itemType="https://schema.org/WebPage"
-      >
-        {/* Priority Content for LCP */}
-        <HeroSection key={locale} locale={locale} />
+    // Wrap the relevant part of the page with VisibilityProvider
+    <VisibilityProvider>
+      <>
+        <div
+          className="relative min-h-screen  bg-white"
+          itemScope
+          itemType="https://schema.org/WebPage"
+        >
+          {/* Priority Content for LCP */}
+          <HeroSection key={locale} locale={locale} />
 
-        {/* Deferred Content */}
-        <div className="relative">
-          <Suspense fallback={<div className="min-h-[300px]" />}>
-            <SubheroSection />
-          </Suspense>
+          {/* Wrap the sections that need visibility management */}
+          <VisibilityManager targetSectionId="our-process">
+            {/* Deferred Content */}
+            <div className="relative">
+              <Suspense fallback={<div className="min-h-[300px]" />}>
+                <SubheroSection />
+              </Suspense>
 
-          {/* Group related sections */}
-          <Suspense fallback={<div className="min-h-[700px]" />}>
-            <div>
-              <OurProcess />
-              <OurServices />
+              {/* Group related sections */}
+              <Suspense fallback={<div className="min-h-[700px]" />}>
+                <div>
+                  {/* OurProcess is now rendered inside VisibilityManager */}
+                  <OurProcess />
+                  <OurServices />
+                </div>
+              </Suspense>
+
+              <Suspense fallback={<div className="min-h-[300px]" />}>
+                <CaseStudies locale={locale} />
+              </Suspense>
+
+              {/* Defer less critical sections */}
+              <Suspense fallback={<div className="min-h-[300px]" />}>
+                <TestimonialsSection locale={locale} />
+              </Suspense>
+
+              {/* Group remaining sections */}
+              <Suspense fallback={<div className="min-h-[900px]" />}>
+                <div>
+                  <WhyUs />
+                  <Philosophy />
+                  <Faq />
+                  {/* <StayInformed /> */}
+                </div>
+              </Suspense>
+
+              {/* FloatVideo is also inside VisibilityManager so it can access context */}
+              <Suspense fallback={null}>
+                <FloatVideo />
+              </Suspense>
+
+              <Suspense fallback={null}>
+                <BannerModalWrapper />
+              </Suspense>
             </div>
-          </Suspense>
+          </VisibilityManager>
 
-          <Suspense fallback={<div className="min-h-[300px]" />}>
-            <div className="min-h-[100vh]">
-              <CaseStudies locale={locale} />
-            </div>
-          </Suspense>
-
-          {/* Defer less critical sections */}
-          <Suspense fallback={<div className="min-h-[300px]" />}>
-            <TestimonialsSection locale={locale} />
-          </Suspense>
-
-          {/* Group remaining sections */}
-          <Suspense fallback={<div className="min-h-[900px]" />}>
-            <div>
-              <WhyUs />
-              <Philosophy />
-              <Faq />
-              {/* <StayInformed /> */}
-            </div>
-          </Suspense>
-
-          {/* Load floating video last */}
-          <Suspense fallback={null}>
-            <FloatVideo />
-          </Suspense>
-
-          <Suspense fallback={null}>
-            <BannerModalWrapper />
-          </Suspense>
+          {/* Metadata */}
+          <meta itemProp="name" content={companyConfig.name} />
+          <meta itemProp="description" content={companyConfig.description} />
+          <meta itemProp="image" content="/images/ziro.avif" />
+          <meta
+            itemProp="dateModified"
+            content={new Date().toISOString().split('T')[0]}
+          />
         </div>
 
-        {/* Metadata */}
-        <meta itemProp="name" content={companyConfig.name} />
-        <meta itemProp="description" content={companyConfig.description} />
-        <meta itemProp="image" content="/images/ziro.avif" />
-        <meta
-          itemProp="dateModified"
-          content={new Date().toISOString().split('T')[0]}
-        />
-      </div>
-
-      {/* Structured Data */}
-      {Object.values(jsonLdData).map((data, index) => (
-        <script
-          key={index}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-        />
-      ))}
-    </>
+        {/* Structured Data */}
+        {Object.values(jsonLdData).map((data, index) => (
+          <script
+            key={index}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+          />
+        ))}
+      </>
+    </VisibilityProvider>
   )
 }
 
+// generateMetadata function remains the same
 export async function generateMetadata({
   params,
 }: {
@@ -197,3 +206,4 @@ export async function generateMetadata({
           ],
   }
 }
+// --- NEW CODE END ---

@@ -1,14 +1,12 @@
-import { Suspense, memo } from 'react';
-import { CaseStudyCard } from '@/components/ui/case-study/case-study-card'
+import { Suspense, memo  } from 'react';
 import { type Locale } from '@/i18n'
-import { CaseStudy } from '@/domain/models/models'
 import { CaseStudiesLoader } from '@/components/sections/case-studies/case-studies-loader'
 import { getCaseStudyService } from '@/lib/services/case-study.service';
 import { getTranslations } from 'next-intl/server';
 import { CaseStudySlider as CaseStudySliderType } from '@/domain/models/case-study-slider.model';
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service';
 import dynamic from 'next/dynamic';
-import CaseStudyList from './case-studies.list';
+import { CaseStudiesTitleSubtitle, CaseStudyList } from './case-studies-list.client';
 
 // Dynamically import the client slider (disable SSR)
 const CaseStudySliderClient = dynamic(
@@ -29,9 +27,13 @@ export async function CaseStudies({ locale }: CaseStudiesProps) {
   const caseStudySliders = await caseStudySliderService.getCaseStudySliders()
   const t = await getTranslations('caseStudiesSection')
 
+  const title = t('title')
+  const description = t('description')
+
   return (
-    <section id="work" className="relative overflow-hidden bg-white py-[100px]">
-      <CaseStudiesTitleSubtitle t={t} />
+    <section id="work" className="relative bg-white min-h-[200vh]">
+        <CaseStudiesTitleSubtitle title={title} description={description} />
+      
       <Suspense fallback={<CaseStudiesLoader />}>
         <CaseStudyList caseStudies={caseStudies} locale={locale} />
       </Suspense>
@@ -43,21 +45,9 @@ export async function CaseStudies({ locale }: CaseStudiesProps) {
   );
 }
 
-const CaseStudiesTitleSubtitle = ({ t }: { t: any }) => {
-  return (
-    <div className='mb-[36px] flex flex-col items-center justify-center gap-[12px]'>
-      <h1
-        className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-primary"
-        itemProp="headline"
-      >
-        {t('title')}
-      </h1>
-      <h3 className="text-[14px] sm:text-[16px] lg:text-[18px] text-gray-600 leading-relaxed max-w-xl sm:max-w-2xl px-4 sm:px-0">
-        {t('description')}
-      </h3>
-    </div>
-  );
-};
+
+
+
 
 export const CaseStudySliders = memo(function CaseStudySliders({
   caseStudySliders,
@@ -70,6 +60,5 @@ export const CaseStudySliders = memo(function CaseStudySliders({
         <CaseStudySliderClient key={caseStudySlider.id} caseStudySlider={caseStudySlider} />
       ))}
     </div>
-  );
-});
-
+  )
+})

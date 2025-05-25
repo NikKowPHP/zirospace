@@ -8,8 +8,12 @@ const dbPath = getDatabaseFilePath();
 const db = new Database(dbPath);
 
 export class CaseStudySliderRepositoryLocal extends SqlLiteAdapter<CaseStudySlider, string> implements ICaseStudySliderRepository{
+  protected db: Database;
   constructor() {
+    const dbPath = getDatabaseFilePath();
+    const db = new Database(dbPath);
     super("case_study_sliders", db);
+    this.db = db;
   }
 
   getCaseStudiesSliders = async (): Promise<CaseStudySlider[]> => {

@@ -129,7 +129,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
   return (
     <>
       <article
-        className={`flex flex-col rounded-[24px] sm:rounded-[32px] shadow-sm h-full`}
+        className={`flex flex-col rounded-[24px] sm:rounded-[32px] w-full shadow-sm h-full`}
         style={{
           color: caseStudy.color,
           backgroundColor: caseStudy.backgroundColor,

@@ -7,6 +7,10 @@ import { Database } from 'sqlite3'
 import { getDatabaseFilePath } from '@/lib/config/database.config'
 import logger from '@/lib/logger'
 
+// REMOVE THESE LINES FROM MODULE SCOPE:
+// const dbPath = getDatabaseFilePath();
+// const db = new Database(dbPath);
+
 const dbPath = getDatabaseFilePath()
 const db = new Database(dbPath)
 
@@ -196,6 +200,5 @@ export class BannerRepositoryLocal extends SqlLiteAdapter<Banner, string> implem
     })
   }
 }
-
 // export singleton
 export const bannerRepositoryLocal = new BannerRepositoryLocal()

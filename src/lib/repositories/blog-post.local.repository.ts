@@ -5,14 +5,20 @@ import logger from '@/lib/logger'
 import { getDatabaseFilePath } from '@/lib/config/database.config';
 import { Database } from 'sqlite3';
 import { SqlLiteAdapter } from './adapters/sqllite.adapter';
-const dbPath = getDatabaseFilePath();
-const db = new Database(dbPath);
+
+// REMOVE THESE LINES FROM MODULE SCOPE:
+// const dbPath = getDatabaseFilePath();
+// const db = new Database(dbPath);
+
 
 export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> implements IBlogPostRepository {
+  protected db: Database;
   constructor() {
+    const dbPath = getDatabaseFilePath();
+    const db = new Database(dbPath);
     super("blog_posts", db);
+    this.db = db;
   }
-
   async getBlogPosts(locale: string): Promise<BlogPost[]> {
     const blogPosts = await this.list(locale)
     return blogPosts
@@ -192,6 +198,5 @@ export class BlogPostRepositoryLocal extends SqlLiteAdapter<BlogPost, string> im
     });
   }
 }
-
 // export singleton
 export const blogPostRepositoryLocal = new BlogPostRepositoryLocal();
