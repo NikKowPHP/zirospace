@@ -1,4 +1,3 @@
-
 Hello @roo,
 
 I need your assistance in processing and planning the execution of the following TODO list for the "[**User: Insert Project Name Here**]" project.
@@ -51,23 +50,14 @@ After processing all individual TODOs, please provide:
 
 ---
 
-**TODO List:**
+**TODO List (Using Markdown Task List Format):**
 
-*(User: Please list your TODO tasks clearly. For each task, if you have specific context or files in mind, mention them.)*
+*(User: Please list your TODO tasks using Markdown task list syntax. Each top-level task should start with `- [ ]`. You can add specific context or relevant files on indented lines below each task if needed. See example below.)*
 
-1.  **TODO 1:** [**User: Description of the first TODO task.**]
-    *   *User Context (Optional):* [e.g., "This likely involves modifying `AuthService` in `src/auth/service.py`"]
-
-2.  **TODO 2:** [**User: Description of the second TODO task.**]
-    *   *User Context (Optional):* [e.g., "Needs a new database model in `src/orders/models.py` and API endpoints in `src/orders/api.py`"]
-
-3.  **TODO 3:** [**User: Description of the third TODO task.**]
-    *   *User Context (Optional):*
-
-**(User: Add more TODOs as needed)**
-
----
-
-@roo, please proceed with analyzing and planning these tasks. I'm ready for your questions and your proposed plan.
-
-Let's begin!
+**Example of how to format your TODOs:**
+```markdown
+- [ ] Implement user registration endpoint
+  Context: This likely involves `AuthService` in `src/auth/service.py` and a new route in `src/routes/auth.py`.
+- [ ] Design database schema for products
+  Context: Needs new tables for `products`, `categories`, `product_variants`. Affects `src/models/product.py`.
+- [ ] Build product listing page UI
