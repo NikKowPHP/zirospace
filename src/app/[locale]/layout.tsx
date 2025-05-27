@@ -6,6 +6,7 @@ import '@/styles/globals.css'
 import { locales, type Locale } from '@/i18n'
 import { ClientWrapper } from './client-wrapper'
 import { PageProvider } from '@/contexts/page-context'
+import GlobalProgressBar from '@/components/layout/global-progress-bar';
 import logger from '@/lib/logger'
 const inter = Inter({
   subsets: ['latin'],
@@ -133,6 +134,7 @@ export default async function LocaleLayout({
             <PageProvider initialActiveBanner={initialActiveBanner || undefined}>
               <SmoothScroll>
                 <ClientWrapper>
+                  <GlobalProgressBar />
                   <main className="relative">{children}</main>
                 </ClientWrapper>
               </SmoothScroll>
