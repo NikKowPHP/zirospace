@@ -107,6 +107,14 @@ export default async function AdminLayout({
             <ImageIcon className="w-5 h-5" />
             <span className="font-medium">Hero Section</span>
           </Link>
+
+          <Link
+            href="/admin/sections/updates"
+            className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <FileText className="w-5 h-5" />
+            <span className="font-medium">Updates</span>
+          </Link>
         </nav>
       </aside>
 

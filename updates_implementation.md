@@ -99,7 +99,7 @@ This feature will create a new section on the website, `/updates`, where users c
 
 ## Phase 3: Admin Panel - API Endpoints
 
-- [ ] **3.1. Create API Routes for Admin Updates (CRUD)**
+- [x] **3.1. Create API Routes for Admin Updates (CRUD)**
     - **Task:** Set up API endpoints for admin.
     - **Directory:** `src/app/api/admin/updates/`
     - **List/Create Route:** `route.ts`
