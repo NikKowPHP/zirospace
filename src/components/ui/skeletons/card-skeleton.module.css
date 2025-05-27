@@ -1,0 +1,38 @@
+.card {
+  width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.image {
+  height: 150px;
+  background-color: #ddd;
+  animation: skeleton-loading 1.2s linear infinite alternate;
+}
+
+.content {
+  padding: 16px;
+}
+
+.title {
+  height: 24px;
+  background-color: #ddd;
+  animation: skeleton-loading 1.2s linear infinite alternate;
+  margin-bottom: 8px;
+}
+
+.description {
+  height: 16px;
+  background-color: #ddd;
+  animation: skeleton-loading 1.2s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: #ddd;
+  }
+  100% {
+    background-color: #eee;
+  }
+}
