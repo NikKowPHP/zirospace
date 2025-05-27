@@ -1,14 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAdmin } from '@/contexts/admin-context'
+import useAdminCaseStudies from '@/hooks/admin/useAdminCaseStudies'
 import { CaseStudy } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { CaseStudyForm } from './components/case-study-form'
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
 
 export function CaseStudyListInteractive() {
-  const { caseStudies, createCaseStudy, updateCaseStudy, deleteCaseStudy, updateCaseStudyOrder, error, loading } = useAdmin()
+  const { caseStudies, createCaseStudy, updateCaseStudy, deleteCaseStudy, updateCaseStudyOrder, error, loading } = useAdminCaseStudies()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const [editingStudy, setEditingStudy] = useState<CaseStudy | null>(null)
   const [isCreating, setIsCreating] = useState(false)
@@ -206,4 +206,4 @@ export function CaseStudyListInteractive() {
       </div>
     </div>
   )
-} 
+}

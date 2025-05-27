@@ -1,7 +1,7 @@
 'use client'
 
 import { Locale } from '@/i18n'
-import { useAdmin } from '@/contexts/admin-context'
+import useAdminBlogPosts from '@/hooks/admin/useAdminBlogPosts'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { BlogPostForm } from '../../components/blog-post-form'
 import { useEffect, useState } from 'react'
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function EditBlogPostPage({params}: Props) {
-  const { updateBlogPost, loading, getBlogPost  } = useAdmin()
+  const { updateBlogPost, loading, getBlogPost  } = useAdminBlogPosts()
   const router = useRouter()
   const searchParams = useSearchParams()
   const locale = searchParams.get('locale') || 'en';
@@ -26,13 +26,13 @@ export default function EditBlogPostPage({params}: Props) {
       setId(id)
     }
   
-    getBlogPost(id, locale).then(post => setBlogPost(post || null))
+    getBlogPost(id, locale as Locale).then((post: BlogPost | null) => setBlogPost(post || null))
   }, [params, getBlogPost, locale])
 
   const handleUpdate = async (data: Partial<BlogPost>) => {
     if (!blogPost) return;
     try {
-      await updateBlogPost(id, data, locale)
+      await updateBlogPost(id, data, locale as Locale)
       router.push('/admin/sections/blog-posts')
     } catch (error) {
       logger.log('Failed to update blog post:', error)

@@ -1,7 +1,7 @@
 'use client'
 
 import { Locale } from '@/i18n'
-import { useAdmin } from '@/contexts/admin-context'
+import useAdminServices from '@/hooks/admin/useAdminServices'
 import { useRouter } from 'next/navigation'
 import { ServiceForm } from '../components/service-form'
 import { useState } from 'react'
@@ -9,7 +9,7 @@ import { Service } from '@/domain/models/service.model'
 import logger from '@/lib/logger'
 
 export default function NewServicePage() {
-  const { createService, loading } = useAdmin()
+  const { createService, loading } = useAdminServices()
   const router = useRouter()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
 

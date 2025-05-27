@@ -1,7 +1,7 @@
 'use client'
 
 import {  useState } from 'react'
-import { useAdmin } from '@/contexts/admin-context'
+import useAdminCaseStudySliders from '@/hooks/admin/useAdminCaseStudySliders'
 import { CaseStudySliderForm } from './components/slider-form'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 
@@ -15,7 +15,7 @@ export function CaseStudySliderList() {
     deleteCaseStudySlider,
     error,
     loading,
-  } = useAdmin()
+  } = useAdminCaseStudySliders()
   const [editingCaseStudySlider, setEditingCaseStudySlider] =
     useState<CaseStudySlider | null>(null)
   const [isCreating, setIsCreating] = useState(false)

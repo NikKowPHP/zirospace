@@ -1,7 +1,7 @@
 'use client'
 
 import {  useState } from 'react'
-import { useAdmin } from '@/contexts/admin-context'
+import useAdminBanners from '@/hooks/admin/useAdminBanners'
 import { Banner } from '@/domain/models/banner.model'
 import { Locale } from '@/i18n'
 import logger from '@/lib/logger'
@@ -15,7 +15,7 @@ export function BannerList() {
     deleteBanner,
     error,
     loading,
-  } = useAdmin()
+  } = useAdminBanners()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null)
   const [isCreating, setIsCreating] = useState(false)

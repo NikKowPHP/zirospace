@@ -1,7 +1,7 @@
 'use client'
 
 import { Locale } from '@/i18n'
-import { useAdmin } from '@/contexts/admin-context'
+import useAdminServices from '@/hooks/admin/useAdminServices'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ServiceForm } from '../../components/service-form'
 import { useEffect, useState } from 'react'
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function EditServicePage({ params }: Props) {
-  const { updateService, loading, getServiceById } = useAdmin()
+  const { updateService, loading, getServiceById } = useAdminServices()
   const router = useRouter()
   const searchParams = useSearchParams()
   const locale = searchParams.get('locale') || 'en';

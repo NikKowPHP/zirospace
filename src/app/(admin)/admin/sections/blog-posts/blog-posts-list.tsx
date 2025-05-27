@@ -1,14 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAdmin } from '@/contexts/admin-context'
+import useAdminBlogPosts from '@/hooks/admin/useAdminBlogPosts'
 import { Locale } from '@/i18n'
 import { useRouter } from 'next/navigation'
 import logger from '@/lib/logger'
 
 export function BlogPostList() {
   const { blogPosts, deleteBlogPost, error, loading, updateBlogPost } =
-    useAdmin()
+    useAdminBlogPosts()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const router = useRouter()
   const [pinnedPostId, setPinnedPostId] = useState<string | null>(null)

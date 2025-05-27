@@ -4,7 +4,7 @@ This document outlines the tasks to refactor the admin panel's state management 
 
 ## Phase 1: Refactor `AdminContext` into Domain-Specific Hooks
 
-- [ ] **1.1. Define Core Hook Utilities and Pattern**
+- [x] **1.1. Define Core Hook Utilities and Pattern**
     - **Task:** Design a reusable pattern for the custom admin hooks. This might include creating shared utilities for API calls (e.g., a `useAdminApi` hook or helper functions) to handle loading states, error handling, and toast notifications consistently across all admin hooks.
     - **Considerations:**
         - How initial data for each domain (e.g., `initialCaseStudies`) will be passed to or fetched by these hooks.
@@ -14,39 +14,39 @@ This document outlines the tasks to refactor the admin panel's state management 
         - `src/hooks/admin/useAdminApi.ts` (or similar utility)
         - Update existing API call patterns if a new utility is introduced.
 
-- [ ] **1.2. Create `useAdminCaseStudies` Hook**
+- [x] **1.2. Create `useAdminCaseStudies` Hook**
     - **Task:** Migrate CaseStudy related state (`caseStudies`) and functions (`createCaseStudy`, `updateCaseStudy`, `deleteCaseStudy`, `updateCaseStudyOrder`) from the existing `AdminContext` to a new dedicated hook.
     - **File:** `src/hooks/admin/useAdminCaseStudies.ts`
     - **API Calls:** Ensure API interactions for case studies are handled within this hook, possibly using the utility from 1.1.
 
-- [ ] **1.3. Create `useAdminBlogPosts` Hook**
+- [x] **1.3. Create `useAdminBlogPosts` Hook**
     - **Task:** Migrate BlogPost related state (`blogPosts`) and functions (`createBlogPost`, `updateBlogPost`, `deleteBlogPost`, `pinBlogPost`, `getBlogPost`) to a new hook.
     - **File:** `src/hooks/admin/useAdminBlogPosts.ts`
 
-- [ ] **1.4. Create `useAdminBanners` Hook**
+- [x] **1.4. Create `useAdminBanners` Hook**
     - **Task:** Migrate Banner related state (`banners`) and functions (`createBanner`, `updateBanner`, `deleteBanner`) to a new hook.
     - **File:** `src/hooks/admin/useAdminBanners.ts`
 
-- [ ] **1.5. Create `useAdminServices` Hook**
+- [x] **1.5. Create `useAdminServices` Hook**
     - **Task:** Migrate Service related state (`services`) and functions (`createService`, `updateService`, `deleteService`, `getServiceById`, `getServices`) to a new hook.
     - **File:** `src/hooks/admin/useAdminServices.ts`
 
-- [ ] **1.6. Create `useAdminTestimonials` Hook**
+- [x] **1.6. Create `useAdminTestimonials` Hook**
     - **Task:** Migrate Testimonial related state (`testimonials`) and functions (`createTestimonial`, `updateTestimonial`, `deleteTestimonial`, `getTestimonials`) to a new hook.
     - **File:** `src/hooks/admin/useAdminTestimonials.ts`
 
-- [ ] **1.7. Create `useAdminCaseStudySliders` Hook**
+- [x] **1.7. Create `useAdminCaseStudySliders` Hook**
     - **Task:** Migrate CaseStudySlider related state (`caseStudySliders`) and functions (`createCaseStudySlider`, `updateCaseStudySlider`, `deleteCaseStudySlider`, `getCaseStudySliders`) to a new hook.
     - **File:** `src/hooks/admin/useAdminCaseStudySliders.ts`
 
-- [ ] **1.8. Refactor `AdminProvider` (or replace with individual providers)**
+- [x] **1.8. Refactor `AdminProvider` (or replace with individual providers)**
     - **Task:** Modify the existing `AdminProvider` to either:
         1.  Initialize and provide instances of these new hooks.
         2.  Be simplified if hooks manage their own state and are provided individually or via a new, leaner context aggregator.
     - **Considerations:** How `initialData` (e.g., `initialCaseStudies`, `initialBlogPosts`) is passed down and consumed by the new hooks. Hooks might fetch their own initial data if `AdminProvider` no longer handles this.
     - **File:** `src/contexts/admin-context.tsx`
 
-- [ ] **1.9. Update Admin Components to Use New Hooks**
+- [x] **1.9. Update Admin Components to Use New Hooks**
     - **Task:** Systematically review and refactor all components currently using the global `useAdmin()` hook.
     - **Action:** Replace `useAdmin()` with the appropriate domain-specific hook(s) (e.g., `useAdminCaseStudies()`, `useAdminBlogPosts()`).
     - **Files to Modify:** All components under `src/app/(admin)/admin/sections/` that currently use `useAdmin()`.

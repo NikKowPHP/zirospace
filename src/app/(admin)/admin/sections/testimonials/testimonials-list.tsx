@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAdmin } from '@/contexts/admin-context'
+import useAdminTestimonials from '@/hooks/admin/useAdminTestimonials'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { Locale } from '@/i18n'
 import { TestimonialForm } from './components/testimonials-form'
@@ -16,7 +16,7 @@ export function TestimonialList() {
     error,
     loading,
     getTestimonials,
-  } = useAdmin()
+  } = useAdminTestimonials()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const [editingTestimonial, setEditingTestimonial] =
     useState<Testimonial | null>(null)
@@ -24,7 +24,7 @@ export function TestimonialList() {
 
   useEffect(() => {
     getTestimonials(activeLocale)
-  }, [activeLocale])
+  }, [activeLocale, getTestimonials])
 
   const handleCreate = async (data: Partial<Testimonial>) => {
     try {

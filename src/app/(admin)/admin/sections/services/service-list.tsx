@@ -3,14 +3,14 @@
 'use client'
 
 import { useState } from 'react'
-import { useAdmin } from '@/contexts/admin-context'
 import { Locale } from '@/i18n'
 import { useRouter } from 'next/navigation'
 import ListItemSkeleton from '@/components/ui/skeletons/list-item-skeleton'
 import logger from '@/lib/logger'
+import useAdminServices from '@/hooks/admin/useAdminServices';
 
 export function ServiceList() {
-  const { services, deleteService, error, loading } = useAdmin()
+  const { services, deleteService, error, loading } = useAdminServices()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const router = useRouter()
 
