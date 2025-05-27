@@ -4,7 +4,7 @@ This feature will create a new section on the website, `/updates`, where users c
 
 ## Phase 1: Database and Core Data Structures
 
-- [ ] **1.1. Define Update Item Data Structure**
+- [x] **1.1. Define Update Item Data Structure**
     - **Task:** Finalize the fields for an "Update" item.
     - **Fields:**
         - `id`: TEXT PRIMARY KEY (UUID)
@@ -21,7 +21,7 @@ This feature will create a new section on the website, `/updates`, where users c
         - `updated_at`: TIMESTAMPTZ DEFAULT NOW()
     - **Consideration:** Create `updates_en` and `updates_pl` tables for multilingual support.
 
-- [ ] **1.2. Create Knex Migration for `updates` Tables**
+- [x] **1.2. Create Knex Migration for `updates` Tables**
     - **Task:** Create a new Knex migration file.
     - **File:** `migrations/YYYYMMDDHHMMSS_create_updates_tables.js`
     - **Schema for `updates_en` & `updates_pl`:**
@@ -29,14 +29,14 @@ This feature will create a new section on the website, `/updates`, where users c
         - `exports.up` should create both tables (`updates_en`, `updates_pl`).
         - `exports.down` should drop both tables.
 
-- [ ] **1.3. Create Supabase Migration for `updates` Tables**
+- [x] **1.3. Create Supabase Migration for `updates` Tables**
     - **Task:** Create a new Supabase migration SQL file.
     - **File:** `supabase/migrations/YYYYMMDDHHMMSS_create_updates_tables.sql`
     - **SQL:**
         - Write `CREATE TABLE` statements for `zirospace_updates_en` and `zirospace_updates_pl` matching the schema from 1.1.
         - Ensure `RLS` is enabled and appropriate policies are set for public read access (if Supabase is used for production direct client access, though admin API is primary).
 
-- [ ] **1.4. Create Knex Seed File for `updates` Tables**
+- [x] **1.4. Create Knex Seed File for `updates` Tables**
     - **Task:** Create a Knex seed file with comprehensive sample data.
     - **File:** `seeds/NN_seed_updates.js` (e.g., `02_seed_updates.js`)
     - **Content:**
@@ -49,7 +49,7 @@ This feature will create a new section on the website, `/updates`, where users c
             - Set some `is_published` to true, some to false.
             - Include `order_index` if manual ordering is a priority.
 
-- [ ] **1.5. Create Supabase Seed File for `updates` Tables**
+- [x] **1.5. Create Supabase Seed File for `updates` Tables**
     - **Task:** Create a Supabase seed SQL file.
     - **File:** `supabase_migrations/seed_updates_zirospace.sql` (or a new file in `supabase/seed.sql` if preferred structure)
     - **SQL:**
@@ -57,41 +57,41 @@ This feature will create a new section on the website, `/updates`, where users c
         - Mirror the comprehensive data from the Knex seed file (1.4), adjusting syntax for SQL.
         - Use picsum.photos URLs for images.
 
-- [ ] **1.6. Define Data Transfer Object (DTO) for Update**
+- [x] **1.6. Define Data Transfer Object (DTO) for Update**
     - **Task:** Create the DTO for update data.
     - **File:** `src/infrastructure/dto/update.dto.ts`
     - **Interface:** `UpdateDTO` (matching database columns, dates as strings).
 
-- [ ] **1.7. Define Domain Model for Update**
+- [x] **1.7. Define Domain Model for Update**
     - **Task:** Create the domain model.
     - **File:** `src/domain/models/update.model.ts`
     - **Interface:** `Update` (add to `src/domain/models/models.ts`).
 
-- [ ] **1.8. Create Mapper for Update**
+- [x] **1.8. Create Mapper for Update**
     - **Task:** Implement `UpdateMapper`.
     - **File:** `src/infrastructure/mappers/update.mapper.ts`
     - **Class:** `UpdateMapper` (`toDomain`, `toPersistence`).
 
-- [ ] **1.9. Define Repository Interface for Updates**
+- [x] **1.9. Define Repository Interface for Updates**
     - **Task:** Specify `IUpdatesRepository`.
     - **File:** `src/lib/interfaces/updatesRepository.interface.ts`
     - **Methods:** `getUpdates`, `getUpdateBySlug`, `getUpdateById`, `createUpdate`, `updateUpdate`, `deleteUpdate`.
 
 ## Phase 2: Backend Service and Repository Implementation
 
-- [ ] **2.1. Implement Supabase `UpdateRepository`**
+- [x] **2.1. Implement Supabase `UpdateRepository`**
     - **Task:** Create Supabase repository.
     - **File:** `src/lib/repositories/update.repository.ts`
     - **Implement:** `IUpdatesRepository` methods using Supabase client.
     - **Caching:** Use `unstable_cache` for read operations.
     - **New Cache Tag:** Add `UPDATES` to `CACHE_TAGS` in `src/lib/utils/cache.ts`.
 
-- [ ] **2.2. Implement Local SQLite `UpdateRepositoryLocal`**
+- [x] **2.2. Implement Local SQLite `UpdateRepositoryLocal`**
     - **Task:** Create SQLite repository.
     - **File:** `src/lib/repositories/update.local.repository.ts`
     - **Implement:** `IUpdatesRepository` methods using `SqlLiteAdapter`.
 
-- [ ] **2.3. Implement `UpdateService`**
+- [x] **2.3. Implement `UpdateService`**
     - **Task:** Create the service layer.
     - **File:** `src/lib/services/update.service.ts`
     - **Implement:** Business logic (slug generation, date defaults, trimming).

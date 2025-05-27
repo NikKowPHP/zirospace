@@ -94,3 +94,4 @@ export interface CaseStudyImage {
     createdAt?: Date;
     updatedAt?: Date;
   }
+export * from './update.model';

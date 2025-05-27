@@ -1,0 +1,9 @@
+INSERT INTO zirospace_updates_en (id, slug, title, publish_date, content_html, excerpt, image_url, image_alt, is_published, order_index) VALUES
+('1', 'first-update', 'First Update (EN)', NOW(), '<p>This is the first update in English.</p>', 'First update excerpt', 'https://picsum.photos/seed/1/800/400', 'First update image', true, 0),
+('2', 'second-update', 'Second Update (EN)', NOW() - interval '1 day', '<p>This is the second update in English.</p>', 'Second update excerpt', 'https://picsum.photos/seed/2/800/400', 'Second update image', false, 1),
+('3', 'third-update', 'Third Update (EN)', NOW() - interval '2 days', '<p>This is the third update in English.</p>', 'Third update excerpt', 'https://picsum.photos/seed/3/800/400', 'Third update image', true, 2);
+
+INSERT INTO zirospace_updates_pl (id, slug, title, publish_date, content_html, excerpt, image_url, image_alt, is_published, order_index) VALUES
+('4', 'pierwsza-aktualizacja', 'Pierwsza Aktualizacja (PL)', NOW(), '<p>To jest pierwsza aktualizacja po polsku.</p>', 'Pierwsza aktualizacja streszczenie', 'https://picsum.photos/seed/4/800/400', 'Pierwsza aktualizacja obraz', true, 0),
+('5', 'druga-aktualizacja', 'Druga Aktualizacja (PL)', NOW() - interval '1 day', '<p>To jest druga aktualizacja po polsku.</p>', 'Druga aktualizacja streszczenie', 'https://picsum.photos/seed/5/800/400', 'Druga aktualizacja obraz', false, 1),
+('6', 'trzecia-aktualizacja', 'Trzecia Aktualizacja (PL)', NOW() - interval '2 days', '<p>To jest trzecia aktualizacja po polsku.</p>', 'Trzecia aktualizacja streszczenie', 'https://picsum.photos/seed/6/800/400', 'Trzecia aktualizacja obraz', true, 2);

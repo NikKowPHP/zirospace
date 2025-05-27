@@ -1,5 +1,7 @@
 import { Database } from 'sqlite3';
-import logger from '@/lib/logger'
+import logger from '@/lib/logger';
+import { UpdateDTO } from '@/infrastructure/dto/update.dto';
+
 export interface BaseEntity<ID> {
   id: ID;
 }
@@ -52,14 +54,14 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
    * @returns {Promise<T | null>} - The entity if found, otherwise null.
    * @throws {Error} - If there's a database error during retrieval.
    */
-  async read(id: ID): Promise<T | null> {
+  async read(id: ID): Promise<UpdateDTO | null> {
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM "${this.tableName}"
         WHERE id = ?;
       `;
 
-      this.db.get(query, [id], (err, row: T) => {
+      this.db.get(query, [id], (err, row: any) => {
         if (err) {
           logger.log(`Error reading entity from table "${this.tableName}" with ID ${id}:`, err);
           reject(new Error(`Database error reading entity from table "${this.tableName}": ${err.message || 'Unknown error'}`));
@@ -94,7 +96,7 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
       this.db.get(query, [...values, id], (err, row: T) => {
         if (err) {
           logger.log(`Error updating entity in table "${this.tableName}" with ID ${id}:`, err);
-          reject(new Error(`Database error updating entity in table "${this.tableName}": ${err.message || 'Unknown error'}`));
+          reject(new Error(`Database error updating entity from table "${this.tableName}": ${err.message || 'Unknown error'}`));
           return;
         }
         resolve(row || null);
@@ -132,13 +134,13 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
    * @returns {Promise<T[]>} - An array of all entities in the table.
    * @throws {Error} - If there's a database error during listing.
    */
-  async list(...args: any[]): Promise<T[]> {
+  async list(...args: any[]): Promise<UpdateDTO[]> {
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM "${this.tableName}";
       `;
 
-      this.db.all(query, args, (err, rows: T[]) => {
+      this.db.all(query, args, (err, rows: UpdateDTO[]) => {
         if (err) {
           logger.log(`Error listing entities from table "${this.tableName}":`, err);
           reject(new Error(`Database error listing entities from table "${this.tableName}": ${err.message || 'Unknown error'}`));

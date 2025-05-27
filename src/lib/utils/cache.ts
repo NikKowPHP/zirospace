@@ -7,6 +7,7 @@ export const CACHE_TAGS = {
   BLOG_POSTS: 'blog-posts',
   BANNERS: 'banners',
   SERVICES: 'services',
+ UPDATES: 'updates',
 } as const;
 
 export const CACHE_TIMES = {
