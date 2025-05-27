@@ -1,16 +1,17 @@
 // seeds/01_seed_services.js
-exports.seed = async function(knex) {
+exports.seed = async function (knex) {
   // Seed for services_en
-  await knex('services_en').del(); // Clear existing data
+  await knex('services_en').del() // Clear existing data
   await knex('services_en').insert([
     {
       id: 'service-en-1',
       slug: 'english-service-one',
       title: 'English Service One',
       subtitle: 'Detailed subtitle for English service one',
-      content_html: '<p>This is the full HTML content for the first English service.</p>',
+      content_html:
+        '<p>This is the full HTML content for the first English service.</p>',
       excerpt: 'A short excerpt for the first English service.',
-      image_url: 'https://picsum.photos/200/300',
+      image_url: '/images/image-service-1.png',
       image_alt: 'Image for English Service One',
       meta_title: 'SEO Title for English Service One',
       meta_description: 'SEO description for English Service One.',
@@ -18,7 +19,7 @@ exports.seed = async function(knex) {
       is_published: true,
       order_index: 0,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     },
     {
       id: 'service-en-2',
@@ -27,7 +28,7 @@ exports.seed = async function(knex) {
       subtitle: 'Detailed subtitle for English service two',
       content_html: '<p>Content for the second English service.</p>',
       excerpt: 'Excerpt for the second English service.',
-      image_url: 'https://picsum.photos/200/300',
+      image_url: '/images/client1.webp',
       image_alt: 'Image for English Service Two',
       meta_title: 'SEO Title for English Service Two',
       meta_description: 'SEO description for English Service Two.',
@@ -35,19 +36,20 @@ exports.seed = async function(knex) {
       is_published: true,
       order_index: 1,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  ]);
+      updated_at: new Date().toISOString(),
+    },
+  ])
 
   // Seed for services_pl
-  await knex('services_pl').del(); // Clear existing data
+  await knex('services_pl').del() // Clear existing data
   await knex('services_pl').insert([
     {
       id: 'service-pl-1',
       slug: 'polski-serwis-jeden',
       title: 'Polski Serwis Jeden',
       subtitle: 'Szczegółowy podtytuł dla polskiego serwisu jeden',
-      content_html: '<p>To jest pełna treść HTML dla pierwszego polskiego serwisu.</p>',
+      content_html:
+        '<p>To jest pełna treść HTML dla pierwszego polskiego serwisu.</p>',
       excerpt: 'Krótki fragment dla pierwszego polskiego serwisu.',
       image_url: '/images/services/pl/serwis1.jpg',
       image_alt: 'Obraz dla Polskiego Serwisu Jeden',
@@ -57,7 +59,7 @@ exports.seed = async function(knex) {
       is_published: true,
       order_index: 0,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     },
     {
       id: 'service-pl-2',
@@ -74,7 +76,8 @@ exports.seed = async function(knex) {
       is_published: false, // Example of an unpublished service
       order_index: 1,
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  ]);
-};
+      updated_at: new Date().toISOString(),
+    },
+  ])
+}
+
