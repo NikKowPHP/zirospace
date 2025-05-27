@@ -34,30 +34,31 @@ export class ServiceRepository implements IServiceRepository {
   );
 
   getServiceBySlug = async (slug: string, locale: string): Promise<Service | null> => {
-    // Wrapped the inner async function with unstable_cache
-    return unstable_cache(
-      async () => {
-        const tableName = this.getTableName(locale);
-        logger.log(`Fetching service by slug "${slug}" for locale: ${locale} (WITH unstable_cache)`);
-        const { data, error } = await supabase.from(tableName).select('*').eq('slug', slug).single();
+  const cachedGetBySlug = unstable_cache(
+    async (slug: string, locale: string): Promise<Service | null> => {
+      const tableName = this.getTableName(locale);
+      logger.log(`Fetching service by slug "${slug}" for locale: ${locale} (WITH unstable_cache)`);
+      const { data, error } = await supabase.from(tableName).select('*').eq('slug', slug).single();
 
-        if (error) {
-          if (error.code === 'PGRST116') { // No rows found
-            return null;
-          }
-          logger.error(`Error fetching service by slug "${slug}" from Supabase for locale ${locale}:`, error);
-          const errorMessage = `Failed to fetch service by slug: ${error.message}${error.details ? ' Details: ' + error.details : ''}`;
-          throw new Error(errorMessage);
+      if (error) {
+        if (error.code === 'PGRST116') { // No rows found
+          return null;
         }
-        return data ? ServiceMapper.toDomain(data as ServiceDTO) : null;
-      },
-      [`getServiceBySlug-${slug}-${locale}`], // Dynamic key segment including slug and locale
-      {
-        tags: [CACHE_TAGS.SERVICES, `service-slug-${slug}-${locale}`], // Specific tag + general tag
-        revalidate: CACHE_TIMES.MINUTE,
+        logger.error(`Error fetching service by slug "${slug}" from Supabase for locale ${locale}:`, error);
+        const errorMessage = `Failed to fetch service by slug: ${error.message}${error.details ? ' Details: ' + error.details : ''}`;
+        throw new Error(errorMessage);
       }
-    )(); // Immediately invoke the cached function
-  };
+      return data ? ServiceMapper.toDomain(data as ServiceDTO) : null;
+    },
+    [`getServiceBySlug-${slug}-${locale}`], // Dynamic key segment including slug and locale
+    {
+      tags: [CACHE_TAGS.SERVICES, `service-slug-${slug}-${locale}`], // Specific tag + general tag
+      revalidate: CACHE_TIMES.MINUTE,
+    }
+  );
+
+  return cachedGetBySlug(slug, locale);
+};
 
   async getServiceById(id: string, locale: string): Promise<Service | null> {
     // It's also a good idea to cache this if it might be called from Server Components
