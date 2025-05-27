@@ -1,34 +1,49 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 import styles from './global-progress-bar.module.css';
 
 const GlobalProgressBar = () => {
-  const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const pathname = usePathname();
+  const [progress, setProgress] = useState(0);
+  const [internalPathname, setInternalPathname] = useState(pathname);
 
   useEffect(() => {
-    const handleStart = () => {
+    if (internalPathname !== pathname) { // If path has changed
       setIsLoading(true);
-      setProgress(40);
-    };
-    const handleComplete = () => {
-      setIsLoading(false);
-      setProgress(100);
-      setTimeout(() => setProgress(0), 400);
-    };
+      setProgress(30); // Start progress
+      setInternalPathname(pathname); // Update internal tracker
 
-    router.events.on('routeChangeStart', handleStart);
-    router.events.on('routeChangeComplete', handleComplete);
-    router.events.on('routeChangeError', handleComplete);
+      // Simulate progress (this is a simplification for a visual bar)
+      let currentProg = 30;
+      const progInterval = setInterval(() => {
+        currentProg += Math.random() * 10;
+        if (currentProg >= 90) {
+          clearInterval(progInterval);
+          setProgress(95); // Almost complete
+          // Simulate completion
+          setTimeout(() => {
+            setProgress(100);
+            setTimeout(() => {
+              setIsLoading(false);
+              setProgress(0);
+            }, 300); // Short delay before hiding
+          }, 200);
+        } else {
+          setProgress(currentProg);
+        }
+      }, 100);
 
-    return () => {
-      router.events.off('routeChangeStart', handleStart);
-      router.events.off('routeChangeComplete', handleComplete);
-      router.events.off('routeChangeError', handleComplete);
-    };
-  }, [router]);
+      return () => {
+        clearInterval(progInterval);
+      };
+    } else {
+      return () => {};
+    }
+  }, [pathname, internalPathname]);
 
   return (
     <div

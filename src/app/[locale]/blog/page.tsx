@@ -180,7 +180,7 @@ const cleanedExcerpt = stripHtmlTags(post.excerpt);
     >
       <Link href={`/${locale}/blog/${post.slug}`} className="" itemProp="url">
         <div className="flex border-b  py-[32px] gap-[32px] justify-between">
-          <div className="flex flex-col gap-[4px]">
+          <div className="flex flex-col max-w-lg gap-[4px]">
             <h2 className=" font-semibold  text-[19px]" itemProp="headline">
               {post.title}
             </h2>
@@ -196,7 +196,7 @@ const cleanedExcerpt = stripHtmlTags(post.excerpt);
             </span>
           </div>
           {post.imageurl && (
-           <div itemProp="image" className="w-full sm:w-[250px]  aspect-video overflow-hidden relative">
+           <div itemProp="image" className="w-full sm:w-[400px]  aspect-video overflow-hidden relative">
               <Image
                 className="rounded-xl w-full h-auto"
                 src={post.imageurl}

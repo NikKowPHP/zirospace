@@ -1,73 +1,81 @@
-# Plan: Implement Robust Loading Animations for ZIRO Project
+# TODO: Fix GlobalProgressBar Build Errors
 
-## I. Page Transition Loading Indicators
-- [x] **B1.1 & B1.2: Implement Route-Specific Loading UI with Reusable Component**
-    - [x] Design and create a reusable, visually consistent loading component (e.g., spinner, basic skeleton).
-        - Target file: `src/components/ui/loader/page-loader.tsx` (or similar)
-    - [x] Implement `loading.tsx` for key route segments using the reusable loader:
-        - [x] `src/app/[locale]/loading.tsx`
-        - [x] `src/app/[locale]/services/loading.tsx`
-        - [x] `src/app/[locale]/services/[slug]/loading.tsx`
-        - [x] `src/app/[locale]/case-studies/loading.tsx`
-        - [x] `src/app/[locale]/case-studies/[slug]/loading.tsx`
-        - [x] `src/app/[locale]/blog/loading.tsx`
-        - [x] `src/app/[locale]/blog/[slug]/loading.tsx`
-        - [ ] *(Add for other critical routes as identified)*
-    - *Effort: Medium*
-    - *Challenge: Ensuring visual consistency and minimal performance impact.*
-    - *Testing: Verify loader appears on route change and hides on completion; check behavior on fast/slow networks.*
+## Problem Description
 
-- [x] **B1.3 (Optional): Implement Global Top Progress Bar (NProgress-like)**
-    - [x] Choose or create a lightweight progress bar library/component.
-        - Target file (new): `src/components/layout/global-progress-bar.tsx`
-    - [x] Integrate with Next.js router events in `src/app/[locale]/layout.tsx` or `src/app/[locale]/client-wrapper.tsx` to show/hide on navigation.
-    - *Effort: Small to Medium*
-    - *Challenge: Smooth integration without layout shifts; handling navigation errors.*
+The current implementation of `src/components/layout/global-progress-bar.tsx` is causing build failures due to incompatibilities with the Next.js App Router. The specific errors indicate:
+1.  The component uses `useState` and `useEffect` (Client Component hooks) but is not marked with `"use client"`.
+2.  The component imports `useRouter` from `next/router` (intended for the Pages Router) instead of the appropriate navigation hooks from `next/navigation` (for the App Router).
+3.  The router event handling (`router.events.on`) is specific to the Pages Router and will not work as expected in the App Router.
 
-- [x] **B1.4 (Optional - Advanced): Implement Page Transition Animations with Framer Motion**
-    - [x] Wrap page content in `src/app/[locale]/layout.tsx` or `src/app/[locale]/client-wrapper.tsx` with `<AnimatePresence>` and `motion.div`.
-        - Target file: `src/app/[locale]/client-wrapper.tsx`
-    - [x] Define `initial`, `animate`, and `exit` props for desired transition effects (fade, slide).
-    - [x] Ensure proper `key` management for `AnimatePresence` (e.g., using `pathname`).
-    - *Effort: Medium to Large*
-    - *Challenge: Achieving smooth, non-jarring animations; performance considerations.*
+## Tasks to Resolve Issues
 
-## II. Data Loading Indicators within Pages/Components
-- [x] **B2.1: Utilize Next.js Suspense for Server Components Fetching Data**
-    - [x] Identify Server Components that perform data fetching (e.g., `src/app/[locale]/blog/page.tsx` if it fetches posts directly).
-    - [x] Wrap these data-dependent Server Components in `<Suspense fallback={<YourSkeletonOrSpinner />}>` in their parent components.
-    - [x] Create appropriate skeleton/spinner fallbacks for these Suspense boundaries.
-    - *Effort: Medium*
-    - *Challenge: Correctly identifying Suspense boundaries; designing effective fallbacks.*
+### 1. Convert `GlobalProgressBar` to a Client Component
+    - **Action:** Add the `"use client";` directive at the very top of the file `src/components/layout/global-progress-bar.tsx`.
+    - **Reasoning:** This will allow the use of `useState` and `useEffect` hooks within the component.
+    - **File to Modify:** `src/components/layout/global-progress-bar.tsx`
 
-- [x] **B2.2 & B2.3: Implement Loading States for Client-Side Data Fetching & Skeletons**
-    - [x] **Design and Create Reusable Skeleton Components:**
-        - [x] `src/components/ui/skeletons/card-skeleton.tsx`
-        - [x] `src/components/ui/skeletons/list-item-skeleton.tsx`
-        - [ ] *(Add others as UI patterns are identified, e.g., form skeleton, table skeleton)*
-    - [x] **Implement in Client Components:**
-        - [x] For components fetching data directly (if any, not relying on context/Suspense):
-            - Add `isLoading` state.
-            - Show skeletons/spinners based on `isLoading`.
-        - [x] For components using `AdminContext` or `PageContext`:
-            - Utilize the `loading` state from these contexts.
-            - Affected files: `src/app/(admin)/admin/sections/**/*.tsx`, and other components consuming these contexts.
-    - *Effort: Medium to Large*
-    - *Challenge: Creating versatile and accurate skeleton components; managing multiple loading states if not using Suspense effectively; avoiding flash of loading state.*
-    - *Testing: Verify loaders for data fetching sections; check error and empty states are handled distinctly from loading states.*
+### 2. Update Router Import and Usage for App Router
+    - **Action 2.1:** Change the import statement for router hooks.
+        - **Replace:** `import { useRouter } from 'next/router';`
+        - **With:** `import { usePathname } from 'next/navigation';`
+    - **Action 2.2:** Adapt the `useEffect` logic to use `usePathname` for detecting route changes. The Pages Router's `router.events` are not available in the App Router. A common pattern is to track changes in the `pathname`.
+        - Declare `const pathname = usePathname();`
+        - You might need to store the `previousPathname` in a state or ref to compare and trigger the progress bar on change.
+        - **Example `useEffect` structure (conceptual):**
+          ```javascript
+          // Inside GlobalProgressBar component
+          const pathname = usePathname();
+          const [isLoading, setIsLoading] = useState(false);
+          const [progress, setProgress] = useState(0);
+          // Optional: to only trigger on actual path changes, not initial render
+          const [internalPathname, setInternalPathname] = useState(pathname);
 
-## III. Suggested Order of Execution
+          useEffect(() => {
+            if (internalPathname !== pathname) { // If path has changed
+              setIsLoading(true);
+              setProgress(30); // Start progress
+              setInternalPathname(pathname); // Update internal tracker
 
-1.  **Reusable Basic Loading Component:** Implement `src/components/ui/loader/page-loader.tsx` (B1.2 first part).
-2.  **Route-Level Loading (`loading.tsx`):** Implement for major routes (B1.1 & B1.2 second part).
-3.  **Data Loading with Suspense (Server Components):** Focus on B2.1.
-4.  **Data Loading for Client Components (Contexts & Skeletons):** Focus on B2.2 & B2.3, creating initial skeleton components.
-5.  **(Optional) Global Progress Bar:** Implement B1.3 if desired.
-6.  **Refine Skeleton Loaders:** Improve and expand skeleton components (B2.3 refinement).
-7.  **(Optional) Advanced Page Transitions (Framer Motion):** Implement B1.4 as a polish step.
+              // Simulate progress (this is a simplification for a visual bar)
+              let currentProg = 30;
+              const progInterval = setInterval(() => {
+                currentProg += Math.random() * 10;
+                if (currentProg >= 90) {
+                  clearInterval(progInterval);
+                  setProgress(95); // Almost complete
+                  // Simulate completion
+                  setTimeout(() => {
+                    setProgress(100);
+                    setTimeout(() => {
+                      setIsLoading(false);
+                      setProgress(0);
+                    }, 300); // Short delay before hiding
+                  }, 200);
+                } else {
+                  setProgress(currentProg);
+                }
+              }, 100);
 
-## IV. General Considerations
-- [x] **Performance:** Ensure all loading indicators are lightweight and do not negatively impact perceived or actual performance.
-- [x] **Accessibility:** Ensure all loading states are communicated appropriately to assistive technologies (e.g., using ARIA attributes if necessary).
-- [x] **Consistency:** Maintain a consistent visual style for all loading indicators across the application.
-- [x] **Error Handling:** Ensure that loading states are correctly dismissed and error messages are shown if data fetching or navigation fails.
+              return () => {
+                clearInterval(progInterval);
+              };
+            }
+          }, [pathname, internalPathname]);
+          ```
+        - **Note:** The progress simulation (intervals, timeouts) will likely need fine-tuning for good user experience. The App Router doesn't provide direct client-side "routeChangeComplete" events in the same way Pages Router did, so this part is often a UX simulation.
+    - **File to Modify:** `src/components/layout/global-progress-bar.tsx`
+
+### 3. Testing and Verification
+    - **Action 3.1:** After applying the fixes, run `npm run dev` (or your dev script) to ensure the application starts without build errors.
+    - **Action 3.2:** Navigate between different pages in your application.
+        - Verify the progress bar appears at the top during navigation.
+        - Verify the progress bar animates and completes.
+        - Verify the progress bar hides after navigation is complete.
+    - **Action 3.3:** Check the browser console for any new errors or warnings related to the `GlobalProgressBar`.
+    - **Action 3.4:** Run `npm run build` to confirm the build completes successfully.
+
+## Completion Criteria
+- [x] `GlobalProgressBar` is marked as a Client Component.
+- [x] `GlobalProgressBar` uses `usePathname` (or other appropriate `next/navigation` hooks) instead of `next/router`.
+- [ ] The progress bar shows and animates correctly during page navigations in the App Router.
+- [ ] The application builds successfully without errors related to this component.
