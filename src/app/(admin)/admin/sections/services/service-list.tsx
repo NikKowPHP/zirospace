@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Locale } from '@/i18n'
 import { useRouter } from 'next/navigation'
 import ListItemSkeleton from '@/components/ui/skeletons/list-item-skeleton'
@@ -10,9 +10,14 @@ import logger from '@/lib/logger'
 import useAdminServices from '@/hooks/admin/useAdminServices';
 
 export function ServiceList() {
-  const { services, deleteService, error, loading } = useAdminServices()
+  const { services, deleteService, error, loading, getServices } = useAdminServices()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const router = useRouter()
+
+  // Fetch services when locale changes
+  useEffect(() => {
+    getServices(activeLocale)
+  }, [activeLocale, getServices]) // Added getServices to dependency array
 
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this service?')) {

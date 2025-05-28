@@ -1,13 +1,18 @@
 'use client'
 
-import {  useState } from 'react'
+import {  useEffect, useState } from 'react'
 import useAdminBanners from '@/hooks/admin/useAdminBanners'
 import { Banner } from '@/domain/models/banner.model'
 import { Locale } from '@/i18n'
 import logger from '@/lib/logger'
 import { BannerForm } from './components/banner-form'
 
-export function BannerList() {
+
+interface BannerListProps {
+  initialBanners: Record<Locale, Banner[]>;
+}
+
+export function BannerList({ initialBanners }: BannerListProps) {
   const {
     banners,
     createBanner,
@@ -15,10 +20,17 @@ export function BannerList() {
     deleteBanner,
     error,
     loading,
-  } = useAdminBanners()
+    getBanners
+  } = useAdminBanners({ initialBanners })
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null)
   const [isCreating, setIsCreating] = useState(false)
+
+  useEffect(() => {
+    if (!banners[activeLocale] || banners[activeLocale].length === 0) {
+      getBanners(activeLocale);
+    }
+  }, [activeLocale, getBanners, banners]);
 
   const handleCreate = async (data: Partial<Banner>) => {
     try {

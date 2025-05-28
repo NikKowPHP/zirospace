@@ -1,11 +1,11 @@
 'use client'
 
-import {  useState } from 'react'
+import {  useEffect, useState } from 'react'
 import useAdminCaseStudySliders from '@/hooks/admin/useAdminCaseStudySliders'
-import { CaseStudySliderForm } from './components/slider-form'
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 
 import logger from '@/lib/logger'
+import { CaseStudySliderForm } from './components/slider-form'
 
 export function CaseStudySliderList() {
   const {
@@ -15,10 +15,16 @@ export function CaseStudySliderList() {
     deleteCaseStudySlider,
     error,
     loading,
+    getCaseStudySliders // Destructure getCaseStudySliders
   } = useAdminCaseStudySliders()
   const [editingCaseStudySlider, setEditingCaseStudySlider] =
     useState<CaseStudySlider | null>(null)
   const [isCreating, setIsCreating] = useState(false)
+
+  // Fetch case study sliders on component mount
+  useEffect(() => {
+    getCaseStudySliders()
+  }, [getCaseStudySliders]) // Added getCaseStudySliders to dependency array
 
 
   const handleCreate = async (data: Partial<CaseStudySlider>) => {

@@ -1,3 +1,4 @@
+'use client';
 import { useState, useCallback } from 'react';
 import { Banner } from '@/domain/models/banner.model';
 import { Locale } from '@/i18n';

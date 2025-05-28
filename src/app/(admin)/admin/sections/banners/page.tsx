@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 import { AdminProvider } from '@/contexts/admin-context'
-import useAdminBanners from '@/hooks/admin/useAdminBanners';
 import { bannerService } from '@/lib/services/banner.service'
 import { BannerList } from './banner-list'
+import { Locale } from '@/i18n';
 
 export default async function BannersAdminPage() {
   const [enBanners, plBanners] = await Promise.all([
@@ -10,21 +10,18 @@ export default async function BannersAdminPage() {
     bannerService.getBanners('pl')
   ])
 
+  const initialBanners: Record<Locale, any[]> = {
+    en: enBanners,
+    pl: plBanners
+  };
+
   return (
-    <AdminProvider initialBanners={{ en: enBanners, pl: plBanners }}>
+    <AdminProvider initialBanners={initialBanners}>
       <div className="bg-white shadow sm:rounded-lg">
         <div className="px-4 py-5 sm:p-6">
           <h2 className="text-2xl font-bold mb-6">Banners Management</h2>
-          <Suspense fallback={
-            useAdminBanners().error ? (
-              <div className="p-4 bg-red-50 text-red-600">
-                {useAdminBanners().error}
-              </div>
-            ) : (
-              <div>Loading...</div>
-            )
-          }>
-            <BannerList />
+          <Suspense fallback={<div>Loading...</div>}>
+            <BannerList initialBanners={initialBanners} />
           </Suspense>
         </div>
       </div>

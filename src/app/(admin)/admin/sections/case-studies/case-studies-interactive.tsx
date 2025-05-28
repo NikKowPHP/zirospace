@@ -8,11 +8,16 @@ import { CaseStudyForm } from './components/case-study-form'
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
 
 export function CaseStudyListInteractive() {
-  const { caseStudies, createCaseStudy, updateCaseStudy, deleteCaseStudy, updateCaseStudyOrder, error, loading } = useAdminCaseStudies()
+  const { caseStudies, createCaseStudy, updateCaseStudy, deleteCaseStudy, updateCaseStudyOrder, error, loading, getCaseStudies } = useAdminCaseStudies()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const [editingStudy, setEditingStudy] = useState<CaseStudy | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [orderedStudies, setOrderedStudies] = useState<CaseStudy[]>([])
+
+  // Fetch case studies when locale changes
+  useEffect(() => {
+    getCaseStudies(activeLocale)
+  }, [activeLocale, getCaseStudies]) // Added getCaseStudies to dependency array
 
   useEffect(() => {
     setOrderedStudies(caseStudies[activeLocale])

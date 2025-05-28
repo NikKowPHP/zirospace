@@ -7,11 +7,16 @@ import { useRouter } from 'next/navigation'
 import logger from '@/lib/logger'
 
 export function BlogPostList() {
-  const { blogPosts, deleteBlogPost, error, loading, updateBlogPost } =
+  const { blogPosts, deleteBlogPost, error, loading, updateBlogPost, getBlogPosts } =
     useAdminBlogPosts()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const router = useRouter()
   const [pinnedPostId, setPinnedPostId] = useState<string | null>(null)
+
+  // Fetch blog posts when locale changes
+  useEffect(() => {
+    getBlogPosts(activeLocale)
+  }, [activeLocale, getBlogPosts]) // Added getBlogPosts to dependency array
 
   useEffect(() => {
     // Find the currently pinned post on component mount
