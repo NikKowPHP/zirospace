@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Analytics } from "@vercel/analytics/react"
 import { Suspense } from 'react'
 import { siteUrl } from '@/config/constants';
 
@@ -135,7 +134,6 @@ export default function RootLayout({
           {children}
 
         </Suspense>
-        <Analytics mode="production" debug={false} />
       </body>
     </html>
   )
