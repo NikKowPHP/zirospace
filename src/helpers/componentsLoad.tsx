@@ -99,7 +99,7 @@ export const CaseStudies = dynamic(
   }
 )
 
-export  const FloatVideo = dynamic(
+export const FloatVideo = dynamic(
   () => import('@/components/sections/float-video/float-video').then(mod => mod.FloatVideo),
   {
     ssr: true,
@@ -115,6 +115,13 @@ export const BannerModalWrapper = dynamic(
 
 export const TestimonialsSection = dynamic(
   () => import('@/components/sections/testimonials/testimonials.server'),
+  {
+    ssr: true,
+  }
+)
+
+export const ContactFormSection = dynamic(
+  () => import('@/components/sections/contact-form/contact-form').then((mod) => mod.ContactFormSection),
   {
     ssr: true,
   }
