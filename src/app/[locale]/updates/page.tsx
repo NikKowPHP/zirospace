@@ -8,7 +8,29 @@ export const generateMetadata = async ({ params: { locale } }: { params: { local
   return {
     title: "Updates | Zirospace",
     description: "Stay up-to-date with the latest news and updates from Zirospace.",
-    // TODO: Add JSON-LD
+    // JSON-LD
+    openGraph: {
+      title: "Updates | Zirospace",
+      description: "Stay up-to-date with the latest news and updates from Zirospace.",
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/${locale}/updates`,
+      siteName: "Zirospace",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Updates | Zirospace",
+      description: "Stay up-to-date with the latest news and updates from Zirospace.",
+      site: "@zirospace",
+      creator: "@zirospace",
+    },
+    metadataBase: new URL(`${process.env.NEXT_PUBLIC_BASE_URL}`),
+    alternates: {
+      canonical: `/${locale}/updates`,
+      languages: {
+        "en-US": "/en/updates",
+        "pl-PL": "/pl/updates",
+      },
+    },
   };
 };
 const UpdatesPage = async ({ params: { locale } }: { params: { locale: string } }) => {
