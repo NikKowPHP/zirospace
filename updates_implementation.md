@@ -107,7 +107,7 @@ This document outlines the tasks to refactor the admin panel's state management 
     - **Props:** `update?: Update` (for editing), `locale: Locale`, `onSubmit: (data: Partial<Update>) => Promise<void>`, `onCancel: () => void`, `loading: boolean`.
     - **Logic:** `onSubmit` will be a function from the parent page, which in turn calls the appropriate method from `useAdminUpdates`. `loading` prop will be derived from `useAdminUpdates().loading`.
 
-- [ ] **5.5. Create `UpdateList` Component**
+- [x] **5.5. Create `UpdateList` Component**
     - **Task:** Table display for updates.
     - **File:** `src/app/(admin)/admin/sections/updates/update-list.tsx`
     - **Functionality:**
@@ -126,7 +126,7 @@ This document outlines the tasks to refactor the admin panel's state management 
         - Renders `UpdateForm`.
         - `onSubmit` handler calls `useAdminUpdates().createUpdate(data, activeLocale)`.
 
-- [ ] **5.7. Create "Edit Update" Page**
+- [x] **5.7. Create "Edit Update" Page**
     - **Task:** UI for editing updates.
     - **Directory:** `src/app/(admin)/admin/sections/updates/edit/[id]/`
     - **File:** `page.tsx`
