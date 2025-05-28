@@ -34,3 +34,23 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const localeParam = searchParams.get('locale');
+  const locale: 'en' | 'pl' = (localeParam === 'en' || localeParam === 'pl') ? localeParam : 'en';
+
+  try {
+    console.log('Processing case study retrieval:', { locale });
+
+    const caseStudies = await caseStudyService.getCaseStudies(locale);
+    console.log('caseStudies', caseStudies)
+
+    return NextResponse.json(caseStudies);
+  } catch (error) {
+    logger.log('Error retrieving case studies:', error)
+    return NextResponse.json(
+      { error: 'Failed to retrieve case studies', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    )
+  }
+}
