@@ -4,55 +4,55 @@ This plan outlines the steps to implement a contact form at the end of the landi
 
 ## Phase 1: Basic Form Structure (Frontend)
 
-- [ ] **Task 1.1: Identify Target Component and Add Basic HTML Form Structure**
-    *   **Objective:** Create the fundamental HTML elements for the form.
-    *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [ ] Wrap the form elements in a `<form>` tag.
-        - [ ] Add an `<input type="text">` for "Name".
-        - [ ] Add an `<input type="email">` for "Email".
-        - [ ] Add an `<input type="tel">` for "Telephone".
-        - [ ] Add a `<textarea>` for "Message".
-        - [ ] Add a `<button type="submit">` for "Submit".
+-[x] Task 1.1: Identify Target Component and Add Basic HTML Form Structure
+Objective: Create the fundamental HTML elements for the form.
+File to Modify: src/components/sections/contact-form/contact-form.tsx
+Implementation Steps:
+[x] Wrap the form elements in a <form> tag.
+[x] Add an <input type="text"> for "Name".
+[x] Add an <input type="email"> for "Email".
+[x] Add an <input type="tel"> for "Telephone".
+[x] Add a <textarea> for "Message".
+[x] Add a <button type="submit"> for "Submit".
 
-- [ ] **Task 1.2: Add Labels for Form Fields**
+- [x] **Task 1.2: Add Labels for Form Fields**
     *   **Objective:** Provide accessible labels for each form input.
     *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
     *   **Implementation Steps:**
-        - [ ] Add a `<label htmlFor="name">` for the Name input.
-        - [ ] Add a `<label htmlFor="email">` for the Email input.
-        - [ ] Add a `<label htmlFor="telephone">` for the Telephone input.
-        - [ ] Add a `<label htmlFor="message">` for the Message textarea.
+        - [x] Add a `<label htmlFor="name">` for the Name input.
+        - [x] Add a `<label htmlFor="email">` for the Email input.
+        - [x] Add a `<label htmlFor="telephone">` for the Telephone input.
+        - [x] Add a `<label htmlFor="message">` for the Message textarea.
 
-- [ ] **Task 1.3: Apply Basic Styling for Form Layout**
+- [x] **Task 1.3: Apply Basic Styling for Form Layout**
     *   **Objective:** Arrange form elements using Tailwind CSS for initial layout.
     *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
     *   **Implementation Steps:**
-        - [ ] Style the main `<form>` container to manage the vertical arrangement of field groups (label + input). Use flex column and gap.
-        - [ ] Style each field group (div containing label and input/textarea) for proper spacing.
+        - [x] Style the main `<form>` container to manage the vertical arrangement of field groups (label + input). Use flex column and gap.
+        - [x] Style each field group (div containing label and input/textarea) for proper spacing.
 
-- [ ] **Task 1.4: Style Input Fields and Textarea**
+- [x] **Task 1.4: Style Input Fields and Textarea**
     *   **Objective:** Apply consistent styling to all input fields and the textarea.
     *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
     *   **Implementation Steps:**
-        - [ ] Apply Tailwind classes for padding (e.g., `px-4 py-2`), borders (e.g., `border rounded-md`), width (e.g., `w-full`), and focus states (e.g., `focus:outline-none focus:ring-1 focus:ring-blue-600`) to all `<input>` elements.
-        - [ ] Apply similar Tailwind classes to the `<textarea>`.
+        - [x] Apply Tailwind classes for padding (e.g., `px-4 py-2`), borders (e.g., `border rounded-md`), width (e.g., `w-full`), and focus states (e.g., `focus:outline-none focus:ring-1 focus:ring-blue-600`) to all `<input>` elements.
+        - [x] Apply similar Tailwind classes to the `<textarea>`.
 
-- [ ] **Task 1.5: Style the Submit Button**
+- [x] **Task 1.5: Style the Submit Button**
     *   **Objective:** Style the submit button to match the primary action button style.
     *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
     *   **Implementation Steps:**
-        - [ ] Apply Tailwind classes for background color (e.g., `bg-primary`), text color (e.g., `text-white`), padding (e.g., `px-4 py-2`), rounded corners (e.g., `rounded-md`), and full width (e.g., `w-full`).
-        - [ ] Use the existing `Button` component from `src/components/ui/button/button.tsx` if appropriate, configuring its variant and size.
+        - [x] Apply Tailwind classes for background color (e.g., `bg-primary`), text color (e.g., `text-white`), padding (e.g., `px-4 py-2`), rounded corners (e.g., `rounded-md`), and full width (e.g., `w-full`).
+        - [x] Use the existing `Button` component from `src/components/ui/button/button.tsx` if appropriate, configuring its variant and size.
 
 ## Phase 2: Internationalization (i18n)
 
-- [ ] **Task 2.1: Add Translation Keys in English**
+- [x] **Task 2.1: Add Translation Keys in English**
     *   **Objective:** Define English translations for all form-related text.
     *   **File to Modify:** `src/messages/en.json`
     *   **Implementation Steps:**
-        - [ ] Add a new top-level key, e.g., `"contactUsFormSection"`.
-        - [ ] Inside `"contactUsFormSection"`, add keys for:
+        - [x] Add a new top-level key, e.g., `"contactUsFormSection"`.
+        - [x] Inside `"contactUsFormSection"`, add keys for:
             - `title`: "Start Your Digital Health Journey with Us"
             - `name`: "Name" (for label and placeholder)
             - `email`: "Email" (for label and placeholder)
@@ -60,30 +60,30 @@ This plan outlines the steps to implement a contact form at the end of the landi
             - `message`: "Message" (for label and placeholder)
             - `submit`: "Submit" (for button text)
 
-- [ ] **Task 2.2: Add Translation Keys in Polish**
+- [x] **Task 2.2: Add Translation Keys in Polish**
     *   **Objective:** Define Polish translations for all form-related text.
     *   **File to Modify:** `src/messages/pl.json`
     *   **Implementation Steps:**
-        - [ ] Add a new top-level key, e.g., `"contactUsFormSection"`.
-        - [ ] Inside `"contactUsFormSection"`, add Polish translations corresponding to the English keys from Task 2.1.
+        - [x] Add a new top-level key, e.g., `"contactUsFormSection"`.
+        - [x] Inside `"contactUsFormSection"`, add Polish translations corresponding to the English keys from Task 2.1.
 
-- [ ] **Task 2.3: Implement `useTranslations` in the Form Component**
+- [x] **Task 2.3: Implement `useTranslations` in the Form Component**
     *   **Objective:** Use the i18n hook to display translated text.
     *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
     *   **Implementation Steps:**
-        - [ ] Import `useTranslations` from `next-intl`.
-        - [ ] Initialize `const t = useTranslations('contactUsFormSection');`.
-        - [ ] Replace static text for the section title with `t('title')`.
-        - [ ] Replace static text for labels with `t('name')`, `t('email')`, etc.
-        - [ ] Replace static text for the submit button with `t('submit')`.
+        - [x] Import `useTranslations` from `next-intl`.
+        - [x] Initialize `const t = useTranslations('contactUsFormSection');`.
+        - [x] Replace static text for the section title with `t('title')`.
+        - [x] Replace static text for labels with `t('name')`, `t('email')`, etc.
+        - [x] Replace static text for the submit button with `t('submit')`.
 
-- [ ] **Task 2.4: Add Placeholder Text and Internationalize Them**
+- [x] **Task 2.4: Add Placeholder Text and Internationalize Them**
     *   **Objective:** Add placeholder attributes to input fields and make them translatable.
     *   **Files to Modify:** `src/messages/en.json`, `src/messages/pl.json`, `src/components/sections/contact-form/contact-form.tsx`
     *   **Implementation Steps:**
-        - [ ] In `en.json` (under `contactUsFormSection`), add placeholder keys: e.g., `namePlaceholder`, `emailPlaceholder`, etc.
-        - [ ] In `pl.json`, add corresponding Polish placeholder keys.
-        - [ ] In `contact-form.tsx`, set the `placeholder` attribute of each input/textarea using `t('keyPlaceholder')`.
+        - [x] In `en.json` (under `contactUsFormSection`), add placeholder keys: e.g., `namePlaceholder`, `emailPlaceholder`, etc.
+        - [x] In `pl.json`, add corresponding Polish placeholder keys.
+        - [x] In `contact-form.tsx`, set the `placeholder` attribute of each input/textarea using `t('keyPlaceholder')`.
 
 ## Phase 3: Form Submission Setup (Getform.io)
 

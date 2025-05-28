@@ -249,6 +249,17 @@
       "email": "Email",
       "submit": "Wyślij"
     }
+  },
+  "contactUsFormSection": {
+    "title": "Rozpocznij swoją cyfrową podróż zdrowotną z nami",
+    "name": "Imię",
+    "email": "Email",
+    "telephone": "Telefon",
+    "message": "Wiadomość",
+    "submit": "Wyślij",
+    "namePlaceholder": "Twoje imię",
+    "emailPlaceholder": "Twój email",
+    "telephonePlaceholder": "Twój numer telefonu",
+    "messagePlaceholder": "Twoja wiadomość"
   }
 }
-

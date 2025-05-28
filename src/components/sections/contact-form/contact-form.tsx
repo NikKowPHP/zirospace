@@ -25,7 +25,7 @@ export const ContactFormSection = async () => {
         <div className='flex items-center flex-wrap max-w-3xl gap-[12px] sm:gap-[55px]'>
 
           <div className='w-full sm:w-1/2' >
-            { /* TODO: youtube section */}
+            {/* TODO: youtube section */}
             <div className='border border-red-500 h-[300px]'><FooterVideo /></div>
             <h1 className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-black"
               itemProp="headline"
@@ -51,8 +51,9 @@ export const ContactFormSection = async () => {
             </div>
 
             <div className='flex flex-col items-center justify-center  w-full'>
-              <form className='flex flex-col items-center justify-center  w-full'>
-                <div className='flex flex-col items-start justify-center w-full'>
+              <form className='flex flex-col items-center justify-center  w-full flex flex-col gap-4 '>
+
+                <div className='flex flex-col items-start justify-center w-full mb-4 '>
                   <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
                     {t('name')}
                   </label>
@@ -60,52 +61,52 @@ export const ContactFormSection = async () => {
                     type="text"
                     id="name"
                     name="name"
-                    placeholder={t('name')}
-                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                    placeholder={t('namePlaceholder')}
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                   />
                 </div>
-                <div className='flex flex-col items-start justify-center w-full'>
-                  <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
+
+                <div className='flex flex-col items-start justify-center w-full mb-4'>
+                  <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
                     {t('email')}
                   </label>
                   <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder={t('name')}
-                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder={t('emailPlaceholder')}
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                   />
                 </div>
-                <div className='flex flex-col items-start justify-center w-full'>
-                  <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
+
+                <div className='flex flex-col items-start justify-center w-full mb-4'>
+                  <label htmlFor="telephone" className="block text-gray-700 text-sm font-bold mb-2">
                     {t('telephone')}
                   </label>
                   <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder={t('name')}
-                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                    type="tel"
+                    id="telephone"
+                    name="telephone"
+                    placeholder={t('telephonePlaceholder')}
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                   />
                 </div>
-                <div className='flex flex-col items-start justify-center w-full'>
-                  <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
+
+                <div className='flex flex-col items-start justify-center w-full mb-4'>
+                  <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">
                     {t('message')}
                   </label>
                   <textarea
-                    id="name"
+                    id="message"
                     name="message"
-                    placeholder={t('message')}
-                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                    placeholder={t('messagePlaceholder')}
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
                   />
                 </div>
 
-                <Button variant="primary"
-                  className='w-full '
-                >
+                <Button type="submit" variant="primary" className='w-full'>
                   {t('submit')}
                 </Button>
-
               </form>
             </div>
 

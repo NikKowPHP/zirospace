@@ -100,14 +100,6 @@
     "description": "Ziro is a partner in innovation, dedicated to creating impactful digital health solutions that enhance patient care and engagement. Collaborate to transform healthcare through exceptional design."
   },
 
-  "contactUsFormSection": {
-    "title": "Start Your Digital Health Journey With Us",
-    "name": "Name",
-    "email": "Email",
-    "telephone": "Telephone",
-    "message": "Message",
-    "submit" : "Submit"
-  },
   "ziroPhilosophy": {
 
     "title": "Ziro's Philosophy: The Art of Nearness",
@@ -259,5 +251,17 @@
   },
   "BannerModal": {
     "bookCall": "Book a Call"
+  },
+  "contactUsFormSection": {
+    "title": "Start Your Digital Health Journey With Us",
+    "name": "Name",
+    "email": "Email",
+    "telephone": "Telephone",
+    "message": "Message",
+    "submit": "Submit",
+    "namePlaceholder": "Your Name",
+    "emailPlaceholder": "Your Email",
+    "telephonePlaceholder": "Your Telephone",
+    "messagePlaceholder": "Your Message"
   }
 }
