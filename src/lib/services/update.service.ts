@@ -8,24 +8,25 @@ export class UpdateService {
   private updatesRepository: IUpdatesRepository;
 
   constructor() {
-    this.updatesRepository = process.env.MOCK_REPOSITORIES
-      ? new UpdateRepositoryLocal()
+    this.updatesRepository = new UpdateRepository();
+  }
+
+  async getUpdates(locale: string): Promise<Update[]> {
+    const updatesRepository: IUpdatesRepository = process.env.MOCK_REPOSITORIES
+      ? new UpdateRepositoryLocal(locale)
       : new UpdateRepository();
+    return updatesRepository.getUpdates(locale);
   }
 
-  async getUpdates(): Promise<Update[]> {
-    return this.updatesRepository.getUpdates();
+  async getUpdateBySlug(slug: string, locale: string): Promise<Update | null> {
+    return this.updatesRepository.getUpdateBySlug(slug, locale);
   }
 
-  async getUpdateBySlug(slug: string): Promise<Update | null> {
-    return this.updatesRepository.getUpdateBySlug(slug);
+  async getUpdateById(id: string, locale: string): Promise<Update | null> {
+    return this.updatesRepository.getUpdateById(id, locale);
   }
 
-  async getUpdateById(id: string): Promise<Update | null> {
-    return this.updatesRepository.getUpdateById(id);
-  }
-
-  async createUpdate(update: Omit<Update, 'id' | 'createdAt' | 'updatedAt' | 'slug'>): Promise<Update> {
+  async createUpdate(update: Omit<Update, 'id' | 'createdAt' | 'updatedAt' | 'slug'>, locale: string): Promise<Update> {
     const slug = generateSlug(update.title);
     const newUpdate: Update = {
       ...update,
@@ -34,11 +35,11 @@ export class UpdateService {
       created_at: new Date(),
       updated_at: new Date(),
     };
-    return this.updatesRepository.createUpdate(newUpdate);
+    return this.updatesRepository.createUpdate(newUpdate, locale);
   }
 
-  async updateUpdate(id: string, update: Omit<Update, 'id' | 'created_at' | 'updated_at' | 'slug'>): Promise<Update> {
-    const existingUpdate = await this.getUpdateById(id);
+  async updateUpdate(id: string, update: Omit<Update, 'id' | 'createdAt' | 'updatedAt' | 'slug'>, locale: string): Promise<Update> {
+    const existingUpdate = await this.getUpdateById(id, locale);
     if (!existingUpdate) {
       throw new Error(`Update with id ${id} not found`);
     }
@@ -50,10 +51,10 @@ export class UpdateService {
       slug: slug,
       updated_at: new Date(),
     };
-    return this.updatesRepository.updateUpdate(id, updatedUpdate);
+    return this.updatesRepository.updateUpdate(id, updatedUpdate, locale);
   }
 
-  async deleteUpdate(id: string): Promise<void> {
-    return this.updatesRepository.deleteUpdate(id);
+  async deleteUpdate(id: string, locale: string): Promise<void> {
+    return this.updatesRepository.deleteUpdate(id, locale);
   }
 }

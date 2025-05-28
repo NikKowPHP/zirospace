@@ -11,9 +11,8 @@ export class UpdateRepository implements IUpdatesRepository {
     return unstable_cache(
       async () => {
         const { data, error } = await supabase
-          .from(\`zirospace_updates_\${locale}\`)
-          .select('*')
-          
+          .from(`zirospace_updates_${locale}`)
+          .select('*');
 
         if (error) {
           console.error(error);
@@ -29,11 +28,11 @@ export class UpdateRepository implements IUpdatesRepository {
     )();
   }
 
-  async getUpdateBySlug(slug: string): Promise<Update | null> {
+  async getUpdateBySlug(slug: string, locale: string): Promise<Update | null> {
     return unstable_cache(
       async () => {
         const { data, error } = await supabase
-          .from('zirospace_updates_en')
+          .from(`zirospace_updates_${locale}`)
           .select('*')
           .eq('slug', slug)
           .single();
@@ -56,11 +55,11 @@ export class UpdateRepository implements IUpdatesRepository {
     )();
   }
 
-  async getUpdateById(id: string): Promise<Update | null> {
+  async getUpdateById(id: string, locale: string): Promise<Update | null> {
     return unstable_cache(
       async () => {
         const { data, error } = await supabase
-          .from('zirospace_updates_en')
+          .from(`zirospace_updates_${locale}`)
           .select('*')
           .eq('id', id)
           .single();
@@ -83,11 +82,11 @@ export class UpdateRepository implements IUpdatesRepository {
     )();
   }
 
-  async createUpdate(update: Update): Promise<Update> {
+  async createUpdate(update: Update, locale: string): Promise<Update> {
     const updateDTO = UpdateMapper.toPersistence(update);
 
     const { data, error } = await supabase
-      .from('zirospace_updates_en')
+      .from(`zirospace_updates_${locale}`)
       .insert([updateDTO])
       .select('*')
       .single();
@@ -100,11 +99,11 @@ export class UpdateRepository implements IUpdatesRepository {
     return UpdateMapper.toDomain(data);
   }
 
-  async updateUpdate(id: string, update: Update): Promise<Update> {
+  async updateUpdate(id: string, update: Update, locale: string): Promise<Update> {
     const updateDTO = UpdateMapper.toPersistence(update);
 
     const { data, error } = await supabase
-      .from('zirospace_updates_en')
+      .from(`zirospace_updates_${locale}`)
       .update(updateDTO)
       .eq('id', id)
       .select('*')
@@ -118,9 +117,9 @@ export class UpdateRepository implements IUpdatesRepository {
     return UpdateMapper.toDomain(data);
   }
 
-  async deleteUpdate(id: string): Promise<void> {
+  async deleteUpdate(id: string, locale: string): Promise<void> {
     const { error } = await supabase
-      .from('zirospace_updates_en')
+      .from(`zirospace_updates_${locale}`)
       .delete()
       .eq('id', id);
 
