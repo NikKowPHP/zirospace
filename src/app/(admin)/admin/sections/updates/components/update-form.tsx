@@ -19,7 +19,7 @@ interface UpdateFormProps {
 const UpdateForm: React.FC<UpdateFormProps> = ({ update, locale, onSubmit, onCancel, loading }) => {
   const [title, setTitle] = useState(update?.title || '');
   const [slug, setSlug] = useState(update?.slug || '');
-  const [publishDate, setPublishDate] = useState(update?.publish_date || new Date());
+  const [publishDate, setPublishDate] = useState(update?.publish_date ? new Date(update.publish_date) : new Date());
   const [excerpt, setExcerpt] = useState(update?.excerpt || '');
   const [content, setContent] = useState(update?.content_html || '');
   const [imageUrl, setImageUrl] = useState(update?.image_url || '');
