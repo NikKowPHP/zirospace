@@ -1,7 +1,7 @@
 import { Update } from "@/domain/models/update.model";
 
 export interface IUpdatesRepository {
-  getUpdates(): Promise<Update[]>;
+  getUpdates(locale: string): Promise<Update[]>;
   getUpdateBySlug(slug: string): Promise<Update | null>;
   getUpdateById(id: string): Promise<Update | null>;
   createUpdate(update: Update): Promise<Update>;

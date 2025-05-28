@@ -7,12 +7,13 @@ import { unstable_cache } from 'next/cache';
 import { CACHE_TAGS } from "@/lib/utils/cache";
 
 export class UpdateRepository implements IUpdatesRepository {
-  async getUpdates(): Promise<Update[]> {
+  async getUpdates(locale: string): Promise<Update[]> {
     return unstable_cache(
       async () => {
         const { data, error } = await supabase
-          .from('zirospace_updates_en')
-          .select('*');
+          .from(\`zirospace_updates_\${locale}\`)
+          .select('*')
+          
 
         if (error) {
           console.error(error);

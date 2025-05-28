@@ -1,63 +1,84 @@
 Hello @roo,
+We are adopting a more direct approach for task execution. Your primary role is to implement the provided tasks based on the detailed specifications I will give you.
+Your Task Processing Model:
+When I provide you with a task (e.g., "Task X.Y: Implement Feature Z"), typically from a Markdown list:
+Acknowledge Receipt (Briefly): A simple "Understood. Starting Task X.Y: Implement Feature Z." is sufficient.
+Direct Implementation:
+The task I provide will contain:
+A clear Objective.
+A list of Affected Files/Components that you will need to create or modify.
+Specific Implementation Steps (often as sub-task checkboxes or numbered lists within the Markdown).
+Your primary job is to directly translate these steps into code within the specified files.
+Assume the provided plan is complete and correct. The detailed breakdown, component identification, and implementation strategy are embedded within the task description I give you.
+Code Generation:
+Generate the necessary code for each affected file and implementation step as outlined.
+Work through any sub-task checkboxes ([ ]) provided within the main task, aiming to complete them.
+Minimize Questions & Pre-Analysis:
+Do not perform extensive pre-analysis.
+Proceed directly to implementation.
+Only ask a question if a task description contains a critical ambiguity or a direct contradiction that makes implementation impossible.
+Reporting Completion & Updating Task List:
+Once all implementation steps for the given task are completed, report back.
+State clearly: "Task X.Y: Implement Feature Z - Complete."
+List the primary files you created or significantly modified to complete the task.
+Crucially, if I provided the task(s) as part of a Markdown list in my prompt, you must reproduce the entire Markdown list I just gave you, but with the main checkbox for the completed task marked as [x]. If the task included sub-step checkboxes ([ ]), also mark those as [x] upon their completion.
+Example Interaction:
+Me (Input - I'm providing a "phase" or "chunk" of my TODO list):
+Okay @roo, please work on the account deletion feature. Here's the relevant part of the plan:
 
-I need your assistance in processing and planning the execution of the following TODO list for the "[**User: Insert Project Name Here**]" project.
+- [ ] **Task 2.4: Add User Preferences Screen**
+    *   Objective: Basic screen for future settings.
+- [ ] **Task 2.5: Implement Account Deletion**
+    *   **Objective:** Allow users to delete their account.
+    *   **Affected Flutter Files:**
+        *   Flutter Profile settings UI (e.g., `profile_settings_page.dart`)
+        *   `lib/core/user/user_service.dart`
+        *   `lib/core/auth/supabase_auth_helper.dart` (for client-side sign out)
+    *   **Implementation Steps:**
+        1.  **Add `deleteAccount` to Flutter `UserService`:**
+            *   [ ] Create method: `Future<void> deleteAccount()`.
+            *   [ ] Inside, use `ApiClient` to make a `DELETE` request to `/profile/`.
+        2.  **Implement UI for Account Deletion (Flutter):**
+            *   [ ] Add a "Delete Account" button in `profile_settings_page.dart`.
+            *   [ ] Show a confirmation dialog before proceeding.
+            *   [ ] On confirmation, call `await userService.deleteAccount()`.
+        3.  **Handle Post-Deletion Flow (Flutter):**
+            *   [ ] After a successful `DELETE` API call from `UserService.deleteAccount()`:
+                *   [ ] Call `await _authHelper.signOut()` (from `SupabaseAuthHelper`).
+                *   [ ] The `onAuthStateChange` listener in `UserProvider` should then handle clearing local app state and navigating to the login screen.
+- [ ] **Task 2.6: Implement Profile Picture Upload**
+    *   Objective: Allow users to upload a profile picture.
 
-**Your Task:**
+@roo (Expected Response after implementing Task 2.5):
+Understood. Starting Task 2.5: Implement Account Deletion.
 
-For each TODO item listed below, please:
+Task 2.5: Implement Account Deletion - Complete.
 
-1.  **Acknowledge & Understand:** Briefly confirm your understanding of the task's objective.
-2.  **Breakdown (if necessary):** If the task is complex, break it down into smaller, manageable sub-steps.
-3.  **Identify Affected Components:** Based on the provided project context (and any general knowledge you have), list the primary files, classes, functions, or modules that you anticipate will need to be created or modified to complete this task.
-4.  **Outline Implementation Approach:** Describe the general strategy or steps you would take to implement the solution. Be specific enough to show a clear path forward. (e.g., "Fetch data from X API endpoint, then transform it by Y, then update Z component in the UI.")
-5.  **Identify Potential Challenges/Dependencies:** Note any potential roadblocks, dependencies on other tasks (either in this list or external), or information you might need clarified.
-6.  **Consider Edge Cases/Testing (Briefly):** Mention 1-2 key edge cases or testing considerations for this task.
-7.  **(Optional) Estimate Relative Effort:** If possible, give a very rough qualitative estimate of effort (e.g., Small, Medium, Large) compared to other tasks in this list.
+Files created/modified:
+- `lib/core/user/user_service.dart` (added deleteAccount method)
+- `lib/ui/profile/profile_settings_page.dart` (added delete account button and dialog)
+- (No changes needed in `supabase_auth_helper.dart` as it was only for calling signOut)
 
-After processing all individual TODOs, please provide:
-
-8.  **Suggested Order of Execution:** If there's a logical or dependent order in which these tasks should be tackled, please suggest it.
-
-
----
-
-**Project Context (Provided by User):**
-
-*   **Project Goal:** [**User: Briefly describe the main goal of the project**]
-*   **Technology Stack (if relevant):** [**User: e.g., Python/Django, React/Node.js, Java/Spring, etc.**]
-*   **Key Architectural Patterns (if relevant):** [**User: e.g., MVC, Microservices, Event-Driven, etc.**]
-*   **Relevant Files/Modules (if known for specific TODOs, otherwise general context):**
-    *   [**User: Provide snippets from an XML context file or list relevant file paths/structures, e.g.:**
-        ```xml
-        <project name="WebApp">
-          <module name="Authentication">
-            <file path="src/auth/service.py">
-              <class name="AuthService">...</class>
-            </file>
-          </module>
-          <module name="Orders">
-            <file path="src/orders/models.py">...</file>
-            <file path="src/orders/api.py">...</file>
-          </module>
-        </project>
-        ```
-        **OR**
-        *   `src/auth/service.py` (handles user login, registration)
-        *   `src/data/database.py` (ORM and database interaction)
-        *   `src/ui/components/UserProfile.jsx`
-    *   **User: You can also refer to specific parts of the context within each TODO item if that's clearer.**]
-*   **Other Important Information:** [**User: e.g., Link to existing codebase repo (if @roo has access), design documents, specific requirements not in TODOs, etc.**]
-
----
-
-**TODO List (Using Markdown Task List Format):**
-
-*(User: Please list your TODO tasks using Markdown task list syntax. Each top-level task should start with `- [ ]`. You can add specific context or relevant files on indented lines below each task if needed. See example below.)*
-
-**Example of how to format your TODOs:**
-```markdown
-- [ ] Implement user registration endpoint
-  Context: This likely involves `AuthService` in `src/auth/service.py` and a new route in `src/routes/auth.py`.
-- [ ] Design database schema for products
-  Context: Needs new tables for `products`, `categories`, `product_variants`. Affects `src/models/product.py`.
-- [ ] Build product listing page UI
+Updated task list from your prompt:
+- [ ] **Task 2.4: Add User Preferences Screen**
+    *   Objective: Basic screen for future settings.
+- [x] **Task 2.5: Implement Account Deletion**
+    *   **Objective:** Allow users to delete their account.
+    *   **Affected Flutter Files:**
+        *   Flutter Profile settings UI (e.g., `profile_settings_page.dart`)
+        *   `lib/core/user/user_service.dart`
+        *   `lib/core/auth/supabase_auth_helper.dart` (for client-side sign out)
+    *   **Implementation Steps:**
+        1.  **Add `deleteAccount` to Flutter `UserService`:**
+            *   [x] Create method: `Future<void> deleteAccount()`.
+            *   [x] Inside, use `ApiClient` to make a `DELETE` request to `/profile/`.
+        2.  **Implement UI for Account Deletion (Flutter):**
+            *   [x] Add a "Delete Account" button in `profile_settings_page.dart`.
+            *   [x] Show a confirmation dialog before proceeding.
+            *   [x] On confirmation, call `await userService.deleteAccount()`.
+        3.  **Handle Post-Deletion Flow (Flutter):**
+            *   [x] After a successful `DELETE` API call from `UserService.deleteAccount()`:
+                *   [x] Call `await _authHelper.signOut()` (from `SupabaseAuthHelper`).
+                *   [x] The `onAuthStateChange` listener in `UserProvider` should then handle clearing local app state and navigating to the login screen.
+- [ ] **Task 2.6: Implement Profile Picture Upload**
+    *   Objective: Allow users to upload a profile picture.
