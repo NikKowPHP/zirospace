@@ -23,7 +23,7 @@ export const generateMetadata = async ({ params: { locale } }: { params: { local
       site: "@zirospace",
       creator: "@zirospace",
     },
-    metadataBase: new URL(`${process.env.NEXT_PUBLIC_BASE_URL}`),
+    metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
     alternates: {
       canonical: `/${locale}/updates`,
       languages: {
@@ -56,7 +56,7 @@ const UpdatesPage = async ({ params: { locale } }: { params: { locale: string } 
         {sortedUpdates.map((update) => (
           <div key={update.id} className="mb-4">
             <h2 className="text-xl font-semibold">{update.title}</h2>
-            <p className="text-gray-600">{update.publish_date?.toLocaleDateString()}</p>
+            <p className="text-gray-600">{update.publish_date ? new Date(update.publish_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : ''}</p>
             {update.image_url && <img src={update.image_url} alt={update.title} className="mt-2" />}
             <div className="mt-2" dangerouslySetInnerHTML={{ __html: update.content_html || "" }} />
           </div>
