@@ -1,13 +1,13 @@
 import { IUpdatesRepository } from "@/lib/interfaces/updatesRepository.interface";
+import sqlite3 from 'sqlite3';
 import { Update } from "@/domain/models/update.model";
 import { SqlLiteAdapter } from "@/lib/repositories/adapters/sqllite.adapter";
 import { UpdateMapper } from "@/infrastructure/mappers/update.mapper";
-import 
 export class UpdateRepositoryLocal implements IUpdatesRepository {
   private db: SqlLiteAdapter<Update, string>;
 
   constructor(locale: string) {
-    this.db = new SqlLiteAdapter<Update, string>(\`updates_\${locale}\`, new sqlite3.Database("./src/lib/data/sql/sqlite.db"));
+    this.db = new SqlLiteAdapter<Update, string>(`updates_${locale}`, new sqlite3.Database("./src/lib/data/sql/sqlite.db"));
   }
 
   async getUpdates(locale: string): Promise<Update[]> {
