@@ -13,8 +13,8 @@ interface UseAdminUpdates {
   loading: boolean;
   error: string | null;
   fetchUpdates: (locale: Locale) => Promise<void>;
-  createUpdate: (data: any, locale: Locale) => Promise<void>;
-  updateUpdate: (id: string, data: any, locale: Locale) => Promise<void>;
+  createUpdate: (data: any, locale: Locale) => Promise<Update>;
+  updateUpdate: (id: string, data: any, locale: Locale) => Promise<Update>;
   deleteUpdate: (id: string, locale: Locale) => Promise<void>;
   getUpdateById: (id: string, locale: Locale) => Promise<Update | undefined>;
 }

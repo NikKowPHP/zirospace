@@ -86,12 +86,12 @@ This document outlines the tasks to refactor the admin panel's state management 
         - Use `toast.promise` for user feedback.
         - Handle initialization with `initialUpdates` if provided by `AdminProvider`.
 
-- [ ] **5.2. Add "Updates" to Admin Navigation**
+- [x] **5.2. Add "Updates" to Admin Navigation**
     - **Task:** Link in admin sidebar.
     - **File:** `src/app/(admin)/admin/sections/layout.tsx`
     - **Action:** Add `Link` to `/admin/sections/updates` (e.g., `Newspaper` icon from Lucide).
 
-- [ ] **5.3. Create Admin Updates Page Structure**
+- [x] **5.3. Create Admin Updates Page Structure**
     - **Task:** Main admin page for Updates.
     - **Directory:** `src/app/(admin)/admin/sections/updates/`
     - **File:** `page.tsx`
