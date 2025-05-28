@@ -1,146 +1,67 @@
-# TODO: Implement Contact Form with Email Sending
+TODO: Fix "updates_undefined" table error in Admin Updates section
+Project: ZIRO
+Estimated Total Time: 0.5 hours for 4b model
+Files Affected: 1 file
 
-This plan outlines the steps to implement a contact form at the end of the landing page. The form will collect user input (Name, Email, Telephone, Message) and submit it, intended to be processed by a service like Getform.io for email sending.
+Implementation Plan
 
-## Phase 1: Basic Form Structure (Frontend)
+Phase 1: Stricter Locale Validation in API Route
+File: `./src/app/api/admin/updates/route.ts`
+- [ ] **Modify GET request handler for robust locale validation**
+    - **Location**: Inside the `GET` function in `./src/app/api/admin/updates/route.ts`, around line 24.
+    - **Current Code Snippet (approximate context):**
+      ```typescript
+      export async function GET(request: NextRequest) {
+        const { searchParams } = new URL(request.url);
+        const locale = searchParams.get('locale');
 
--[x] Task 1.1: Identify Target Component and Add Basic HTML Form Structure
-Objective: Create the fundamental HTML elements for the form.
-File to Modify: src/components/sections/contact-form/contact-form.tsx
-Implementation Steps:
-[x] Wrap the form elements in a <form> tag.
-[x] Add an <input type="text"> for "Name".
-[x] Add an <input type="email"> for "Email".
-[x] Add an <input type="tel"> for "Telephone".
-[x] Add a <textarea> for "Message".
-[x] Add a <button type="submit"> for "Submit".
+        if (!locale) { // Current check
+          return NextResponse.json({ error: 'Locale is required' }, { status: 400 });
+        }
+        // ...
+      }
+      ```
+    - **Action**: Replace the existing `if (!locale)` check with a more comprehensive validation to ensure `locale` is strictly "en" or "pl".
+    - **New Code Snippet:**
+      ```typescript
+      export async function GET(request: NextRequest) {
+        const { searchParams } = new URL(request.url);
+        const locale = searchParams.get('locale');
 
-- [x] **Task 1.2: Add Labels for Form Fields**
-    *   **Objective:** Provide accessible labels for each form input.
-    *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [x] Add a `<label htmlFor="name">` for the Name input.
-        - [x] Add a `<label htmlFor="email">` for the Email input.
-        - [x] Add a `<label htmlFor="telephone">` for the Telephone input.
-        - [x] Add a `<label htmlFor="message">` for the Message textarea.
+        if (!locale || (locale !== 'en' && locale !== 'pl')) { // Enhanced validation
+          return NextResponse.json({ error: 'Locale is required and must be "en" or "pl"' }, { status: 400 });
+        }
+        // ... rest of the function
+      }
+      ```
+    - **Expected Outcome**: The API endpoint `/api/admin/updates` will now only proceed if the `locale` query parameter is explicitly "en" or "pl". Any other value (including missing, empty, or "undefined" string) will result in a 400 error. This prevents `UpdateRepositoryLocal` from being initialized with an invalid locale string that could lead to table name `updates_undefined`.
+    - **Verification**:
+        1. After applying the change, try accessing `/api/admin/updates` (no locale) -> Should see 400 error.
+        2. Try `/api/admin/updates?locale=de` -> Should see 400 error.
+        3. Try `/api/admin/updates?locale=undefined` -> Should see 400 error.
+        4. Try `/api/admin/updates?locale=en` -> Should proceed (may still error if `updates_en` table is missing, but not with `updates_undefined`).
 
-- [x] **Task 1.3: Apply Basic Styling for Form Layout**
-    *   **Objective:** Arrange form elements using Tailwind CSS for initial layout.
-    *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [x] Style the main `<form>` container to manage the vertical arrangement of field groups (label + input). Use flex column and gap.
-        - [x] Style each field group (div containing label and input/textarea) for proper spacing.
+Phase 2: Testing Admin Updates Page
+File: (Manual testing via browser)
+- [ ] **Navigate to the Admin Updates page** at `/admin/sections/updates`.
+    - **Action**: Open this page in your browser after the code change.
+    - **Expected Outcome**: The page should load without the "SQLITE_ERROR: no such table: updates_undefined" error.
+    - **Verification**: The error message related to `updates_undefined` should no longer be present. The page might show "No updates" or a different error if the actual `updates_en` or `updates_pl` tables are missing in `sqlite.db`, which would be a separate (but valid) state.
 
-- [x] **Task 1.4: Style Input Fields and Textarea**
-    *   **Objective:** Apply consistent styling to all input fields and the textarea.
-    *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [x] Apply Tailwind classes for padding (e.g., `px-4 py-2`), borders (e.g., `border rounded-md`), width (e.g., `w-full`), and focus states (e.g., `focus:outline-none focus:ring-1 focus:ring-blue-600`) to all `<input>` elements.
-        - [x] Apply similar Tailwind classes to the `<textarea>`.
+- [ ] **Test locale switching (EN/PL tabs)** on the Admin Updates page.
+    - **Action**: Click the "EN" and "PL" tabs.
+    - **Expected Outcome**: Switching locales should attempt to load data for that locale.
+    - **Verification**: No `updates_undefined` error. If data exists for `updates_en` and `updates_pl` in the local SQLite database, it should be displayed. If tables are missing, errors like "no such table: updates_en" are acceptable as they point to a data/schema issue, not the `undefined` locale issue.
 
-- [x] **Task 1.5: Style the Submit Button**
-    *   **Objective:** Style the submit button to match the primary action button style.
-    *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [x] Apply Tailwind classes for background color (e.g., `bg-primary`), text color (e.g., `text-white`), padding (e.g., `px-4 py-2`), rounded corners (e.g., `rounded-md`), and full width (e.g., `w-full`).
-        - [x] Use the existing `Button` component from `src/components/ui/button/button.tsx` if appropriate, configuring its variant and size.
+Validation Checklist
+- [ ] The `GET` handler in `./src/app/api/admin/updates/route.ts` now contains the stricter locale validation: `if (!locale || (locale !== 'en' && locale !== 'pl'))`.
+- [ ] The application compiles successfully after the change.
+- [ ] The Admin Updates page (`/admin/sections/updates`) loads without the specific "updates_undefined" SQLite error.
+- [ ] Locale switching on the Admin Updates page functions and attempts to load data for the selected locale, without the "updates_undefined" error.
 
-## Phase 2: Internationalization (i18n)
-
-- [x] **Task 2.1: Add Translation Keys in English**
-    *   **Objective:** Define English translations for all form-related text.
-    *   **File to Modify:** `src/messages/en.json`
-    *   **Implementation Steps:**
-        - [x] Add a new top-level key, e.g., `"contactUsFormSection"`.
-        - [x] Inside `"contactUsFormSection"`, add keys for:
-            - `title`: "Start Your Digital Health Journey with Us"
-            - `name`: "Name" (for label and placeholder)
-            - `email`: "Email" (for label and placeholder)
-            - `telephone`: "Telephone" (for label and placeholder)
-            - `message`: "Message" (for label and placeholder)
-            - `submit`: "Submit" (for button text)
-
-- [x] **Task 2.2: Add Translation Keys in Polish**
-    *   **Objective:** Define Polish translations for all form-related text.
-    *   **File to Modify:** `src/messages/pl.json`
-    *   **Implementation Steps:**
-        - [x] Add a new top-level key, e.g., `"contactUsFormSection"`.
-        - [x] Inside `"contactUsFormSection"`, add Polish translations corresponding to the English keys from Task 2.1.
-
-- [x] **Task 2.3: Implement `useTranslations` in the Form Component**
-    *   **Objective:** Use the i18n hook to display translated text.
-    *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [x] Import `useTranslations` from `next-intl`.
-        - [x] Initialize `const t = useTranslations('contactUsFormSection');`.
-        - [x] Replace static text for the section title with `t('title')`.
-        - [x] Replace static text for labels with `t('name')`, `t('email')`, etc.
-        - [x] Replace static text for the submit button with `t('submit')`.
-
-- [x] **Task 2.4: Add Placeholder Text and Internationalize Them**
-    *   **Objective:** Add placeholder attributes to input fields and make them translatable.
-    *   **Files to Modify:** `src/messages/en.json`, `src/messages/pl.json`, `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [x] In `en.json` (under `contactUsFormSection`), add placeholder keys: e.g., `namePlaceholder`, `emailPlaceholder`, etc.
-        - [x] In `pl.json`, add corresponding Polish placeholder keys.
-        - [x] In `contact-form.tsx`, set the `placeholder` attribute of each input/textarea using `t('keyPlaceholder')`.
-
-## Phase 3: Form Submission Setup (Getform.io)
-
-- [x] **Task 3.1: (User Task) Create Getform.io Account and Endpoint**
-    *   **Objective:** User needs to manually create a Getform.io account and obtain their unique form endpoint URL.
-    *   **Action:** This step is for the user to perform outside of AI interaction. The AI should note this dependency.
-    *   **Output:** User provides the Getform.io endpoint URL.
-    https://getform.io/f/akknypoa
-
-
-- [ ] **Task 3.2: Configure HTML Form for Getform.io Submission**
-    *   **Objective:** Set the form's `action`, `method`, and `enctype` attributes for Getform.io.
-    *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [ ] Set the `<form>` `action` attribute to the Getform.io endpoint URL (use a placeholder like `"YOUR_GETFORM_ENDPOINT_URL"` initially, to be replaced by the user).
-        - [ ] Set the `<form>` `method` attribute to `POST`.
-        - [ ] Set the `<form>` `enctype` attribute to `multipart/form-data`.
-
-        https://getform.io/f/akknypoa
-
-- [x] **Task 3.3: Add `name` Attributes to Form Input Fields**
-    *   **Objective:** Ensure each form field has a `name` attribute so its data is included in the submission.
-    *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [x] Add `name="name"` to the Name input.
-        - [x] Add `name="email"` to the Email input.
-        - [x] Add `name="telephone"` to the Telephone input.
-        - [x] Add `name="message"` to the Message textarea.
-
-## Phase 4: Styling and Layout Refinements (Matching Screenshot)
-
-- [x] **Task 4.4: Refine Overall Form Section Styling**
-    *   **Objective:** Ensure the entire contact form section matches the screenshot's background color and padding.
-    *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [x] Apply background color (e.g., `bg-gray-100` or similar).
-        - [x] Apply padding (e.g., `py-12 px-6 sm:py-16 sm:px-8`).
-        - [x] Apply rounded corners if the section container has them (e.g., `rounded-lg`).
-        - [x] Ensure `max-w-` and `mx-auto` are used appropriately for centering.
-
-## Phase 5: Final Touches and Testing
-
-- [x] **Task 5.1: Add `required` Attributes to Form Fields**
-    *   **Objective:** Mark essential fields as required for basic client-side validation.
-    *   **File to Modify:** `src/components/sections/contact-form/contact-form.tsx`
-    *   **Implementation Steps:**
-        - [x] Add the `required` attribute to the Name input.
-        - [x] Add the `required` attribute to the Email input.
-        - [x] Add the `required` attribute to the Message textarea.
-        - (Telephone can be optional or required based on preference).
-
-- [ ] **Task 5.2: (User Task) Test Form Submission with Getform.io**
-    *   **Objective:** User verifies that form submissions are correctly received in their Getform.io dashboard.
-    *   **Action:** User fills out and submits the form on the live/dev site and checks Getform.io.
-
-- [x] **Task 5.3: Review Responsiveness**
-    *   **Objective:** Ensure the contact form section displays correctly on various screen sizes (mobile, tablet, desktop).
-    *   **Implementation Steps:**
-        - [x] Test the layout on different viewport widths.
-        - [x] The form is usable and readable on small screens.
+Ready for Implementation
+This todo list is optimized for 4b AI models. Each task is:
+✅ Self-contained and specific
+✅ Includes clear validation criteria
+✅ References exact file locations
+✅ Estimated at 10-15 minutes completion time

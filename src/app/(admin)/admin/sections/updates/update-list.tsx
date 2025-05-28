@@ -29,7 +29,7 @@ const UpdateList: React.FC<UpdateListProps> = ({ updates, locale }) => {
             <tr key={update.id}>
               <td>{update.title}</td>
               <td>{update.slug}</td>
-              <td>{update.publish_date.toLocaleDateString()}</td>
+              <td>{update.publish_date ? new Date(update.publish_date).toLocaleDateString() : ''}</td>
               <td>{update.is_published ? 'Published' : 'Draft'}</td>
               <td>
                 <Link href={`/admin/sections/updates/edit/${update.id}`}>Edit</Link>
