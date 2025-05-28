@@ -117,7 +117,7 @@ This document outlines the tasks to refactor the admin panel's state management 
         - Uses `useAdminUpdates()` to get data (`updates[activeLocale]`) and action handlers (`deleteUpdate`).
         - `loading` state from `useAdminUpdates()` to disable buttons during operations.
 
-- [ ] **5.6. Create "Create Update" Page**
+- [x] **5.6. Create "Create Update" Page**
     - **Task:** UI for adding new updates.
     - **Directory:** `src/app/(admin)/admin/sections/updates/create/`
     - **File:** `page.tsx`
@@ -137,12 +137,12 @@ This document outlines the tasks to refactor the admin panel's state management 
 
 ## Phase 6: Public-Facing Updates Page (Single Scrollable Page)
 
-- [ ] **6.1. Create Public Route for Updates Page**
+- [x] **6.1. Create Public Route for Updates Page**
     - **Task:** Define the main public URL.
     - **Directory:** `src/app/[locale]/updates/`
     - **File:** `page.tsx`
 
-- [ ] **6.2. Fetch and Display All Updates Sequentially**
+- [x] **6.2. Fetch and Display All Updates Sequentially**
     - **Task:** Implement the single-page scrollable view for updates.
     - **File:** `src/app/[locale]/updates/page.tsx`
     - **Implementation:**
@@ -152,19 +152,19 @@ This document outlines the tasks to refactor the admin panel's state management 
         - **Each Update Item Display:** Title, Publish Date, Featured Image (if `image_url`), Full `content_html` (safely rendered).
         - **Styling:** Design for a continuous scroll experience with clear visual separation. Ensure responsiveness.
 
-- [ ] **6.3. Implement `generateMetadata` for the `/updates` Page**
+- [x] **6.3. Implement `generateMetadata` for the `/updates` Page**
     - **Task:** Add SEO metadata for the single `/updates` page.
     - **File:** `src/app/[locale]/updates/page.tsx`
     - **Content:** General title (e.g., "Updates | Company Name"), overall description for the updates section.
     - **JSON-LD:** `CollectionPage` schema, possibly with `ItemList` or individual `Article`/`NewsArticle` schemas for each item.
 
-- [ ] **6.4. Add "Updates" to Main Navigation (Optional)**
+- [x] **6.4. Add "Updates" to Main Navigation (Optional)**
     - **Task:** Link to `/updates` from the main navigation.
     - **Files:** `src/config/navigation.ts`, `src/components/layout/navbar/navbar.tsx`, `messages/en.json`, `messages/pl.json`.
 
 ## Phase 7: Styling, Refinements, and Testing
 
-- [ ] **7.1. CSS Styling for Public Updates Page**
+- [x] **7.1. CSS Styling for Public Updates Page**
     - **Task:** Apply styling for the scrollable public updates page.
     - **Focus:** Readability, visual hierarchy, item separation, responsiveness.
 
@@ -177,6 +177,6 @@ This document outlines the tasks to refactor the admin panel's state management 
 - [ ] **7.4. Comprehensive Testing**
     - **Task:** Test admin CRUD, public display (content, order, status), responsiveness, SEO.
 
-- [ ] **7.5. Loading States for Public Updates Page**
+- [x] **7.5. Loading States for Public Updates Page**
     - **Task:** Implement a loading state (e.g., skeleton loaders) for the `/updates` page.
     - **File:** `src/app/[locale]/updates/loading.tsx`

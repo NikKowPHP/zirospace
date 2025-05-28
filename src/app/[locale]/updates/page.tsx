@@ -51,22 +51,26 @@ const UpdatesPage = async ({ params: { locale } }: { params: { locale: string } 
     });
 
     return (
-      <div>
-        <h1>Updates</h1>
+      <div className="container mx-auto py-8">
+        <h1 className="text-2xl font-bold mb-4">Updates</h1>
         {sortedUpdates.map((update) => (
-          <div key={update.id}>
-            <h2>{update.title}</h2>
-            <p>{update.publish_date?.toLocaleDateString()}</p>
-            {update.image_url && <img src={update.image_url} alt={update.title} />}
-            <div dangerouslySetInnerHTML={{ __html: update.content_html || "" }} />
+          <div key={update.id} className="mb-4">
+            <h2 className="text-xl font-semibold">{update.title}</h2>
+            <p className="text-gray-600">{update.publish_date?.toLocaleDateString()}</p>
+            {update.image_url && <img src={update.image_url} alt={update.title} className="mt-2" />}
+            <div className="mt-2" dangerouslySetInnerHTML={{ __html: update.content_html || "" }} />
           </div>
         ))}
       </div>
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching updates:", error);
-    notFound();
-    return null;
+    return (
+      <div className="container mx-auto py-8">
+        <h1 className="text-2xl font-bold mb-4">Updates</h1>
+        <p className="text-red-500">Error: {error.message || "Failed to load updates"}</p>
+      </div>
+    );
   }
 };
 
