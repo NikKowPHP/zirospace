@@ -116,6 +116,7 @@ export const useAdminUpdates = (initialUpdates?: Record<Locale, Update[]>): UseA
   const getUpdateById = useCallback(
     async (id: string, locale: Locale): Promise<Update | undefined> => {
       const currentUpdates = updates[locale] || [];
+      
       return currentUpdates.find((update) => update.id === id);
     },
     [updates]

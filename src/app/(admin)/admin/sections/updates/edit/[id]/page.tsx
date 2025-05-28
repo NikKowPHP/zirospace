@@ -10,7 +10,7 @@ import { Update } from '@/domain/models/update.model';
 
 const EditUpdatePage = () => {
   const [activeLocale, setActiveLocale] = useState<Locale>('en');
-  const { getUpdateById, updateUpdate, loading } = useAdminUpdates();
+  const { getUpdateById, updateUpdate, loading, fetchUpdates } = useAdminUpdates();
   const [update, setUpdate] = useState<Update | null>(null);
   const router = useRouter();
   const params = useParams();
@@ -26,6 +26,7 @@ const EditUpdatePage = () => {
     };
 
     if (updateId && activeLocale) {
+      fetchUpdates(activeLocale); // Ensure updates are fetched for the active locale
       fetchUpdate();
     }
   }, [getUpdateById, updateId, activeLocale]);
