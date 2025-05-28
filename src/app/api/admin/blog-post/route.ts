@@ -48,6 +48,8 @@ export async function GET(request: NextRequest) {
     if (!blogPost) {
       return NextResponse.json({ error: 'Blog post not found' }, { status: 404 })
     }
+
+     logger.log('RESPONSE FROM ROUTE' + JSON.stringify(blogPost));
     return NextResponse.json(blogPost)
   } catch (error) {
     logger.error(`Error fetching blog post: ${error}`)

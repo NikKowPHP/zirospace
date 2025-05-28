@@ -8,6 +8,7 @@ export default async function BlogPostsAdminPage() {
     blogPostService.getBlogPosts('en'),
     blogPostService.getBlogPosts('pl')
   ])
+  console.log(`all blog posts ${JSON.stringify(enBlogPosts)}`)
 
   return (
     <AdminProvider initialBlogPosts={{ en: enBlogPosts, pl: plBlogPosts }}>

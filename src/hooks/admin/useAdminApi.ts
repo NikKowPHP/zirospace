@@ -1,3 +1,4 @@
+import logger from '@/lib/logger';
 import { useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
@@ -28,6 +29,7 @@ const useAdminApi = () => {
         }
 
         const response = await fetch(url, options);
+        
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({ error: 'API call failed' }));
@@ -44,6 +46,7 @@ const useAdminApi = () => {
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : errorMessage || 'An unexpected error occurred';
         setError(message);
+        logger.error(err);
         toast.error(message, { id: 'apiCall' });
         throw err; // Re-throw to allow component-level handling
       } finally {
