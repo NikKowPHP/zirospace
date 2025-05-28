@@ -30,7 +30,13 @@ export const useAdminUpdates = (initialUpdates?: Record<Locale, Update[]>): UseA
     setError(null);
     try {
       const response = await adminApi.callApi<Update[]>(`/api/admin/updates?locale=${locale}`, {});
-      setUpdates((prevUpdates) => ({ ...prevUpdates, [locale]: response }));
+      setUpdates((prevUpdates) => {
+        // Only update if the data has actually changed to prevent infinite re-renders
+        if (JSON.stringify(prevUpdates[locale]) === JSON.stringify(response)) {
+          return prevUpdates;
+        }
+        return { ...prevUpdates, [locale]: response };
+      });
     } catch (e: any) {
       setError(e.message || 'Failed to fetch updates');
     } finally {
