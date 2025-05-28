@@ -75,7 +75,7 @@ This document outlines the tasks to refactor the admin panel's state management 
 
 ## Phase 5: Implement "Updates" Feature - Admin Panel UI (Using New Hooks)
 
-- [ ] **5.1. Create `useAdminUpdates` Hook**
+- [x] **5.1. Create `useAdminUpdates` Hook**
     - **Task:** This hook will manage the state and CRUD operations for "Updates", following the pattern established in Phase 1.
     - **File:** `src/hooks/admin/useAdminUpdates.ts`
     - **Content:**
