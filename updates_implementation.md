@@ -100,7 +100,7 @@ This document outlines the tasks to refactor the admin panel's state management 
         - `AdminProvider` (if still used for initial data) might provide `initialUpdates` fetched server-side.
         - Render `UpdateList` component.
 
-- [ ] **5.4. Create `UpdateForm` Component**
+- [x] **5.4. Create `UpdateForm` Component**
     - **Task:** Reusable form for create/edit.
     - **File:** `src/app/(admin)/admin/sections/updates/components/update-form.tsx`
     - **Fields:** Title, Slug (auto-generated or manual), Publish Date, Excerpt (Textarea), Content (Quill RTE), Image URL, Image Alt, Is Published (Switch), Order Index.
