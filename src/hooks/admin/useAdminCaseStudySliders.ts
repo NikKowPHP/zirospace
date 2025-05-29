@@ -55,12 +55,13 @@ const useAdminCaseStudySliders = ({ initialCaseStudySliders }: UseAdminCaseStudy
   const updateCaseStudySlider = useCallback(
     async (id: string, data: Partial<CaseStudySlider>) => {
       try {
+        
         const updatedCaseStudySlider: CaseStudySlider = await callApi(
           `/api/admin/case-study-sliders/${id}`,
           {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data }),
+            body: JSON.stringify({ data, id }),
           },
           {
             loadingMessage: 'Updating case study slider...',
