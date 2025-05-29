@@ -109,7 +109,7 @@ export function Footer() {
               </div>
 
               {/* Footer video */}
-              <FooterVideo />
+              {/* <FooterVideo /> */}
 
               {/* Company Description */}
               <div className="space-y-4">

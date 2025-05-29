@@ -80,7 +80,7 @@ export const FooterVideo = () => {
     // AnimatePresence handles the mounting/unmounting animation
     <AnimatePresence>
       <motion.section
-        className="  md:hidden flex items-center justify-center  "
+        className="   flex items-center justify-center  "
         variants={videoVariants}
         initial="hidden"
         animate="visible"

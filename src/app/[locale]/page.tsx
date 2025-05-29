@@ -11,7 +11,7 @@ import {
   Philosophy,
   Faq,
   // StayInformed,
-  FloatVideo,
+  // FloatVideo,
   TestimonialsSection,
   BannerModalWrapper,
   ContactFormSection,
@@ -124,9 +124,9 @@ export default async function HomePage({ params }: HomePageProps) {
               </Suspense>
 
               {/* FloatVideo is also inside VisibilityManager so it can access context */}
-              <Suspense fallback={null}>
+              {/* <Suspense fallback={null}>
                 <FloatVideo />
-              </Suspense>
+              </Suspense> */}
 
               <Suspense fallback={null}>
                 <BannerModalWrapper />

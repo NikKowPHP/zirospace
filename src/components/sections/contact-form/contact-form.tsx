@@ -32,7 +32,7 @@ export const ContactFormSection = async () => {
 
           <div className='w-full sm:w-1/2' >
             {/* TODO: youtube section */}
-            <div className=' h-[300px]'><FooterVideo /></div>
+            <div className=' '><FooterVideo /></div>
             <h1 className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-black mb-8">
 
               {t('title')}
