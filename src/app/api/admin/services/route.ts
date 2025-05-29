@@ -51,6 +51,10 @@ const serviceIdLocaleSchema = z.object({
   locale: z.string(),
 });
 
+const serviceLocaleSchema = z.object({
+  locale: z.string(),
+});
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
@@ -91,22 +95,38 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const id = searchParams.get('id');
     const locale = searchParams.get('locale');
 
-    const validatedParams = serviceIdLocaleSchema.safeParse({ id, locale });
+    if (id) {
+      const validatedParams = serviceIdLocaleSchema.safeParse({ id, locale });
 
-    if (!validatedParams.success) {
-      logger.error('Validation error fetching service:', validatedParams.error.issues);
-      return NextResponse.json({ error: 'Validation error', details: validatedParams.error.issues }, { status: 400 });
+      if (!validatedParams.success) {
+        logger.error('Validation error fetching service by ID:', validatedParams.error.issues);
+        return NextResponse.json({ error: 'Validation error', details: validatedParams.error.issues }, { status: 400 });
+      }
+
+      const { id: validatedId, locale: validatedLocale } = validatedParams.data;
+
+      console.log('processing service get request by ID', { id: validatedId, locale: validatedLocale });
+      logger.log(`Fetching service by ID: ${validatedId} ${validatedLocale}`);
+      const service = await serviceService.getServiceById(validatedId, validatedLocale);
+      if (!service) {
+        return NextResponse.json({ error: 'Service not found' }, { status: 404 });
+      }
+      return NextResponse.json(service);
+    } else {
+      const validatedParams = serviceLocaleSchema.safeParse({ locale });
+
+      if (!validatedParams.success) {
+        logger.error('Validation error fetching all services:', validatedParams.error.issues);
+        return NextResponse.json({ error: 'Validation error', details: validatedParams.error.issues }, { status: 400 });
+      }
+
+      const { locale: validatedLocale } = validatedParams.data;
+
+      console.log('processing service get request for all services', { locale: validatedLocale });
+      logger.log(`Fetching all services for locale: ${validatedLocale}`);
+      const services = await serviceService.getServices(validatedLocale);
+      return NextResponse.json(services);
     }
-
-    const { id: validatedId, locale: validatedLocale } = validatedParams.data;
-
-    console.log('processing service get request', { id: validatedId, locale: validatedLocale });
-    logger.log(`Fetching service: ${validatedId} ${validatedLocale}`);
-    const service = await serviceService.getServiceById(validatedId, validatedLocale);
-    if (!service) {
-      return NextResponse.json({ error: 'Service not found' }, { status: 404 });
-    }
-    return NextResponse.json(service);
   } catch (error: unknown) {
     logger.error(`Error fetching service: ${error}`);
     return NextResponse.json({ error: 'Failed to fetch service' }, { status: 500 });
