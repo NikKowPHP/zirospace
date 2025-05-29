@@ -36,12 +36,22 @@ const putServiceSchema = z.object({
     excerpt: z.string().nullable().optional(),
     imageUrl: z.string().nullable().optional(), // Matches Service model for clarity
     imageAlt: z.string().nullable().optional(), // Matches Service model for clarity
-    isPublished: z.boolean().optional(),
+    isPublished: z.preprocess((val) => {
+      if (typeof val === 'string') {
+        return val === 'true';
+      }
+      if (typeof val === 'number') {
+        return val === 1;
+      }
+      return val;
+    }, z.boolean().default(false)).optional(),
     metaTitle: z.string().nullable().optional(),
     metaDescription: z.string().nullable().optional(),
     keywords: z.array(z.string()).optional(),
     orderIndex: z.number().optional(),
   }),
+  id: z.string(),
+  locale: z.string()
   // locale is expected as a query parameter for PUT
 });
 
@@ -135,9 +145,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 export async function PUT(request: NextRequest): Promise<NextResponse> {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const id = searchParams.get('id');
-    const locale = searchParams.get('locale');
+    const body = await request.json();
+    body.data.isPublished
+    console.log(`parsed body ${body}`)
+    const validatedBody = putServiceSchema.parse(body);
+    const { data: domainData, id, locale } = validatedBody;
 
     if (!id || !locale) {
       return NextResponse.json({ error: 'Missing id or locale' }, { status: 400 });
@@ -145,9 +157,6 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
 
     logger.log(`PUT request received with id=${id}, locale=${locale}`);
 
-    const body = await request.json();
-    const validatedBody = putServiceSchema.parse(body);
-    const { data: domainData } = validatedBody;
 
     logger.log(`data after validation ${JSON.stringify(domainData)}`);
 
@@ -174,18 +183,16 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
 
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const id = searchParams.get('id') as string;
-    const locale = searchParams.get('locale') as string;
 
-    const validatedParams = serviceIdLocaleSchema.safeParse({ id, locale });
+    const body = await request.json();
+    const validatedBody = serviceIdLocaleSchema.safeParse(body);
 
-    if (!validatedParams.success) {
-      logger.error('Validation error deleting service:', validatedParams.error.issues);
-      return NextResponse.json({ error: 'Validation error', details: validatedParams.error.issues }, { status: 400 });
+    if (!validatedBody.success) {
+      logger.error('Validation error deleting service:', validatedBody.error.issues);
+      return NextResponse.json({ error: 'Validation error', details: validatedBody.error.issues }, { status: 400 });
     }
 
-    const { id: validatedId, locale: validatedLocale } = validatedParams.data;
+    const { id: validatedId, locale: validatedLocale } = validatedBody.data;
 
     logger.log(`Deleting service: ${validatedId} for locale: ${validatedLocale} `);
     const deletedService = await serviceService.deleteService(validatedId, validatedLocale);

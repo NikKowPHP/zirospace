@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { LayoutDashboard, Images, SlidersHorizontal, MessageCircle, FileText, Image as ImageIcon, Youtube, Briefcase } from 'lucide-react'
+import { LayoutDashboard, Images, SlidersHorizontal, MessageCircle, FileText, Image as ImageIcon, Youtube,  } from 'lucide-react'
 import { AdminProvider } from '@/contexts/admin-context'
 
 export default async function AdminLayout({
@@ -67,15 +67,7 @@ export default async function AdminLayout({
             <FileText className="w-5 h-5" />
             <span className="font-medium">Blog Posts</span>
           </Link>
-
-          <Link
-            href="/admin/sections/services"
-            className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <Briefcase className="w-5 h-5" />
-            <span className="font-medium">Services</span>
-          </Link>
-
+        
           <Link 
             href="/admin/sections/services" 
             className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"

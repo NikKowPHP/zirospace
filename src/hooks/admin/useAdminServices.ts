@@ -77,11 +77,11 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
     async (id: string, data: Partial<Service>, locale: Locale) => {
       try {
         const updatedService: Service = await callApi(
-          `/api/admin/services/${id}`,
+          `/api/admin/services`,
           {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data, locale }),
+            body: JSON.stringify({ data, locale, id }),
           },
           {
             loadingMessage: 'Updating service...',
@@ -106,11 +106,11 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
     async (id: string, locale: Locale) => {
       try {
         await callApi(
-          `/api/admin/services/${id}`,
+          `/api/admin/services`,
           {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ locale }),
+            body: JSON.stringify({ locale, id }),
           },
           {
             loadingMessage: 'Deleting service...',

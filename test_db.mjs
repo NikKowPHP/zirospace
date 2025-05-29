@@ -33,33 +33,35 @@ async function testQueries() {
       )
     console.log('Joined Slider Data:', joinedSliderData)
 
+    // Hero Section
+    const heroResults = await db('zirospace_hero_en').select('*')
+    console.log('zirospace_hero_en:', heroResults)
+
     // Testimonials
     const testimonialsEnResults = await db('testimonials_en').select('*')
     console.log('testimonials_en:', testimonialsEnResults)
 
-    const testimonialsPlResults = await db('testimonials_pl').select('*')
-    console.log('testimonials_pl:', testimonialsPlResults)
+    // const testimonialsPlResults = await db('testimonials_pl').select('*')
+    // console.log('testimonials_pl:', testimonialsPlResults)
 
     const blogPostsEnResults = await db('blog_posts_en').select('*')
     console.log('blog_posts_en:', blogPostsEnResults)
 
-    const blogPostsPlResults = await db('blog_posts_pl').select('*')
-    console.log('blog_posts_pl:', blogPostsPlResults)
+    // const blogPostsPlResults = await db('blog_posts_pl').select('*')
+    // console.log('blog_posts_pl:', blogPostsPlResults)
 
     const bannersEnResults = await db('zirospace_banners_en').select('*')
     console.log('zirospace_banners_en:', bannersEnResults)
 
-    const bannersPlResults = await db('zirospace_banners_pl').select('*')
-    console.log('zirospace_banners_pl:', bannersPlResults)
+  
 
     const servicesEnResults = await db('services_en').select('*')
     console.log('services_en:', servicesEnResults)
 
-    const servicesPlResults = await db('services_pl').select('*')
-    console.log('services_pl:', servicesPlResults)
-
+    // const servicesPlResults = await db('services_pl').select('*')
+    // console.log('services_pl:', servicesPlResults)
   } catch (error) {
-    console.error('Error querying database:', error);
+    console.error('Error querying database:', error)
   } finally {
     db.destroy()
   }
