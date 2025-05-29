@@ -49,10 +49,6 @@ const EditUpdatePage = () => {
   return (
     <div>
       <h1>Edit Update</h1>
-      <div>
-        <button onClick={() => setActiveLocale('en')}>EN</button>
-        <button onClick={() => setActiveLocale('pl')}>PL</button>
-      </div>
       <UpdateForm update={update}  onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} />
     </div>
   );

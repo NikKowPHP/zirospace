@@ -52,9 +52,9 @@ export async function PUT(
   try {
     const json = await request.json();
     const result = updateSchema.safeParse(json);
-
-    if (!result.success) {
-      return NextResponse.json(result.error, { status: 400 });
+    if (result.error) {
+      console.error('Update validation failed:', result.error.errors);
+      return NextResponse.json({ errors: result.error.errors }, { status: 400 });
     }
 
     const { publish_date: pubDate, ...updateData } = result.data;

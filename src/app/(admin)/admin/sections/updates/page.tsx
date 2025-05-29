@@ -1,31 +1,19 @@
-'use client';
+import UpdateList from './update-list'
+import { Suspense } from 'react'
+import { AdminProvider } from '@/contexts/admin-context'
 
-import { Locale } from '@/i18n';
-import { useAdminUpdates } from '@/hooks/admin/useAdminUpdates';
-import UpdateList from './update-list';
-import { useEffect, useState } from 'react';
-
-const AdminUpdatesPage = () => {
-  const [activeLocale, setActiveLocale] = useState<Locale>('en');
-  const { updates, loading, error, fetchUpdates } = useAdminUpdates();
-
-  useEffect(() => {
-    fetchUpdates(activeLocale);
-  }, [fetchUpdates, activeLocale]);
-
+export default async function UpdatesAdminPage() {
   return (
-    <div className="bg-white shadow sm:rounded-lg">
-     
-      <div className="mb-4">
-         <h1 className="text-2xl font-bold mb-4">Updates</h1>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => setActiveLocale('en')}>EN</button>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setActiveLocale('pl')}>PL</button>
+    <AdminProvider>
+      <div className="bg-white shadow sm:rounded-lg">
+        <div className="px-4 py-5 sm:p-6">
+          <h2 className="text-2xl font-bold mb-6">Updates Management</h2>
+          <Suspense fallback={<div>Loading...</div>}>
+            <UpdateList />
+          </Suspense>
+        </div>
       </div>
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
-      <UpdateList updates={updates[activeLocale] || []} locale={activeLocale} />
-    </div>
-  );
-};
+    </AdminProvider>
+  )
+}
 
-export default AdminUpdatesPage;
