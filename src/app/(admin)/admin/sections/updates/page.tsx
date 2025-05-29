@@ -14,9 +14,10 @@ const AdminUpdatesPage = () => {
   }, [fetchUpdates, activeLocale]);
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-4">Updates</h1>
+    <div className="bg-white shadow sm:rounded-lg">
+     
       <div className="mb-4">
+         <h1 className="text-2xl font-bold mb-4">Updates</h1>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => setActiveLocale('en')}>EN</button>
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setActiveLocale('pl')}>PL</button>
       </div>
