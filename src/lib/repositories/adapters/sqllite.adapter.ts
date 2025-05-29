@@ -1,6 +1,5 @@
 import { Database } from 'sqlite3';
 import logger from '@/lib/logger';
-import { UpdateDTO } from '@/infrastructure/dto/update.dto';
 
 export interface BaseEntity<ID> {
   id: ID;
@@ -54,7 +53,7 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
    * @returns {Promise<T | null>} - The entity if found, otherwise null.
    * @throws {Error} - If there's a database error during retrieval.
    */
-  async read(id: ID): Promise<UpdateDTO | null> {
+  async read(id: ID): Promise<T | null> {
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM "${this.tableName}"
@@ -134,13 +133,13 @@ export class SqlLiteAdapter<T extends BaseEntity<ID>, ID> {
    * @returns {Promise<T[]>} - An array of all entities in the table.
    * @throws {Error} - If there's a database error during listing.
    */
-  async list(...args: any[]): Promise<UpdateDTO[]> {
+  async list(...args: any[]): Promise<T[]> {
     return new Promise((resolve, reject) => {
       const query = `
         SELECT * FROM "${this.tableName}";
       `;
 
-      this.db.all(query, args, (err, rows: UpdateDTO[]) => {
+      this.db.all(query, args, (err, rows: T[]) => {
         if (err) {
           logger.log(`Error listing entities from table "${this.tableName}":`, err);
           reject(new Error(`Database error listing entities from table "${this.tableName}": ${err.message || 'Unknown error'}`));

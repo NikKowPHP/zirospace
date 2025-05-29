@@ -27,7 +27,7 @@ const CreateUpdatePage = () => {
         <button onClick={() => setActiveLocale('en')}>EN</button>
         <button onClick={() => setActiveLocale('pl')}>PL</button>
       </div>
-      <UpdateForm locale={activeLocale} onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} />
+      <UpdateForm  onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} />
     </div>
   );
 };

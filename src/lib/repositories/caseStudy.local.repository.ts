@@ -8,8 +8,6 @@ import { Database } from 'sqlite3';
 import { getDatabaseFilePath } from '@/lib/config/database.config';
 import logger from '@/lib/logger'
 import { OrderUpdate } from '../services/case-study.service';
-const dbPath = getDatabaseFilePath();
-const db = new Database(dbPath);
 
 export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> implements ICaseStudyRepository {
   protected db: Database;

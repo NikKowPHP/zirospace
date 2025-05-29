@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { footerConfig } from '@/config/footer'
 import { usePathname, useRouter } from 'next/navigation'
 import { siteUrl } from '@/config/constants'
-import { FooterVideo } from '@/components/sections/float-video/footer-video'
 export function Footer() {
   const t = useTranslations('footer')
   const pathname = usePathname()

@@ -3,6 +3,7 @@ import { UpdateService } from '@/lib/services/update.service';
 import { revalidateTag } from 'next/cache';
 import { CACHE_TAGS } from '@/lib/utils/cache';
 import { z } from 'zod';
+import logger from '@/lib/logger';
 
 const updateSchema = z.object({
   title: z.string().min(3),
@@ -52,12 +53,11 @@ export async function POST(request: NextRequest) {
     }
 
     const { publish_date, ...rest } = result.data;
+    logger.log(rest)
     const { publish_date: pubDate, ...updateData } = result.data;
     const update = await updateService.createUpdate({
       ...updateData,
       publish_date: new Date(pubDate),
-      created_at: new Date(updateData.created_at),
-      updated_at: new Date(updateData.updated_at),
       content_html: updateData.content_html ?? null,
       excerpt: updateData.excerpt ?? null,
       image_url: updateData.image_url ?? null,
@@ -89,15 +89,14 @@ export async function PUT(
       return NextResponse.json(result.error, { status: 400 });
     }
 
-    const { publish_date, ...rest } = result.data;
+    // const { publish_date, ...rest } = result.data;
+
     const { publish_date: pubDate, ...updateData } = result.data;
     const update = await updateService.updateUpdate(
       params.id,
       {
         ...updateData,
         publish_date: new Date(pubDate),
-        created_at: new Date(updateData.created_at),
-        updated_at: new Date(updateData.updated_at),
         content_html: updateData.content_html ?? null,
         excerpt: updateData.excerpt ?? null,
         image_url: updateData.image_url ?? null,

@@ -1,14 +1,10 @@
-// src/contexts/admin-context.tsx
 'use client'
 
 import { Service } from '@/domain/models/service.model';
-import { useRouter } from 'next/navigation';
 
 import {
   createContext,
   useContext,
-  useState,
-  useEffect,
   useCallback,
 } from 'react'
 import { CaseStudy } from '@/domain/models/models'
@@ -17,7 +13,6 @@ import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
 import { Testimonial } from '@/domain/models/testimonial.model'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Banner } from '@/domain/models/banner.model'
-import toast from 'react-hot-toast'
 import useAdminCaseStudies from '@/hooks/admin/useAdminCaseStudies';
 import useAdminBlogPosts from '@/hooks/admin/useAdminBlogPosts';
 import useAdminBanners from '@/hooks/admin/useAdminBanners';
@@ -25,10 +20,6 @@ import useAdminServices from '@/hooks/admin/useAdminServices';
 import useAdminTestimonials from '@/hooks/admin/useAdminTestimonials';
 import useAdminCaseStudySliders from '@/hooks/admin/useAdminCaseStudySliders';
 
-interface OrderUpdate {
-  id: string
-  order: number
-}
 
 interface AdminContextType {
   loading: boolean
@@ -57,36 +48,21 @@ export function AdminProvider({
   initialBanners,
   initialServices,
 }: AdminProviderProps) {
-  const router = useRouter();
   const {
-    caseStudies,
     loading: caseStudiesLoading,
     error: caseStudiesError,
-    getCaseStudies,
-    createCaseStudy,
-    updateCaseStudy,
-    deleteCaseStudy,
-    updateCaseStudyOrder,
     clearError: clearCaseStudiesError,
   } = useAdminCaseStudies({ initialCaseStudies });
 
   const {
     loading: blogPostsLoading,
     error: blogPostsError,
-    createBlogPost,
-    updateBlogPost,
-    deleteBlogPost,
-    pinBlogPost,
     clearError: clearBlogPostsError,
   } = useAdminBlogPosts({ initialBlogPosts });
 
   const {
     loading: bannersLoading,
     error: bannersError,
-    getBanners,
-    createBanner,
-    updateBanner,
-    deleteBanner,
     clearError: clearBannersError,
   } = useAdminBanners({ initialBanners });
 
@@ -97,24 +73,14 @@ export function AdminProvider({
   } = useAdminServices({ initialServices });
 
   const {
-    testimonials,
     loading: testimonialsLoading,
     error: testimonialsError,
-    getTestimonials,
-    createTestimonial,
-    updateTestimonial,
-    deleteTestimonial,
     clearError: clearTestimonialsError,
   } = useAdminTestimonials({ initialTestimonials });
 
   const {
-    caseStudySliders,
     loading: caseStudySlidersLoading,
     error: caseStudySlidersError,
-    getCaseStudySliders,
-    createCaseStudySlider,
-    updateCaseStudySlider,
-    deleteCaseStudySlider,
     clearError: clearCaseStudySlidersError,
   } = useAdminCaseStudySliders({ initialCaseStudySliders });
 

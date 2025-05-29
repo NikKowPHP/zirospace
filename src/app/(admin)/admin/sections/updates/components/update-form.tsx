@@ -1,6 +1,5 @@
 'use client';
 
-import { Locale } from '@/i18n';
 import { Update } from '@/domain/models/update.model';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input/input';
@@ -10,13 +9,12 @@ import { Textarea } from '@/components/ui/textarea/textarea';
 
 interface UpdateFormProps {
   update?: Update;
-  locale: Locale;
   onSubmit: (data: Partial<Update>) => Promise<void>;
   onCancel: () => void;
   loading: boolean;
 }
 
-const UpdateForm: React.FC<UpdateFormProps> = ({ update, locale, onSubmit, onCancel, loading }) => {
+const UpdateForm: React.FC<UpdateFormProps> = ({ update, onSubmit, onCancel, loading }) => {
   const [title, setTitle] = useState(update?.title || '');
   const [slug, setSlug] = useState(update?.slug || '');
   const [publishDate, setPublishDate] = useState(update?.publish_date ? new Date(update.publish_date) : new Date());

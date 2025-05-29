@@ -53,7 +53,7 @@ const EditUpdatePage = () => {
         <button onClick={() => setActiveLocale('en')}>EN</button>
         <button onClick={() => setActiveLocale('pl')}>PL</button>
       </div>
-      <UpdateForm update={update} locale={activeLocale} onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} />
+      <UpdateForm update={update}  onSubmit={handleSubmit} onCancel={handleCancel} loading={loading} />
     </div>
   );
 };

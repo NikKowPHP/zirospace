@@ -3,6 +3,7 @@ import { UpdateService } from '@/lib/services/update.service';
 import { revalidateTag } from 'next/cache';
 import { CACHE_TAGS } from '@/lib/utils/cache';
 import { z } from 'zod';
+import logger from '@/lib/logger';
 
 const updateSchema = z.object({
   title: z.string().min(3),
@@ -77,6 +78,7 @@ export async function DELETE(
   { params }: { params: Params }
 ) {
   const { id, locale } = params;
+  logger.log(request)
 
   try {
     await updateService.deleteUpdate(id,locale);
