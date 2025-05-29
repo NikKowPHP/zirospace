@@ -6,6 +6,11 @@ import { Button } from '@/components/ui/button/button'
 
 export const ContactFormSection = async () => {
   const t = await getTranslations('contactUsFormSection')
+  const formActionUrl = process.env.FORM_ACTION_URL
+
+  if (!formActionUrl) {
+    alert('form action is not defined');
+  }
 
   return (
     <Suspense
@@ -50,8 +55,8 @@ export const ContactFormSection = async () => {
             </div>
           </div>
 
-          <div className='w-full sm:w-1/2 flex flex-col items-center justify-center  w-full'>
-            <form className='flex flex-col items-center justify-center  w-full   gap-4 ' action="https://getform.io/f/akknypoa" method="POST" encType="multipart/form-data">
+          <div className='w-full sm:w-1/2 flex flex-col items-center justify-center  '>
+            <form className='flex flex-col items-center justify-center  w-full   gap-4 ' action={formActionUrl} method="POST" encType="multipart/form-data">
 
               <div className='flex flex-col items-start justify-center w-full mb-4 '>
                 <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
