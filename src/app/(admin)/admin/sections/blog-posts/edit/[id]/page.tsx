@@ -30,8 +30,10 @@ export default function EditBlogPostPage({params}: Props) {
   }, [params, getBlogPost, locale])
 
   const handleUpdate = async (data: Partial<BlogPost>) => {
-    if (!blogPost) return;
+    
     try {
+      logger.log(`handleupdate call with data ${JSON.stringify(data,)}`)
+      
       await updateBlogPost(id, data, locale as Locale)
       router.push('/admin/sections/blog-posts')
     } catch (error) {

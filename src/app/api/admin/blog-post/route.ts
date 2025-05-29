@@ -66,16 +66,12 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams
-    const id = searchParams.get('id')
-    const locale = searchParams.get('locale')
-    const { data } = await request.json()
-
+    const { data, locale, id } = await request.json()
+  logger.log(`updating blog post: ${id} ${locale} with data: ${JSON.stringify(data)}`)
     if (!id || !locale) {
       return NextResponse.json({ error: 'ID and locale are required' }, { status: 400 })
     }
 
-    logger.log(`Updating blog post: ${id} ${locale} with data: ${JSON.stringify(data)}`)
     const updatedBlogPost = await blogPostService.updateBlogPost(id, data, locale)
 
     if (!updatedBlogPost) {
@@ -84,6 +80,7 @@ export async function PUT(request: NextRequest) {
 
     revalidateTag(CACHE_TAGS.BLOG_POSTS)
     return NextResponse.json(updatedBlogPost)
+    //  return NextResponse.json({error:'fuck o'})
   } catch (error) {
     logger.error(`Error updating blog post: ${error}`)
     return NextResponse.json({ error: 'Failed to update blog post' }, { status: 500 })

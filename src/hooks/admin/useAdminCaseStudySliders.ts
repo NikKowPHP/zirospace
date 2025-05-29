@@ -23,7 +23,7 @@ const useAdminCaseStudySliders = ({ initialCaseStudySliders }: UseAdminCaseStudy
           errorMessage: 'Failed to fetch case study sliders',
         }
       );
-      logger.log('case study sliders data ' + JSON.stringify(data, null, 2))
+      logger.log('case study sliders data ' + data)
       setCaseStudySliders(data);
     } catch (error) {
       // Error is already handled by useAdminApi

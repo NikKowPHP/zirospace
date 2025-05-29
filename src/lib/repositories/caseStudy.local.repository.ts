@@ -93,7 +93,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
         VALUES (${placeholders})
       `;
 
-      this.db.run(query, values, function (err) {
+      this.db.run(query, values, (err) => {
         if (err) {
           logger.log(`Error creating entity in table "${tableName}":`, err);
           reject(new Error(`Database error creating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
@@ -102,7 +102,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
         // After successful insertion, retrieve the created entity
         const id = caseStudy.id;
         const selectQuery = `SELECT * FROM "${tableName}" WHERE id = ?`;
-        db.get(selectQuery, [id], (err, row: any) => {
+        this.db.get(selectQuery, [id], (err: Error | null, row: any) => {
           if (err) {
             logger.log(`Error retrieving created entity from table "${tableName}":`, err);
             reject(new Error(`Database error retrieving created entity from table "${tableName}": ${err.message || 'Unknown error'}`));
@@ -140,16 +140,18 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
         SET ${updates}
         WHERE id = ?
       `;
-
-      this.db.run(query, [...values, id], function (err) { // Pass values and id
+      logger.log(`Executing update query for table "${tableName}":`, query, [...values, id]);
+      this.db.run(query, [...values, id], (err) => { // Pass values and id
         if (err) {
           logger.log(`Error updating entity in table "${tableName}":`, err);
           reject(new Error(`Database error updating entity in table "${tableName}": ${err.message || 'Unknown error'}`));
           return;
         }
+        logger.log(`Entity successfully updated in table "${tableName}". Attempting to retrieve updated entity.`);
         // After successful update, retrieve the updated entity
         const selectQuery = `SELECT * FROM "${tableName}" WHERE id = ?`;
-        db.get(selectQuery, [id], (err, row: any) => {
+        logger.log(`Executing select query for table "${tableName}":`, selectQuery, [id]);
+        this.db.get(selectQuery, [id], (err: Error | null, row: any) => {
           if (err) {
             logger.log(`Error retrieving updated entity from table "${tableName}":`, err);
             reject(new Error(`Database error retrieving updated entity from table "${tableName}": ${err.message || 'Unknown error'}`));
@@ -159,6 +161,7 @@ export class CaseStudyRepositoryLocal extends SqlLiteAdapter<CaseStudy, string> 
             reject(new Error(`Failed to retrieve updated entity from table "${tableName}"`));
             return;
           }
+          logger.log(`Successfully retrieved updated entity from table "${tableName}".`);
           const createdCaseStudy = CaseStudyMapper.toDomain(row as CaseStudyDTO);
           resolve(createdCaseStudy);
         });

@@ -71,10 +71,8 @@ export function AdminProvider({
   } = useAdminCaseStudies({ initialCaseStudies });
 
   const {
-    blogPosts,
     loading: blogPostsLoading,
     error: blogPostsError,
-    getBlogPosts,
     createBlogPost,
     updateBlogPost,
     deleteBlogPost,
@@ -83,7 +81,6 @@ export function AdminProvider({
   } = useAdminBlogPosts({ initialBlogPosts });
 
   const {
-    banners,
     loading: bannersLoading,
     error: bannersError,
     getBanners,
@@ -94,14 +91,8 @@ export function AdminProvider({
   } = useAdminBanners({ initialBanners });
 
   const {
-    services,
     loading: servicesLoading,
     error: servicesError,
-    getServices,
-    getServiceById,
-    createService,
-    updateService,
-    deleteService,
     clearError: clearServicesError,
   } = useAdminServices({ initialServices });
 
