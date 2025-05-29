@@ -23,17 +23,17 @@ export const ContactFormSection = async () => {
 
       <section
         id='contact-form'
-        className="flex flex-col items-center text-center py-12 px-6 sm:py-16 sm:px-8 bg-gray-100 rounded-lg"
+        className="flex flex-col  text-center  bg-gray-100 rounded-primary-lg max-w-5xl mx-auto p-[40px]"
         itemScope
         itemType="https://schema.org/WebPageElement"
       >
         <div className='flex items-center flex-wrap max-w-3xl gap-[12px] sm:gap-[55px] '>
-          <div className='flex flex-col sm:flex-row w-full gap-[12px] sm:gap-[55px]'>
+          <div className='flex flex-col sm:flex-row justify-between  w-full gap-[12px] sm:gap-[55px]'>
 
           <div className='w-full sm:w-1/2' >
             {/* TODO: youtube section */}
             <div className=' '><FooterVideo /></div>
-            <h1 className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-black mb-8">
+            <h1 className="text-[18px] sm:text-[24px] lg:text-[28px] leading-[1.1] font-medium tracking-[-0.02em] text-black mb-8">
 
               {t('title')}
 
@@ -42,15 +42,15 @@ export const ContactFormSection = async () => {
             <div className='flex flex-col gap-[20px] mt-4' >
               <div className='flex items-center  gap-2' >
                 <Mail className="w-5 h-5 text-gray-500" />
-                <a href="mailto:nikhil@ziro.space" className='text-gray-700 text-sm hover:text-blue-500'>nikhil@ziro.space</a>
+                <a href="mailto:nikhil@ziro.space" className='text-gray-700 text-[16px] hover:text-blue-500'>nikhil@ziro.space</a>
               </div>
               <div className='flex items-center   gap-2' >
                 <Phone className="w-5 h-5 text-gray-500" />
-                <a href="tel:+48509654467" className='text-gray-700 text-sm hover:text-blue-500'>+48 509 654 467</a>
+                <a href="tel:+48509654467" className='text-gray-700 text-[16px] hover:text-blue-500'>+48 509 654 467</a>
               </div>
               <div className='flex items-center   gap-2' >
                 <MapPin className="w-5 h-5 text-gray-500" />
-                <a href="https://www.google.com/maps/search/?api=1&query=UL.+Mogilska+43,+31-545,+Krakow" target="_blank" rel="noopener noreferrer" className='text-gray-700 text-sm hover:text-blue-500'>UL. Mogilska 43, 31-545, Krakow</a>
+                <a href="https://www.google.com/maps/search/?api=1&query=UL.+Mogilska+43,+31-545,+Krakow" target="_blank" rel="noopener noreferrer" className='text-gray-700 text-[16px] hover:text-blue-500'>UL. Mogilska 43, 31-545, Krakow</a>
               </div>
             </div>
           </div>
