@@ -38,19 +38,26 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id')
     const locale = searchParams.get('locale')
 
+       if (!locale) {
+      return NextResponse.json({ error: 'Locale is required' }, { status: 400 });
+    }
     console.log('processing blog post get request', {id, locale})
-    if (!id || !locale) {
-      return NextResponse.json({ error: 'ID and locale are required' }, { status: 400 })
-    }
 
-    logger.log(`Fetching blog post: ${id} ${locale}`)
-    const blogPost = await blogPostService.getBlogPostById(id, locale) // Assuming you have this method in your service
-    if (!blogPost) {
-      return NextResponse.json({ error: 'Blog post not found' }, { status: 404 })
-    }
 
-     logger.log('RESPONSE FROM ROUTE' + JSON.stringify(blogPost));
-    return NextResponse.json(blogPost)
+   if (id) {
+      // Case 1: Fetch single blog post by ID
+      logger.log(`Fetching blog post by ID: ${id} for locale: ${locale}`);
+      const blogPost = await blogPostService.getBlogPostById(id, locale);
+      if (!blogPost) {
+        return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
+      }
+      return NextResponse.json(blogPost);
+    } else {
+      // Case 2: Fetch all blog posts for the locale
+      logger.log(`Fetching all blog posts for locale: ${locale}`);
+      const blogPosts = await blogPostService.getBlogPosts(locale);
+      return NextResponse.json(blogPosts);
+    }
   } catch (error) {
     logger.error(`Error fetching blog post: ${error}`)
     return NextResponse.json({ error: 'Failed to fetch blog post' }, { status: 500 })

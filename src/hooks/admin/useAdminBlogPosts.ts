@@ -16,7 +16,7 @@ const useAdminBlogPosts = ({ initialBlogPosts }: UseAdminBlogPostsProps = {}) =>
   const getBlogPosts = useCallback(async (locale: Locale) => {
     try {
       const data: BlogPost[] = await callApi(
-        `/api/admin/blog-posts?locale=${locale}`,
+        `/api/admin/blog-post?locale=${locale}`,
         { method: 'GET' },
         {
           loadingMessage: 'Fetching blog posts...',
@@ -32,7 +32,7 @@ const useAdminBlogPosts = ({ initialBlogPosts }: UseAdminBlogPostsProps = {}) =>
   const getBlogPost = useCallback(async (id: string, locale: Locale): Promise<BlogPost | null> => {
     try {
       const data: BlogPost = await callApi(
-        `/api/admin/blog-posts/${id}?locale=${locale}`,
+        `/api/admin/blog-post?id=${id}&locale=${locale}`,
         { method: 'GET' },
         {
           loadingMessage: 'Fetching blog post...',
