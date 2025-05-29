@@ -10,7 +10,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await request.json()
-    console.log('deleting case study slider', id)
+    console.log('deleting case study slider in useRouter', id)
 
     if (!id) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 })

@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { CaseStudySlider } from '@/domain/models/case-study-slider.model';
 import useAdminApi from './useAdminApi';
+import logger from '@/lib/logger';
 
 interface UseAdminCaseStudySlidersProps {
   initialCaseStudySliders?: CaseStudySlider[];
@@ -22,6 +23,7 @@ const useAdminCaseStudySliders = ({ initialCaseStudySliders }: UseAdminCaseStudy
           errorMessage: 'Failed to fetch case study sliders',
         }
       );
+      logger.log('case study sliders data ' + JSON.stringify(data, null, 2))
       setCaseStudySliders(data);
     } catch (error) {
       // Error is already handled by useAdminApi
@@ -86,6 +88,8 @@ const useAdminCaseStudySliders = ({ initialCaseStudySliders }: UseAdminCaseStudy
           `/api/admin/case-study-sliders/${id}`,
           {
             method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ id }),
           },
           {
             loadingMessage: 'Deleting case study slider...',

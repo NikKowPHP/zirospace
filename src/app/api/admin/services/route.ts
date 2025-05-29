@@ -47,7 +47,7 @@ const putServiceSchema = z.object({
 
 // Define Zod schema for GET/PUT/DELETE request params
 const serviceIdLocaleSchema = z.object({
-  id: z.string(), // Changed from UUID to string to accommodate non-UUID IDs like 'service-en-1'
+  id: z.string(),
   locale: z.string(),
 });
 
