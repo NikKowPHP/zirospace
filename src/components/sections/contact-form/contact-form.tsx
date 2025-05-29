@@ -23,24 +23,24 @@ export const ContactFormSection = async () => {
 
       <section
         id='contact-form'
-        className="flex flex-col  text-center  bg-gray-100 rounded-primary-lg max-w-5xl mx-auto p-[40px]"
+        className="flex flex-col  text-center  bg-gray-100 rounded-primary-lg max-w-5xl mx-auto p-[40px] mb-[60px]"
         itemScope
         itemType="https://schema.org/WebPageElement"
       >
-        <div className='flex items-center flex-wrap max-w-3xl gap-[12px] sm:gap-[55px] '>
+        <div className='flex items-center flex-wrap  gap-[12px] sm:gap-[55px] w-full'>
           <div className='flex flex-col sm:flex-row justify-between  w-full gap-[12px] sm:gap-[55px]'>
 
           <div className='w-full sm:w-1/2' >
             {/* TODO: youtube section */}
-            <div className=' '><FooterVideo /></div>
-            <h1 className="text-[18px] sm:text-[24px] lg:text-[28px] leading-[1.1] font-medium tracking-[-0.02em] text-black mb-8">
+            <FooterVideo />
+            <h1 className="text-[18px] text-start sm:text-[24px] lg:text-[28px] leading-[1.1] font-medium tracking-[-0.02em] text-black mb-3 mt-3">
 
               {t('title')}
 
             </h1>
 
             <div className='flex flex-col gap-[20px] mt-4' >
-              <div className='flex items-center  gap-2' >
+              <div className='flex items-center  gap-16' >
                 <Mail className="w-5 h-5 text-gray-500" />
                 <a href="mailto:nikhil@ziro.space" className='text-gray-700 text-[16px] hover:text-blue-500'>nikhil@ziro.space</a>
               </div>
@@ -59,7 +59,7 @@ export const ContactFormSection = async () => {
             <form className='flex flex-col items-center justify-center  w-full   gap-4 ' action={formActionUrl} method="POST" encType="multipart/form-data">
 
               <div className='flex flex-col items-start justify-center w-full mb-4 '>
-                <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
+                <label htmlFor="name" className="block text-blue-500 text-sm  mb-2">
                   {t('name')}
                 </label>
                 <input
@@ -73,7 +73,7 @@ export const ContactFormSection = async () => {
               </div>
 
               <div className='flex flex-col items-start justify-center w-full mb-4'>
-                <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+                <label htmlFor="email" className="block text-blue-500 text-sm  mb-2">
                   {t('email')}
                 </label>
                 <input
@@ -87,7 +87,7 @@ export const ContactFormSection = async () => {
               </div>
 
               <div className='flex flex-col items-start justify-center w-full mb-4'>
-                <label htmlFor="telephone" className="block text-gray-700 text-sm font-bold mb-2">
+                <label htmlFor="telephone" className="block text-blue-500 text-sm  mb-2">
                   {t('telephone')}
                 </label>
                 <input
@@ -100,7 +100,7 @@ export const ContactFormSection = async () => {
               </div>
 
               <div className='flex flex-col items-start justify-center w-full mb-4'>
-                <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">
+                <label htmlFor="message" className="block text-blue-500 text-sm  mb-2">
                   {t('message')}
                 </label>
                 <textarea
@@ -108,11 +108,11 @@ export const ContactFormSection = async () => {
                   name="message"
                   placeholder={t('messagePlaceholder')}
                   required
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 h-[100px]"
                 />
               </div>
 
-              <Button type="submit" variant="primary" className='w-full'>
+              <Button type="submit" variant="primary" className='w-full rounded-xl'>
                 {t('submit')}
               </Button>
             </form>
