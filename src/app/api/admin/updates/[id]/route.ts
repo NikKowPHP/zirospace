@@ -13,13 +13,11 @@ const updateSchema = z.object({
   image_alt: z.string().optional(),
   is_published: z.boolean().default(false),
   order_index: z.number().default(0),
-  created_at: z.string(),
-  updated_at: z.string(),
 });
 
 const updateService = new UpdateService();
 
-type Params = { id: string };
+type Params = { id: string, locale: string };
 
 export async function GET(
   request: NextRequest,
@@ -34,7 +32,7 @@ export async function GET(
   }
 
   try {
-    const update = await updateService.getUpdateById(id);
+    const update = await updateService.getUpdateById(id, locale);
     if (!update) {
       return NextResponse.json({ error: 'Update not found' }, { status: 404 });
     }
@@ -48,7 +46,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Params }
 ) {
-  const { id } = params;
+  const { id , locale} = params;
 
   try {
     const json = await request.json();
@@ -58,15 +56,15 @@ export async function PUT(
       return NextResponse.json(result.error, { status: 400 });
     }
 
-    const { publish_date: pubDate, created_at, updated_at, ...updateData } = result.data;
-    const updatedUpdate = await updateService.updateUpdate(id, {
+    const { publish_date: pubDate, ...updateData } = result.data;
+    const updatedUpdate = await updateService.updateUpdate(id,  {
       ...updateData,
       publish_date: new Date(pubDate),
       content_html: updateData.content_html ?? null,
       excerpt: updateData.excerpt ?? null,
       image_url: updateData.image_url ?? null,
       image_alt: updateData.image_alt ?? null,
-    });
+    }, locale);
     revalidateTag(CACHE_TAGS.UPDATES);
     return NextResponse.json(updatedUpdate);
   } catch (error: any) {
@@ -78,10 +76,10 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Params }
 ) {
-  const { id } = params;
+  const { id, locale } = params;
 
   try {
-    await updateService.deleteUpdate(id);
+    await updateService.deleteUpdate(id,locale);
     revalidateTag(CACHE_TAGS.UPDATES);
     return new NextResponse(null, { status: 204 });
   } catch (error: any) {

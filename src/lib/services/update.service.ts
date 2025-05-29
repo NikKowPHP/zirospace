@@ -28,7 +28,7 @@ export class UpdateService {
   }
 
   async createUpdate(
-    update: Omit<Update, 'id' | 'createdAt' | 'updatedAt' | 'slug'>,
+    update: Omit<Update, 'id' | 'created_at' | 'updated_at' | 'slug'>,
     locale: string
   ): Promise<Update> {
     const slug = generateSlug(update.title)
@@ -44,7 +44,7 @@ export class UpdateService {
 
   async updateUpdate(
     id: string,
-    update: Omit<Update, 'id' | 'createdAt' | 'updatedAt' | 'slug'>,
+    update: Omit<Update, 'id' | 'created_at' | 'updated_at' | 'slug'>,
     locale: string
   ): Promise<Update> {
     const existingUpdate = await this.getUpdateById(id, locale)
