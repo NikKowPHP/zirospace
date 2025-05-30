@@ -3,12 +3,20 @@ import { UpdateRepository } from '@/lib/repositories/update.repository'
 import { UpdateRepositoryLocal } from '@/lib/repositories/update.local.repository'
 import { Update } from '@/domain/models/update.model'
 import { generateSlug } from '@/lib/utils/slugify'
+import logger from '../logger'
 
 export class UpdateService {
   private updatesRepository: IUpdatesRepository
 
   constructor() {
-    this.updatesRepository = new UpdateRepository()
+    if (process.env.MOCK_REPOSITORIES === 'true') {
+      const {
+        UpdateRepositoryLocal,
+      } = require('@/lib/repositories/update.local.repository')
+      this.updatesRepository = new UpdateRepositoryLocal('en') // Locale might need to be dynamic or passed
+    } else {
+      this.updatesRepository = new UpdateRepository()
+    }
   }
 
   async getUpdates(locale: string): Promise<Update[]> {
@@ -63,7 +71,7 @@ export class UpdateService {
   }
 
   async deleteUpdate(id: string, locale: string): Promise<void> {
+    logger.log(`Deleting update with id ${id} and locale ${locale}`)
     return this.updatesRepository.deleteUpdate(id, locale)
   }
 }
-
