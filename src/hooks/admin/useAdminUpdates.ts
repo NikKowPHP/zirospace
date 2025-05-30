@@ -3,7 +3,6 @@ import { Locale } from '@/i18n'
 import { Update } from '@/domain/models/update.model'
 import useAdminApi from './useAdminApi'
 import { toast } from 'react-hot-toast'
-import logger from '@/lib/logger'
 
 type Record<K extends keyof any, T> = {
   [P in K]: T
