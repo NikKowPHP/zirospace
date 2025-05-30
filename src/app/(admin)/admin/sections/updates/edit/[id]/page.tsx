@@ -29,7 +29,7 @@ export default function EditUpdatePage({ params }: Props) {
     getUpdateById(id, locale as Locale).then((fetchedUpdate) =>
       setUpdate(fetchedUpdate || null)
     )
-  }, [params, getUpdateById, locale])
+  }, [params, locale])
 
   const handleUpdate = async (data: Partial<Update>) => {
     if (!update) return

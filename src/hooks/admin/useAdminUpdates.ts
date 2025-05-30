@@ -60,7 +60,7 @@ export const useAdminUpdates = (
   const createUpdate = useCallback(
     async (data: any, locale: Locale) => {
       return toast.promise(
-        adminApi.callApi<Update>('/api/admin/updates', {
+        adminApi.callApi<Update>(`/api/admin/updates?locale=${locale}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export const useAdminUpdates = (
   const updateUpdate = useCallback(
     async (id: string, data: any, locale: Locale) => {
       return toast.promise(
-        adminApi.callApi<Update>(`/api/admin/updates/${id}`, {
+        adminApi.callApi<Update>(`/api/admin/updates/${id}?locale=${locale}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
