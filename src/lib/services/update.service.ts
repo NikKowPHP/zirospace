@@ -1,6 +1,5 @@
 import { IUpdatesRepository } from '@/lib/interfaces/updatesRepository.interface'
 import { UpdateRepository } from '@/lib/repositories/update.repository'
-import { UpdateRepositoryLocal } from '@/lib/repositories/update.local.repository'
 import { Update } from '@/domain/models/update.model'
 import { generateSlug } from '@/lib/utils/slugify'
 import logger from '../logger'
@@ -20,11 +19,7 @@ export class UpdateService {
   }
 
   async getUpdates(locale: string): Promise<Update[]> {
-    const updatesRepository: IUpdatesRepository = process.env.MOCK_REPOSITORIES
-      ? new UpdateRepositoryLocal(locale)
-      : new UpdateRepository()
-
-    return updatesRepository.getUpdates(locale)
+    return this.updatesRepository.getUpdates(locale)
   }
 
   async getUpdateBySlug(slug: string, locale: string): Promise<Update | null> {
