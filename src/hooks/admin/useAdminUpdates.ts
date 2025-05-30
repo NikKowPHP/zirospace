@@ -3,6 +3,7 @@ import { Locale } from '@/i18n'
 import { Update } from '@/domain/models/update.model'
 import useAdminApi from './useAdminApi'
 import { toast } from 'react-hot-toast'
+import logger from '@/lib/logger'
 
 type Record<K extends keyof any, T> = {
   [P in K]: T
@@ -119,7 +120,6 @@ export const useAdminUpdates = (
       return toast.promise(
         adminApi.callApi<void>(`/api/admin/updates/${id}?locale=${locale}`, {
           method: 'DELETE',
-          // body: JSON.stringify({locale}),
         }),
         {
           loading: 'Deleting update...',
@@ -142,11 +142,22 @@ export const useAdminUpdates = (
 
   const getUpdateById = useCallback(
     async (id: string, locale: Locale): Promise<Update | undefined> => {
-      const currentUpdates = updates[locale] || []
-
-      return currentUpdates.find((update) => update.id === id)
+      return toast.promise(
+        adminApi.callApi<Update>(
+          `/api/admin/updates/${id}?locale=${locale}`,
+          {}
+        ),
+        {
+          loading: 'Fetching update...',
+          success: () => {
+            // No need to update 'updates' state here as it's a single fetch
+            return 'Update fetched successfully!'
+          },
+          error: (error) => `Failed to fetch update: ${error.message}`,
+        }
+      )
     },
-    [updates]
+    [adminApi]
   )
 
   return {
