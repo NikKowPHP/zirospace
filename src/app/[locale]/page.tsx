@@ -21,8 +21,6 @@ import { companyConfig } from '@/config/company'
 import { siteUrl } from '@/config/constants'
 import { VisibilityProvider } from '@/contexts/VisibilityContext' // Import Provider
 import { VisibilityManager } from '@/components/visibility-manager' // Import Manager
-import { Team } from '@/components/sections/team/team'
-
 interface HomePageProps {
   params: Promise<{ locale: Locale }>
 }
