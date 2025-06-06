@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic'
 
-
 export const HeroSection = dynamic(
-  () => import('@/components/sections/hero/hero').then((mod) => mod.HeroSection),
+  () =>
+    import('@/components/sections/hero/hero').then((mod) => mod.HeroSection),
   {
     ssr: true,
   }
@@ -100,14 +100,20 @@ export const CaseStudies = dynamic(
 )
 
 export const FloatVideo = dynamic(
-  () => import('@/components/sections/float-video/float-video').then(mod => mod.FloatVideo),
+  () =>
+    import('@/components/sections/float-video/float-video').then(
+      (mod) => mod.FloatVideo
+    ),
   {
     ssr: true,
   }
 )
 
 export const BannerModalWrapper = dynamic(
-  () => import('@/components/BannerModalWrapper').then((mod) => mod.BannerModalWrapper),
+  () =>
+    import('@/components/BannerModalWrapper').then(
+      (mod) => mod.BannerModalWrapper
+    ),
   {
     ssr: false,
   }
@@ -121,9 +127,18 @@ export const TestimonialsSection = dynamic(
 )
 
 export const ContactFormSection = dynamic(
-  () => import('@/components/sections/contact-form/contact-form').then((mod) => mod.ContactFormSection),
+  () =>
+    import('@/components/sections/contact-form/contact-form').then(
+      (mod) => mod.ContactFormSection
+    ),
   {
     ssr: true,
   }
 )
 
+export const TeamSection = dynamic(
+  () => import('@/components/sections/team/team').then((mod) => mod.Team),
+  {
+    ssr: true,
+  }
+)

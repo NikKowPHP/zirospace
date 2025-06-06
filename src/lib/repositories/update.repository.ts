@@ -138,4 +138,3 @@ export class UpdateRepository implements IUpdatesRepository {
     }
   }
 }
-

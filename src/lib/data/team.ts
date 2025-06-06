@@ -16,9 +16,10 @@ export const teamItems: TeamItem[] = [
     role: 'team.nikhil.role',
     company: 'team.nikhil.company',
     quote: 'team.nikhil.quote',
-    image: 'https://i.postimg.cc/T1nrzdwP/BCJ9upw-V2-ARbexiidm-P5w0okz-LE.avif',
+    // image: 'https://i.postimg.cc/T1nrzdwP/BCJ9upw-V2-ARbexiidm-P5w0okz-LE.avif',
+    image: '/images/nikhil-ceo.avif',
     imageAlt: 'team.nikhil.imageAlt',
-    imagePerson: 'https://i.postimg.cc/XJkjmtWb/morda.avif'
+    imagePerson: '/images/morda.avif',
   },
   // Add more team members as needed
 ]
@@ -26,4 +27,5 @@ export const teamItems: TeamItem[] = [
 export async function getTeamItems(): Promise<TeamItem[]> {
   await new Promise((resolve) => setTimeout(resolve, 1000))
   return teamItems
-} 
+}
+
