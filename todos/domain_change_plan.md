@@ -30,7 +30,7 @@
   - Check `.env*` files for any references to old domain
   - Update if found
 
-- [ ] **Task 3: Update SEO/sitemap configuration**
+- [x] **Task 3: Update SEO/sitemap configuration**
   - Check `next-sitemap.config.js` if exists
   - Update domain in sitemap configuration
 
