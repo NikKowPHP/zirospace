@@ -13,7 +13,7 @@ const config = {
   images: {
     domains: [
       'localhost',
-      'ziro.space',
+      'ziro.health',
       'picsum.photos',
       'drive.google.com',
       'i.ibb.co',
@@ -119,6 +119,17 @@ const config = {
         destination: '/',
         permanent: true,
       },
+      {
+        source: '/:path*',
+        destination: 'https://ziro.health/:path*',
+        permanent: true,
+        has: [
+          {
+            type: 'host',
+            value: 'ziro.space',
+          }
+        ]
+      }
     ]
   },
 
