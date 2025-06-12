@@ -26,7 +26,7 @@
     ```
   - Update images.domains array to replace 'ziro.space' with 'ziro.health'
 
-- [ ] **Task 2: Verify and update environment variables**
+- [x] **Task 2: Verify and update environment variables**
   - Check `.env*` files for any references to old domain
   - Update if found
 
