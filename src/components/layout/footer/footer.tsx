@@ -128,11 +128,11 @@ export function Footer() {
               {/* Contact Information */}
               <div className="space-y-2">
                 <Link
-                  href="mailto:contact@ziro.space"
+                  href="mailto:contact@ziro.health"
                   className="text-sm text-gray-600 hover:text-primary transition-colors"
                   itemProp="email"
                 >
-                  nikhil@ziro.space
+                  nikhil@ziro.health
                 </Link>
               </div>
             </div>

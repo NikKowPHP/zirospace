@@ -42,7 +42,7 @@ export const ContactFormSection = async () => {
             <div className='flex flex-col gap-[20px] mt-4' >
               <div className='flex items-center  gap-16' >
                 <Mail className="w-5 h-5 text-gray-500" />
-                <a href="mailto:nikhil@ziro.space" className='text-gray-700 text-[16px] hover:text-blue-500'>nikhil@ziro.space</a>
+                <a href="mailto:nikhil@ziro.health" className='text-gray-700 text-[16px] hover:text-blue-500'>nikhil@ziro.health</a>
               </div>
               <div className='flex items-center   gap-2' >
                 <Phone className="w-5 h-5 text-gray-500" />
