@@ -1,92 +1,151 @@
-Of course. Here is a detailed plan for refactoring your application to remove Knex, consolidate database logic into services using Prisma, and enhance caching.
+### **Revised Part 2: Deprecate and Remove Old Infrastructure (Detailed Steps & Commands)**
 
-### Master Plan: Application Refactoring to Prisma and Service-Oriented Architecture
+This part focuses on surgically removing all obsolete files and dependencies to clean the project slate before introducing Prisma logic.
 
-This plan outlines the steps to migrate the application's data layer from a repository pattern using Knex/Supabase-client to a more direct service-layer implementation using Prisma. This will simplify the architecture, remove legacy dependencies, and improve data fetching performance and consistency.
+*   `[ ]` **Task 2.1: Uninstall Old Dependencies.**
+    *   **Action:** Run the following command in your terminal to remove Knex and SQLite from your project's dependencies.
+    *   **Command:**
+        ```bash
+        npm uninstall knex sqlite3
+        ```
 
----
+*   `[ ]` **Task 2.2: Delete All Knex, Migration, and Seeding Files.**
+    *   **Action:** These directories and files are central to the old Knex setup and must be removed.
+    *   **Command:**
+        ```bash
+        rm -rf knexfile.mjs migrations/ seeds/
+        ```
 
-#### **Part 1: Prisma Integration and Schema Setup**
+*   `[ ]` **Task 2.3: Delete Old Repository and Data Access Layer.**
+    *   **Action:** This is the core of the pattern shift. We are removing the entire repository abstraction layer, including local (SQLite) and remote implementations, interfaces, and DTOs/Mappers. Prisma's client and generated types will replace them.
+    *   **Command:**
+        ```bash
+        rm -rf src/lib/repositories/ src/lib/interfaces/ src/infrastructure/dto/ src/infrastructure/mappers/
+        ```
 
-This is the foundational step where we introduce Prisma and define the new data structure.
+*   `[ ]` **Task 2.4: Delete Obsolete Configuration and Test Files.**
+    *   **Action:** Remove the remaining configuration files, the old database file, and any obsolete server action files that will be consolidated.
+    *   **Command:**
+        ```bash
+        rm -f src/lib/config/database.config.ts src/lib/data/sql/sqlite.db test_db.mjs src/lib/server-actions/casestudy.actions.ts
+        ```
 
-*   `[x]` **Task 1.1: Install and Initialize Prisma.**
-    *   Install Prisma CLI and Client: `npm install prisma --save-dev` and `npm install @prisma/client`.
-    *   Initialize the Prisma project: `npx prisma init`. This will create the `prisma/schema.prisma` file.
+*   `[ ]` **Task 2.5: Remove Supabase and Docker-related Files.**
+    *   **Action:** Since we are moving to a direct-to-database model with Prisma, the Supabase-specific migration folders and all Docker configurations are no longer needed.
+    *   **Command:**
+        ```bash
+        rm -rf supabase/ supabase_migrations/ docker/ docker-compose.proxy.yml Dockerfile.proxy
+        ```
 
-*   `[ ]` **Task 1.2: Configure Prisma Schema.**
-    *   In `prisma/schema.prisma`, set the `datasource db` provider to `postgresql`.
-    *   Update the `DATABASE_URL` in your `.env` file with the Supabase connection string.
-    *   Translate all existing SQL table definitions into Prisma models. This includes models for `CaseStudy`, `CaseStudySlider`, `Testimonial`, `BlogPost`, `Banner`, `Youtube`, `Service`, `Update`, and `Hero`. I will create separate models for English (`_en`) and Polish (`_pl`) versions as per the current database structure (e.g., `CaseStudyEN`, `CaseStudyPL`).
-    *   Ensure all relations, indexes, and constraints (`@id`, `@unique`, `@default`, etc.) are correctly defined.
-
-*   `[x]` **Task 1.3: Generate Prisma Client.**
-    *   Run the command `npx prisma generate` to create the typed Prisma client based on your schema.
-
-*   `[x]` **Task 1.4: Create Prisma Client Singleton.**
-    *   Create a new file `src/lib/prisma.ts` to instantiate and export a single instance of `PrismaClient`. This is crucial for preventing too many database connections in a serverless environment.
-
----
-
-#### **Part 2: Deprecate and Remove Old Infrastructure**
-
-This part involves cleaning up the project by removing all files and dependencies related to the old data access patterns.
-
-*   `[ ]` **Task 2.1: Remove Knex and SQLite Dependencies.**
-    *   Delete the `knexfile.mjs` file.
-    *   Delete the entire `migrations` directory.
-    *   Delete the entire `seeds` directory.
-    *   Delete the `src/lib/data/sql` directory if it only contains the SQLite database.
-    *   Uninstall Knex and SQLite packages: `npm uninstall knex sqlite3`.
-
-*   `[ ]` **Task 2.2: Remove Obsolete Repository Layer.**
-    *   Delete the entire `src/lib/repositories` directory.
-    *   Delete the entire `src/lib/interfaces` directory.
-    *   Delete `src/lib/config/database.config.ts`.
-    *   Delete the `test_db.mjs` file.
-    *   Delete all `*.local.repository.ts` files and their corresponding tests.
-
-*   `[ ]` **Task 2.3: Remove Docker Configuration.**
-    *   Delete `docker-compose.proxy.yml`.
-    *   Delete `Dockerfile.proxy`.
-    *   Delete the `docker` directory.
-
-*   `[ ]` **Task 2.4: Simplify Supabase Client.**
-    *   Modify `src/lib/supabase.ts` to only export the client for Supabase Auth. All data-related client exports and functions should be removed.
+*   `[ ]` **Task 2.6: Sanitize Supabase Client Module.**
+    *   **Action:** Open `src/lib/supabase.ts`. This file should now **only** be used for Supabase Auth. Remove the `supabaseAdmin` export and any other data-related helper functions.
+    *   **Verification:** The file should be minimal, essentially just exporting the public client for authentication.
 
 ---
 
-#### **Part 3: Refactor Core Logic to Use Prisma**
+### **Revised Part 3: Refactor Core Logic to Use Prisma (Detailed Steps & Code Examples)**
 
-This is the main part of the refactoring, where all data logic is rewritten to use Prisma and the caching strategy is implemented.
+This part details the process of rewriting data logic using Prisma and implementing the new caching strategy.
 
-*   `[ ]` **Task 3.1: Refactor Service Layer.**
-    *   Go through each file in `src/lib/services/`.
-    *   In each service, import the singleton Prisma Client from `src/lib/prisma.ts`.
-    *   Rewrite every data-access method to use Prisma Client queries directly (e.g., replace `repository.getCaseStudies()` with `prisma.caseStudyEN.findMany()`).
-    *   Ensure all `GET` methods are wrapped with `unstable_cache` for efficient data caching. Use appropriate tags for each model (e.g., `['services']`, `['services:en']`).
+*   `[ ]` **Task 3.1: Refactor Service Layer with Prisma and Caching.**
+    *   **Action:** For each file in `src/lib/services/`, you will replace the repository calls with direct Prisma Client queries and wrap them in `unstable_cache`.
 
-*   `[ ]` **Task 3.2: Refactor API Routes.**
-    *   Review all API routes in `src/app/api/`.
-    *   Ensure they continue to call the service layer methods.
-    *   For all mutation routes (`POST`, `PUT`, `DELETE`), add a call to `revalidateTag()` after a successful database operation to invalidate the relevant cache and ensure data freshness across the application.
+    *   **Example: Refactoring `case-study.service.ts`**
 
-*   `[ ]` **Task 3.3: Refactor Server Actions.**
-    *   Review all server actions (`*.actions.ts`).
-    *   Ensure they correctly call the refactored services.
-    *   Add `revalidateTag()` calls to any server actions that perform data mutations.
+        1.  **Open:** `src/lib/services/case-study.service.ts`
+        2.  **Modify Imports:**
+            ```typescript
+            // REMOVE these imports
+            // import { CaseStudyRepository } from "../repositories/caseStudy.repository"
+            // import { ICaseStudyRepository } from "../interfaces/caseStudyRepository.interface"
+
+            // ADD these imports
+            import { prisma } from '@/lib/prisma';
+            import { unstable_cache } from 'next/cache';
+            import { CACHE_TAGS } from '@/lib/utils/cache';
+            ```
+        3.  **Rewrite `getCaseStudies` Method:**
+            *   **Before:**
+                ```typescript
+                getCaseStudies = async (locale: Locale): Promise<CaseStudy[]> => {
+                  return this.caseStudyRepository.getCaseStudies(locale);
+                }
+                ```
+            *   **After (with Prisma and Caching):**
+                ```typescript
+                getCaseStudies = async (locale: Locale): Promise<CaseStudy[]> => {
+                  const getCachedCaseStudies = unstable_cache(
+                    async (locale: Locale) => {
+                      const model = locale === 'pl' ? prisma.caseStudyPL : prisma.caseStudyEN;
+                      return model.findMany({
+                        orderBy: { order_index: 'asc' },
+                      });
+                    },
+                    [`case-studies-${locale}`], // Unique cache key
+                    {
+                      tags: [CACHE_TAGS.CASE_STUDIES, `case-studies:${locale}`], // Tags for revalidation
+                    }
+                  );
+                  // The result from Prisma will match the domain model now, so no mapping is needed.
+                  return getCachedCaseStudies(locale);
+                }
+                ```
+        4.  **Rewrite `createCaseStudy`, `updateCaseStudy`, `deleteCaseStudy` Methods:**
+            *   These methods will now directly use `prisma.caseStudyEN.create(...)`, `prisma.caseStudyEN.update(...)`, etc. They do **not** get wrapped in `unstable_cache`.
+
+*   `[ ]` **Task 3.2: Refactor API Routes with Cache Revalidation.**
+    *   **Action:** For each API route file in `src/app/api/` that handles data mutations, you will add a `revalidateTag` call.
+
+    *   **Example: Refactoring `src/app/api/admin/case-studies/route.ts`**
+
+        1.  **Open:** `src/app/api/admin/case-studies/route.ts`
+        2.  **Modify Imports:**
+            ```typescript
+            // ADD this import if it's not there
+            import { revalidateTag } from 'next/cache';
+            ```
+        3.  **Update `POST` handler:**
+            *   **After** the `await caseStudyService.createCaseStudy(...)` call, add the revalidation logic.
+            ```typescript
+            // ... inside POST handler
+            const newCaseStudy = await caseStudyService.createCaseStudy(data, locale);
+
+            // Invalidate the cache for case studies
+            revalidateTag(CACHE_TAGS.CASE_STUDIES);
+
+            return NextResponse.json(newCaseStudy);
+            //...
+            ```
+        4.  **Update `PUT` and `DELETE` handlers:** Apply the same `revalidateTag(CACHE_TAGS.CASE_STUDIES)` logic after successful database operations in the `PUT` and `DELETE` functions in this file and all other API route files.
+
+*   `[ ]` **Task 3.3: Refactor and Verify Server Actions.**
+    *   **Action:** Review `src/infrastructure/services/pageServerActions.ts`.
+    *   **Verification:** Ensure that `updateHeroSectionAction` and `getHeroSectionAction` correctly call the refactored `heroService`. The `getHeroSectionAction` should now benefit from the `unstable_cache` implemented inside the service.
+    *   **Action:** For `updateHeroSectionAction`, add the cache revalidation call.
+        ```typescript
+        // src/infrastructure/services/pageServerActions.ts
+        import { revalidateTag } from 'next/cache';
+        import { CACHE_TAGS } from '@/lib/utils/cache'; // Assuming you create a HERO tag
+
+        export async function updateHeroSectionAction(data: Partial<HeroModel>, locale: string) {
+          const result = await heroService.updateHeroSection(data, locale);
+          revalidateTag(CACHE_TAGS.HERO); // Add a 'hero' tag to CACHE_TAGS
+          return result;
+        }
+        ```
 
 ---
 
-#### **Part 4: Final Cleanup and Verification**
+### **Verification: Public Components Data Fetching Strategy**
 
-The final step is to ensure the application is clean and all changes have been integrated correctly.
+I have verified the data fetching patterns in your public-facing components. The existing architecture correctly separates concerns, and this refactoring will build upon that good foundation.
 
-*   `[ ]` **Task 4.1: Update `package.json`.**
-    *   Double-check `package.json` to confirm old dependencies are removed and new ones (`prisma`, `@prisma/client`) are present.
-*   `[ ]` **Task 4.2: Verify Admin Panel Functionality.**
-    *   The admin panel's hooks (`src/hooks/admin/*.ts`) should work without modification, as they call the API routes. A full manual test of all CRUD (Create, Read, Update, Delete) operations in the admin panel is required to confirm the refactoring was successful.
-*   `[ ]` **Task 4.3: Clean Up Tests.**
-    *   Remove any Jest tests that were specifically for the now-deleted repository layer (`*.repository.test.ts`, `*.local.repository.test.ts`).
+1.  **Server Components (e.g., `src/app/[locale]/page.tsx`, `.../[slug]/page.tsx`)**:
+    *   **Current State:** These components correctly fetch data by directly calling the service layer (e.g., `await caseStudyService.getCaseStudyBySlug(...)`).
+    *   **After Refactor:** This pattern remains correct. The only change is that these calls will now be transparently cached by `unstable_cache` within the service, leading to faster page loads on subsequent visits.
 
-By following this plan, we will successfully modernize the data access layer, improve performance with a robust caching strategy, and simplify the overall architecture of the application.
+2.  **Client Components (e.g., `src/app/(admin)/**`, `*.client.tsx`)**:
+    *   **Current State:** Client components do **not** import or call server-side services directly. They correctly use hooks like `useAdminCaseStudies` which internally use the `fetch` API to call Next.js API routes (`/api/admin/...`).
+    *   **After Refactor:** This pattern remains correct and is the recommended approach. The client-side application will trigger API routes, which then execute the refactored, Prisma-based service logic on the server. The `revalidateTag` calls within those API routes will ensure that after a mutation, any cached data on the server is busted, and subsequent fetches (including from Server Components) will receive the fresh data.
+
+**Conclusion:** The project already follows the best practice of separating data fetching logic for server and client components. This refactoring will enhance this pattern by replacing the repository layer with a more direct and efficient Prisma implementation, backed by a robust server-side caching and revalidation strategy.
