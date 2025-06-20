@@ -1,10 +1,8 @@
 import { Locale } from '@/i18n'
 import { CaseStudy } from '@/domain/models/models'
-// import { prisma } from '@/lib/prisma';
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
-
 export interface OrderUpdate {
   id: string
   order: number
@@ -14,25 +12,26 @@ export class CaseStudyService {
   private getModel(locale: Locale) {
     return locale === 'pl' ? prisma.caseStudyPL : prisma.caseStudyEN
   }
+
   private withCache<T extends (...args: any[]) => Promise<any>>(
     fn: T,
     key: string,
     tags: string[]
   ): T {
-    return unstable_cache(fn, key, { tags }) as T
+    return unstable_cache(fn, [key], { tags }) as T
   }
 
   async getCaseStudies(locale: Locale): Promise<CaseStudy[]> {
     const cachedFn = this.withCache(
       async (locale: Locale) => {
-        return this.getModel(locale).findMany({
+        const model = this.getModel(locale)
+        return (model as any).findMany({
           orderBy: { order_index: 'asc' },
         })
       },
       `case-studies-${locale}`,
       [CACHE_TAGS.CASE_STUDIES, `case-studies:${locale}`]
     )
-
     return cachedFn(locale)
   }
 
@@ -40,7 +39,8 @@ export class CaseStudyService {
     slug: string,
     locale: Locale
   ): Promise<CaseStudy | null> {
-    return this.getModel(locale).findFirst({
+    const model = this.getModel(locale)
+    return (model as any).findFirst({
       where: { slug },
     })
   }
@@ -49,8 +49,9 @@ export class CaseStudyService {
     caseStudy: Partial<CaseStudy>,
     locale: Locale
   ): Promise<CaseStudy> {
-    return this.getModel(locale).create({
-      data: caseStudy,
+    const model = this.getModel(locale)
+    return (model as any).create({
+      data: caseStudy as any,
     })
   }
 
@@ -59,14 +60,16 @@ export class CaseStudyService {
     caseStudy: Partial<CaseStudy>,
     locale: Locale
   ): Promise<CaseStudy> {
-    return this.getModel(locale).update({
+    const model = this.getModel(locale)
+    return (model as any).update({
       where: { id },
-      data: caseStudy,
+      data: caseStudy as any,
     })
   }
 
   async deleteCaseStudy(id: string, locale: Locale): Promise<void> {
-    await this.getModel(locale).delete({
+    const model = this.getModel(locale)
+    await (model as any).delete({
       where: { id },
     })
   }
@@ -75,7 +78,7 @@ export class CaseStudyService {
     orders: OrderUpdate[],
     locale: Locale
   ): Promise<void> {
-    const model = this.getModel(locale)
+    const model = this.getModel(locale) as any
     await prisma.$transaction(
       orders.map((order) =>
         model.update({
