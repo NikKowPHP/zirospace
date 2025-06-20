@@ -2,19 +2,9 @@ import { Locale } from '@/i18n'
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
+import { Banner } from '@/generated/prisma'
 
-export interface Banner {
-  id: string
-  title: string
-  content: string
-  imageUrl?: string
-  link?: string
-  isActive: boolean
-  order_index?: number
-  locale: Locale
-  createdAt: Date
-  updatedAt: Date
-}
+
 
 export class BannerService {
   private getModel(locale: Locale) {
@@ -34,7 +24,7 @@ export class BannerService {
       async (locale: Locale) => {
         const model = this.getModel(locale)
         return (model as any).findMany({
-          orderBy: { order_index: 'asc' },
+          
           where: { is_active: true }
         })
       },

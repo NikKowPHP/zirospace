@@ -21,9 +21,7 @@ export class TestimonialService {
     const cachedFn = this.withCache(
       async (locale: Locale) => {
         const model = this.getModel(locale)
-        return (model as any).findMany({
-          orderBy: { order_index: 'asc' },
-        })
+        return (model as any).findMany()
       },
       `testimonials-${locale}`,
       [CACHE_TAGS.TESTIMONIALS, `testimonials:${locale}`]
