@@ -13,3 +13,137 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model CaseStudyEN {
+  id             String  @id
+  slug           String  @unique
+  title          String
+  subtitle       String?
+  description    String?
+  tags           String?
+  images         String?
+  cta_url        String?
+  created_at     String? @default("CURRENT_TIMESTAMP")
+  updated_at     String? @default("CURRENT_TIMESTAMP")
+  color          String?
+  background_color String?
+  theme          String?
+  order_index    Int?    @default(0)
+}
+
+model CaseStudyPL {
+  id             String  @id
+  slug           String  @unique
+  title          String
+  subtitle       String?
+  description    String?
+  tags           String?
+  images         String?
+  cta_url        String?
+  created_at     String? @default("CURRENT_TIMESTAMP")
+  updated_at     String? @default("CURRENT_TIMESTAMP")
+  color          String?
+  background_color String?
+  theme          String?
+  order_index    Int?    @default(0)
+}
+
+model CaseStudySlider {
+  id        String                 @id
+  theme     String?
+  created_at String? @default("CURRENT_TIMESTAMP")
+  updated_at String? @default("CURRENT_TIMESTAMP")
+  images    CaseStudySliderImage[]
+}
+
+model CaseStudySliderImage {
+  id       String          @id
+  slider   CaseStudySlider @relation(fields: [slider_id], references: [id])
+  slider_id String
+  image    String?
+  alt      String?
+}
+
+model Testimonial {
+  id          String  @id
+  author      String
+  position    String?
+  company     String?
+  content     String
+  image       String?
+  created_at  String? @default("CURRENT_TIMESTAMP")
+  updated_at  String? @default("CURRENT_TIMESTAMP")
+  order_index Int?    @default(0)
+}
+
+model BlogPost {
+  id          String  @id
+  slug        String  @unique
+  title       String
+  content     String
+  excerpt     String?
+  image       String?
+  created_at  String? @default("CURRENT_TIMESTAMP")
+  updated_at  String? @default("CURRENT_TIMESTAMP")
+  published   Boolean @default(false)
+  pinned      Boolean @default(false)
+  order_index Int?    @default(0)
+}
+
+model Banner {
+  id         String  @id
+  title      String
+  content    String?
+  image      String?
+  link       String?
+  theme      String?
+  created_at String? @default("CURRENT_TIMESTAMP")
+  updated_at String? @default("CURRENT_TIMESTAMP")
+  active     Boolean @default(false)
+  order_index Int?   @default(0)
+}
+
+model Youtube {
+  id         String  @id
+  video_id   String
+  title      String
+  created_at String? @default("CURRENT_TIMESTAMP")
+  updated_at String? @default("CURRENT_TIMESTAMP")
+  order_index Int?   @default(0)
+}
+
+model Service {
+  id          String  @id
+  slug        String  @unique
+  title       String
+  description String?
+  icon        String?
+  content     String?
+  created_at  String? @default("CURRENT_TIMESTAMP")
+  updated_at  String? @default("CURRENT_TIMESTAMP")
+  order_index Int?    @default(0)
+}
+
+model Update {
+  id          String  @id
+  title       String
+  content     String
+  created_at  String? @default("CURRENT_TIMESTAMP")
+  updated_at  String? @default("CURRENT_TIMESTAMP")
+  published   Boolean @default(false)
+  order_index Int?    @default(0)
+}
+
+model Hero {
+  id          String  @id
+  title       String
+  subtitle    String?
+  content     String?
+  image       String?
+  cta_text    String?
+  cta_link    String?
+  theme       String?
+  created_at  String? @default("CURRENT_TIMESTAMP")
+  updated_at  String? @default("CURRENT_TIMESTAMP")
+  order_index Int?    @default(0)
+}
