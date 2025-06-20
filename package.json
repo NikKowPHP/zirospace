@@ -1,3 +1,4 @@
+
 {
   "name": "ziro.space",
   "version": "0.1.1",
@@ -12,12 +13,9 @@
     "test:watch": "jest --watch",
     "format": "prettier --write .",
     "analyze": "cross-env ANALYZE=true next build",
-    "build:prod": "next build && next-bundle-analyzer",
-    "docker:proxy": "docker-compose -f docker-compose.proxy.yml up",
-    "docker:mac:run": "docker-compose -f docker-compose.mac.yml up",
-    "migrate:latest": "npx knex migrate:latest --knexfile knexfile.mjs",
-    "db:seed": "npx knex seed:run --knexfile knexfile.mjs",
-    "migrate:fresh": "npx knex migrate:fresh --knexfile knexfile.mjs"
+    "db:migrate": "npx prisma migrate dev",
+    "db:seed": "npx prisma db seed",
+    "db:setup": "npm run db:migrate && npm run db:seed"
   },
   "dependencies": {
     "@google-analytics/data": "^4.12.0",
@@ -73,8 +71,12 @@
     "prisma": "^6.10.1",
     "supabase": "^2.9.6",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.16.2",
     "typescript": "^5",
     "umzug": "^3.8.2",
     "webpack-bundle-analyzer": "^4.10.1"
-  }
+  },
+"prisma": {
+"seed": "tsx prisma/seed.ts"
+}
 }
