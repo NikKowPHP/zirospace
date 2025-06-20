@@ -1,64 +1,101 @@
-import { BlogPost } from "@/domain/models/blog-post.model"
-import { blogPostRepositoryLocal } from "@/lib/repositories/blog-post.local.repository"
-import { blogPostRepository } from "@/lib/repositories/blog-post.repository"
+import { Locale } from '@/i18n'
+import { BlogPost } from '@/domain/models/blog-post.model'
+import { prisma } from '@/lib/prisma'
+import { unstable_cache } from 'next/cache'
+import { CACHE_TAGS } from '@/lib/utils/cache'
 
-export interface IBlogPostService {
-  getBlogPosts(locale: string): Promise<BlogPost[]>
-  getBlogPostBySlug(slug: string, locale: string): Promise<BlogPost | null>
-  createBlogPost(blogPost: Omit<BlogPost, 'id'>, locale: string): Promise<BlogPost>
-  updateBlogPost(id: string, blogPost: Partial<BlogPost>, locale: string): Promise<BlogPost | null>
-  deleteBlogPost(id: string, locale: string): Promise<boolean>
-}
+export class BlogPostService {
+  private getModel(locale: Locale) {
+    return locale === 'pl' ? prisma.blogPostPL : prisma.blogPostEN
+  }
 
-export class BlogPostService implements IBlogPostService {
-  private blogPostRepository: any //IBlogPostRepository
-  constructor() {
-    if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.blogPostRepository = blogPostRepositoryLocal
-    } else {
-      this.blogPostRepository = blogPostRepository // TODO: implement postgres repo
+  private withCache<T extends (...args: any[]) => Promise<any>>(
+    fn: T,
+    key: string,
+    tags: string[]
+  ): T {
+    return unstable_cache(fn, [key], { tags }) as T
+  }
+
+  async getBlogPosts(locale: Locale): Promise<BlogPost[]> {
+    const cachedFn = this.withCache(
+      async (locale: Locale) => {
+        const model = this.getModel(locale)
+        return (model as any).findMany({
+          orderBy: { createdAt: 'desc' },
+        })
+      },
+      `blog-posts-${locale}`,
+      [CACHE_TAGS.BLOG_POSTS, `blog-posts:${locale}`]
+    )
+    return cachedFn(locale)
+  }
+
+  async getBlogPostBySlug(slug: string, locale: Locale): Promise<BlogPost | null> {
+    const cachedFn = this.withCache(
+      async (slug: string, locale: Locale) => {
+        const model = this.getModel(locale)
+        return (model as any).findFirst({
+          where: { slug },
+        })
+      },
+      `blog-post-${slug}-${locale}`,
+      [CACHE_TAGS.BLOG_POSTS, `blog-post:${slug}:${locale}`]
+    )
+    return cachedFn(slug, locale)
+  }
+
+  async getBlogPostById(id: string, locale: Locale): Promise<BlogPost | null> {
+    const cachedFn = this.withCache(
+      async (id: string, locale: Locale) => {
+        const model = this.getModel(locale)
+        return (model as any).findUnique({
+          where: { id },
+        })
+      },
+      `blog-post-${id}-${locale}`,
+      [CACHE_TAGS.BLOG_POSTS, `blog-post:${id}:${locale}`]
+    )
+    return cachedFn(id, locale)
+  }
+
+  async createBlogPost(blogPost: Omit<BlogPost, 'id'>, locale: Locale): Promise<BlogPost> {
+    const model = this.getModel(locale)
+    blogPost.createdAt = new Date().toISOString()
+    const trimmedBlogPost = this.trimBlogPost(blogPost)
+    return (model as any).create({
+      data: trimmedBlogPost as any,
+    })
+  }
+
+  async updateBlogPost(id: string, blogPost: Partial<BlogPost>, locale: Locale): Promise<BlogPost> {
+    const model = this.getModel(locale)
+    const trimmedBlogPost = this.trimBlogPost(blogPost)
+    return (model as any).update({
+      where: { id },
+      data: trimmedBlogPost as any,
+    })
+  }
+
+  async deleteBlogPost(id: string, locale: Locale): Promise<boolean> {
+    const model = this.getModel(locale)
+    try {
+      await (model as any).delete({
+        where: { id },
+      })
+      return true
+    } catch (error) {
+      return false
     }
   }
 
-  getBlogPosts = async (locale: string): Promise<BlogPost[]> => {
-    return this.blogPostRepository.getBlogPosts(locale)
-  }
-
-  getBlogPostBySlug = async (slug: string, locale: string): Promise<BlogPost | null> => {
-    return this.blogPostRepository.getBlogPostBySlug(slug, locale)
-  }
-
-  getBlogPostById = async (id: string, locale: string): Promise<BlogPost | null> => {
-    return this.blogPostRepository.getBlogPostById(id, locale)
-  }
-
-  createBlogPost = async (blogPost: Omit<BlogPost, 'id'>, locale: string): Promise<BlogPost> => {
-    blogPost.createdAt = new Date().toISOString()
-    const trimmedBlogPost = this.trimBlogPost(blogPost)
-    return this.blogPostRepository.createBlogPost(trimmedBlogPost, locale)
-  }
-
-  updateBlogPost = async (id: string, blogPost: Partial<BlogPost>, locale: string): Promise<BlogPost | null> => {
-    const trimmedBlogPost = this.trimBlogPost(blogPost)
-
-    return this.blogPostRepository.updateBlogPost(id, trimmedBlogPost, locale)
-  }
-
-  deleteBlogPost = async (id: string, locale: string): Promise<boolean> => {
-    return this.blogPostRepository.deleteBlogPost(id, locale)
-  }
-  private trimBlogPost = (blogPost: Partial<BlogPost>): Partial<BlogPost> => {
-    return  Object.fromEntries(
+  private trimBlogPost(blogPost: Partial<BlogPost>): Partial<BlogPost> {
+    return Object.fromEntries(
       Object.entries(blogPost)
         .filter(([_, value]) => value !== null && value !== undefined)
         .map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
-    );
+    ) as Partial<BlogPost>
   }
 }
 
-// export singleton
 export const blogPostService = new BlogPostService()
-
-export const getBlogPostService =  () => {
-  return new BlogPostService()
-}

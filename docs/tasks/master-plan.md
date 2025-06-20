@@ -51,6 +51,15 @@ This part details the process of rewriting data logic using Prisma and implement
     *   **Action:** For each file in `src/lib/services/`, you will replace the repository calls with direct Prisma Client queries and wrap them in `unstable_cache`.
 
     - [x] case study service
+     - [x] blog post
+      - [x] banner
+      - [x] hero
+      - [ ] case study
+      - [ ] case study slider
+      - [ ] service 
+      - [ ] testimonials
+      - [ ] update 
+      - [ ] youtube
 
     *   **Example: Refactoring `case-study.service.ts`**
 
