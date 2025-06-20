@@ -1,56 +1,90 @@
-import { Locale } from "@/i18n"
-import { CaseStudyRepository } from "../repositories/caseStudy.repository"
-import { CaseStudy } from "@/domain/models/models"
-import { caseStudyRepositoryLocal } from "../repositories/caseStudy.local.repository"
-import { ICaseStudyRepository } from "../interfaces/caseStudyRepository.interface"
+import { Locale } from '@/i18n'
+import { CaseStudy } from '@/domain/models/models'
+// import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/prisma'
+import { unstable_cache } from 'next/cache'
+import { CACHE_TAGS } from '@/lib/utils/cache'
 
 export interface OrderUpdate {
   id: string
   order: number
 }
 
-const caseStudyRepository = new CaseStudyRepository()
-
-
-
 export class CaseStudyService {
-  private caseStudyRepository: ICaseStudyRepository
-  constructor() {
-    if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.caseStudyRepository = caseStudyRepositoryLocal
-    } else {
-      this.caseStudyRepository = caseStudyRepository
-    }
+  private getModel(locale: Locale) {
+    return locale === 'pl' ? prisma.caseStudyPL : prisma.caseStudyEN
+  }
+  private withCache<T extends (...args: any[]) => Promise<any>>(
+    fn: T,
+    key: string,
+    tags: string[]
+  ): T {
+    return unstable_cache(fn, key, { tags }) as T
   }
 
-  getCaseStudies = async (locale: Locale): Promise<CaseStudy[]> => {
-    return this.caseStudyRepository.getCaseStudies(locale)
+  async getCaseStudies(locale: Locale): Promise<CaseStudy[]> {
+    const cachedFn = this.withCache(
+      async (locale: Locale) => {
+        return this.getModel(locale).findMany({
+          orderBy: { order_index: 'asc' },
+        })
+      },
+      `case-studies-${locale}`,
+      [CACHE_TAGS.CASE_STUDIES, `case-studies:${locale}`]
+    )
+
+    return cachedFn(locale)
   }
 
-  getCaseStudyBySlug = async (slug: string, locale: Locale): Promise<CaseStudy | null> => {
-    return this.caseStudyRepository.getCaseStudyBySlug(slug, locale)
+  async getCaseStudyBySlug(
+    slug: string,
+    locale: Locale
+  ): Promise<CaseStudy | null> {
+    return this.getModel(locale).findFirst({
+      where: { slug },
+    })
   }
 
-  createCaseStudy = async (caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
-    return this.caseStudyRepository.createCaseStudy(caseStudy, locale)
+  async createCaseStudy(
+    caseStudy: Partial<CaseStudy>,
+    locale: Locale
+  ): Promise<CaseStudy> {
+    return this.getModel(locale).create({
+      data: caseStudy,
+    })
   }
 
-  updateCaseStudy = async (id: string, caseStudy: Partial<CaseStudy>, locale: Locale): Promise<CaseStudy> => {
-    return this.caseStudyRepository.updateCaseStudy(id, caseStudy, locale);
+  async updateCaseStudy(
+    id: string,
+    caseStudy: Partial<CaseStudy>,
+    locale: Locale
+  ): Promise<CaseStudy> {
+    return this.getModel(locale).update({
+      where: { id },
+      data: caseStudy,
+    })
   }
 
-  deleteCaseStudy = async (id: string, locale: Locale): Promise<void> => {
-    return this.caseStudyRepository.deleteCaseStudy(id, locale)
+  async deleteCaseStudy(id: string, locale: Locale): Promise<void> {
+    await this.getModel(locale).delete({
+      where: { id },
+    })
   }
 
-  updateCaseStudyOrder = async (orders: OrderUpdate[], locale: Locale): Promise<void> => {
-    return this.caseStudyRepository.updateCaseStudyOrder(orders, locale)
+  async updateCaseStudyOrder(
+    orders: OrderUpdate[],
+    locale: Locale
+  ): Promise<void> {
+    const model = this.getModel(locale)
+    await prisma.$transaction(
+      orders.map((order) =>
+        model.update({
+          where: { id: order.id },
+          data: { order_index: order.order },
+        })
+      )
+    )
   }
 }
 
-// export singleton
 export const caseStudyService = new CaseStudyService()
-
-export const getCaseStudyService = async () => {
-  return new CaseStudyService()
-}
