@@ -1,4 +1,3 @@
-import { Locale } from '@/i18n'
 import { CaseStudySlider } from "@/domain/models/case-study-slider.model"
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'

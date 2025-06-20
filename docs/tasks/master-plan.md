@@ -54,9 +54,9 @@ This part details the process of rewriting data logic using Prisma and implement
      - [x] blog post
       - [x] banner
       - [x] hero
-      - [ ] case study
-      - [ ] case study slider
-      - [ ] service 
+      - [x] case study
+      - [x] case study slider
+      - [x] service 
       - [ ] testimonials
       - [ ] update 
       - [ ] youtube

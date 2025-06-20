@@ -1,131 +1,97 @@
-import { IServiceRepository } from '../interfaces/service.interface';
-import { Service } from '../../domain/models/service.model';
-import { ServiceDTO } from '../../infrastructure/dto/service.dto';
-import { generateSlug } from '../utils/slugify';
-import { serviceRepository } from '../repositories/service.repository';
-import logger from '@/lib/logger';
-/**
- * @class ServiceService
- * @desc Service class for managing services.
- */
-class ServiceService {
-  private readonly repository: IServiceRepository;
+import { Locale } from '@/i18n'
+import { Service } from '@/domain/models/service.model'
+import { prisma } from '@/lib/prisma'
+import { unstable_cache } from 'next/cache'
+import { generateSlug } from '@/lib/utils/slugify'
+import { CACHE_TAGS } from '@/lib/utils/cache'
+import logger from '@/lib/logger'
 
+export interface OrderUpdate {
+  id: string
+  order: number
+}
 
-  constructor() {
-    if (process.env.MOCK_REPOSITORIES === 'true') {
-      // Use synchronous require for server-side code
-      const { serviceLocalRepository } = require('../repositories/service.local.repository');
-      this.repository = serviceLocalRepository;
-    } else {
-      this.repository = serviceRepository;
-    }
-  }
-  /**
-   * @public
-   * @async
-   * @method getServices
-   * @desc Gets all services for a given locale.
-   * @param {string} locale - The locale to get services for.
-   * @returns {Promise<Service[]>} A promise that resolves to an array of services.
-   */
-  async getServices(locale: string): Promise<Service[]> {
-    return this.repository.getServices(locale);
+export class ServiceService {
+  private getModel(locale: Locale) {
+    return locale === 'pl' ? prisma.servicePL : prisma.serviceEN
   }
 
-  /**
-   * @public
-   * @async
-   * @method getServiceBySlug
-   * @desc Gets a service by its slug for a given locale.
-   * @param {string} slug - The slug of the service to get.
-   * @param {string} locale - The locale to get the service for.
-   * @returns {Promise<Service | null>} A promise that resolves to a service or null if not found.
-   */
-  async getServiceBySlug(slug: string, locale: string): Promise<Service | null> {
-    return this.repository.getServiceBySlug(slug, locale);
+  private withCache<T extends (...args: any[]) => Promise<any>>(
+    fn: T,
+    key: string,
+    tags: string[]
+  ): T {
+    return unstable_cache(fn, [key], { tags }) as T
   }
 
-  /**
-   * @public
-   * @async
-   * @method getServiceById
-   * @desc Gets a service by its ID for a given locale.
-   * @param {string} id - The ID of the service to get.
-   * @param {string} locale - The locale to get the service for.
-   * @returns {Promise<Service | null>} A promise that resolves to a service or null if not found.
-   */
-  async getServiceById(id: string, locale: string): Promise<Service | null> {
-    return this.repository.getServiceById(id, locale);
+  async getServices(locale: Locale): Promise<Service[]> {
+    const cachedFn = this.withCache(
+      async (locale: Locale) => {
+        const model = this.getModel(locale)
+        return (model as any).findMany({
+          orderBy: { order_index: 'asc' },
+        })
+      },
+      `services-${locale}`,
+      [CACHE_TAGS.SERVICES, `services:${locale}`]
+    )
+    return cachedFn(locale)
   }
 
-  /**
-   * @public
-   * @async
-   * @method createService
-   * @desc Creates a new service.
-   * @param {Partial<ServiceDTO>} service - The service data to create.
-   * @param {string} locale - The locale to create the service for.
-   * @returns {Promise<Service>} A promise that resolves to the created service.
-   */
-  async createService(service: Partial<ServiceDTO>, locale: string): Promise<Service> {
+  
+  async getServiceBySlug(slug: string, locale: Locale): Promise<Service | null> {
+    const model = this.getModel(locale)
+    return (model as any).findFirst({
+      where: { slug },
+    })
+  }
+
+
+  async createService(service: Partial<Service>, locale: Locale): Promise<Service> {
     // Business logic: Generate slug if not provided
     if (!service.slug && service.title) {
       service.slug = generateSlug(service.title);
     }
 
-    // Business logic: Trim string fields (basic example)
-    if (service.title) service.title = service.title.trim();
-    if (service.subtitle) service.subtitle = service.subtitle.trim();
-    if (service.excerpt) service.excerpt = service.excerpt.trim();
-    if (service.image_url) service.image_url = service.image_url.trim();
-    if (service.image_alt) service.image_alt = service.image_alt.trim();
-    if (service.meta_title) service.meta_title = service.meta_title.trim();
-    if (service.meta_description) service.meta_description = service.meta_description.trim();
+ 
+    // Trim all string fields
+    this.trimStrings(service);
 
-    // Keywords are handled by the repository/mapper, no service-level logic needed here
-
-    return this.repository.createService(service, locale);
+    const model = this.getModel(locale)
+    return (model as any).create({
+      data: service as any,
+    })
   }
 
-  /**
-   * @public
-   * @async
-   * @method updateService
-   * @desc Updates an existing service.
-   * @param {string} id - The ID of the service to update.
-   * @param {Partial<ServiceDTO>} service - The service data to update.
-   * @param {string} locale - The locale to update the service for.
-   * @returns {Promise<Service | null>} A promise that resolves to the updated service or null if not found.
-   */
-  async updateService(id: string, service: Partial<ServiceDTO>, locale: string): Promise<Service | null> {
-    // Business logic: Trim string fields (basic example)
-    if (service.title) service.title = service.title.trim();
-    if (service.subtitle) service.subtitle = service.subtitle.trim();
-    if (service.excerpt) service.excerpt = service.excerpt.trim();
-    if (service.image_url) service.image_url = service.image_url.trim();
-    if (service.image_alt) service.image_alt = service.image_alt.trim();
-    if (service.meta_title) service.meta_title = service.meta_title.trim();
-    if (service.meta_description) service.meta_description = service.meta_description.trim();
+ 
+  async updateService(id: string, service: Partial<Service>, locale: Locale): Promise<Service | null> {
+    // Trim all string fields
+    this.trimStrings(service);
 
     logger.log('Updating service with ID:', id, 'and locale:', locale);
-    // Keywords are handled by the repository/mapper, no service-level logic needed here
 
-    return this.repository.updateService(id, service, locale);
+    const model = this.getModel(locale)
+    return (model as any).update({
+      where: { id },
+      data: service as any,
+    })
   }
 
-  /**
-   * @public
-   * @async
-   * @method deleteService
-   * @desc Deletes a service by its ID for a given locale.
-   * @param {string} id - The ID of the service to delete.
-   * @param {string} locale - The locale to delete the service for.
-   * @returns {Promise<boolean>} A promise that resolves to true if the service was deleted, false otherwise.
-   */
-  async deleteService(id: string, locale: string): Promise<boolean> {
+  private trimStrings(obj: Record<string, any>): void {
+    for (const key in obj) {
+      if (typeof obj[key] === 'string') {
+        obj[key] = obj[key].trim();
+      }
+    }
+  
+  }
 
-    return this.repository.deleteService(id, locale);
+ 
+  async deleteService(id: string, locale: Locale): Promise<void> {
+    const model = this.getModel(locale)
+    await (model as any).delete({
+      where: { id },
+    })
   }
 }
 
