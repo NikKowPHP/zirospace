@@ -9,6 +9,7 @@ export const CACHE_TAGS = {
   SERVICES: 'services',
   UPDATES: 'updates',
   HERO: 'hero',
+  YOUTUBE: 'youtube',
 } as const
 
 export const CACHE_TIMES = {

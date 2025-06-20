@@ -1,37 +1,40 @@
-import { YoutubeModel } from "@/domain/models/models"
-import { youtubeRepositoryLocal } from "../repositories/youtube.local.repository"
-import { youtubeRepository } from "../repositories/youtube.repository"
+import { YoutubeModel } from '@/domain/models/models'
+import { prisma } from '@/lib/prisma'
+import { unstable_cache } from 'next/cache'
+import { CACHE_TAGS } from '@/lib/utils/cache'
 
-export interface IYoutubeRepository {
-  getYoutube(): Promise<YoutubeModel | null>
-  updateYoutube(youtube_url: string): Promise<YoutubeModel | null>
+export class YoutubeService {
+  private getModel() {
+    return prisma.youtube
+  }
+
+  private withCache<T extends (...args: any[]) => Promise<any>>(
+    fn: T,
+    key: string,
+    tags: string[]
+  ): T {
+    return unstable_cache(fn, [key], { tags }) as T
+  }
+
+  async getYoutube(): Promise<YoutubeModel | null> {
+    const cachedFn = this.withCache(
+      async () => {
+        const model = this.getModel()
+        return (model as any).findFirst()
+      },
+      `youtube-data`,
+      [CACHE_TAGS.YOUTUBE]
+    )
+    return cachedFn()
+  }
+
+  async updateYoutube(youtubeUrl: string): Promise<YoutubeModel | null> {
+    const model = this.getModel()
+    return (model as any).update({
+      where: { id: 'youtube-id' }, // Assuming a fixed ID for the single YouTube entry
+      data: { youtubeUrl },
+    })
+  }
 }
 
-export class YoutubeService implements IYoutubeRepository {
-  private youtubeRepository: IYoutubeRepository
-
-  constructor() {
-    if(process.env.NEXT_PUBLIC_MOCK_REPOSITORIES === 'true') {
-      this.youtubeRepository = youtubeRepositoryLocal 
-    } else {
-      this.youtubeRepository = youtubeRepository
-    }
-  }
-
-  getYoutube = async (): Promise<YoutubeModel | null> => {
-    const youtubeData = await this.youtubeRepository.getYoutube()
-    console.log('YouTube data fetched in service', youtubeData)
-    return youtubeData
-  }
-
-  updateYoutube = async (youtube_url: string): Promise<YoutubeModel | null> => {
-    return this.youtubeRepository.updateYoutube(youtube_url)
-  }
-}
-
-// export singleton
 export const youtubeService = new YoutubeService()
-
-export const getYoutubeService = async () => {
-  return new YoutubeService()
-}
