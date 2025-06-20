@@ -32,6 +32,30 @@ const serviceLocaleSchema = z.object({
   locale: z.string(),
 });
 
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const locale = searchParams.get('locale');
+
+    const validatedParams = serviceLocaleSchema.safeParse({ locale });
+
+    if (!validatedParams.success) {
+      logger.error('Validation error fetching all services:', validatedParams.error.issues);
+      return NextResponse.json({ error: 'Validation error', details: validatedParams.error.issues }, { status: 400 });
+    }
+
+    const { locale: validatedLocale } = validatedParams.data;
+
+    console.log('processing service get request for all services', { locale: validatedLocale });
+    logger.log(`Fetching all services for locale: ${validatedLocale}`);
+    const services = await serviceService.getServices(validatedLocale as Locale);
+    return NextResponse.json(services);
+  } catch (error: unknown) {
+    logger.error(`Error fetching service: ${error}`);
+    return NextResponse.json({ error: 'Failed to fetch service' }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
@@ -59,29 +83,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { error: 'Failed to create service', details: (error as Error).message },
       { status: 500 }
     );
-  }
-}
-
-export async function GET(request: NextRequest): Promise<NextResponse> {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const locale = searchParams.get('locale');
-
-    const validatedParams = serviceLocaleSchema.safeParse({ locale });
-
-    if (!validatedParams.success) {
-      logger.error('Validation error fetching all services:', validatedParams.error.issues);
-      return NextResponse.json({ error: 'Validation error', details: validatedParams.error.issues }, { status: 400 });
-    }
-
-    const { locale: validatedLocale } = validatedParams.data;
-
-    console.log('processing service get request for all services', { locale: validatedLocale });
-    logger.log(`Fetching all services for locale: ${validatedLocale}`);
-    const services = await serviceService.getServices(validatedLocale as Locale);
-    return NextResponse.json(services);
-  } catch (error: unknown) {
-    logger.error(`Error fetching service: ${error}`);
-    return NextResponse.json({ error: 'Failed to fetch service' }, { status: 500 });
   }
 }

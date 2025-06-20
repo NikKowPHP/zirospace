@@ -47,6 +47,10 @@ export async function GET(
     const { id } = params;
     const searchParams = request.nextUrl.searchParams;
     const locale = searchParams.get('locale') as Locale;
+    if (!locale) {
+      logger.error('Locale is required for DELETE request');
+      return NextResponse.json({ error: 'Locale is required' }, { status: 400 });
+    }
 
     const validatedParams = serviceIdLocaleSchema.safeParse({ id, locale });
 
@@ -79,6 +83,11 @@ export async function PUT(
     const body = await request.json();
     const validatedBody = putServiceSchema.parse(body);
     const { data: domainData, locale } = validatedBody;
+    const searchParams = request.nextUrl.searchParams;
+    const localeFromQuery = searchParams.get('locale') as Locale;
+    if (localeFromQuery && localeFromQuery !== locale) {
+      logger.warn(`Locale mismatch in PUT request for service ${id}: body locale ${locale}, query locale ${localeFromQuery}`);
+    }
 
     if (!id || !locale) {
       return NextResponse.json({ error: 'Missing id or locale' }, { status: 400 });
