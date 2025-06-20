@@ -46,6 +46,13 @@ export class ServiceService {
     })
   }
 
+  async getServiceById(id: string, locale: Locale): Promise<Service | null> {
+    const model = this.getModel(locale)
+    return (model as any).findUnique({
+      where: { id },
+    })
+  }
+
 
   async createService(service: Partial<Service>, locale: Locale): Promise<Service> {
     // Business logic: Generate slug if not provided
@@ -87,11 +94,17 @@ export class ServiceService {
   }
 
  
-  async deleteService(id: string, locale: Locale): Promise<void> {
+  async deleteService(id: string, locale: Locale): Promise<boolean> {
     const model = this.getModel(locale)
-    await (model as any).delete({
-      where: { id },
-    })
+    try {
+      await (model as any).delete({
+        where: { id },
+      })
+      return true
+    } catch (error) {
+      logger.error(`Error deleting service with ID ${id} for locale ${locale}:`, error);
+      return false
+    }
   }
 }
 

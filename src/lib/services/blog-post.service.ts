@@ -96,6 +96,24 @@ export class BlogPostService {
         .map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
     ) as Partial<BlogPost>
   }
+
+  async pinBlogPost(postIdToPin: string, locale: Locale): Promise<BlogPost> {
+    return prisma.$transaction(async (tx) => {
+      const txModel = locale === 'pl' ? tx.blogPostPL : tx.blogPostEN;
+      // Unpin any currently pinned post for the given locale
+      await (txModel as any).updateMany({
+        where: { isPinned: true, locale },
+        data: { isPinned: false },
+      });
+
+      // Pin the target post
+      const pinnedPost = await (txModel as any).update({
+        where: { id: postIdToPin },
+        data: { isPinned: true },
+      });
+      return pinnedPost;
+    });
+  }
 }
 
 export const blogPostService = new BlogPostService()

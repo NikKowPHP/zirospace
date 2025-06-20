@@ -42,6 +42,21 @@ export class BannerService {
     return cachedFn(locale)
   }
 
+  async getActiveBanner(locale: Locale): Promise<Banner | null> {
+    const cachedFn = this.withCache(
+      async (locale: Locale) => {
+        const model = this.getModel(locale)
+        return (model as any).findFirst({
+          where: { isActive: true, locale },
+          orderBy: { orderIndex: 'asc' },
+        })
+      },
+      `active-banner-${locale}`,
+      [CACHE_TAGS.BANNERS, `active-banner:${locale}`]
+    )
+    return cachedFn(locale)
+  }
+
   async createBanner(
     banner: Partial<Banner>,
     locale: Locale

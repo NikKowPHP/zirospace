@@ -39,7 +39,7 @@ const useAdminBlogPosts = ({
     async (id: string, locale: Locale): Promise<BlogPost | null> => {
       try {
         const data: BlogPost = await callApi(
-          `/api/admin/blog-post?id=${id}&locale=${locale}`,
+          `/api/admin/blog-post/${id}?locale=${locale}`,
           { method: 'GET' },
           {
             loadingMessage: 'Fetching blog post...',
@@ -87,11 +87,11 @@ const useAdminBlogPosts = ({
       try {
         logger.log(`submitting the blog post ${id}, ${JSON.stringify(data)}`)
         const updatedBlogPost: BlogPost = await callApi(
-          `/api/admin/blog-post`,
+          `/api/admin/blog-post/${id}`,
           {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data, locale, id }),
+            body: JSON.stringify({ data, locale }),
           },
           {
             loadingMessage: 'Updating blog post...',
@@ -116,11 +116,10 @@ const useAdminBlogPosts = ({
     async (id: string, locale: Locale) => {
       try {
         await callApi(
-          `/api/admin/blog-post/`,
+          `/api/admin/blog-post/${id}?locale=${locale}`,
           {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ locale, id }),
           },
           {
             loadingMessage: 'Deleting blog post...',

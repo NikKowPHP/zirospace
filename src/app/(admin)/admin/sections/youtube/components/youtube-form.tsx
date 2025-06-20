@@ -1,49 +1,50 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button/button'
-import { YoutubeModel} from '@/domain/models/models'
-import { updateYoutubeAction } from '../actions/youtubeServerActions'
-import { Loader2 } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button/button';
+import { YoutubeModel } from '@/domain/models/models';
+import { Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
-export function YoutubeForm({youtube}: {youtube: YoutubeModel | null}) {
+interface YoutubeFormProps {
+  youtube: YoutubeModel | null;
+  onSubmit: (data: Partial<YoutubeModel>) => Promise<void>;
+  onCancel: () => Promise<void>;
+}
 
-  const [youtube_url, setYoutubeUrl] = useState(youtube?.youtube_url || '')
-  const [loading, setLoading] = useState(false)
+export function YoutubeForm({ youtube, onSubmit, onCancel }: YoutubeFormProps) {
+  const [youtube_url, setYoutubeUrl] = useState(youtube?.youtube_url || '');
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (youtube) {
-      setYoutubeUrl(youtube.youtube_url || '')
+      setYoutubeUrl(youtube.youtube_url || '');
     }
-  }, [youtube])
+  }, [youtube]);
 
-  console.log('youtubeSection fetched on form', youtube)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
     try {
-      setLoading(true)
-      const result = await updateYoutubeAction({ youtube_url, id: youtube?.id })
-      console.log('updateYoutubeAction result', result)
-      setYoutubeUrl(result?.youtube_url || '')
-      toast.success('Youtube URL updated successfully')
-      setLoading(false)
+      await onSubmit({ youtube_url });
+      toast.success('YouTube URL updated successfully');
     } catch (error) {
-      console.error('Failed to update YouTube:', error)
-      toast.error('Failed to update YouTube')
-      setLoading(false)
+      toast.error(`Failed to update YouTube: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  if(loading) {
-    return <div className="flex justify-center items-center h-screen">
-      <Loader2 className="w-4 h-4 animate-spin" />
-    </div>
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="w-4 h-4 animate-spin" />
+      </div>
+    );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleFormSubmit} className="space-y-4">
       <div>
         <label
           htmlFor="youtube_url"
@@ -60,14 +61,14 @@ export function YoutubeForm({youtube}: {youtube: YoutubeModel | null}) {
           required
         />
       </div>
-      <div>
-      </div>
-       
       <div className="flex justify-end space-x-4">
         <Button variant="primary" type="submit" disabled={loading}>
           {loading ? 'Updating...' : 'Update'}
         </Button>
+        <Button variant="secondary" type="button" onClick={onCancel} disabled={loading}>
+          Cancel
+        </Button>
       </div>
     </form>
-  )
+  );
 }

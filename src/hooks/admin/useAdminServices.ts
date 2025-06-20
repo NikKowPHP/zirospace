@@ -32,7 +32,7 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
   const getServiceById = useCallback(async (id: string, locale: Locale): Promise<Service | null> => {
     try {
       const data: Service = await callApi(
-        `/api/admin/services?id=${id}&locale=${locale}`,
+        `/api/admin/services/${id}?locale=${locale}`,
         { method: 'GET' },
         {
           loadingMessage: 'Fetching service details...',
@@ -77,11 +77,11 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
     async (id: string, data: Partial<Service>, locale: Locale) => {
       try {
         const updatedService: Service = await callApi(
-          `/api/admin/services`,
+          `/api/admin/services/${id}`,
           {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data, locale, id }),
+            body: JSON.stringify({ data, locale }),
           },
           {
             loadingMessage: 'Updating service...',
@@ -106,11 +106,10 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
     async (id: string, locale: Locale) => {
       try {
         await callApi(
-          `/api/admin/services`,
+          `/api/admin/services/${id}?locale=${locale}`,
           {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ locale, id }),
           },
           {
             loadingMessage: 'Deleting service...',

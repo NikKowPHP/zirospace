@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import logger from '@/lib/logger'
-import { BannerMapper } from '@/infrastructure/mappers/banner.mapper'
 import { bannerService } from '@/lib/services/banner.service'
+import { Locale } from '@/i18n'
 
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     console.log('Processing banner creation:', {
       locale,
-      mappedData: BannerMapper.toPersistence(data)
+      data
     })
 
     // Generate ID
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     // Extract locale from query parameters; default to 'en' if not provided.
-    const locale = searchParams.get('locale') ?? 'en'
+    const locale = searchParams.get('locale') as Locale ?? 'en'
     const activeBanner = await bannerService.getActiveBanner(locale)
     logger.log('active banner ', activeBanner)
     if (!activeBanner) {
