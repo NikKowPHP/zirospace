@@ -7,11 +7,13 @@ export interface Banner {
   id: string
   title: string
   content: string
-  imageUrl: string
+  imageUrl?: string
   link?: string
   isActive: boolean
-  orderIndex: number
+  order_index?: number
   locale: Locale
+  createdAt: Date
+  updatedAt: Date
 }
 
 export class BannerService {
@@ -32,8 +34,8 @@ export class BannerService {
       async (locale: Locale) => {
         const model = this.getModel(locale)
         return (model as any).findMany({
-          orderBy: { orderIndex: 'asc' },
-          where: { isActive: true }
+          orderBy: { order_index: 'asc' },
+          where: { is_active: true }
         })
       },
       `banners-${locale}`,
@@ -47,8 +49,8 @@ export class BannerService {
       async (locale: Locale) => {
         const model = this.getModel(locale)
         return (model as any).findFirst({
-          where: { isActive: true },
-          orderBy: { orderIndex: 'asc' },
+          where: { is_active: true },
+          orderBy: { order_index: 'asc' },
         })
       },
       `active-banner-${locale}`,

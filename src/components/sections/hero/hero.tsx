@@ -1,13 +1,16 @@
-import { getHeroSectionAction } from '@/infrastructure/services/pageServerActions'
 import { HeroButtons } from './hero-buttons'
 
 export const HeroSection = async ({ locale }: { locale: string }) => {
-  const heroData = await getHeroSectionAction(locale)
+  // const heroData = await getHeroSectionAction(locale)
+  const response = await fetch('/api/admin/hero')
+  if (!response.ok) {
+    throw new Error('Failed to fetch YouTube URL')
+  }
+  const heroData = await response.json()
 
   return (
     <section
       className="md:w-screen md:max-w-[100vw]  sm:-mx-6 lg:-mx-8 flex flex-col justify-center items-center   space-y-6 sm:space-y-8 min-h-screen px-4 sm:px-6 -mt-[73px]"
-
       itemScope
       itemType="https://schema.org/WebPageElement"
       style={{

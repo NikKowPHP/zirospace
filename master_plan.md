@@ -1,55 +1,116 @@
-# Audit & Refactoring Plan: REST API Correctness and Final Cleanup
+You are absolutely right. My apologies. I missed that crucial detail in my initial analysis. The use of Server Actions within Client Components (`'use client'`) is indeed an anti-pattern that breaks the intended client-server boundary. Client components should fetch data via API routes.
 
-This plan has been revised to align with the project's explicit RESTful architecture. The goal is to perfect the existing API routes, improve service-layer code, and remove legacy configurations without migrating to Server Actions.
+Thank you for the correction. I will now perform a targeted analysis to identify these issues and create a precise refactoring plan.
 
-## Phase 1: Dead Code and Obsolete File Removal
+### Analysis of the Architectural Inconsistency
 
-This phase remains critical for reducing the project's surface area and removing confusion.
+The core issue is that components marked with `'use client'` are directly importing and calling functions marked with `'use server'`.
 
+1.  **`FloatVideo.tsx` & `FooterVideo.tsx`:**
+    *   **File:** `src/components/sections/float-video/float-video.tsx` and `footer-video.tsx`
+    *   **Problem:** These client components directly import and call `getYoutubeAction` from `youtubeServerActions.ts`.
+    *   **Correct Pattern:** These components should use the `fetch` API inside a `useEffect` hook to call a dedicated API route.
 
--   [ ] **Task 1.2: Delete Unused Admin Component.**
-    *   **Reasoning:** `case-study-list.tsx` is a non-interactive legacy component superseded by `case-studies-interactive.tsx`.
-    *   **Action:** Delete the file:
-        *   `src/app/(admin)/admin/sections/case-studies/case-study-list.tsx`
+2.  **`pageServerActions.ts`:**
+    *   **File:** `src/infrastructure/services/pageServerActions.ts`
+    *   **Analysis:** This file defines `getHeroSectionAction`. It is used in `src/components/sections/hero/hero.tsx`. Since `HeroSection` is a **Server Component** (it's an `async` function without the `'use client'` directive), this is a **correct and intended use of Server Actions**. This component does not need refactoring.
 
--   [ ] **Task 1.3: Delete Obsolete Test File.**
-    *   **Reasoning:** `service.service.test.ts` is based on the old, now-removed repository pattern and DTOs. It is no longer runnable.
-    *   **Action:** Delete the file:
-        *   `src/app/(admin)/admin/sections/services/service-list.test.tsx`
+Based on this, the refactoring effort must focus on replacing `youtubeServerActions.ts` with a proper API route and updating the client components that consume it.
 
-## Phase 2: Service Layer & API Route Refinements
+Here is the new, detailed `master_plan.md` to correct this.
 
-This phase focuses on improving the correctness, type safety, and efficiency of the existing services and their API route consumers.
+---
 
+### New `master_plan.md`
 
+# Refactoring Plan: Client Component Data Fetching
 
--   [ ] **Task 2.2: Refactor `getActiveBanner` Service Logic for Efficiency.**
-    *   **Reasoning (Inefficiency):** The `getActiveBanner` method in `banner.service.ts` includes a redundant `locale` filter in its `where` clause. The `getModel(locale)` function already selects the correct table, so the extra filter is unnecessary.
-    *   **Action:** In `src/lib/services/banner.service.ts`, modify the `where` clause in the `getActiveBanner` method from `{ isActive: true, locale }` to just `{ isActive: true }`.
+This plan corrects the architectural issue of Client Components calling Server Actions directly. The goal is to replace this pattern with standard API route communication, ensuring a clear separation of client and server logic.
 
--   [ ] **Task 2.3: Encapsulate `pinBlogPost` Business Logic in the Service Layer.**
-    *   **Reasoning (Best Practice):** The complex logic for pinning a blog post (un-pinning the old, pinning the new) currently resides in the API route. This is business logic that should be in the service layer to ensure it's atomic and reusable.
-    *   **Action:**
-        1.  In `src/lib/services/blog-post.service.ts`, create a new method: `pinBlogPost(postIdToPin: string, locale: Locale): Promise<BlogPost>`.
-        2.  Inside this new method, use `prisma.$transaction` to perform the two required updates (un-pinning the old post and pinning the new one) as a single, atomic operation.
-        3.  Refactor the `POST` handler in `src/app/api/admin/blog-post/[id]/pin/route.ts` to make a single, clean call to this new `blogPostService.pinBlogPost` method.
+### Phase 1: Create the API Endpoint for YouTube Data
 
--   [ ] **Task 2.4: Remove Redundant Handlers from Root API Routes.**
-    *   **Reasoning (Code Smell):** The `updates` and `blog-post` root API routes (`/api/admin/updates/route.ts` and `/api/admin/blog-post/route.ts`) contain redundant `PUT` and `DELETE` handlers that are correctly implemented in their respective `[id]` routes. This is a leftover from a previous implementation and can cause bugs.
-    *   **Action:**
-        1.  Delete the `PUT` and `DELETE` function exports from `src/app/api/admin/updates/route.ts`.
-        2.  Delete the `PUT` and `DELETE` function exports from `src/app/api/admin/blog-post/route.ts`.
+The first step is to create a dedicated, cacheable API route that client components can fetch from.
 
-## Phase 3: Configuration and Final Cleanup
+-   [ ] **Task 1.1: Create a new API route for YouTube data.**
+    *   **Reasoning:** To provide a proper RESTful endpoint for client-side components to fetch the YouTube URL, replacing the direct server action call.
+    *   **Action:** Create the file `src/app/api/youtube/route.ts`.
+    *   **Implementation:** The file should contain a `GET` handler that uses the existing `youtubeService` to fetch the data. It should also handle cases where no data is found.
 
-This phase removes legacy configurations and commented-out code.
+        ```typescript
+        // File: src/app/api/youtube/route.ts
+        import { NextResponse } from 'next/server';
+        import { youtubeService } from '@/lib/services/youtube.service';
+        import logger from '@/lib/logger';
 
--   [ ] **Task 3.1: Remove Obsolete `middleware.ts` Logic.**
-    *   **Reasoning (Dead Code):** The `middleware.ts` file contains a large, commented-out section for handling 404 redirects which is no longer in use.
-    *   **Action:** Delete the entire commented-out block within `middleware.ts`.
+        export async function GET() {
+          try {
+            logger.log('Fetching YouTube data via API route');
+            const youtubeData = await youtubeService.getYoutube();
+            
+            if (!youtubeData) {
+              return NextResponse.json({ error: 'YouTube data not found' }, { status: 404 });
+            }
 
--   [ ] **Task 3.2: Simplify `next.config.js`.**
-    *   **Reasoning (Legacy Configuration):** The custom `webpack` configuration for `splitChunks` and the `critters` installation script are legacy optimizations that are now handled more effectively by modern versions of Next.js. They add unnecessary complexity.
-    *   **Action:**
-        1.  In `next.config.js`, remove the entire `webpack` function override.
-        2.  Remove the `try/catch` block that installs and requires `critters`.
+            return NextResponse.json(youtubeData);
+          } catch (error) {
+            logger.error(`Error fetching YouTube data: ${error}`);
+            return NextResponse.json({ error: 'Failed to fetch YouTube data' }, { status: 500 });
+          }
+        }
+        ```
+
+### Phase 2: Refactor Client Components to Use the New API Route
+
+With the endpoint in place, we will update the client components to use `fetch` instead of the server action.
+
+-   [ ] **Task 2.1: Refactor `FloatVideo.tsx` to fetch from the API.**
+    *   **Reasoning:** To decouple the client component from server-side logic.
+    *   **Action:** In `src/components/sections/float-video/float-video.tsx`, remove the import for `getYoutubeAction` and modify the `useEffect` hook.
+
+        *   **Remove:**
+            ```typescript
+            import { getYoutubeAction } from '@/app/(admin)/admin/sections/youtube/actions/youtubeServerActions'
+            ```
+        *   **Modify the `useEffect` hook:**
+            ```typescript
+            // Inside the FloatVideo component
+            useEffect(() => {
+              const fetchYoutubeUrl = async () => {
+                try {
+                  const response = await fetch('/api/youtube');
+                  if (!response.ok) {
+                    throw new Error('Failed to fetch YouTube URL');
+                  }
+                  const youtubeData = await response.json();
+                  setVideoId(youtubeData?.youtube_url || '');
+                } catch (error) {
+                  logger.error("Failed to fetch YouTube URL:", error);
+                }
+              };
+              fetchYoutubeUrl();
+            }, []);
+            ```
+
+-   [ ] **Task 2.2: Refactor `FooterVideo.tsx` to fetch from the API.**
+    *   **Reasoning:** This component has the same issue as `FloatVideo.tsx` and must be updated for consistency.
+    *   **Action:** Apply the exact same changes as in Task 2.1 to the file `src/components/sections/float-video/footer-video.tsx`.
+
+### Phase 3: Cleanup and Deprecation
+
+The final step is to remove the now-obsolete server action file.
+
+-   [ ] **Task 3.1: Delete the obsolete `youtubeServerActions.ts` file.**
+    *   **Reasoning:** This file has been fully replaced by the new API route and is no longer needed.
+    *   **Action:** Delete the file.
+    *   **Command:**
+        ```bash
+        rm src/app/(admin)/admin/sections/youtube/actions/youtubeServerActions.ts
+        ```
+
+-   [ ] **Task 3.2: Clean up dead code in `pageServerActions.ts`**
+    *   **Reasoning:** The function `updateHeroSectionAction` is not used anywhere in the codebase and should be removed to prevent confusion.
+    *   **Action:** In `src/infrastructure/services/pageServerActions.ts`, delete the `updateHeroSectionAction` function and its related imports. The `getHeroSectionAction` function should remain as it is used correctly by a Server Component.
+
+---
+
+I will now update the `master_plan.md` file in the project with this new, corrected plan.

@@ -8,6 +8,7 @@ export interface Banner {
     startDate?: Date;
     endDate?: Date;
     isActive: boolean;
+    order_index?: number;
     createdAt: Date;
     updatedAt: Date;
     ctaButtonText?: string;

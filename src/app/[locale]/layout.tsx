@@ -18,6 +18,7 @@ import { bannerService } from '@/lib/services/banner.service'
 import { siteUrl } from '@/config/constants';
 import { SmoothScroll } from '@/components/smooth-scroll'
 
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
 }
@@ -100,7 +101,7 @@ export default async function LocaleLayout({
     notFound()
   }
 
-  const initialActiveBanner = await bannerService.getActiveBanner(locale)
+  const initialActiveBanner = await bannerService.getActiveBanner(locale as Locale)
   const isProduction = process.env.NODE_ENV === 'production';
   console.log('initialActiveBanner', initialActiveBanner)
 

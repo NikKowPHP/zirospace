@@ -1,3 +1,4 @@
+
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 const LOREM_IPSUM_SHORT =
@@ -182,7 +183,7 @@ async function main() {
   console.log('Seeding Hero Section...')
   await prisma.heroEN.create({
     data: {
-      id: 'hero-en-1',
+      id: '1a9a8f4b-016c-4f1d-9b8e-3e3e0d8c2b7a',
       title: 'Pioneering Integrated Digital Health Solutions',
       subtitle:
         'Designing User-Friendly Technology for Better Patient Experiences, from Apps to Devices',
@@ -191,7 +192,7 @@ async function main() {
   })
   await prisma.heroPL.create({
     data: {
-      id: 'hero-pl-1',
+      id: '2b8b9e5c-027d-4f2e-9c9f-4f4f1e9d3c8b',
       title: 'Pionierskie Zintegrowane Rozwiązania Cyfrowego Zdrowia',
       subtitle:
         'Projektowanie Przyjaznej Technologii dla Lepszych Doświadczeń Pacjentów, od Aplikacji po Urządzenia',

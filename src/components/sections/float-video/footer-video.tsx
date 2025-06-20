@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import logger from '@/lib/logger'
-import { getYoutubeAction } from '@/app/(admin)/admin/sections/youtube/actions/youtubeServerActions'
 import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 
 const YouTube = dynamic(
@@ -27,14 +26,19 @@ export const FooterVideo = () => {
 
   useEffect(() => {
     const fetchYoutubeUrl = async () => {
-      try {
-        const youtubeData = await getYoutubeAction()
-        setVideoId(youtubeData?.youtube_url || '')
-      } catch (error) {
-        logger.error("Failed to fetch YouTube URL:", error)
+    try {
+      const response = await fetch('/api/youtube');
+      if (!response.ok) {
+        throw new Error('Failed to fetch YouTube URL');
       }
+      const youtubeData = await response.json();
+      setVideoId(youtubeData?.youtube_url || '');
+    } catch (error) {
+      logger.error("Failed to fetch YouTube URL:", error);
     }
-    fetchYoutubeUrl()
+  };
+  fetchYoutubeUrl();
+
   }, [])
 
   const opts = {
