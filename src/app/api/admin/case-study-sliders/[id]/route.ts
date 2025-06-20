@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
-import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
 import logger from '@/lib/logger'
 
 export async function DELETE(
@@ -49,7 +48,7 @@ export async function PUT(request: NextRequest) {
     logger.log(`Updating case study slider: ${id} with data: ${JSON.stringify(data)}`)
     console.log('Processing case study slider update:', {
       id,
-      mappedData: CaseStudySliderMapper.toPersistence(data)
+      mappedData: (data)
     })
 
     const updatedCaseStudySlider = await caseStudySliderService.updateCaseStudySlider(
