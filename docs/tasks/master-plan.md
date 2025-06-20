@@ -20,10 +20,10 @@ This is the foundational step where we introduce Prisma and define the new data 
     *   Translate all existing SQL table definitions into Prisma models. This includes models for `CaseStudy`, `CaseStudySlider`, `Testimonial`, `BlogPost`, `Banner`, `Youtube`, `Service`, `Update`, and `Hero`. I will create separate models for English (`_en`) and Polish (`_pl`) versions as per the current database structure (e.g., `CaseStudyEN`, `CaseStudyPL`).
     *   Ensure all relations, indexes, and constraints (`@id`, `@unique`, `@default`, etc.) are correctly defined.
 
-*   `[ ]` **Task 1.3: Generate Prisma Client.**
+*   `[x]` **Task 1.3: Generate Prisma Client.**
     *   Run the command `npx prisma generate` to create the typed Prisma client based on your schema.
 
-*   `[ ]` **Task 1.4: Create Prisma Client Singleton.**
+*   `[x]` **Task 1.4: Create Prisma Client Singleton.**
     *   Create a new file `src/lib/prisma.ts` to instantiate and export a single instance of `PrismaClient`. This is crucial for preventing too many database connections in a serverless environment.
 
 ---
