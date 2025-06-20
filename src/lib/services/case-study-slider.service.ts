@@ -1,37 +1,57 @@
+import { Locale } from '@/i18n'
 import { CaseStudySlider } from "@/domain/models/case-study-slider.model"
-import { ICaseStudySliderRepository } from "../interfaces/caseStudySliderRepository.interface"
-import { caseStudySliderRepository } from "../repositories/caseStudySlider.repository"
-import { caseStudySliderRepositoryLocal } from "../repositories/caseStudySlider.local.repository"
-
-
-
+import { prisma } from '@/lib/prisma'
+import { unstable_cache } from 'next/cache'
+import { CACHE_TAGS } from '@/lib/utils/cache'
 
 export class CaseStudySliderService {
-  private caseStudySliderRepository: ICaseStudySliderRepository
-  constructor() {
-    if(process.env.MOCK_REPOSITORIES === 'true') {
-      this.caseStudySliderRepository = caseStudySliderRepositoryLocal
-    } else {
-      this.caseStudySliderRepository = caseStudySliderRepository
-    }
+  private getModel() {
+    return prisma.caseStudySlider
   }
 
-  getCaseStudySliders = async (): Promise<CaseStudySlider[]> => {
-    return this.caseStudySliderRepository.getCaseStudiesSliders()
+  private withCache<T extends (...args: any[]) => Promise<any>>(
+    fn: T,
+    key: string,
+    tags: string[]
+  ): T {
+    return unstable_cache(fn, [key], { tags }) as T
   }
 
-  createCaseStudySlider = async (caseStudySlider: CaseStudySlider ): Promise<CaseStudySlider> => {
-    return this.caseStudySliderRepository.createCaseStudySlider(caseStudySlider )
+  async getCaseStudySliders(): Promise<CaseStudySlider[]> {
+    const cachedFn = this.withCache(
+      async () => {
+        const model = this.getModel()
+        return (model as any).findMany({
+          orderBy: { orderIndex: 'asc' },
+        })
+      },
+      `case-study-sliders`,
+      [CACHE_TAGS.CASE_STUDY_SLIDERS]
+    )
+    return cachedFn()
   }
 
-  updateCaseStudySlider = async (id: string, caseStudySlider: CaseStudySlider): Promise<CaseStudySlider | null> => {
-    return this.caseStudySliderRepository.updateCaseStudySlider(id, caseStudySlider)
+  async createCaseStudySlider(caseStudySlider: CaseStudySlider): Promise<CaseStudySlider> {
+    const model = this.getModel()
+    return (model as any).create({
+      data: caseStudySlider as any,
+    })
   }
 
-  deleteCaseStudySlider = async (id: string): Promise<void> => {
-    return this.caseStudySliderRepository.deleteCaseStudySlider(id)
+  async updateCaseStudySlider(id: string, caseStudySlider: CaseStudySlider): Promise<CaseStudySlider> {
+    const model = this.getModel()
+    return (model as any).update({
+      where: { id },
+      data: caseStudySlider as any,
+    })
+  }
+
+  async deleteCaseStudySlider(id: string): Promise<void> {
+    const model = this.getModel()
+    await (model as any).delete({
+      where: { id },
+    })
   }
 }
 
-// export singleton
 export const caseStudySliderService = new CaseStudySliderService()
