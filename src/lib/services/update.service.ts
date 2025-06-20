@@ -1,72 +1,84 @@
-import { IUpdatesRepository } from '@/lib/interfaces/updatesRepository.interface'
-import { UpdateRepository } from '@/lib/repositories/update.repository'
+import { Locale } from '@/i18n'
 import { Update } from '@/domain/models/update.model'
+import { prisma } from '@/lib/prisma'
+import { unstable_cache } from 'next/cache'
 import { generateSlug } from '@/lib/utils/slugify'
-import logger from '../logger'
+import { CACHE_TAGS } from '@/lib/utils/cache'
+import logger from '@/lib/logger'
 
 export class UpdateService {
-  private updatesRepository: IUpdatesRepository
-
-  constructor() {
-    if (process.env.MOCK_REPOSITORIES === 'true') {
-      const {
-        UpdateRepositoryLocal,
-      } = require('@/lib/repositories/update.local.repository')
-      this.updatesRepository = new UpdateRepositoryLocal('en') // Locale might need to be dynamic or passed
-    } else {
-      this.updatesRepository = new UpdateRepository()
-    }
+  private getModel(locale: Locale) {
+    return locale === 'pl' ? prisma.updatePL : prisma.updateEN
   }
 
-  async getUpdates(locale: string): Promise<Update[]> {
-    return this.updatesRepository.getUpdates(locale)
+  private withCache<T extends (...args: any[]) => Promise<any>>(
+    fn: T,
+    key: string,
+    tags: string[]
+  ): T {
+    return unstable_cache(fn, [key], { tags }) as T
   }
 
-  async getUpdateBySlug(slug: string, locale: string): Promise<Update | null> {
-    return this.updatesRepository.getUpdateBySlug(slug, locale)
+  async getUpdates(locale: Locale): Promise<Update[]> {
+    const cachedFn = this.withCache(
+      async (locale: Locale) => {
+        const model = this.getModel(locale)
+        return (model as any).findMany({
+          orderBy: { order_index: 'asc' },
+        })
+      },
+      `updates-${locale}`,
+      [CACHE_TAGS.UPDATES, `updates:${locale}`]
+    )
+    return cachedFn(locale)
   }
 
-  async getUpdateById(id: string, locale: string): Promise<Update | null> {
-    return this.updatesRepository.getUpdateById(id, locale)
+  async getUpdateBySlug(slug: string, locale: Locale): Promise<Update | null> {
+    const model = this.getModel(locale)
+    return (model as any).findFirst({
+      where: { slug },
+    })
   }
 
-  async createUpdate(
-    update: Omit<Update, 'id' | 'created_at' | 'updated_at' | 'slug'>,
-    locale: string
-  ): Promise<Update> {
-    const slug = generateSlug(update.title)
-    const newUpdate: Update = {
-      ...update,
-      id: crypto.randomUUID(),
-      slug: slug,
-      created_at: new Date(),
-      updated_at: new Date(),
-    }
-    return this.updatesRepository.createUpdate(newUpdate, locale)
+  async getUpdateById(id: string, locale: Locale): Promise<Update | null> {
+    const model = this.getModel(locale)
+    return (model as any).findFirst({
+      where: { id },
+    })
+  }
+
+  async createUpdate(update: Partial<Update>, locale: Locale): Promise<Update> {
+    const slug = generateSlug(update.title || '') // Ensure title is not undefined
+    const model = this.getModel(locale)
+    return (model as any).create({
+      data: {
+        ...update,
+        slug: slug,
+      } as any,
+    })
   }
 
   async updateUpdate(
     id: string,
-    update: Omit<Update, 'id' | 'created_at' | 'updated_at' | 'slug'>,
-    locale: string
+    update: Partial<Update>,
+    locale: Locale
   ): Promise<Update> {
-    const existingUpdate = await this.getUpdateById(id, locale)
-    if (!existingUpdate) {
-      throw new Error(`Update with id ${id} not found`)
-    }
-
-    const slug = generateSlug(update.title)
-    const updatedUpdate: Update = {
-      ...existingUpdate,
-      ...update,
-      slug: slug,
-      updated_at: new Date(),
-    }
-    return this.updatesRepository.updateUpdate(id, updatedUpdate, locale)
+    const slug = update.title ? generateSlug(update.title) : undefined // Generate slug only if title is provided
+    const model = this.getModel(locale)
+    return (model as any).update({
+      where: { id },
+      data: {
+        ...update,
+        ...(slug && { slug }), // Only add slug if it was generated
+      } as any,
+    })
   }
 
-  async deleteUpdate(id: string, locale: string): Promise<void> {
+  async deleteUpdate(id: string, locale: Locale): Promise<void> {
     logger.log(`Deleting update with id ${id} and locale ${locale}`)
-    return this.updatesRepository.deleteUpdate(id, locale)
+    const model = this.getModel(locale)
+    await (model as any).delete({
+      where: { id },
+    })
   }
 }
