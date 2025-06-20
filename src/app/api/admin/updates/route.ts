@@ -35,32 +35,3 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const locale = searchParams.get('locale');
-
-  if (!locale || (locale !== 'en' && locale !== 'pl')) {
-    return NextResponse.json({ error: 'Locale is required and must be "en" or "pl"' }, { status: 400 });
-  }
-
-  try {
-    const json = await request.json();
-    const result = updateSchema.safeParse(json);
-
-    if (!result.success) {
-      return NextResponse.json(result.error, { status: 400 });
-    }
-
-    const update = await updateService.createUpdate({
-      ...result.data,
-      content_html: result.data.content_html ?? null,
-      excerpt: result.data.excerpt ?? null,
-      image_url: result.data.image_url ?? null,
-      image_alt: result.data.image_alt ?? null,
-    }, locale);
-    revalidateTag(CACHE_TAGS.UPDATES);
-    return NextResponse.json(update, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}

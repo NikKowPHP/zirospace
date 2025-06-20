@@ -12,13 +12,7 @@ const config = {
   // Image optimization
   images: {
     domains: [
-      'localhost',
-      'ziro.health',
-      'picsum.photos',
-      'drive.google.com',
-      'i.ibb.co',
-      'i.postimg.cc',
-      'i.ytimg.com',
+    "*"
     ],
     deviceSizes: PERFORMANCE_CONFIG.images.deviceSizes,
     imageSizes: PERFORMANCE_CONFIG.images.imageSizes,
@@ -52,45 +46,6 @@ const config = {
       'tailwind-merge',
     ],
     webpackBuildWorker: true,
-  },
-
-  // Webpack configuration
-  webpack: (config, { dev, isServer }) => {
-    if (!dev && !isServer) {
-      config.optimization = {
-        ...config.optimization,
-        usedExports: true,
-        sideEffects: true,
-        minimize: true,
-        splitChunks: {
-          chunks: 'all',
-          minSize: 20000,
-          maxSize: 244000,
-          minChunks: 1,
-          maxAsyncRequests: 30,
-          maxInitialRequests: 30,
-          cacheGroups: {
-            default: false,
-            vendors: false,
-            vendor: {
-              name: 'vendor',
-              chunks: 'all',
-              test: /[\\/]node_modules[\\/]/,
-              priority: 20,
-            },
-            common: {
-              name: 'common',
-              minChunks: 2,
-              chunks: 'all',
-              priority: 10,
-              reuseExistingChunk: true,
-              enforce: true,
-            },
-          },
-        },
-      }
-    }
-    return config
   },
 
   // Headers optimization
@@ -127,9 +82,9 @@ const config = {
           {
             type: 'host',
             value: 'ziro.space',
-          }
-        ]
-      }
+          },
+        ],
+      },
     ]
   },
 
@@ -145,14 +100,6 @@ const config = {
       },
     },
   },
-}
-
-// Install critters for CSS optimization
-try {
-  require('critters')
-} catch (e) {
-  console.warn('Installing critters...')
-  require('child_process').execSync('npm install critters')
 }
 
 // Export your configuration using CommonJS

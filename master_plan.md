@@ -1,58 +1,55 @@
-# Audit & Refactoring Plan: Dead Code and Code Smells
+# Audit & Refactoring Plan: REST API Correctness and Final Cleanup
 
-This document outlines the findings from a full codebase audit. It identifies dead code, code smells, and provides a concrete action plan for cleanup and refactoring.
+This plan has been revised to align with the project's explicit RESTful architecture. The goal is to perfect the existing API routes, improve service-layer code, and remove legacy configurations without migrating to Server Actions.
 
 ## Phase 1: Dead Code and Obsolete File Removal
 
-The following files and components are identified as either unused, obsolete after the Prisma migration, or redundant. They should be removed to reduce clutter and prevent confusion.
+This phase remains critical for reducing the project's surface area and removing confusion.
 
--   [ ] **Task 1.1: Delete Obsolete Mock Files.**
-    *   **Reasoning:** The project now uses a live database via Prisma, making the mock repository layer obsolete. These files are no longer used and represent a stale implementation pattern.
-    *   **Action:** Delete the following files:
-        *   `src/lib/__mocks__/caseStudyRepository.mock.ts`
-        *   `src/lib/__mocks__/caseStudySliderRepository.mock.ts`
 
 -   [ ] **Task 1.2: Delete Unused Admin Component.**
-    *   **Reasoning:** The component `src/app/(admin)/admin/sections/case-studies/case-study-list.tsx` is an old, non-interactive version of the case study list. The active component is `case-studies-interactive.tsx`, which uses drag-and-drop functionality. The old component is dead code.
+    *   **Reasoning:** `case-study-list.tsx` is a non-interactive legacy component superseded by `case-studies-interactive.tsx`.
     *   **Action:** Delete the file:
         *   `src/app/(admin)/admin/sections/case-studies/case-study-list.tsx`
 
 -   [ ] **Task 1.3: Delete Obsolete Test File.**
-    *   **Reasoning:** The test file `src/lib/services/service.service.test.ts` is based on the old repository pattern and imports `ServiceDTO`, which has been removed. It no longer reflects the current implementation of `ServiceService` and cannot be run.
+    *   **Reasoning:** `service.service.test.ts` is based on the old, now-removed repository pattern and DTOs. It is no longer runnable.
     *   **Action:** Delete the file:
-        *   `src/lib/services/service.service.test.ts`
+        *   `src/app/(admin)/admin/sections/services/service-list.test.tsx`
 
-## Phase 2: Code Smells and Refactoring
+## Phase 2: Service Layer & API Route Refinements
 
-The following issues have been identified as code smells or inconsistencies that should be addressed to improve code quality, maintainability, and correctness.
+This phase focuses on improving the correctness, type safety, and efficiency of the existing services and their API route consumers.
 
--   [ ] **Task 2.1: Consolidate RESTful API Routes for `services`.**
-    *   **Reasoning (Code Smell):** The `src/app/api/admin/services/route.ts` file currently contains logic for `GET` (all) and `POST`, while the `[id]/route.ts` handles `GET` (by ID), `PUT`, and `DELETE`. However, the client-side hook `useAdminServices` is still pointing all its calls to the non-standard, combined endpoints, which is incorrect and not RESTful. The `[id]/route.ts` is not actually being used.
+
+
+-   [ ] **Task 2.2: Refactor `getActiveBanner` Service Logic for Efficiency.**
+    *   **Reasoning (Inefficiency):** The `getActiveBanner` method in `banner.service.ts` includes a redundant `locale` filter in its `where` clause. The `getModel(locale)` function already selects the correct table, so the extra filter is unnecessary.
+    *   **Action:** In `src/lib/services/banner.service.ts`, modify the `where` clause in the `getActiveBanner` method from `{ isActive: true, locale }` to just `{ isActive: true }`.
+
+-   [ ] **Task 2.3: Encapsulate `pinBlogPost` Business Logic in the Service Layer.**
+    *   **Reasoning (Best Practice):** The complex logic for pinning a blog post (un-pinning the old, pinning the new) currently resides in the API route. This is business logic that should be in the service layer to ensure it's atomic and reusable.
     *   **Action:**
-        1.  In `src/hooks/admin/useAdminServices.ts`, update the `callApi` URLs to use the correct RESTful endpoints:
-            *   `getServiceById`: Change URL to `/api/admin/services/${id}?locale=${locale}`.
-            *   `updateService`: Change URL to `/api/admin/services/${id}` and send `locale` in the body.
-            *   `deleteService`: Change URL to `/api/admin/services/${id}?locale=${locale}` and remove the body.
-        2.  In `src/app/api/admin/services/[id]/route.ts`, ensure `PUT` gets locale from the body and `DELETE` gets it from query params to match the hook.
-        3.  Verify that `src/app/api/admin/services/route.ts` only contains `GET` (all) and `POST` handlers.
+        1.  In `src/lib/services/blog-post.service.ts`, create a new method: `pinBlogPost(postIdToPin: string, locale: Locale): Promise<BlogPost>`.
+        2.  Inside this new method, use `prisma.$transaction` to perform the two required updates (un-pinning the old post and pinning the new one) as a single, atomic operation.
+        3.  Refactor the `POST` handler in `src/app/api/admin/blog-post/[id]/pin/route.ts` to make a single, clean call to this new `blogPostService.pinBlogPost` method.
 
--   [ ] **Task 2.2: Refactor `pinBlogPost` Logic.**
-    *   **Reasoning (Code Smell):** The logic to unpin the old post and pin the new one is currently in the API route `src/app/api/admin/blog-post/[id]/pin/route.ts`. This complex business logic should reside in the service layer to be atomic and reusable.
+-   [ ] **Task 2.4: Remove Redundant Handlers from Root API Routes.**
+    *   **Reasoning (Code Smell):** The `updates` and `blog-post` root API routes (`/api/admin/updates/route.ts` and `/api/admin/blog-post/route.ts`) contain redundant `PUT` and `DELETE` handlers that are correctly implemented in their respective `[id]` routes. This is a leftover from a previous implementation and can cause bugs.
     *   **Action:**
-        1.  In `src/lib/services/blog-post.service.ts`, create a new method `pinBlogPost(postIdToPin: string, locale: Locale)`.
-        2.  This method must use `prisma.$transaction` to perform two operations atomically:
-            *   First, update all posts for the given `locale` to set `isPinned` to `false`.
-            *   Second, update the post matching `postIdToPin` to set `isPinned` to `true`.
-        3.  Refactor the `POST` handler in `src/app/api/admin/blog-post/[id]/pin/route.ts` to make a single call to the new `blogPostService.pinBlogPost` method.
+        1.  Delete the `PUT` and `DELETE` function exports from `src/app/api/admin/updates/route.ts`.
+        2.  Delete the `PUT` and `DELETE` function exports from `src/app/api/admin/blog-post/route.ts`.
 
--   [ ] **Task 2.3: Remove Redundant Handlers from `updates` API Route.**
-    *   **Reasoning (Code Smell):** The file `src/app/api/admin/updates/route.ts` contains `PUT` and `DELETE` handlers. This is redundant and error-prone, as the correct implementations already exist in `src/app/api/admin/updates/[id]/route.ts`.
-    *   **Action:** Delete the `PUT` and `DELETE` function exports from `src/app/api/admin/updates/route.ts`.
+## Phase 3: Configuration and Final Cleanup
 
--   [ ] **Task 2.4: Remove Redundant Handlers from `blog-post` API Route.**
-    *   **Reasoning (Code Smell):** Similar to the `updates` route, the `src/app/api/admin/blog-post/route.ts` contains `PUT` and `DELETE` handlers that belong in the `[id]` route. This is a leftover from a previous, non-RESTful implementation. The `[id]/route.ts` now correctly handles these.
-    *   **Action:** Delete the `PUT` and `DELETE` function exports from `src/app/api/admin/blog-post/route.ts`. The file should only contain `POST` (create) and `GET` (list all).
+This phase removes legacy configurations and commented-out code.
 
--   [ ] **Task 2.5: Inconsistent Data Mapping in `case-studies` API Route.**
-    *   **Reasoning (Code Smell):** The `POST` handler in `src/app/api/admin/case-studies/route.ts` uses `CaseStudyMapper.toPersistence(data)`. This is incorrect. The frontend `CaseStudyForm` and `useAdminCaseStudies` hook operate on the `CaseStudy` domain model. The service layer's `createCaseStudy` method also expects a `Partial<CaseStudy>`. The mapper is not needed and indicates a layer violation.
-    *   **Action:** In `src/app/api/admin/case-studies/route.ts`, remove the call to `CaseStudyMapper.toPersistence(data)` in the `POST` handler and pass the `data` object directly to the service.
+-   [ ] **Task 3.1: Remove Obsolete `middleware.ts` Logic.**
+    *   **Reasoning (Dead Code):** The `middleware.ts` file contains a large, commented-out section for handling 404 redirects which is no longer in use.
+    *   **Action:** Delete the entire commented-out block within `middleware.ts`.
+
+-   [ ] **Task 3.2: Simplify `next.config.js`.**
+    *   **Reasoning (Legacy Configuration):** The custom `webpack` configuration for `splitChunks` and the `critters` installation script are legacy optimizations that are now handled more effectively by modern versions of Next.js. They add unnecessary complexity.
+    *   **Action:**
+        1.  In `next.config.js`, remove the entire `webpack` function override.
+        2.  Remove the `try/catch` block that installs and requires `critters`.

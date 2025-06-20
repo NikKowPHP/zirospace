@@ -35,26 +35,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`/${defaultLocale}`, request.url));
   }
 
-  // Check if the pathname starts with a locale
-  // const pathnameHasLocale = locales.some(
-  //   locale => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  // );
-
-  // if (pathnameHasLocale) {
-  //   const pathWithoutLocale = pathname
-  //     .split('/')
-  //     .slice(2)
-  //     .join('/');
-
-  //   const isCaseStudyRoute = /^case-studies(\/[a-z0-9-]+)?$/.test(pathWithoutLocale);
-  //   const isBlogRoute = /^blog(\/[a-z0-9-]+)?$/.test(pathWithoutLocale);
-
-  //   const locale = pathname.split('/')[1];
-    
-  //   if (pathWithoutLocale && !isCaseStudyRoute && !isBlogRoute) {
-  //     return NextResponse.redirect(new URL(`/${locale}/404`, request.url));
-  //   }
-  // }
 
   return intlMiddleware(request);
 }

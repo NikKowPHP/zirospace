@@ -47,7 +47,7 @@ export class BannerService {
       async (locale: Locale) => {
         const model = this.getModel(locale)
         return (model as any).findFirst({
-          where: { isActive: true, locale },
+          where: { isActive: true },
           orderBy: { orderIndex: 'asc' },
         })
       },
