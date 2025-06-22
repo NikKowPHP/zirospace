@@ -35,7 +35,7 @@ export const serviceItems: ServiceItem[] = [
     title: 'serviceCard4.title',
     subtitle: 'serviceCard4.subtitle',
     description: 'serviceCard4.description',
-    image_url: '/images/image-service-4.png',
+    image_url: '/images/image-service-4.jpg',
   },
   {
     id: 'serviceCard5.title',
@@ -49,7 +49,7 @@ export const serviceItems: ServiceItem[] = [
     title: 'serviceCard6.title',
     subtitle: 'serviceCard6.subtitle',
     description: 'serviceCard6.description',
-    image_url: '/images/image-service-6.png',
+    image_url: '/images/image-service-6.jpg',
   },
 ]
 
