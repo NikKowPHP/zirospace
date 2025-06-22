@@ -226,6 +226,21 @@
       "title": "Produkt Cyfrowy",
       "subtitle": "Przekształcanie Pomysłów w Rzeczywistość",
       "description": "Projektowanie nowatorskich aplikacji i platform, które odpowiadają na wyzwania opieki zdrowotnej, zwiększają zaangażowanie pacjentów i przynoszą wymierne rezultaty."
+    },
+    "serviceCard4": {
+      "title": "Projektowanie Przemysłowe",
+      "subtitle": "Tworzenie Ergonomicznych Urządzeń",
+      "description": "Twórz ergonomiczne, zorientowane na użytkownika urządzenia medyczne, które poprawiają opiekę nad pacjentem, spełniają standardy i integrują się z cyfrowymi ekosystemami."
+    },
+    "serviceCard5": {
+      "title": "Prototypowanie Produktów",
+      "subtitle": "Rozwój Funkcjonalnych Prototypów",
+      "description": "Opracowuj funkcjonalne prototypy urządzeń medycznych, zapewniając użyteczność, zgodność i płynną integrację z cyfrowymi rozwiązaniami zdrowotnymi."
+    },
+    "serviceCard6": {
+      "title": "Projektowanie Usług",
+      "subtitle": "Optymalizacja Doświadczeń w Opiece Zdrowotnej",
+      "description": "Optymalizuj doświadczenia w opiece zdrowotnej, projektując płynne ścieżki pacjentów i dostawców usług medycznych w cyfrowych i fizycznych punktach styku."
     }
   },
 

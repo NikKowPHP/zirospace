@@ -29,7 +29,28 @@ export const serviceItems: ServiceItem[] = [
     image_url: '/images/image-service-3.png',
   },
 
-  // Add more testimonials
+
+  {
+    id: 'serviceCard4.title',
+    title: 'serviceCard4.title',
+    subtitle: 'serviceCard4.subtitle',
+    description: 'serviceCard4.description',
+    image_url: '/images/image-service-4.png',
+  },
+  {
+    id: 'serviceCard5.title',
+    title: 'serviceCard5.title',
+    subtitle: 'serviceCard5.subtitle',
+    description: 'serviceCard5.description',
+    image_url: '/images/image-service-5.webp',
+  },
+  {
+    id: 'serviceCard6.title',
+    title: 'serviceCard6.title',
+    subtitle: 'serviceCard6.subtitle',
+    description: 'serviceCard6.description',
+    image_url: '/images/image-service-6.png',
+  },
 ]
 
 export async function getServiceItems(): Promise<ServiceItem[]> {
