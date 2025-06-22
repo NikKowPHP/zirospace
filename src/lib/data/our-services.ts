@@ -35,14 +35,14 @@ export const serviceItems: ServiceItem[] = [
     title: 'serviceCard4.title',
     subtitle: 'serviceCard4.subtitle',
     description: 'serviceCard4.description',
-    image_url: '/images/image-service-4.jpg',
+    image_url: '/images/image-service-5.jpg',
   },
   {
     id: 'serviceCard5.title',
     title: 'serviceCard5.title',
     subtitle: 'serviceCard5.subtitle',
     description: 'serviceCard5.description',
-    image_url: '/images/image-service-5.webp',
+    image_url: '/images/image-service-4.webp',
   },
   {
     id: 'serviceCard6.title',
