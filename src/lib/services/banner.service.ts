@@ -2,7 +2,7 @@ import { Locale } from '@/i18n'
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
-import { Banner } from '@/generated/prisma'
+import { Banner } from '@/domain/models/models'
 
 
 
@@ -39,8 +39,8 @@ export class BannerService {
       async (locale: Locale) => {
         const model = this.getModel(locale)
         return (model as any).findFirst({
-          where: { is_active: true },
-          orderBy: { order_index: 'asc' },
+          where: { is_active: true }
+          
         })
       },
       `active-banner-${locale}`,

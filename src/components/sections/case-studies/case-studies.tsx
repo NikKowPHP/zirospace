@@ -1,7 +1,7 @@
 import { Suspense, memo  } from 'react';
 import { type Locale } from '@/i18n'
 import { CaseStudiesLoader } from '@/components/sections/case-studies/case-studies-loader'
-import { getCaseStudyService } from '@/lib/services/case-study.service';
+import { caseStudyService } from '@/lib/services/case-study.service';
 import { getTranslations } from 'next-intl/server';
 import { CaseStudySlider as CaseStudySliderType } from '@/domain/models/case-study-slider.model';
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service';
@@ -22,7 +22,7 @@ interface CaseStudiesProps {
 }
 
 export async function CaseStudies({ locale }: CaseStudiesProps) {
-  const caseStudyService = await getCaseStudyService()
+
   const caseStudies = await caseStudyService.getCaseStudies(locale)
   const caseStudySliders = await caseStudySliderService.getCaseStudySliders()
   const t = await getTranslations('caseStudiesSection')

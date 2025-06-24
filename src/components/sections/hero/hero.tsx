@@ -1,12 +1,9 @@
 import { HeroButtons } from './hero-buttons'
+import { heroService } from '@/lib/services/hero.service'
 
-export const HeroSection = async ({ locale }: { locale: string }) => {
-  // const heroData = await getHeroSectionAction(locale)
-  const response = await fetch('/api/admin/hero')
-  if (!response.ok) {
-    throw new Error('Failed to fetch YouTube URL')
-  }
-  const heroData = await response.json()
+export const HeroSection = async ({ locale }: { locale: 'en' | 'pl' }) => {
+  const heroData = await heroService.getHero(locale)
+ 
 
   return (
     <section

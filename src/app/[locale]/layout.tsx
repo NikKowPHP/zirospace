@@ -103,7 +103,7 @@ export default async function LocaleLayout({
 
   const initialActiveBanner = await bannerService.getActiveBanner(locale as Locale)
   const isProduction = process.env.NODE_ENV === 'production';
-  console.log('initialActiveBanner', initialActiveBanner)
+  
 
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
   if (!GA_MEASUREMENT_ID) {

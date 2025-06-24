@@ -2,16 +2,9 @@ import { Locale } from '@/i18n'
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
+import { HeroModel } from '@/domain/models/models'
 
-export interface Hero {
-  id: string
-  title: string
-  subtitle: string
-  ctaText: string
-  ctaLink: string
-  imageUrl: string
-  locale: Locale
-}
+
 
 export class HeroService {
   private getModel(locale: Locale) {
@@ -26,7 +19,7 @@ export class HeroService {
     return unstable_cache(fn, [key], { tags }) as T
   }
 
-  async getHero(locale: Locale): Promise<Hero | null> {
+  async getHero(locale: Locale): Promise<HeroModel | null> {
     const cachedFn = this.withCache(
       async (locale: Locale) => {
         const model = this.getModel(locale)
@@ -40,9 +33,9 @@ export class HeroService {
 
   async updateHero(
     id: string,
-    hero: Partial<Hero>,
+    hero: Partial<HeroModel>,
     locale: Locale
-  ): Promise<Hero> {
+  ): Promise<HeroModel> {
     const model = this.getModel(locale)
     return (model as any).update({
       where: { id },

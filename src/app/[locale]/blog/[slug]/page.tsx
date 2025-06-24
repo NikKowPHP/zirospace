@@ -81,7 +81,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   // Calculate reading time
   const wordsPerMinute = 200;
-  const wordCount = post.contentHtml.trim().split(/\s+/).length;
+   const wordCount = (post?.contentHtml ?? '').trim().split(/\s+/).length;
   const readingTime = Math.ceil(wordCount / wordsPerMinute);
 
   return (
@@ -173,13 +173,16 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         </header>
 
-        <div
+        {post.contentHtml && (
+  <div
           className={styles.blogPostContent}
           itemProp="articleBody"
           dangerouslySetInnerHTML={{
             __html: post.contentHtml.trim()
           }}
         />
+        )}
+      
 
         <footer className="mt-8 pt-8 border-t border-gray-200">
           <div className="flex flex-col gap-4">

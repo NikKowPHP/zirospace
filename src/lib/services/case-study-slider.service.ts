@@ -20,9 +20,7 @@ export class CaseStudySliderService {
     const cachedFn = this.withCache(
       async () => {
         const model = this.getModel()
-        return (model as any).findMany({
-          orderBy: { orderIndex: 'asc' },
-        })
+        return (model as any).findMany()
       },
       `case-study-sliders`,
       [CACHE_TAGS.CASE_STUDY_SLIDERS]

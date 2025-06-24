@@ -12,7 +12,8 @@ const config = {
   // Image optimization
   images: {
     domains: [
-    "*"
+      "*",
+      "picsum.photos"
     ],
     deviceSizes: PERFORMANCE_CONFIG.images.deviceSizes,
     imageSizes: PERFORMANCE_CONFIG.images.imageSizes,

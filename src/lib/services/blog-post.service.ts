@@ -22,7 +22,7 @@ export class BlogPostService {
       async (locale: Locale) => {
         const model = this.getModel(locale)
         return (model as any).findMany({
-          orderBy: { createdAt: 'desc' },
+          orderBy: { created_at: 'desc' },
         })
       },
       `blog-posts-${locale}`,

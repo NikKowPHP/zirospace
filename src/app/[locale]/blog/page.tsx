@@ -1,7 +1,7 @@
 import { type Locale } from '@/i18n'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getBlogPostService } from '@/lib/services/blog-post.service'
+import { blogPostService } from '@/lib/services/blog-post.service'
 import { BlogPost } from '@/domain/models/blog-post.model'
 import { Suspense } from 'react'
 import { siteUrl } from '@/config/constants'
@@ -83,10 +83,9 @@ const breadcrumbJsonLd = {
   ],
 }
 
-const blogPostService =  getBlogPostService()
 
 export default async function BlogPage({ params }: PageProps) {
-  const { locale } = await params
+  const { locale } = params
   const blogPosts = await blogPostService.getBlogPosts(locale)
 
   return (

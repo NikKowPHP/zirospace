@@ -197,16 +197,20 @@ export const CaseStudyCard = memo(function CaseStudyCard({
             role="img"
             aria-label={`${caseStudy.title} preview image`}
           >
-            {caseStudy.images
-              .slice(0, 1)
-              .map((image: ImageType, index: number) => (
-                <CaseStudyImage
-                  key={image.url}
-                  url={image.url}
-                  alt={image.alt}
-                  isFirst={index === 0}
-                />
-              ))}
+            {Array.isArray(caseStudy.images) && caseStudy.images.length > 0 ? (
+              caseStudy.images
+                .slice(0, 1)
+                .map((image: ImageType, index: number) => (
+                  <CaseStudyImage
+                    key={image.url}
+                    url={image.url}
+                    alt={image.alt}
+                    isFirst={index === 0}
+                  />
+                ))
+            ) : caseStudy.images && !Array.isArray(caseStudy.images) ? (
+              <div> </div>
+            ) : null}
           </div>
         </Link>
 

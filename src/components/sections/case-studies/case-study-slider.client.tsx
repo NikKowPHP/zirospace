@@ -100,7 +100,7 @@ export function CaseStudySliderClient({ caseStudySlider }: CaseStudySliderProps)
         }}
       >
         <div className="flex flex-nowrap gap-4 px-4">
-          {caseStudySlider.images.map((image: CaseStudyImage) => (
+          {caseStudySlider.images && caseStudySlider.images.map((image: CaseStudyImage) => (
             <div 
               key={image.id} 
               className="flex-none w-[650px]   h-full"
