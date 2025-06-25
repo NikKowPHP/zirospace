@@ -4,29 +4,38 @@ import Image from 'next/image'
 import { Suspense } from 'react'
 import { caseStudyService } from '@/lib/services/case-study.service'
 import logger from '@/lib/logger'
-import { siteUrl } from '@/config/constants';
+import { siteUrl } from '@/config/constants'
+import { CaseStudy } from '@/domain/models/models'
+import { timestampToLocaleDateString } from '@/lib/utils/timestamp-to-locale-date-string'
 interface PageProps {
   params: Promise<{
-    slug: string;
-    locale: Locale;
-  }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+    slug: string
+    locale: Locale
+  }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 // Generate metadata for the case study page
-export async function generateMetadata({ params }: { params: { slug: string; locale: Locale } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string; locale: Locale }
+}) {
   const { slug, locale } = params
-  const caseStudy = await caseStudyService.getCaseStudyBySlug(slug, locale)
-
-  if (!caseStudy) return {}
-
+  const caseStudy = await fetchCaseStudy(slug, locale)
+  logger.log(caseStudy)
   return {
     title: {
       default: `${caseStudy.title} | ZIRO Case Study`,
       template: '%s | ZIRO Healthcare Technology',
     },
     description: caseStudy.description,
-    keywords: [...caseStudy.tags, 'case study', 'healthcare technology', 'medical software'],
+    keywords: [
+      ...caseStudy.tags,
+      'case study',
+      'healthcare technology',
+      'medical software',
+    ],
     alternates: {
       canonical: `${siteUrl}/${locale}/case-studies/${slug}`,
       languages: {
@@ -38,7 +47,7 @@ export async function generateMetadata({ params }: { params: { slug: string; loc
       title: caseStudy.title,
       description: caseStudy.description,
       type: 'article',
-      publishedTime: caseStudy.createdAt,
+      publishedTime: caseStudy.created_at,
       images: [
         {
           url: caseStudy.images.length > 0 ? caseStudy.images[0].url : 'http',
@@ -79,11 +88,10 @@ function CaseStudyLoading() {
   )
 }
 
-// Error component
 function CaseStudyError() {
   return (
-    <div className="bg-white pt-20">
-      <div className="container mx-auto pt-32 pb-16 text-center">
+    <div className="bg-white h-svh  flex flex-col justify-center items-center">
+      <div className="container  mx-auto pt-32 pb-16 text-center">
         <h1 className="text-2xl font-medium text-gray-900 mb-4">
           Something went wrong
         </h1>
@@ -94,11 +102,17 @@ function CaseStudyError() {
     </div>
   )
 }
-
-// Main component with updated type
+async function fetchCaseStudy(
+  slug: string,
+  locale: Locale
+): Promise<CaseStudy> {
+  const caseStudy = await caseStudyService.getCaseStudyBySlug(slug, locale)
+  if (!caseStudy) notFound()
+  return caseStudy
+}
 export default async function Page({ params }: PageProps) {
-  const resolvedParams = await params;
-  const { slug, locale } = resolvedParams;
+  const resolvedParams = await params
+  const { slug, locale } = resolvedParams
   return (
     <Suspense fallback={<CaseStudyLoading />}>
       <CaseStudyContent slug={slug} locale={locale} />
@@ -107,92 +121,110 @@ export default async function Page({ params }: PageProps) {
 }
 
 // Content component with SEO improvements
-async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale }) {
+async function CaseStudyContent({
+  slug,
+  locale,
+}: {
+  slug: string
+  locale: Locale
+}) {
   try {
-    const caseStudy = await caseStudyService.getCaseStudyBySlug(slug, locale)
-    if (!caseStudy) return notFound()
+    const caseStudy = await fetchCaseStudy(slug, locale)
 
     let [heroImage, ...otherImages] = caseStudy.images
 
-
     // Create JSON-LD structured data
     const caseStudyJsonLd = {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": caseStudy.title,
-      "description": caseStudy.description,
-      "image": caseStudy.images.map((img: { url: string }) => img.url),
-      "datePublished": caseStudy.createdAt,
-      "author": {
-        "@type": "Organization",
-        "name": "ZIRO Healthcare Solutions"
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: caseStudy.title,
+      description: caseStudy.description,
+      image: caseStudy.images.map((img: { url: string }) => img.url),
+      datePublished: caseStudy.created_at,
+      author: {
+        '@type': 'Organization',
+        name: 'ZIRO Healthcare Solutions',
       },
-      "publisher": {
-        "@type": "Organization",
-        "name": "ZIRO Healthcare Solutions",
-        "logo": {
-          "@type": "ImageObject",
-          "url": `${siteUrl}/images/ziro.avif`
-        }
+      publisher: {
+        '@type': 'Organization',
+        name: 'ZIRO Healthcare Solutions',
+        logo: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/images/ziro.avif`,
+        },
       },
-      "keywords": caseStudy.tags.join(", "),
-      "articleSection": "Case Study",
-      "inLanguage": locale
+      keywords: caseStudy.tags.join(', '),
+      articleSection: 'Case Study',
+      inLanguage: locale,
     }
 
     // Create breadcrumb JSON-LD
     const breadcrumbJsonLd = {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
         {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": `${siteUrl}/${locale}`
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: `${siteUrl}/${locale}`,
         },
         {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Case Studies",
-          "item": `${siteUrl}/${locale}/case-studies`
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Case Studies',
+          item: `${siteUrl}/${locale}/case-studies`,
         },
         {
-          "@type": "ListItem",
-          "position": 3,
-          "name": caseStudy.title,
-          "item": `${siteUrl}/${locale}/case-studies/${slug}`
-        }
-      ]
+          '@type': 'ListItem',
+          position: 3,
+          name: caseStudy.title,
+          item: `${siteUrl}/${locale}/case-studies/${slug}`,
+        },
+      ],
     }
 
-    // Helper function to determine image layout
     const getImageLayout = (index: number) => {
-      const position = index % 4 // Creates groups of 4 images
+      const position = index % 4
       return {
-        isFullWidth: position === 0 || position === 1, // First two images in each group
-        isSplitColumn: position === 2 || position === 3 // Last two images in each group
+        isFullWidth: position === 0 || position === 1,
+        isSplitColumn: position === 2 || position === 3,
       }
     }
 
-    const calculateReadingTime = () => {
-      // Calculate reading time
-      const wordsPerMinute = 200;
-      let totalWords = caseStudy.description.trim().split(/\s+/).length;
-
-      // Adding word count from Image alt texts
-      caseStudy.images.forEach((image) => {
-        if (image.alt) {
-          totalWords += image.alt.trim().split(/\s+/).length;
-        }
-      });
-
-      const readingTime = Math.ceil(totalWords / wordsPerMinute);
-
-      return readingTime;
+    function renderMetaData(caseStudy: CaseStudy, locale: Locale) {
+      return (
+        <>
+          <meta itemProp="headline" content={caseStudy.title} />
+          <meta itemProp="description" content={caseStudy.title} />
+          <meta itemProp="inLanguage" content={locale} />
+          <meta
+            itemProp="datePublished"
+            content={caseStudy.created_at.toString()}
+          />
+          <meta
+            itemProp="dateModified"
+            content={caseStudy.created_at.toString()}
+          />
+          <meta itemProp="author" content="ZIRO Healthcare Solutions" />
+          <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
+        </>
+      )
     }
 
-    const readingTime = calculateReadingTime(); // Calculate reading time here
+    const calculateReadingTime = () => {
+      const wordsPerMinute = 200
+      let totalWords = caseStudy.description.trim().split(/\s+/).length
+      caseStudy.images.forEach((image) => {
+        if (image.alt) {
+          totalWords += image.alt.trim().split(/\s+/).length
+        }
+      })
+      const readingTime = Math.ceil(totalWords / wordsPerMinute)
+      return readingTime
+    }
+
+    const readingTime = calculateReadingTime()
     return (
       <>
         <article
@@ -200,19 +232,11 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
           itemScope
           itemType="https://schema.org/Article"
         >
-          <meta itemProp="headline" content={caseStudy.title} />
-          <meta itemProp="description" content={caseStudy.title} />
-          <meta itemProp="inLanguage" content={locale} />
-          <meta itemProp="datePublished" content={caseStudy.createdAt.toString()} />
-          <meta itemProp="dateModified" content={caseStudy.createdAt.toString()} />
-          <meta itemProp="author" content="ZIRO Healthcare Solutions" />
-          <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
+          {renderMetaData(caseStudy, locale)}
+
           {/* Hero Section */}
 
-
           <header className="flex flex-col ">
-
-
             <div className="flex flex-col gap-8">
               <h1
                 className="text-[32px] leading-[1.2] font-bold mb-[12px] "
@@ -226,18 +250,18 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                   className="text-[18px] text-gray-500 "
                   itemProp="abstract"
                   dangerouslySetInnerHTML={{
-                    __html: caseStudy.subtitle.trim()
+                    __html: caseStudy.subtitle.trim(),
                   }}
-                >
-                </p>
+                ></p>
               )}
               <div className="text-[11px] text-gray-600 flex  gap-4 pb-[15px] border-b ">
-                <time dateTime={caseStudy.createdAt.toString()}>
-                  {new Date(caseStudy.createdAt).toLocaleDateString(locale, {
+                <time dateTime={caseStudy.created_at.toString()}>
+                  {new Date(caseStudy.created_at).toLocaleDateString(locale, {
                     year: 'numeric',
                     month: 'long',
-                    day: 'numeric'
+                    day: 'numeric',
                   })}
+                  {timestampToLocaleDateString(caseStudy.created_at, locale)}
                 </time>
                 <span>•</span>
                 <span>{readingTime} min read</span>
@@ -245,13 +269,15 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
             </div>
 
             <div className="w-full flex items-center justify-center py-[35px] border-b">
-
-
-              <div itemProp='image' className="w-full h-[500px] mx-auto">
+              <div itemProp="image" className="w-full h-[500px] mx-auto">
                 <div className="relative h-[500px] w-full  mb-16">
                   <Image
                     src={heroImage.url}
-                    alt={heroImage.alt ? heroImage.alt : `${caseStudy.title} Case Study Hero Image`}
+                    alt={
+                      heroImage.alt
+                        ? heroImage.alt
+                        : `${caseStudy.title} Case Study Hero Image`
+                    }
                     fill
                     className="rounded-primary-lg object-cover"
                     priority
@@ -264,24 +290,56 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
             </div>
           </header>
 
-
-
-
-
-
           {/*  Image Gallery */}
           <section className="container mx-auto px-4 md:px-6 lg:px-8">
             <div className="max-w-5xl mx-auto">
               <div className="space-y-[20px]">
-                {otherImages.map((image: { url: string; alt: string }, index: number) => {
-                  const { isFullWidth, isSplitColumn } = getImageLayout(index)
+                {otherImages.map(
+                  (image: { url: string; alt: string }, index: number) => {
+                    const { isFullWidth, isSplitColumn } = getImageLayout(index)
 
-                  // If it's a split column image and it's the first of the pair (even index)
-                  if (isSplitColumn && index % 2 === 0) {
-                    return (
-                      <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-[20px]">
-                        {/* Current Image */}
-                        <div className="relative aspect-[4/3]">
+                    // If it's a split column image and it's the first of the pair (even index)
+                    if (isSplitColumn && index % 2 === 0) {
+                      return (
+                        <div
+                          key={index}
+                          className="grid grid-cols-1 md:grid-cols-2 gap-[20px]"
+                        >
+                          {/* Current Image */}
+                          <div className="relative aspect-[4/3]">
+                            <Image
+                              src={image.url}
+                              alt={image.alt}
+                              fill
+                              quality={100}
+                              className="object-cover rounded-primary-lg"
+                              unoptimized
+                            />
+                          </div>
+                          {/* Next Image (if exists) */}
+                          {otherImages[index + 1] && (
+                            <div className="relative aspect-[4/3]">
+                              <Image
+                                src={otherImages[index + 1].url}
+                                alt={otherImages[index + 1].alt}
+                                fill
+                                quality={100}
+                                className="object-cover rounded-primary-lg"
+                                unoptimized
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )
+                    }
+                    // Skip the second image of split columns as it's handled above
+                    else if (isSplitColumn && index % 2 !== 0) {
+                      return null
+                    }
+                    // Full width images
+                    else if (isFullWidth) {
+                      return (
+                        <div key={index} className="relative aspect-[16/9]">
                           <Image
                             src={image.url}
                             alt={image.alt}
@@ -291,56 +349,23 @@ async function CaseStudyContent({ slug, locale }: { slug: string; locale: Locale
                             unoptimized
                           />
                         </div>
-                        {/* Next Image (if exists) */}
-                        {otherImages[index + 1] && (
-                          <div className="relative aspect-[4/3]">
-                            <Image
-                              src={otherImages[index + 1].url}
-                              alt={otherImages[index + 1].alt}
-                              fill
-                              quality={100}
-                              className="object-cover rounded-primary-lg"
-                              unoptimized
-                            />
-                          </div>
-                        )}
-                      </div>
-                    )
+                      )
+                    } else {
+                      return (
+                        <div key={index} className="relative aspect-[4/3]">
+                          <Image
+                            src={image.url}
+                            alt={image.alt}
+                            fill
+                            quality={100}
+                            className="object-cover rounded-primary-lg"
+                            unoptimized
+                          />
+                        </div>
+                      )
+                    }
                   }
-                  // Skip the second image of split columns as it's handled above
-                  else if (isSplitColumn && index % 2 !== 0) {
-                    return null
-                  }
-                  // Full width images
-                  else if (isFullWidth) {
-                    return (
-                      <div key={index} className="relative aspect-[16/9]">
-                        <Image
-                          src={image.url}
-                          alt={image.alt}
-                          fill
-                          quality={100}
-                          className="object-cover rounded-primary-lg"
-                          unoptimized
-                        />
-                      </div>
-                    )
-                  }
-                  else {
-                    return (
-                      <div key={index} className="relative aspect-[4/3]">
-                        <Image
-                          src={image.url}
-                          alt={image.alt}
-                          fill
-                          quality={100}
-                          className="object-cover rounded-primary-lg"
-                          unoptimized
-                        />
-                      </div>
-                    )
-                  }
-                })}
+                )}
               </div>
             </div>
           </section>

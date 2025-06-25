@@ -16,20 +16,20 @@ export interface Image {
 }
 
 export interface CaseStudy {
-  readonly id: string
-  readonly slug: string
-  readonly title: string
-  readonly subtitle: string
-  readonly description: string
-  tags: readonly string[]
-  readonly images: readonly Image[]
-  readonly ctaUrl: string
-  readonly createdAt: Date
-  readonly updatedAt: Date
-  readonly color: string
-  readonly orderIndex: number
-  readonly backgroundColor: string
-  readonly theme: string
+   id: string
+   slug: string
+   title: string
+   subtitle: string
+   description: string
+  tags:  string[]
+   images:  Image[]
+   cta_url: string
+   created_at: string
+   updated_at: string
+   color: string
+  cta_text_name: string
+   order_index: number
+   theme: string
 }
 
 export interface Banner {
@@ -37,15 +37,15 @@ export interface Banner {
   title: string
   content: string
   subtitle?: string
-  imageUrl?: string
-  youtubeUrl?: string
-  startDate?: Date
-  endDate?: Date
-  isActive: boolean
-  createdAt: Date
-  updatedAt: Date
-  ctaButtonText?: string
-  ctaButtonLink?: string
+  image_url?: string
+  youtube_url?: string
+  start_date?: Date
+  end_date?: Date
+  is_active: boolean
+  created_at: string
+  updated_at: string
+  cta_button_text?: string
+  cta_button_link?: string
 }
 
 export interface BlogPost {
@@ -61,62 +61,48 @@ export interface BlogPost {
 }
 
 export interface Testimonial {
-  readonly id: string
-  readonly author: string
-  readonly role: string
-  readonly company: string
-  readonly quote: string
-  readonly image: string
-  readonly image_alt: string
-  readonly createdAt: Date
-  readonly updatedAt: Date
+   id: string
+   author: string
+   role: string
+   company: string
+   quote: string
+   image: string
+   image_alt: string
+   created_at: string
+   updated_at: string
 }
 
 export interface CaseStudyImage {
   id: string
   image: string
   alt: string
-  createdAt?: Date
-  updatedAt?: Date
+  created_at?: string
+  updated_at?: string
 }
 
 export interface Service {
   id: string
-
   slug: string
-
   title: string
-
   subtitle?: string | null
-
   contentHtml: string
-
   excerpt?: string | null
-
   imageUrl?: string | null
-
   imageAlt?: string | null
-
   metaTitle?: string | null
-
   meta_description?: string | null
-
   keywords?: string[]
-
   is_published: boolean
-
   order_index?: number
-
   created_at: string
-
   updated_at: string
 }
 
 export interface CaseStudySlider {
-  readonly id: string
+   id: string
   images: CaseStudyImage[]
-  createdAt?: Date
-  updatedAt?: Date
+  created_at?: string
+  updated_at?: string
 }
 export interface Update {
   id: string
@@ -129,6 +115,6 @@ export interface Update {
   image_alt: string | null
   is_published: boolean
   order_index: number
-  created_at: Date
-  updated_at: Date
+  created_at: string
+  updated_at: string
 }

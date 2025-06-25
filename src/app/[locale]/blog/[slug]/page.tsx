@@ -6,6 +6,7 @@ import { blogPostService } from '@/lib/services/blog-post.service'
 import { BlogPost } from '@/domain/models/models'
 import { siteUrl } from '@/config/constants'
 import '@/styles/blog.css'
+import { timestampToLocaleDateString } from '@/lib/utils/timestamp-to-locale-date-string'
 interface PageProps {
   params: {
     slug: string
@@ -165,11 +166,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           )}
           <div className="text-[11px] text-gray-600 flex  gap-4 pb-[15px] border-b ">
             <time dateTime={post.created_at}>
-              {new Date(post.created_at).toLocaleDateString(locale, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
+              {timestampToLocaleDateString(post.created_at, locale)}
             </time>
             <span>•</span>
             <span>{readingTime} min read</span>
