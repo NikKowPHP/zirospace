@@ -2,27 +2,17 @@ import { type Locale } from '@/i18n'
 import Link from 'next/link'
 import Image from 'next/image'
 import { blogPostService } from '@/lib/services/blog-post.service'
-import { BlogPost } from '@/domain/models/blog-post.model'
+import { BlogPost } from '@/domain/models/models'
 import { Suspense } from 'react'
 import { siteUrl } from '@/config/constants'
+import { stripHtmlTags } from '@/lib/utils/strip-html-tags'
 interface PageProps {
   params: {
     locale: Locale
   }
 }
 
- const stripHtmlTags =(htmlString: string) => {
-  if (!htmlString) {
-    return ''; // Handle null, undefined, or empty strings
-  }
-  // Use a regular expression to find and replace HTML tags
-  // <   : Matches the opening angle bracket
-  // [^>] : Matches any character EXCEPT a closing angle bracket
-  // *   : Matches the previous character zero or more times
-  // >   : Matches the closing angle bracket
-  // g   : Global flag - replace all occurrences, not just the first
-  return htmlString.replace(/<[^>]*>/g, '');
-}
+
 
 // Blog JSON-LD
 const blogJsonLd = {

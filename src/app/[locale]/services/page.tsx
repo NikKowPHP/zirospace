@@ -4,7 +4,8 @@ import { Metadata } from 'next'
 import { Service } from '@/domain/models/models'
 import Link from 'next/link'
 import Image from 'next/image'
-import logger from '@/lib/logger'
+import { stripHtmlTags } from '@/lib/utils/strip-html-tags'
+
 
 interface Props {
   params: { locale: Locale }
@@ -20,18 +21,11 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-const stripHtmlTags = (htmlString: string) => {
-  if (!htmlString) {
-    return ''
-  }
- 
-  return htmlString.replace(/<[^>]*>/g, '')
-}
 
 async function getServices(locale: Locale) {
   try {
     const services = await serviceService.getServices(locale)
-    logger.log(`services`, services)
+   
     return services
       .filter((service) => service.is_published)
       .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
@@ -43,7 +37,7 @@ async function getServices(locale: Locale) {
 
 export default async function ServicesPage({ params: { locale } }: Props) {
   const services = await getServices(locale)
-     logger.log(`ServicesPage services`, services)
+
   return (
     <div className="max-w-3xl py-10 mx-auto ">
       <h1 className="text-3xl text-center font-bold mb-5">Our Services</h1>
