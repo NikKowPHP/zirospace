@@ -68,23 +68,23 @@ const createBreadcrumbJsonLd = (post: BlogPost, locale: string) => ({
   ],
 })
 
-function calculateReadingTime(post: BlogPost) {
+function calculateReadingTime(post: BlogPost): number {
   const wordsPerMinute = 200
-  const wordCount = (post?.content_html ?? '').trim().split(/\s+/).length
+  const content = post?.content_html?.trim() ?? ''
+  if (!content) return 0
+  const wordCount = content.split(/\s+/).length
   return Math.ceil(wordCount / wordsPerMinute)
+}
+
+async function fetchBlogPost(slug: string, locale: Locale): Promise<BlogPost> {
+  const post = await blogPostService.getBlogPostBySlug(slug, locale)
+  if (!post) notFound()
+  return post
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug, locale } = params
-
-  // Find the blog post with the matching slug
-  const post = await blogPostService.getBlogPostBySlug(slug, locale)
-
-  // If the post doesn't exist, return a 404
-  if (!post) {
-    notFound()
-  }
-
+  const post = await fetchBlogPost(slug, locale)
   const readingTime = calculateReadingTime(post)
 
   return (
