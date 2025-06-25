@@ -79,7 +79,7 @@ export const CaseStudyList = memo(function CaseStudyList({
     locale: Locale
 }) {
     const sortedStudies = useMemo(() => {
-        return [...caseStudies].sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0))
+        return [...caseStudies].sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
     }, [caseStudies])
 
 
