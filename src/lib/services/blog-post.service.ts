@@ -6,7 +6,7 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 
 export class BlogPostService {
   private getModel(locale: Locale) {
-    return locale === 'pl' ? prisma.blogPostPL : prisma.blogPostEN
+    return locale === 'pl' ? prisma.zirospace_blog_posts_pl : prisma.zirospace_blog_posts_en
   }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(
@@ -99,7 +99,7 @@ export class BlogPostService {
 
   async pinBlogPost(postIdToPin: string, locale: Locale): Promise<BlogPost> {
     return prisma.$transaction(async (tx) => {
-      const txModel = locale === 'pl' ? tx.blogPostPL : tx.blogPostEN;
+      const txModel = locale === 'pl' ? tx.zirospace_blog_posts_pl : tx.zirospace_blog_posts_en;
       // Unpin any currently pinned post for the given locale
       await (txModel as any).updateMany({
         where: { isPinned: true, locale },

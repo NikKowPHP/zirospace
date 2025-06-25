@@ -13,6 +13,7 @@ const config = {
   images: {
     domains: [
       "*",
+      "i.postimg.cc",
       "picsum.photos"
     ],
     deviceSizes: PERFORMANCE_CONFIG.images.deviceSizes,

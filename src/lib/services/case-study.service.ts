@@ -10,7 +10,7 @@ export interface OrderUpdate {
 
 export class CaseStudyService {
   private getModel(locale: Locale) {
-    return locale === 'pl' ? prisma.caseStudyPL : prisma.caseStudyEN
+    return locale === 'pl' ? prisma.zirospace_case_studies_pl : prisma.zirospace_case_studies_en
   }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(

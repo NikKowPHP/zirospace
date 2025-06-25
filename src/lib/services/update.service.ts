@@ -8,7 +8,7 @@ import logger from '@/lib/logger'
 
 export class UpdateService {
   private getModel(locale: Locale) {
-    return locale === 'pl' ? prisma.updatePL : prisma.updateEN
+    return locale === 'pl' ? prisma.zirospace_updates_pl : prisma.zirospace_updates_en
   }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(

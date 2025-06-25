@@ -8,7 +8,7 @@ import { HeroModel } from '@/domain/models/models'
 
 export class HeroService {
   private getModel(locale: Locale) {
-    return locale === 'pl' ? prisma.heroPL : prisma.heroEN
+    return locale === 'pl' ? prisma.zirospace_hero_pl : prisma.zirospace_hero_en
   }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(

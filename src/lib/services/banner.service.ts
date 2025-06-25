@@ -8,7 +8,7 @@ import { Banner } from '@/domain/models/models'
 
 export class BannerService {
   private getModel(locale: Locale) {
-    return locale === 'pl' ? prisma.bannerPL : prisma.bannerEN
+    return locale === 'pl' ? prisma.zirospace_banners_pl : prisma.zirospace_banners_en
   }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(

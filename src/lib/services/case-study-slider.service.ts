@@ -5,7 +5,7 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 
 export class CaseStudySliderService {
   private getModel() {
-    return prisma.caseStudySlider
+    return prisma.zirospace_case_study_sliders
   }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(

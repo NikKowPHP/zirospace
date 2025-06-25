@@ -6,7 +6,7 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 
 export class TestimonialService {
   private getModel(locale: Locale) {
-    return locale === 'pl' ? prisma.testimonialPL : prisma.testimonialEN
+    return locale === 'pl' ? prisma.zirospace_testimonials_pl : prisma.zirospace_testimonials_en
   }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(

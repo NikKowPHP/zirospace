@@ -5,7 +5,7 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 
 export class YoutubeService {
   private getModel() {
-    return prisma.youtube
+    return prisma.zirospace_youtube
   }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(
