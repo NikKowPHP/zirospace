@@ -1,0 +1,282 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+// --- Banner Models ---
+model BannerEN {
+  id              String    @id
+  title           String
+  content         String
+  subtitle        String?
+  image_url       String?
+  youtube_url     String?   @map("youtube_url") @db.VarChar
+  start_date      DateTime? @db.Timestamptz
+  end_date        DateTime? @db.Timestamptz
+  is_active       Boolean   @default(false)
+  cta_button_text String?
+  cta_button_link String?
+  created_at      DateTime  @default(now()) @db.Timestamptz
+  updated_at      DateTime  @updatedAt @db.Timestamptz
+
+  @@map("zirospace_banners_en")
+}
+
+model BannerPL {
+  id              String    @id
+  title           String
+  content         String
+  subtitle        String?
+  image_url       String?
+  youtube_url     String?   @map("youtube_url") @db.VarChar
+  start_date      DateTime? @db.Timestamptz
+  end_date        DateTime? @db.Timestamptz
+  is_active       Boolean   @default(false)
+  cta_button_text String?
+  cta_button_link String?
+  created_at      DateTime  @default(now()) @db.Timestamptz
+  updated_at      DateTime  @updatedAt @db.Timestamptz
+
+  @@map("zirospace_banners_pl")
+}
+
+// --- Blog Post Models ---
+model BlogPostEN {
+  id           Int      @id @default(autoincrement())
+  slug         String   @unique
+  title        String
+  image_url    String
+  image_alt    String?
+  excerpt      String
+  content_html String
+  is_pinned    Boolean? @default(false)
+  created_at   DateTime? @default(now()) @db.Timestamptz
+  updated_at   DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_blog_posts_en")
+}
+
+model BlogPostPL {
+  id           Int      @id @default(autoincrement())
+  slug         String   @unique
+  title        String
+  image_url    String
+  image_alt    String?
+  excerpt      String
+  content_html String
+  is_pinned    Boolean? @default(false)
+  created_at   DateTime? @default(now()) @db.Timestamptz
+  updated_at   DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_blog_posts_pl")
+}
+
+// --- Case Study Models ---
+model CaseStudyEN {
+  id               String    @id
+  slug             String    @unique
+  title            String
+  subtitle         String?
+  description      String?
+  images           String? // This will store the JSON string
+  tags             String[]
+  cta_url          String?
+  color            String?   @db.VarChar
+  background_color String?   @db.VarChar
+  theme            String?   @db.VarChar
+  order_index      Int?      @default(0)
+  created_at       DateTime? @default(now()) @db.Timestamptz
+  updated_at       DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_case_studies_en")
+}
+
+model CaseStudyPL {
+  id               String    @id
+  slug             String    @unique
+  title            String
+  subtitle         String?
+  description      String?
+  images           String? // This will store the JSON string
+  tags             String[]
+  cta_url          String?
+  color            String?   @db.VarChar
+  background_color String?   @db.VarChar
+  theme            String?   @db.VarChar
+  order_index      Int?      @default(0)
+  created_at       DateTime? @default(now()) @db.Timestamptz
+  updated_at       DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_case_studies_pl")
+}
+
+// --- Case Study Slider Models (with relation) ---
+model CaseStudySlider {
+  id         String                @id
+  theme      String?
+  created_at DateTime?             @default(now()) @db.Timestamptz
+  updated_at DateTime?             @updatedAt @db.Timestamptz
+  images     CaseStudySliderImage[]
+
+  @@map("zirospace_case_study_sliders")
+}
+
+model CaseStudySliderImage {
+  id         String   @id
+  slider_id  String
+  image      String?
+  alt        String?
+  created_at DateTime? @default(now()) @db.Timestamptz
+  updated_at DateTime? @updatedAt @db.Timestamptz
+  slider     CaseStudySlider @relation(fields: [slider_id], references: [id], onDelete: Cascade)
+
+  @@map("zirospace_case_study_slider_images")
+}
+
+// --- Hero Models ---
+model HeroEN {
+  id               String    @id @default(uuid()) @db.Uuid
+  title            String
+  subtitle         String
+  background_image String?
+  created_at       DateTime? @default(now()) @db.Timestamptz
+  updated_at       DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_hero_en")
+}
+
+model HeroPL {
+  id               String    @id @default(uuid()) @db.Uuid
+  title            String
+  subtitle         String
+  background_image String?
+  created_at       DateTime? @default(now()) @db.Timestamptz
+  updated_at       DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_hero_pl")
+}
+
+// --- Service Models ---
+model ServiceEN {
+  id               String    @id
+  slug             String    @unique
+  title            String
+  subtitle         String?
+  content_html     String?
+  excerpt          String?
+  image_url        String?
+  image_alt        String?
+  meta_title       String?
+  meta_description String?
+  keywords         String[]
+  is_published     Boolean?  @default(true)
+  order_index      Int?      @default(0)
+  created_at       DateTime? @default(now()) @db.Timestamptz
+  updated_at       DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_services_en")
+}
+
+model ServicePL {
+  id               String    @id
+  slug             String    @unique
+  title            String
+  subtitle         String?
+  content_html     String?
+  excerpt          String?
+  image_url        String?
+  image_alt        String?
+  meta_title       String?
+  meta_description String?
+  keywords         String[]
+  is_published     Boolean?  @default(true)
+  order_index      Int?      @default(0)
+  created_at       DateTime? @default(now()) @db.Timestamptz
+  updated_at       DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_services_pl")
+}
+
+// --- Testimonial Models ---
+model TestimonialEN {
+  id         String    @id
+  author     String?
+  role       String?
+  company    String?
+  quote      String?
+  image      String?
+  image_alt  String?
+ 
+  
+  created_at DateTime? @default(now()) @db.Timestamptz
+  updated_at DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_testimonials_en")
+}
+
+model TestimonialPL {
+  id         String    @id
+  author     String?
+  role       String?
+  company    String?
+  quote      String?
+  image      String?
+  image_alt  String?
+
+  created_at DateTime? @default(now()) @db.Timestamptz
+  updated_at DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_testimonials_pl")
+}
+
+// --- Update Models ---
+model UpdateEN {
+  id           String    @id
+  slug         String    @unique
+  title        String
+  publish_date DateTime  @db.Timestamptz
+  content_html String?
+  excerpt      String?
+  image_url    String?
+  image_alt    String?
+  is_published Boolean?  @default(false)
+  order_index  Int?      @default(0)
+  created_at   DateTime? @default(now()) @db.Timestamptz
+  updated_at   DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_updates_en")
+}
+
+model UpdatePL {
+  id           String    @id
+  slug         String    @unique
+  title        String
+  publish_date DateTime  @db.Timestamptz
+  content_html String?
+  excerpt      String?
+  image_url    String?
+  image_alt    String?
+  is_published Boolean?  @default(false)
+  order_index  Int?      @default(0)
+  created_at   DateTime? @default(now()) @db.Timestamptz
+  updated_at   DateTime? @updatedAt @db.Timestamptz
+
+  @@map("zirospace_updates_pl")
+}
+
+// --- YouTube Model ---
+model Youtube {
+    id           String    @id
+    youtube_url  String?
+    created_at   DateTime  @default(now()) @db.Timestamptz
+    updated_at   DateTime  @updatedAt @db.Timestamptz
+
+    @@map("zirospace_youtube")
+}
