@@ -1,5 +1,5 @@
 import { Locale } from '@/i18n'
-import { Update } from '@/domain/models/update.model'
+import { Update } from '@/domain/models/models'
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { generateSlug } from '@/lib/utils/slugify'

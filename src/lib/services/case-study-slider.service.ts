@@ -1,4 +1,4 @@
-import { CaseStudySlider } from "@/domain/models/case-study-slider.model"
+import { CaseStudySlider } from "@/domain/models/models"
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'

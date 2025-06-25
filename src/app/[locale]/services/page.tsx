@@ -1,9 +1,10 @@
 import { serviceService } from '@/lib/services/service.service'
 import { Locale } from '@/i18n'
 import { Metadata } from 'next'
-import { Service } from '@/domain/models/service.model'
+import { Service } from '@/domain/models/models'
 import Link from 'next/link'
 import Image from 'next/image'
+import logger from '@/lib/logger'
 
 interface Props {
   params: { locale: Locale }
@@ -35,6 +36,7 @@ const stripHtmlTags = (htmlString: string) => {
 async function getServices(locale: Locale) {
   try {
     const services = await serviceService.getServices(locale)
+
     return services
       .filter((service) => service.isPublished)
       .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0))
@@ -46,7 +48,7 @@ async function getServices(locale: Locale) {
 
 export default async function ServicesPage({ params: { locale } }: Props) {
   const services = await getServices(locale)
-
+    logger.log(`services ${JSON.stringify(services)}`)
   return (
     <div className="max-w-3xl py-10 mx-auto ">
       <h1 className="text-3xl text-center font-bold mb-5">Our Services</h1>

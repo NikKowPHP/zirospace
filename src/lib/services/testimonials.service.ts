@@ -1,5 +1,5 @@
 import { Locale } from '@/i18n'
-import { Testimonial } from '@/domain/models/testimonial.model'
+import { Testimonial } from '@/domain/models/models'
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
