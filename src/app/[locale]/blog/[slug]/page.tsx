@@ -3,7 +3,7 @@ import { type Locale } from '@/i18n'
 import Image from 'next/image'
 import styles from './blog-post.module.css'
 import { blogPostService } from '@/lib/services/blog-post.service'
-import { BlogPost } from '@/domain/models/blog-post.model'
+import { BlogPost } from '@/domain/models/models'
 import { siteUrl } from '@/config/constants';
 import "@/styles/blog.css"
 interface PageProps {
@@ -20,9 +20,9 @@ const createArticleJsonLd = (post: BlogPost, locale: string) => ({
   "@id": `${siteUrl}/${locale}/blog/${post.slug}#article`,
   "headline": post.title,
   "description": post.excerpt || post.title,
-  "image": post.imageurl,
-  "datePublished": post.createdAt,
-  "dateModified": post.createdAt,
+  "image": post.image_url,
+  "datePublished": post.created_at,
+  "dateModified": post.created_at,
   "inLanguage": locale,
   "publisher": {
     "@type": "Organization",
@@ -68,6 +68,8 @@ const createBreadcrumbJsonLd = (post: BlogPost, locale: string) => ({
   ]
 })
 
+
+
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug, locale } = await params
 
@@ -79,9 +81,10 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound()
   }
 
+  // REFACTOR: seperate function
   // Calculate reading time
   const wordsPerMinute = 200;
-   const wordCount = (post?.contentHtml ?? '').trim().split(/\s+/).length;
+   const wordCount = (post?.content_html ?? '').trim().split(/\s+/).length;
   const readingTime = Math.ceil(wordCount / wordsPerMinute);
 
   return (
@@ -106,8 +109,8 @@ export default async function BlogPostPage({ params }: PageProps) {
         <meta itemProp="headline" content={post.title} />
         <meta itemProp="description" content={post.excerpt || post.title} />
         <meta itemProp="inLanguage" content={locale} />
-        <meta itemProp="datePublished" content={post.createdAt} />
-        <meta itemProp="dateModified" content={post.createdAt} />
+        <meta itemProp="datePublished" content={post.created_at} />
+        <meta itemProp="dateModified" content={post.created_at} />
         <meta itemProp="author" content="ZIRO Healthcare Solutions" />
         <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
 
@@ -132,8 +135,8 @@ export default async function BlogPostPage({ params }: PageProps) {
             </p>
           )}
           <div className="text-[11px] text-gray-600 flex  gap-4 pb-[15px] border-b ">
-            <time dateTime={post.createdAt}>
-              {new Date(post.createdAt).toLocaleDateString(locale, {
+            <time dateTime={post.created_at}>
+              {new Date(post.created_at).toLocaleDateString(locale, {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
@@ -144,23 +147,11 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
 
           <div className="w-full flex items-center justify-center pt-[10px]">
-
-
-            {/* <div itemProp="image " className='  w-full aspect-[16/9]'>
-            <Image
-              src={post.imageurl}
-              alt={post.imageAlt || post.title}
-              fill
-              className="mb-4 rounded object-cover"
-            />
-          </div> */}
-
-
             <div itemProp='image' className="max-w-full mx-auto">
               <div className="relative w-[400px] sm:w-[450px]  h-[400px] sm:h-[450px] mb-16">
                 <Image
-                  src={post.imageurl}
-                  alt={post.imageAlt || post.title}
+                  src={post.image_url}
+                  alt={post.image_alt || post.title}
                   fill
                   className="object-cover rounded-primary-lg"
                   priority
@@ -173,12 +164,12 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         </header>
 
-        {post.contentHtml && (
+        {post.content_html && (
   <div
           className={styles.blogPostContent}
           itemProp="articleBody"
           dangerouslySetInnerHTML={{
-            __html: post.contentHtml.trim()
+            __html: post.content_html.trim()
           }}
         />
         )}
@@ -201,8 +192,8 @@ export default async function BlogPostPage({ params }: PageProps) {
 
             <div className="text-sm text-gray-600">
               Last updated: {' '}
-              <time dateTime={post.createdAt}>
-                {new Date(post.createdAt).toLocaleDateString(locale, {
+              <time dateTime={post.created_at}>
+                {new Date(post.created_at).toLocaleDateString(locale, {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
@@ -232,14 +223,14 @@ export async function generateMetadata({ params }: PageProps) {
       title: post.title,
       description: post.excerpt || post.title,
       type: 'article',
-      publishedTime: post.createdAt,
-      modifiedTime: post.createdAt,
+      publishedTime: post.created_at,
+      modifiedTime: post.created_at,
       images: [
         {
-          url: post.imageurl,
+          url: post.image_url,
           width: 600,
           height: 400,
-          alt: post.imageAlt || post.title,
+          alt: post.image_alt || post.title,
         },
       ],
     },
@@ -247,7 +238,7 @@ export async function generateMetadata({ params }: PageProps) {
       card: 'summary_large_image',
       title: post.title,
       description: post.excerpt || post.title,
-      images: [post.imageurl],
+      images: [post.image_url],
     },
   }
 }
