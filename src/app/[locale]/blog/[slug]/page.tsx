@@ -18,20 +18,19 @@ const BLOG_CONFIG = {
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.ziro.health',
   logoUrl: '/images/ziro.avif',
   wordsPerMinute: 200,
-} as const;
-
+} as const
 
 const createArticleJsonLd = (post: BlogPost, locale: string) => ({
   '@context': 'https://schema.org',
   '@type': 'Article',
- '@id': `${BLOG_CONFIG.siteUrl}/${locale}/blog/${post.slug}#article`,
+  '@id': `${BLOG_CONFIG.siteUrl}/${locale}/blog/${post.slug}#article`,
   headline: post.title,
   description: post.excerpt || post.title,
   image: post.image_url,
   datePublished: post.created_at,
   dateModified: post.created_at,
   inLanguage: locale,
- publisher: {
+  publisher: {
     '@type': 'Organization',
     name: BLOG_CONFIG.siteName,
     logo: {
@@ -47,6 +46,12 @@ const createArticleJsonLd = (post: BlogPost, locale: string) => ({
     '@type': 'WebPage',
     '@id': `${BLOG_CONFIG.siteUrl}/${locale}/blog/${post.slug}`,
   },
+  wordCount: post.content_html
+    ? post.content_html.trim().split(/\s+/).length
+    : 0,
+  timeRequired: `PT${calculateReadingTime(post)}M`,
+
+  articleSection: 'Healthcare',
 })
 
 const createBreadcrumbJsonLd = (post: BlogPost, locale: string) => ({
@@ -101,23 +106,29 @@ function renderMetaData(post: BlogPost, locale: Locale) {
     </>
   )
 }
+
 function renderJsonLdScripts(post: BlogPost, locale: Locale) {
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(createArticleJsonLd(post, locale)),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(createBreadcrumbJsonLd(post, locale)),
-        }}
-      />
-    </>
-  )
+  try {
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(createArticleJsonLd(post, locale)),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(createBreadcrumbJsonLd(post, locale)),
+          }}
+        />
+      </>
+    )
+  } catch (error) {
+    console.error('Error generating JSON-LD:', error)
+    return null
+  }
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
