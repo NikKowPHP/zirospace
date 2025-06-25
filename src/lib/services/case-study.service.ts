@@ -25,9 +25,15 @@ export class CaseStudyService {
     const cachedFn = this.withCache(
       async (locale: Locale) => {
         const model = this.getModel(locale)
-        return (model as any).findMany({
+        const rawCaseStudies = await (model as any).findMany({
           orderBy: { order_index: 'asc' },
         })
+
+        return rawCaseStudies.map((cs: any) => ({
+          ...cs,
+          images: cs.images ? JSON.parse(cs.images) : [], 
+        })) as CaseStudy[]; 
+        
       },
       `case-studies-${locale}`,
       [CACHE_TAGS.CASE_STUDIES, `case-studies:${locale}`]
@@ -40,9 +46,18 @@ export class CaseStudyService {
     locale: Locale
   ): Promise<CaseStudy | null> {
     const model = this.getModel(locale)
-    return (model as any).findFirst({
+    const rawCaseStudy = await (model as any).findFirst({
       where: { slug },
-    })
+    });
+
+    if (!rawCaseStudy) {
+      return null;
+    }
+
+    return {
+      ...rawCaseStudy,
+      images: rawCaseStudy.images ? JSON.parse(rawCaseStudy.images) : [],
+    } as CaseStudy
   }
 
   async createCaseStudy(
