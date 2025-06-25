@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
-import { FooterVideo } from '../float-video/footer-video'
+import { ContactFormYoutubeVideo } from '../footer-video/footer-video'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button/button'
 
@@ -31,8 +31,8 @@ export const ContactFormSection = async () => {
           <div className='flex flex-col sm:flex-row justify-between  w-full gap-[12px] sm:gap-[55px]'>
 
           <div className='w-full sm:w-1/2' >
-            {/* TODO: youtube section */}
-            <FooterVideo />
+           
+            <ContactFormYoutubeVideo />
             <h1 className="text-[18px] text-start sm:text-[24px] lg:text-[28px] leading-[1.1] font-medium tracking-[-0.02em] text-black mb-3 mt-3">
 
               {t('title')}

@@ -7,7 +7,7 @@ import { CaseStudy, CaseStudySlider as CaseStudySliderType } from '@/domain/mode
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service';
 import dynamic from 'next/dynamic';
 import { CaseStudiesTitleSubtitle, CaseStudyList } from './case-studies-list.client';
-import logger from '@/lib/logger';
+
 
 // Dynamically import the client slider (disable SSR)
 const CaseStudySliderClient = dynamic(
@@ -45,7 +45,6 @@ const t = await getTranslations('caseStudiesSection')
 export async function CaseStudies({ locale }: CaseStudiesProps) {
 
   const caseStudies = await fetchCaseStudies(locale)
-  logger.log('casse studies' , caseStudies)
   const caseStudySliders = await caseStudySliderService.getCaseStudySliders()
   const { title, description } = await fetchTitleAndDescription();
 

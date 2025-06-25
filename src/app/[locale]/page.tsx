@@ -10,8 +10,6 @@ import {
   WhyUs,
   Philosophy,
   Faq,
-  // StayInformed,
-  // FloatVideo,
   TestimonialsSection,
   BannerModalWrapper,
   ContactFormSection,
@@ -124,10 +122,7 @@ export default async function HomePage({ params }: HomePageProps) {
                 </div>
               </Suspense>
 
-              {/* FloatVideo is also inside VisibilityManager so it can access context */}
-              {/* <Suspense fallback={null}>
-                <FloatVideo />
-              </Suspense> */}
+             
 
               <Suspense fallback={null}>
                 <BannerModalWrapper />

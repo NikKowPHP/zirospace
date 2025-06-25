@@ -99,15 +99,6 @@ export const CaseStudies = dynamic(
   }
 )
 
-export const FloatVideo = dynamic(
-  () =>
-    import('@/components/sections/float-video/float-video').then(
-      (mod) => mod.FloatVideo
-    ),
-  {
-    ssr: true,
-  }
-)
 
 export const BannerModalWrapper = dynamic(
   () =>

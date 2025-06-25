@@ -107,8 +107,6 @@ export function Footer() {
                 </span>
               </div>
 
-              {/* Footer video */}
-              {/* <FooterVideo /> */}
 
               {/* Company Description */}
               <div className="space-y-4">

@@ -256,11 +256,6 @@ async function CaseStudyContent({
               )}
               <div className="text-[11px] text-gray-600 flex  gap-4 pb-[15px] border-b ">
                 <time dateTime={caseStudy.created_at.toString()}>
-                  {new Date(caseStudy.created_at).toLocaleDateString(locale, {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
                   {timestampToLocaleDateString(caseStudy.created_at, locale)}
                 </time>
                 <span>•</span>
