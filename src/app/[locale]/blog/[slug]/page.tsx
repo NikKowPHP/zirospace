@@ -4,8 +4,8 @@ import Image from 'next/image'
 import styles from './blog-post.module.css'
 import { blogPostService } from '@/lib/services/blog-post.service'
 import { BlogPost } from '@/domain/models/models'
-import { siteUrl } from '@/config/constants';
-import "@/styles/blog.css"
+import { siteUrl } from '@/config/constants'
+import '@/styles/blog.css'
 interface PageProps {
   params: {
     slug: string
@@ -15,63 +15,67 @@ interface PageProps {
 
 // Create Article JSON-LD
 const createArticleJsonLd = (post: BlogPost, locale: string) => ({
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "@id": `${siteUrl}/${locale}/blog/${post.slug}#article`,
-  "headline": post.title,
-  "description": post.excerpt || post.title,
-  "image": post.image_url,
-  "datePublished": post.created_at,
-  "dateModified": post.created_at,
-  "inLanguage": locale,
-  "publisher": {
-    "@type": "Organization",
-    "name": "ZIRO Healthcare Solutions",
-    "logo": {
-      "@type": "ImageObject",
-      "url": `${siteUrl}/images/ziro.avif`
-    }
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  '@id': `${siteUrl}/${locale}/blog/${post.slug}#article`,
+  headline: post.title,
+  description: post.excerpt || post.title,
+  image: post.image_url,
+  datePublished: post.created_at,
+  dateModified: post.created_at,
+  inLanguage: locale,
+  publisher: {
+    '@type': 'Organization',
+    name: 'ZIRO Healthcare Solutions',
+    logo: {
+      '@type': 'ImageObject',
+      url: `${siteUrl}/images/ziro.avif`,
+    },
   },
-  "author": {
-    "@type": "Organization",
-    "name": "ZIRO Healthcare Solutions"
+  author: {
+    '@type': 'Organization',
+    name: 'ZIRO Healthcare Solutions',
   },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": `${siteUrl}/${locale}/blog/${post.slug}`
-  }
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': `${siteUrl}/${locale}/blog/${post.slug}`,
+  },
 })
 
 // Create Breadcrumb JSON-LD
 const createBreadcrumbJsonLd = (post: BlogPost, locale: string) => ({
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": `${siteUrl}/${locale}`
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: `${siteUrl}/${locale}`,
     },
     {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Blog",
-      "item": `${siteUrl}/${locale}/blog`
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Blog',
+      item: `${siteUrl}/${locale}/blog`,
     },
     {
-      "@type": "ListItem",
-      "position": 3,
-      "name": post.title,
-      "item": `${siteUrl}/${locale}/blog/${post.slug}`
-    }
-  ]
+      '@type': 'ListItem',
+      position: 3,
+      name: post.title,
+      item: `${siteUrl}/${locale}/blog/${post.slug}`,
+    },
+  ],
 })
 
-
+function calculateReadingTime(post: BlogPost) {
+  const wordsPerMinute = 200
+  const wordCount = (post?.content_html ?? '').trim().split(/\s+/).length
+  return Math.ceil(wordCount / wordsPerMinute)
+}
 
 export default async function BlogPostPage({ params }: PageProps) {
-  const { slug, locale } = await params
+  const { slug, locale } = params
 
   // Find the blog post with the matching slug
   const post = await blogPostService.getBlogPostBySlug(slug, locale)
@@ -81,24 +85,20 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound()
   }
 
-  // REFACTOR: seperate function
-  // Calculate reading time
-  const wordsPerMinute = 200;
-   const wordCount = (post?.content_html ?? '').trim().split(/\s+/).length;
-  const readingTime = Math.ceil(wordCount / wordsPerMinute);
+  const readingTime = calculateReadingTime(post)
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(createArticleJsonLd(post, locale))
+          __html: JSON.stringify(createArticleJsonLd(post, locale)),
         }}
       />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(createBreadcrumbJsonLd(post, locale))
+          __html: JSON.stringify(createBreadcrumbJsonLd(post, locale)),
         }}
       />
       <article
@@ -115,8 +115,6 @@ export default async function BlogPostPage({ params }: PageProps) {
         <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
 
         <header className="flex flex-col gap-8">
-
-
           <h1
             className="text-[32px] leading-[1.2] font-bold mb-[12px] "
             itemProp="name"
@@ -129,17 +127,16 @@ export default async function BlogPostPage({ params }: PageProps) {
               className="text-[18px] text-gray-500 "
               itemProp="abstract"
               dangerouslySetInnerHTML={{
-                __html: post.excerpt.trim()
+                __html: post.excerpt.trim(),
               }}
-            >
-            </p>
+            ></p>
           )}
           <div className="text-[11px] text-gray-600 flex  gap-4 pb-[15px] border-b ">
             <time dateTime={post.created_at}>
               {new Date(post.created_at).toLocaleDateString(locale, {
                 year: 'numeric',
                 month: 'long',
-                day: 'numeric'
+                day: 'numeric',
               })}
             </time>
             <span>•</span>
@@ -147,7 +144,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
 
           <div className="w-full flex items-center justify-center pt-[10px]">
-            <div itemProp='image' className="max-w-full mx-auto">
+            <div itemProp="image" className="max-w-full mx-auto">
               <div className="relative w-[400px] sm:w-[450px]  h-[400px] sm:h-[450px] mb-16">
                 <Image
                   src={post.image_url}
@@ -165,15 +162,14 @@ export default async function BlogPostPage({ params }: PageProps) {
         </header>
 
         {post.content_html && (
-  <div
-          className={styles.blogPostContent}
-          itemProp="articleBody"
-          dangerouslySetInnerHTML={{
-            __html: post.content_html.trim()
-          }}
-        />
+          <div
+            className={styles.blogPostContent}
+            itemProp="articleBody"
+            dangerouslySetInnerHTML={{
+              __html: post.content_html.trim(),
+            }}
+          />
         )}
-      
 
         <footer className="mt-8 pt-8 border-t border-gray-200">
           <div className="flex flex-col gap-4">
@@ -191,12 +187,12 @@ export default async function BlogPostPage({ params }: PageProps) {
             )} */}
 
             <div className="text-sm text-gray-600">
-              Last updated: {' '}
+              Last updated:{' '}
               <time dateTime={post.created_at}>
                 {new Date(post.created_at).toLocaleDateString(locale, {
                   year: 'numeric',
                   month: 'long',
-                  day: 'numeric'
+                  day: 'numeric',
                 })}
               </time>
             </div>
