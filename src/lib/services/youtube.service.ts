@@ -31,7 +31,7 @@ export class YoutubeService {
   async updateYoutube(youtubeUrl: string): Promise<YoutubeModel | null> {
     const model = this.getModel()
     return (model as any).update({
-      where: { id: 'youtube-id' }, // Assuming a fixed ID for the single YouTube entry
+      where: { id: '123413123' }, // Assuming a fixed ID for the single YouTube entry
       data: { youtubeUrl },
     })
   }

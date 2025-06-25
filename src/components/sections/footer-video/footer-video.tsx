@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-export const FooterVideo = () => {
+export const ContactFormYoutubeVideo = () => {
   const [showVideo, setShowVideo] = useState(false)
   const [videoId, setVideoId] = useState('')
 
@@ -27,7 +27,7 @@ export const FooterVideo = () => {
   useEffect(() => {
     const fetchYoutubeUrl = async () => {
     try {
-      const response = await fetch('/api/youtube');
+      const response = await fetch('/api/admin/youtube');
       if (!response.ok) {
         throw new Error('Failed to fetch YouTube URL');
       }
