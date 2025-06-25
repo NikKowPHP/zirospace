@@ -13,36 +13,42 @@ interface PageProps {
   }
 }
 
-// Create Article JSON-LD
+const BLOG_CONFIG = {
+  siteName: 'ZIRO Healthcare Solutions',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.ziro.health',
+  logoUrl: '/images/ziro.avif',
+  wordsPerMinute: 200,
+} as const;
+
+
 const createArticleJsonLd = (post: BlogPost, locale: string) => ({
   '@context': 'https://schema.org',
   '@type': 'Article',
-  '@id': `${siteUrl}/${locale}/blog/${post.slug}#article`,
+ '@id': `${BLOG_CONFIG.siteUrl}/${locale}/blog/${post.slug}#article`,
   headline: post.title,
   description: post.excerpt || post.title,
   image: post.image_url,
   datePublished: post.created_at,
   dateModified: post.created_at,
   inLanguage: locale,
-  publisher: {
+ publisher: {
     '@type': 'Organization',
-    name: 'ZIRO Healthcare Solutions',
+    name: BLOG_CONFIG.siteName,
     logo: {
       '@type': 'ImageObject',
-      url: `${siteUrl}/images/ziro.avif`,
+      url: `${BLOG_CONFIG.siteUrl}${BLOG_CONFIG.logoUrl}`,
     },
   },
   author: {
     '@type': 'Organization',
-    name: 'ZIRO Healthcare Solutions',
+    name: BLOG_CONFIG.siteName,
   },
   mainEntityOfPage: {
     '@type': 'WebPage',
-    '@id': `${siteUrl}/${locale}/blog/${post.slug}`,
+    '@id': `${BLOG_CONFIG.siteUrl}/${locale}/blog/${post.slug}`,
   },
 })
 
-// Create Breadcrumb JSON-LD
 const createBreadcrumbJsonLd = (post: BlogPost, locale: string) => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
