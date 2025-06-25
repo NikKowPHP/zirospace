@@ -22,24 +22,19 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const stripHtmlTags = (htmlString: string) => {
   if (!htmlString) {
-    return '' // Handle null, undefined, or empty strings
+    return ''
   }
-  // Use a regular expression to find and replace HTML tags
-  // <   : Matches the opening angle bracket
-  // [^>] : Matches any character EXCEPT a closing angle bracket
-  // *   : Matches the previous character zero or more times
-  // >   : Matches the closing angle bracket
-  // g   : Global flag - replace all occurrences, not just the first
+ 
   return htmlString.replace(/<[^>]*>/g, '')
 }
 
 async function getServices(locale: Locale) {
   try {
     const services = await serviceService.getServices(locale)
-
+    logger.log(`services`, services)
     return services
-      .filter((service) => service.isPublished)
-      .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0))
+      .filter((service) => service.is_published)
+      .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
   } catch (error) {
     console.error('Failed to fetch services:', error)
     return []
@@ -48,7 +43,7 @@ async function getServices(locale: Locale) {
 
 export default async function ServicesPage({ params: { locale } }: Props) {
   const services = await getServices(locale)
-    logger.log(`services ${JSON.stringify(services)}`)
+     logger.log(`ServicesPage services`, services)
   return (
     <div className="max-w-3xl py-10 mx-auto ">
       <h1 className="text-3xl text-center font-bold mb-5">Our Services</h1>
@@ -59,7 +54,7 @@ export default async function ServicesPage({ params: { locale } }: Props) {
             key={service.id}
             service={service}
             locale={locale}
-            position={service.orderIndex ?? 0}
+            position={service.order_index ?? 0}
           />
         ))}
       </ul>
