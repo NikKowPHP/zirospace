@@ -5,6 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -19,7 +20,7 @@ model case_studies_en {
   cta_url       String
   created_at    DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
   updated_at    DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
-  slug          String   @unique(map: "case_studies_en_slug_unique")
+  slug          String   @unique
   order_index   Int?     @default(0)
 }
 
@@ -51,7 +52,7 @@ model case_studies_pl {
   cta_url       String
   created_at    DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
   updated_at    DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
-  slug          String   @unique(map: "case_studies_pl_slug_unique")
+  slug          String   @unique
   order_index   Int?     @default(0)
 }
 
@@ -69,125 +70,6 @@ model case_studies_pl_backup {
   updated_at    DateTime? @db.Timestamptz(6)
 
   @@ignore
-}
-
-model medical_products {
-  id          String   @id @default(dbgenerated("uuid_generate_v4()"))
-  image_url   String
-  description String
-  pdf_url     String
-  title       String
-  category    String
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @db.Timestamptz(6)
-}
-
-model medical_slider {
-  id        String @id @db.VarChar
-  image_url String @db.VarChar
-}
-
-model professor_quote_section {
-  id         String   @id @default(dbgenerated("uuid_generate_v4()"))
-  quote      String
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @db.Timestamptz(6)
-}
-
-model proffessor_news {
-  id           String   @id @default(dbgenerated("uuid_generate_v4()"))
-  slug         String   @unique
-  title        String
-  image_url    String
-  tag          String?
-  created_at   DateTime @default(now()) @db.Timestamptz(6)
-  image_alt    String?
-  excerpt      String
-  content_html String
-  is_pinned    Boolean  @default(false)
-  updated_at   DateTime @default(now()) @db.Timestamptz(6)
-}
-
-model proffessor_youtube_section {
-  id          String   @id @default(dbgenerated("uuid_generate_v4()"))
-  youtube_url String
-  quote       String
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @db.Timestamptz(6)
-}
-
-model slider_items {
-  id        String @id @db.VarChar
-  image_url String @db.VarChar
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model testimonials_en {
-  id         String   @id
-  author     String
-  role       String
-  company    String
-  quote      String
-  image      String
-  image_alt  String
-  created_at DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
-  updated_at DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model testimonials_pl {
-  id         String   @id
-  author     String
-  role       String
-  company    String
-  quote      String
-  image      String
-  image_alt  String
-  created_at DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
-  updated_at DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
-}
-
-model ziroagency_tags {
-  id         String   @id
-  name       String   @unique
-  image_url  String?
-  created_at DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
-  updated_at DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model zirospace_app_ratings {
-  id             BigInt         @id(map: "app_ratings_pkey") @default(autoincrement())
-  app_id         BigInt
-  user_id        String?        @db.VarChar
-  rating_value   Int
-  created_at     DateTime       @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime       @default(now()) @db.Timestamptz(6)
-  zirospace_apps zirospace_apps @relation(fields: [app_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model zirospace_app_tags {
-  app_id         BigInt
-  tag_id         BigInt
-  created_at     DateTime       @default(now()) @db.Timestamptz(6)
-  zirospace_apps zirospace_apps @relation(fields: [app_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  zirospace_tags zirospace_tags @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([app_id, tag_id])
-}
-
-model zirospace_apps {
-  id                    BigInt                  @id(map: "apps_pkey") @default(autoincrement())
-  name                  String                  @db.VarChar
-  description           String?
-  thumbnail_url         String?                 @db.VarChar
-  average_rating        Float?                  @default(0)
-  created_at            DateTime                @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime                @default(now()) @db.Timestamptz(6)
-  zirospace_app_ratings zirospace_app_ratings[]
-  zirospace_app_tags    zirospace_app_tags[]
-  zirospace_screenshots zirospace_screenshots[]
 }
 
 model zirospace_banners_en {
@@ -254,7 +136,7 @@ model zirospace_case_studies_en {
   title            String
   subtitle         String?
   description      String?
-  tags             String?
+  tags             String[]
   images           String?
   cta_text         String?
   cta_text_name    String?
@@ -273,7 +155,7 @@ model zirospace_case_studies_pl {
   title            String
   subtitle         String?
   description      String?
-  tags             String?
+  tags             String[]
   images           String?
   cta_text         String?
   cta_text_name    String?
@@ -322,33 +204,6 @@ model zirospace_hero_pl {
   updated_at       DateTime? @default(now()) @db.Timestamptz(6)
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model zirospace_screenshot_ratings {
-  id                    BigInt                @id(map: "screenshot_ratings_pkey") @default(autoincrement())
-  screenshot_id         BigInt
-  user_id               String?               @db.VarChar
-  rating_value          Int
-  created_at            DateTime              @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime              @default(now()) @db.Timestamptz(6)
-  zirospace_screenshots zirospace_screenshots @relation(fields: [screenshot_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model zirospace_screenshots {
-  id                           BigInt                         @id(map: "screenshots_pkey") @default(autoincrement())
-  app_id                       BigInt
-  image_url                    String                         @db.VarChar
-  screen_name                  String?                        @db.VarChar
-  route_path                   String?                        @db.VarChar
-  description                  String?
-  order_index                  Int?                           @default(0)
-  average_rating               Float?                         @default(0)
-  created_at                   DateTime                       @default(now()) @db.Timestamptz(6)
-  updated_at                   DateTime                       @default(now()) @db.Timestamptz(6)
-  zirospace_screenshot_ratings zirospace_screenshot_ratings[]
-  zirospace_apps               zirospace_apps                 @relation(fields: [app_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
 model zirospace_services_en {
   id               String    @id
   slug             String    @unique
@@ -383,15 +238,6 @@ model zirospace_services_pl {
   order_index      Int?      @default(0)
   created_at       DateTime? @default(now()) @db.Timestamptz(6)
   updated_at       DateTime? @default(now()) @db.Timestamptz(6)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model zirospace_tags {
-  id                 BigInt               @id @default(autoincrement())
-  name               String               @unique @db.VarChar
-  created_at         DateTime             @default(now()) @db.Timestamptz(6)
-  updated_at         DateTime             @default(now()) @db.Timestamptz(6)
-  zirospace_app_tags zirospace_app_tags[]
 }
 
 model zirospace_testimonials_en {
