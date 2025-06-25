@@ -82,11 +82,20 @@ async function fetchBlogPost(slug: string, locale: Locale): Promise<BlogPost> {
   return post
 }
 
-export default async function BlogPostPage({ params }: PageProps) {
-  const { slug, locale } = params
-  const post = await fetchBlogPost(slug, locale)
-  const readingTime = calculateReadingTime(post)
-
+function renderMetaData(post: BlogPost, locale: Locale) {
+  return (
+    <>
+      <meta itemProp="headline" content={post.title} />
+      <meta itemProp="description" content={post.excerpt || post.title} />
+      <meta itemProp="inLanguage" content={locale} />
+      <meta itemProp="datePublished" content={post.created_at} />
+      <meta itemProp="dateModified" content={post.created_at} />
+      <meta itemProp="author" content="ZIRO Healthcare Solutions" />
+      <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
+    </>
+  )
+}
+function renderJsonLdScripts(post: BlogPost, locale: Locale) {
   return (
     <>
       <script
@@ -101,18 +110,24 @@ export default async function BlogPostPage({ params }: PageProps) {
           __html: JSON.stringify(createBreadcrumbJsonLd(post, locale)),
         }}
       />
+    </>
+  )
+}
+
+export default async function BlogPostPage({ params }: PageProps) {
+  const { slug, locale } = params
+  const post = await fetchBlogPost(slug, locale)
+  const readingTime = calculateReadingTime(post)
+
+  return (
+    <>
+      {renderJsonLdScripts(post, locale)}
       <article
         className="blog-post  py-[100px] max-w-3xl mx-auto flex flex-col gap-[35px] spectral-regular"
         itemScope
         itemType="https://schema.org/Article"
       >
-        <meta itemProp="headline" content={post.title} />
-        <meta itemProp="description" content={post.excerpt || post.title} />
-        <meta itemProp="inLanguage" content={locale} />
-        <meta itemProp="datePublished" content={post.created_at} />
-        <meta itemProp="dateModified" content={post.created_at} />
-        <meta itemProp="author" content="ZIRO Healthcare Solutions" />
-        <meta itemProp="publisher" content="ZIRO Healthcare Solutions" />
+        {renderMetaData(post, locale)}
 
         <header className="flex flex-col gap-8">
           <h1
@@ -173,19 +188,6 @@ export default async function BlogPostPage({ params }: PageProps) {
 
         <footer className="mt-8 pt-8 border-t border-gray-200">
           <div className="flex flex-col gap-4">
-            {/* {post.tags && (
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag: string) => (
-                  <span 
-                    key={tag}
-                    className="bg-gray-100 px-3 py-1 rounded-full text-sm"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )} */}
-
             <div className="text-sm text-gray-600">
               Last updated:{' '}
               <time dateTime={post.created_at}>
