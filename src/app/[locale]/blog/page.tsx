@@ -6,6 +6,7 @@ import { BlogPost } from '@/domain/models/models'
 import { Suspense } from 'react'
 import { siteUrl } from '@/config/constants'
 import { stripHtmlTags } from '@/lib/utils/strip-html-tags'
+import logger from '@/lib/logger'
 interface PageProps {
   params: {
     locale: Locale
@@ -42,8 +43,8 @@ const createBlogListJsonLd = (posts: BlogPost[]) => ({
     item: {
       '@type': 'BlogPosting',
       headline: post.title,
-      image: post.imageurl,
-      datePublished: post.createdAt,
+      image: post.image_url,
+      datePublished: post.created_at,
       author: {
         '@type': 'Organization',
         name: 'ZIRO Healthcare Solutions',
@@ -77,7 +78,7 @@ const breadcrumbJsonLd = {
 export default async function BlogPage({ params }: PageProps) {
   const { locale } = params
   const blogPosts = await blogPostService.getBlogPosts(locale)
-
+  logger.log('blog posts', blogPosts)
   return (
     <div className=' '>
       <script
@@ -120,7 +121,7 @@ export default async function BlogPage({ params }: PageProps) {
         >
           {/* PINNED POST */}
           {blogPosts
-            .filter((post) => post.isPinned)
+            .filter((post) => post.is_pinned)
             .map((post) => (
               <PinnedBlogPost
                 key={post.slug}
@@ -154,7 +155,7 @@ const BlogPostItem = ({
   locale: Locale
   position: number
 }) => {
-  const formatedDate = new Date(post.createdAt).toLocaleDateString(locale, {
+  const formatedDate = new Date(post.created_at).toLocaleDateString(locale, {
     month: 'short',
     day: 'numeric',
   })
@@ -184,13 +185,13 @@ const cleanedExcerpt = stripHtmlTags(post.excerpt);
               <span className="uppercase">NIKHIL SINGH</span>
             </span>
           </div>
-          {post.imageurl && (
+          {post.image_url && (
            <div itemProp="image" className="w-full sm:w-[400px]  aspect-video overflow-hidden relative">
               <Image
                 className="rounded-xl w-full h-auto"
-                src={post.imageurl}
+                src={post.image_url}
                 // src="https://picsum.photos/250/150"
-                alt={post.imageAlt || post.title}
+                alt={post.image_alt || post.title}
                 style={{ objectFit: 'cover' }}
               fill
 
@@ -212,7 +213,7 @@ const PinnedBlogPost = ({
   post: BlogPost
   locale: Locale
 }) => {
-  const formatedDate = new Date(post.createdAt).toLocaleDateString(locale, {
+  const formatedDate = new Date(post.created_at).toLocaleDateString(locale, {
     month: 'short',
     day: 'numeric',
   })
@@ -224,13 +225,13 @@ const PinnedBlogPost = ({
       itemProp="url"
     >
       <div className="flex flex-col sm:flex-row justify-start items-center gap-[32px] rounded-md  mb-[32px] ">
-        {post.imageurl && (
+        {post.image_url && (
           <div itemProp="image" className="w-full sm:w-[350px] md:w-[458px] aspect-video overflow-hidden relative">
             <Image
               className="rounded-xl w-full h-auto"
-              src={post.imageurl}
+              src={post.image_url}
               // src="https://picsum.photos/458/305"
-              alt={post.imageAlt || post.title}
+              alt={post.image_alt || post.title}
               style={{ objectFit: 'cover' }}
               fill
               

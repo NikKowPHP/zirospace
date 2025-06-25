@@ -61,7 +61,7 @@ export class BlogPostService {
 
   async createBlogPost(blogPost: Omit<BlogPost, 'id'>, locale: Locale): Promise<BlogPost> {
     const model = this.getModel(locale)
-    blogPost.createdAt = new Date().toISOString()
+    blogPost.created_at = new Date().toISOString()
     const trimmedBlogPost = this.trimBlogPost(blogPost)
     return (model as any).create({
       data: trimmedBlogPost as any,
