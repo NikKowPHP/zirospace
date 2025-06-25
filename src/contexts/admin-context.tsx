@@ -1,18 +1,12 @@
 'use client'
-
-import { Service } from '@/domain/models/service.model';
-
 import {
   createContext,
   useContext,
   useCallback,
 } from 'react'
-import { CaseStudy } from '@/domain/models/models'
+import { Banner, BlogPost, CaseStudy, CaseStudySlider, Service, Testimonial } from '@/domain/models/models'
 import { Locale } from '@/i18n'
-import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
-import { Testimonial } from '@/domain/models/testimonial.model'
-import { BlogPost } from '@/domain/models/blog-post.model'
-import { Banner } from '@/domain/models/banner.model'
+
 import useAdminCaseStudies from '@/hooks/admin/useAdminCaseStudies';
 import useAdminBlogPosts from '@/hooks/admin/useAdminBlogPosts';
 import useAdminBanners from '@/hooks/admin/useAdminBanners';
