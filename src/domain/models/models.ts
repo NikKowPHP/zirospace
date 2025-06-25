@@ -26,7 +26,8 @@ export interface CaseStudy {
    cta_url: string
    created_at: string
    updated_at: string
-   color: string
+  color: string
+  background_color: string
   cta_text_name: string
    order_index: number
    theme: string

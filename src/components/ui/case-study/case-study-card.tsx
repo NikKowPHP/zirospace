@@ -99,7 +99,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
   const t = useTranslations()
   const ctaText = t('caseStudy.ctaText.viewCaseStudy')
   const caseStudyUrl = `/${locale}/case-studies/${caseStudy.slug}`
-  console.log('caseStudy.tags', caseStudy.tags)
+
 
   // JSON-LD for the case study
   const caseStudyJsonLd = {
@@ -111,7 +111,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
     // "keywords":  caseStudy.tags ? caseStudy.tags.join(", ") : '',
     // "image": caseStudy.images.length > 0 && caseStudy.images[0]?.url ? caseStudy.images[0].url : '',
     "url": `${siteUrl}${caseStudyUrl}`,
-    "datePublished": caseStudy.createdAt,
+    "datePublished": caseStudy.created_at,
     "author": {
       "@type": "Organization",
       "name": "ZIRO Healthcare Solutions"
@@ -132,7 +132,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
         className={`flex flex-col rounded-[24px] sm:rounded-[32px] w-full shadow-sm h-full`}
         style={{
           color: caseStudy.color,
-          backgroundColor: caseStudy.backgroundColor,
+          backgroundColor: caseStudy.background_color,
         }}
         itemScope
         itemType="https://schema.org/CreativeWork"
@@ -215,7 +215,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
         </Link>
 
         {/* Add metadata */}
-        <meta itemProp="datePublished" content={new Date(caseStudy.createdAt).toString()} />
+        <meta itemProp="datePublished" content={new Date(caseStudy.created_at).toString()} />
         <meta itemProp="author" content="ZIRO " />
         <meta itemProp="publisher" content="ZIRO " />
       </article>
