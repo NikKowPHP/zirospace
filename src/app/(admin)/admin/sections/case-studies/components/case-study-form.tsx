@@ -83,9 +83,11 @@ export function CaseStudyForm({
   loading,
 }: CaseStudyFormProps) {
   const [images, setImages] = useState<ImageInput[]>(
-    study?.images.map((img) => ({ url: img.url, alt: img.alt })) || [
-      { url: '', alt: '' },
-    ]
+    (study?.images && Array.isArray(study.images)
+      ? study.images.map((img) => ({ url: img.url, alt: img.alt }))
+      : [{ url: '', alt: '' }])
+     
+    
   )
   const [tags, setTags] = useState<readonly string[]>(study?.tags || [])
   const [tagInput, setTagInput] = useState('')
@@ -94,10 +96,10 @@ export function CaseStudyForm({
   const [imageErrors, setImageErrors] = useState<Record<number, string | null>>({})
 
   const [theme, setTheme] = useState<CaseStudy['theme']>(study?.theme || 'dark')
-  const [backgroundColor, setBackgroundColor] = useState(study?.backgroundColor || '#FFFFFF')
+  const [backgroundColor, setBackgroundColor] = useState(study?.background_color || '#FFFFFF')
   const [color, setColor] = useState(study?.color || '#000000')
   const [subtitle, setSubtitle] = useState(study?.subtitle || '')
-  const [ctaUrl, setCtaUrl] = useState(study?.ctaUrl || '')
+  const [ctaUrl, setCtaUrl] = useState(study?.cta_url || '')
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value
@@ -169,11 +171,11 @@ export function CaseStudyForm({
       title: formData.get('title') as string,
       slug: formData.get('slug') as string,
       description: formData.get('description') as string,
-      tags: tags,
+      tags: [...tags],
       images: images.filter((img) => img.url && img.alt),
-      ctaUrl: ctaUrl,
+      cta_url: ctaUrl,
       theme: theme,
-      backgroundColor: backgroundColor,
+      background_color: backgroundColor,
       color: color,
       subtitle: subtitle,
     })

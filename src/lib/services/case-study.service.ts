@@ -66,7 +66,10 @@ export class CaseStudyService {
   ): Promise<CaseStudy> {
     const model = this.getModel(locale)
     return (model as any).create({
-      data: caseStudy as any,
+      data: {
+        ...caseStudy,
+        images: caseStudy.images ? JSON.stringify(caseStudy.images) : null,
+      } as any,
     })
   }
 
@@ -78,7 +81,10 @@ export class CaseStudyService {
     const model = this.getModel(locale)
     return (model as any).update({
       where: { id },
-      data: caseStudy as any,
+      data: {
+        ...caseStudy,
+        images: caseStudy.images ? JSON.stringify(caseStudy.images) : null,
+      } as any,
     })
   }
 
