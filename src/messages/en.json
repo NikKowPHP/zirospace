@@ -63,6 +63,21 @@
       "title": "Digital Product",
       "subtitle": "Transforming Ideas into Reality",
       "description": "Design cutting-edge apps and platforms that address healthcare challenges, enhance patient engagement, and deliver measurable outcomes."
+    },
+    "serviceCard4": {
+      "title": "Industrial Design",
+      "subtitle": "Creating Ergonomic Devices",
+      "description": "Create ergonomic, user-centered medical devices that enhance patient care, meet standards, and integrate with digital ecosystems."
+    },
+    "serviceCard5": {
+      "title": "Product Prototyping",
+      "subtitle": "Developing Functional Prototypes",
+      "description": "Develop functional prototypes for medical devices, ensuring usability, compliance, and seamless integration with digital health solutions."
+    },
+    "serviceCard6": {
+      "title": "Service Design",
+      "subtitle": "Optimizing Healthcare Experiences",
+      "description": "Optimize healthcare experiences by designing seamless patient and provider journeys across digital and physical touchpoints."
     }
   },
   "footer": {
@@ -254,6 +269,7 @@
   },
   "contactUsFormSection": {
     "title": "Start Your Digital Health Journey With Us",
+    "description": "At Ziro Health, we create simple, effective digital health designs that help healthcare providers and patients connect better. Our focus is on clear, user-friendly solutions that improve care and support your goals",
     "name": "Name",
     "email": "Email",
     "telephone": "Telephone",
