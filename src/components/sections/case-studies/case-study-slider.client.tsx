@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { CaseStudyImage, CaseStudySlider as CaseStudySliderType } from '@/domain/models/case-study-slider.model';
+import { CaseStudyImage, CaseStudySlider as CaseStudySliderType } from '@/domain/models/models';
 
 interface CaseStudySliderProps {
   caseStudySlider: CaseStudySliderType;

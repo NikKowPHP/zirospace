@@ -5,7 +5,7 @@ import { caseStudyService } from '@/lib/services/case-study.service'
 import { serviceService } from '@/lib/services/service.service'
 import { siteUrl } from '@/config/constants';
 type ChangeFrequency = 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never'
-import { Service } from '@/domain/models/service.model';
+import { Service } from '@/domain/models/models';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteUrl;
@@ -34,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const posts = await blogPostService.getBlogPosts(locale)
       return posts.map(post => ({
         url: `${baseUrl}/${locale}/blog/${post.slug}`,
-        lastModified: post.createdAt,
+        lastModified: post.created_at,
         changeFrequency: 'weekly' as ChangeFrequency,
         priority: 0.7,
       }))
@@ -50,7 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const caseStudies = await caseStudyService.getCaseStudies(locale)
       return caseStudies.map(study => ({
         url: `${baseUrl}/${locale}/case-studies/${study.slug}`,
-        lastModified: study.createdAt,
+        lastModified: study.created_at,
         changeFrequency: 'weekly' as ChangeFrequency,
         priority: 0.7,
       }))
@@ -82,7 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const services = await serviceService.getServices(locale)
       return services.map((service: Service) => ({
         url: `${baseUrl}/${locale}/services/${service.slug}`,
-        lastModified: service.createdAt,
+        lastModified: service.created_at,
         changeFrequency: 'weekly' as ChangeFrequency,
         priority: 0.7,
       }))

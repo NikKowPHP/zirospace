@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Locale } from '@/i18n'
-import { Testimonial } from '@/domain/models/testimonial.model'
+import { Testimonial } from '@/domain/models/models'
 import { Button } from '@/components/ui/button/button'
 
 interface TestimonialFormProps {

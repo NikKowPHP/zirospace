@@ -5,7 +5,7 @@ import useAdminServices from '@/hooks/admin/useAdminServices'
 import { useRouter } from 'next/navigation'
 import { ServiceForm } from '../components/service-form'
 import { useState } from 'react'
-import { Service } from '@/domain/models/service.model'
+import { Service } from '@/domain/models/models'
 import logger from '@/lib/logger'
 
 export default function NewServicePage() {

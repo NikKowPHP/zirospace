@@ -1,6 +1,6 @@
 'use client'
 
-import { Banner } from '@/domain/models/banner.model'
+import { Banner } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { useState } from 'react'
 
@@ -22,11 +22,11 @@ export function BannerForm({
   const [title, setTitle] = useState(banner?.title || '')
   const [content, setContent] = useState(banner?.content || '')
   const [subtitle, setSubtitle] = useState(banner?.subtitle || '')
-  const [imageUrl, setImageUrl] = useState(banner?.imageUrl || '')
-  const [youtubeUrl, setYoutubeUrl] = useState(banner?.youtubeUrl || '')
-  const [startDate, setStartDate] = useState<Date | undefined>(banner?.startDate ? new Date(banner.startDate) : undefined)
-  const [endDate, setEndDate] = useState<Date | undefined>(banner?.endDate ? new Date(banner.endDate) : undefined)
-  const [isActive, setIsActive] = useState(banner?.isActive || false)
+  const [imageUrl, setImageUrl] = useState(banner?.image_url || '')
+  const [youtubeUrl, setYoutubeUrl] = useState(banner?.youtube_url || '')
+  const [startDate, setStartDate] = useState<Date | undefined>(banner?.start_date ? new Date(banner.start_date) : undefined)
+  const [endDate, setEndDate] = useState<Date | undefined>(banner?.end_date ? new Date(banner.end_date) : undefined)
+  const [isActive, setIsActive] = useState(banner?.is_active || false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -36,13 +36,13 @@ export function BannerForm({
       title: title,
       content: content,
       subtitle: subtitle,
-      imageUrl: imageUrl,
-      youtubeUrl: youtubeUrl,
-      startDate: startDate,
-      endDate: endDate,
-      isActive: isActive,
-      createdAt: banner?.createdAt,
-      updatedAt: new Date(),
+      image_url: imageUrl,
+      youtube_url: youtubeUrl,
+      start_date: startDate,
+      end_date: endDate,
+      is_active: isActive,
+      created_at: banner?.created_at,
+      updated_at: new Date().toDateString(),
     })
   }
 

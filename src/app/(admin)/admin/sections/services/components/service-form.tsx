@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
-import { Service } from '@/domain/models/service.model'
+import { Service } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import React from 'react'
 import { useQuill } from 'react-quilljs'
@@ -39,8 +39,8 @@ export function ServiceForm({
   } = useForm<Partial<Service>>({
     defaultValues: {
       ...service,
-      orderIndex: service?.orderIndex ?? 0,
-      isPublished: service?.isPublished ?? true,
+      order_index: service?.order_index ?? 0,
+      is_published: service?.is_published ?? true,
     },
   });
   const [content, setContent] = useState(service?.contentHtml || '');
@@ -72,7 +72,7 @@ export function ServiceForm({
   }, [quillExcerpt, service?.excerpt])
 
   const submitHandler = async (data: Partial<Service>) => {
-    logger.log('Submitting ServiceForm. isPublished:', data.isPublished); // Log on submit
+    logger.log('Submitting ServiceForm. isPublished:', data.is_published); // Log on submit
     const keywordsArray = keywords.split(',').map(k => k.trim()).filter(k => k !== '');
     await onSubmit({ ...data, contentHtml: content, excerpt: excerpt, keywords: keywordsArray });
   }
@@ -167,7 +167,7 @@ export function ServiceForm({
         <Label htmlFor="metaDescription">Meta Description</Label>
         <Textarea
           id="metaDescription"
-          {...register('metaDescription')}
+          {...register('meta_description')}
           className="w-full"
         />
       </div>
@@ -188,7 +188,7 @@ export function ServiceForm({
         <Input
           type="number"
           id="orderIndex"
-          {...register('orderIndex')}
+          {...register('order_index')}
           className="w-full"
         />
       </div>
@@ -197,7 +197,7 @@ export function ServiceForm({
         <div>
           <Label htmlFor="isPublished" className="mr-2">Published</Label>
           <Controller
-            name="isPublished"
+            name="is_published"
             control={control}
             render={({ field }) => (
               <Switch

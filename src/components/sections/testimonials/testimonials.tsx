@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Testimonial } from '@/domain/models/testimonial.model'
+import { Testimonial } from '@/domain/models/models'
 
 // Define the props for the Testimonials component
 interface TestimonialsProps {

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button/button'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
-import { BlogPost } from '@/domain/models/blog-post.model'
+import { BlogPost } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import React from 'react'
 import { useQuill } from 'react-quilljs'
@@ -32,7 +32,7 @@ export function BlogPostForm({
   } = useForm<Partial<BlogPost>>({
     defaultValues: post,
   })
-  const [content, setContent] = useState(post?.contentHtml || '')
+  const [content, setContent] = useState(post?.content_html || '')
   const [excerpt, setExcerpt] = useState(post?.excerpt || '')
   const { quill: quillContent, quillRef: quillRefContent } = useQuill({ theme: 'snow' })
   const { quill: quillExcerpt, quillRef: quillRefExcerpt } = useQuill({ theme: 'snow' })
@@ -42,11 +42,11 @@ export function BlogPostForm({
       quillContent.on('text-change', () => {
         setContent(quillContent.root.innerHTML)
       })
-      if (post?.contentHtml) {
-        quillContent.clipboard.dangerouslyPasteHTML(post.contentHtml)
+      if (post?.content_html) {
+        quillContent.clipboard.dangerouslyPasteHTML(post.content_html)
       }
     }
-  }, [quillContent, post?.contentHtml])
+  }, [quillContent, post?.content_html])
 
   React.useEffect(() => {
     if (quillExcerpt) {
@@ -60,7 +60,7 @@ export function BlogPostForm({
   }, [quillExcerpt, post?.excerpt])
 
   const submitHandler = async (data: Partial<BlogPost>) => {
-    await onSubmit({ ...data, contentHtml: content, excerpt: excerpt })
+    await onSubmit({ ...data, content_html: content, excerpt: excerpt })
   }
 
   return (
@@ -96,11 +96,11 @@ export function BlogPostForm({
         <Input
           type="text"
           id="imageurl"
-          {...register('imageurl', { required: 'Image URL is required' })}
+          {...register('image_url', { required: 'Image URL is required' })}
           className="w-full"
         />
-        {errors.imageurl && (
-          <p className="text-red-600">{errors.imageurl.message}</p>
+        {errors.image_url && (
+          <p className="text-red-600">{errors.image_url.message}</p>
         )}
       </div>
 
@@ -109,7 +109,7 @@ export function BlogPostForm({
         <Input
           type="text"
           id="imageAlt"
-          {...register('imageAlt')}
+          {...register('image_alt')}
           className="w-full"
         />
       </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import useAdminTestimonials from '@/hooks/admin/useAdminTestimonials'
-import { Testimonial } from '@/domain/models/testimonial.model'
+import { Testimonial } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { TestimonialForm } from './components/testimonials-form'
 import logger from '@/lib/logger'

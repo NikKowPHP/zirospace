@@ -2,7 +2,7 @@
 
 import {  useEffect, useState } from 'react'
 import useAdminBanners from '@/hooks/admin/useAdminBanners'
-import { Banner } from '@/domain/models/banner.model'
+import { Banner } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import logger from '@/lib/logger'
 import { BannerForm } from './components/banner-form'

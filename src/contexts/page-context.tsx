@@ -7,12 +7,9 @@ import {
   useEffect,
   useCallback,
 } from 'react'
-import { CaseStudy } from '@/domain/models/models'
+import { Banner, BlogPost, CaseStudy, CaseStudySlider, Testimonial } from '@/domain/models/models'
 import { Locale } from '@/i18n'
-import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
-import { Testimonial } from '@/domain/models/testimonial.model'
-import { BlogPost } from '@/domain/models/blog-post.model'
-import { Banner } from '@/domain/models/banner.model'
+
 
 interface PageContextType {
   caseStudies: Record<Locale, CaseStudy[]>

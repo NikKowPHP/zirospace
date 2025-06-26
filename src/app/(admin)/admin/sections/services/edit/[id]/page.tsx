@@ -5,7 +5,7 @@ import useAdminServices from '@/hooks/admin/useAdminServices'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ServiceForm } from '../../components/service-form'
 import { useEffect, useState } from 'react'
-import { Service } from '@/domain/models/service.model'
+import { Service } from '@/domain/models/models'
 import logger from '@/lib/logger'
 
 interface Props {
@@ -26,14 +26,14 @@ export default function EditServicePage({ params }: Props) {
       setId(id)
     }
 
-    getServiceById(id, locale as Locale).then(service => setService(service || null))
+    getServiceById(id).then(service => setService(service || null))
   }, [params, getServiceById, locale])
 
   const handleUpdate = async (data: Partial<Service>) => {
     if (!service) return;
     try {
       logger.log('Updating service in handleUpdate:', data);
-      logger.log('isPublished value in handleUpdate:', data.isPublished); // Add logging for isPublished
+      logger.log('isPublished value in handleUpdate:', data.is_published); // Add logging for isPublished
       await updateService(id, data, locale as Locale)
       router.push('/admin/sections/services')
     } catch (error) {

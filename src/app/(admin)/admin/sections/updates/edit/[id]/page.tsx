@@ -5,7 +5,7 @@ import { useAdminUpdates } from '@/hooks/admin/useAdminUpdates'
 import { useRouter, useSearchParams } from 'next/navigation'
 import UpdateForm from '../../components/update-form'
 import { useEffect, useState } from 'react'
-import { Update } from '@/domain/models/update.model'
+import { Update } from '@/domain/models/models'
 import logger from '@/lib/logger'
 
 interface Props {

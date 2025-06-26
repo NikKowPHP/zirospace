@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { Update } from '@/domain/models/update.model'
+import { Update } from '@/domain/models/models'
 import { Input } from '@/components/ui/input/input'
 import { Label } from '@/components/ui/label/label'
 import { Switch } from '@/components/ui/switch/switch'

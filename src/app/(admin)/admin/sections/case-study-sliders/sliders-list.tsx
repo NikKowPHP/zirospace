@@ -2,7 +2,7 @@
 
 import {  useEffect, useState } from 'react'
 import useAdminCaseStudySliders from '@/hooks/admin/useAdminCaseStudySliders'
-import { CaseStudySlider } from '@/domain/models/case-study-slider.model'
+import { CaseStudySlider } from '@/domain/models/models'
 
 import logger from '@/lib/logger'
 import { CaseStudySliderForm } from './components/slider-form'

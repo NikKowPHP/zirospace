@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button/button'
 import {
   CaseStudySlider,
   CaseStudyImage,
-} from '@/domain/models/case-study-slider.model'
+} from '@/domain/models/models'
 
 interface CaseStudySliderFormProps {
   caseStudySlider?: CaseStudySlider

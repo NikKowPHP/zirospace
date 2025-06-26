@@ -5,7 +5,7 @@ import useAdminBlogPosts from '@/hooks/admin/useAdminBlogPosts'
 import { useRouter } from 'next/navigation'
 import { BlogPostForm } from '../components/blog-post-form'
 import { useState } from 'react'
-import { BlogPost } from '@/domain/models/blog-post.model'
+import { BlogPost } from '@/domain/models/models'
 import logger from '@/lib/logger'
 
 export default function NewBlogPostPage() {

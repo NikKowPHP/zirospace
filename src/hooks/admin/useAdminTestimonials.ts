@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Testimonial } from '@/domain/models/testimonial.model';
+import { Testimonial } from '@/domain/models/models';
 import { Locale } from '@/i18n';
 import useAdminApi from './useAdminApi';
 

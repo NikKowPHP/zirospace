@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { CaseStudySlider } from '@/domain/models/case-study-slider.model';
+import { CaseStudySlider } from '@/domain/models/models';
 import useAdminApi from './useAdminApi';
 import logger from '@/lib/logger';
 

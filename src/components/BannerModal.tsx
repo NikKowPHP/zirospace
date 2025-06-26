@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Banner } from '@/domain/models/banner.model'
+import { Banner } from '@/domain/models/models'
 import { Modal } from '@/components/ui/modal/modal'
 import { Button } from '@/components/ui/button/button'
 import Image from 'next/image'
@@ -24,7 +24,7 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
       autoplay: 1,
       mute: 0,
       controls: 1,
-      playlist: banner?.youtubeUrl,
+      playlist: banner?.youtube_url,
       loop: 1,
       modestbranding: 1,
       rel: 0,
@@ -81,11 +81,11 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
     <Modal isOpen={showModal} onClose={onClose}>
       <div className="flex flex-col gap-[16px] w-full items-center justify-center">
         <div className="rounded-lg w-full">
-          {banner?.youtubeUrl ? (
+          {banner?.youtube_url ? (
             <div className="relative pt-[56.25%] w-full">
               <div className="absolute top-0 left-0 w-full h-full rounded-lg overflow-hidden">
                 <YouTube
-                  videoId={banner.youtubeUrl}
+                  videoId={banner.youtube_url}
                   opts={opts}
                   className="w-full h-full"
                   onReady={(event: any) => {
@@ -105,9 +105,9 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
                 />
               </div>
             </div>
-          ) : banner?.imageUrl ? (
+          ) : banner?.image_url ? (
             <Image
-              src={banner.imageUrl}
+              src={banner.image_url}
               alt={banner.title || ''}
               width={1000}
               height={1000}

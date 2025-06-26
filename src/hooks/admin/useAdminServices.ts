@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Service } from '@/domain/models/service.model';
+import { Service } from '@/domain/models/models';
 import { Locale } from '@/i18n';
 import useAdminApi from './useAdminApi';
 

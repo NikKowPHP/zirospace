@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { BlogPost } from '@/domain/models/blog-post.model'
+import { BlogPost } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import useAdminApi from './useAdminApi'
 import logger from '@/lib/logger'
@@ -160,7 +160,7 @@ const useAdminBlogPosts = ({
           if (updatedBlogPosts[locale]) {
             // First, unpin any previously pinned post
             updatedBlogPosts[locale] = updatedBlogPosts[locale].map((bp) => {
-              if (bp.isPinned && bp.id !== id) {
+              if (bp.is_pinned && bp.id !== id) {
                 // 'id' here is postIdToPin from pinBlogPost params
                 return { ...bp, isPinned: false }
               }
