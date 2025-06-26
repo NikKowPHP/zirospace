@@ -7,7 +7,7 @@ import { Locale } from '@/i18n'
 import { useRouter } from 'next/navigation'
 import ListItemSkeleton from '@/components/ui/skeletons/list-item-skeleton'
 import logger from '@/lib/logger'
-import useAdminServices from '@/hooks/admin/useAdminServices';
+import useAdminServices from '@/hooks/admin/useAdminServices'
 
 export function ServiceList() {
   const { services, deleteService, error, loading, getServices } = useAdminServices()
@@ -64,90 +64,63 @@ export function ServiceList() {
         </button>
       </div>
 
-      <div className="overflow-hidden bg-white   shadow">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Title
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Slug
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                URL Preview
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Excerpt
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Published Status
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {loading ? (
-              <>
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <tr key={index}>
-                    <td colSpan={7}>
-                      <ListItemSkeleton />
-                    </td>
-                  </tr>
-                ))}
-              </>
-            ) : (
-              services[activeLocale]?.map((service) => (
-                <tr key={service.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {service.title}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">{service.slug}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-500">/services/{service.slug}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-500 line-clamp-2">
-                      {service.excerpt}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                      {service.isPublished ? 'Published' : 'Draft'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                    <button
-                      onClick={() =>
-                        router.push(
-                          `/admin/sections/services/edit/${service.id}?locale=${activeLocale}`
-                        )
-                      }
-                      className="text-primary hover:text-primary/90 disabled:opacity-50"
-                      disabled={loading}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(service.id)}
-                      className="text-red-600 hover:text-red-900 disabled:opacity-50"
-                      disabled={loading}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {loading ? (
+          <>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <ListItemSkeleton key={index} />
+            ))}
+          </>
+        ) : (
+          services[activeLocale]?.map((service) => (
+            <div
+              key={service.id}
+              className="bg-white rounded-lg shadow-md p-6 space-y-4"
+            >
+              <h3 className="text-xl font-semibold text-gray-900 line-clamp-1">
+                {service.title}
+              </h3>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium">Slug:</span> {service.slug}
+              </p>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium">URL Preview:</span> /services/{service.slug}
+              </p>
+              <p className="text-sm text-gray-600 line-clamp-3">
+                <span className="font-medium">Excerpt:</span> {service.excerpt}
+              </p>
+              <div className="flex items-center space-x-2">
+                <span
+                  className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    service.is_published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                  }`}
+                >
+                  {service.is_published ? 'Published' : 'Draft'}
+                </span>
+              </div>
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() =>
+                    router.push(
+                      `/admin/sections/services/edit/${service.id}?locale=${activeLocale}`
+                    )
+                  }
+                  className="text-primary hover:text-primary/90 disabled:opacity-50 font-medium"
+                  disabled={loading}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(service.id)}
+                  className="text-red-600 hover:text-red-900 disabled:opacity-50 font-medium"
+                  disabled={loading}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   )
