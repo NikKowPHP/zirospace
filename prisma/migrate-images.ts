@@ -15,7 +15,7 @@
 
       const caseStudies = await (caseStudyModel as any).findMany({
         where: {
-          images_old: {
+          images: {
             not: null,
           },
         },
@@ -24,12 +24,12 @@
       console.log(`Found ${caseStudies.length} case studies with images for locale ${locale}.`);
 
       for (const study of caseStudies) {
-        if (!study.images_old || study.images_old.trim() === '') {
+        if (!study.images || study.images.trim() === '') {
           continue;
         }
 
         try {
-          const parsedImages: OldImageFormat[] = JSON.parse(study.images_old);
+          const parsedImages: OldImageFormat[] = JSON.parse(study.images);
 
           if (Array.isArray(parsedImages) && parsedImages.length > 0) {
             console.log(`  Migrating ${parsedImages.length} images for case study: ${study.title}`);
@@ -46,7 +46,7 @@
           }
         } catch (error) {
           console.error(`  !! Failed to parse or migrate images for case study ID ${study.id}:`, error);
-          console.error(`  !! Raw images string: ${study.images_old}`);
+          console.error(`  !! Raw images string: ${study.images}`);
         }
       }
 

@@ -129,44 +129,44 @@ model zirospace_blog_posts_pl {
   updated_at   DateTime? @default(now()) @db.Timestamptz(6)
 }
 
+// casestudiesen
 model zirospace_case_studies_en {
-  id               String    @id
-  slug             String    @unique
-  title            String
-  subtitle         String?
-  description      String?
-  tags             String[]
-  images           String?
-  cta_text         String?
-  cta_text_name    String?
-  cta_url          String?
+  id                String             @id
+  slug              String             @unique
+  title             String
+  subtitle          String?
+  description       String?
+  tags              String[]
+  cta_text          String?
+  cta_text_name     String?
+  cta_url           String?
+  color             String?            @db.VarChar(7)
+  background_color  String?            @db.VarChar(7)
+  theme             String?            @db.VarChar(50)
+  order_index       Int?               @default(0)
+  created_at        DateTime?          @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime?          @default(now()) @db.Timestamptz(6)
   case_study_images CaseStudyImageEN[]
-  color            String?   @db.VarChar(7)
-  background_color String?   @db.VarChar(7)
-  theme            String?   @db.VarChar(50)
-  order_index      Int?      @default(0)
-  created_at       DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime? @default(now()) @db.Timestamptz(6)
 }
 
+// casestudiespl
 model zirospace_case_studies_pl {
-  id               String    @id
-  slug             String    @unique
-  title            String
-  subtitle         String?
-  description      String?
-  tags             String[]
-  images           String?
-  cta_text         String?
-  cta_text_name    String?
-  cta_url          String?
+  id                String             @id
+  slug              String             @unique
+  title             String
+  subtitle          String?
+  description       String?
+  tags              String[]
+  cta_text          String?
+  cta_text_name     String?
+  cta_url           String?
+  color             String?            @db.VarChar(7)
+  background_color  String?            @db.VarChar(7)
+  theme             String?            @db.VarChar(50)
+  order_index       Int?               @default(0)
+  created_at        DateTime?          @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime?          @default(now()) @db.Timestamptz(6)
   case_study_images CaseStudyImagePL[]
-  color            String?   @db.VarChar(7)
-  background_color String?   @db.VarChar(7)
-  theme            String?   @db.VarChar(50)
-  order_index      Int?      @default(0)
-  created_at       DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime? @default(now()) @db.Timestamptz(6)
 }
 
 model CaseStudyImageEN {
