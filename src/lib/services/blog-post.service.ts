@@ -102,14 +102,14 @@ export class BlogPostService {
       const txModel = locale === 'pl' ? tx.zirospace_blog_posts_pl : tx.zirospace_blog_posts_en;
       // Unpin any currently pinned post for the given locale
       await (txModel as any).updateMany({
-        where: { isPinned: true, locale },
-        data: { isPinned: false },
+        where: { is_pinned: true, locale },
+        data: { is_pinned: false },
       });
 
       // Pin the target post
       const pinnedPost = await (txModel as any).update({
         where: { id: postIdToPin },
-        data: { isPinned: true },
+        data: { is_pinned: true },
       });
       return pinnedPost;
     });

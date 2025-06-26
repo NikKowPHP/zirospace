@@ -1,11 +1,11 @@
 // import { TestimonialList } from './testimonial-list'
 import { Suspense } from 'react'
 import { AdminProvider } from '@/contexts/admin-context'
-import { getTestimonialService } from '@/lib/services/testimonials.service'
+import { testimonialService } from '@/lib/services/testimonials.service'
 import { TestimonialList } from './testimonials-list'
 
 export default async function TestimonialsAdminPage() {
-  const testimonialService = await getTestimonialService()
+
   const [enTestimonials, plTestimonials] = await Promise.all([
     testimonialService.getTestimonials('en'),
     testimonialService.getTestimonials('pl')

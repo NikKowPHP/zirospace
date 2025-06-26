@@ -20,7 +20,7 @@ export function BlogPostList() {
 
   useEffect(() => {
     // Find the currently pinned post on component mount
-    const pinnedPost = blogPosts[activeLocale]?.find((post) => post.isPinned)
+    const pinnedPost = blogPosts[activeLocale]?.find((post) => post.is_pinned)
     setPinnedPostId(pinnedPost?.id || null)
   }, [blogPosts, activeLocale])
 
@@ -38,10 +38,10 @@ export function BlogPostList() {
     try {
       // Unpin the currently pinned post if there is one
       if (pinnedPostId) {
-        await updateBlogPost(pinnedPostId, { isPinned: false }, activeLocale)
+        await updateBlogPost(pinnedPostId, { is_pinned: false }, activeLocale)
       }
       // Pin the selected post
-      await updateBlogPost(postId, { isPinned: true }, activeLocale)
+      await updateBlogPost(postId, { is_pinned: true }, activeLocale)
       setPinnedPostId(postId)
     } catch (error) {
       logger.log('Failed to pin/unpin blog post:', error)
@@ -84,84 +84,62 @@ export function BlogPostList() {
         </button>
       </div>
 
-      <div className="overflow-hidden bg-white   shadow">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Title
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Slug
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                URL Preview
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Excerpt
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {blogPosts[activeLocale]?.map((post) => (
+          <div
+            key={post.id}
+            className={`bg-white rounded-lg shadow-md p-6 space-y-4 ${
+              loading ? 'opacity-50' : ''
+            }`}
+          >
+            <h3 className="text-xl font-semibold text-gray-900 line-clamp-1">
+              {post.title}
+            </h3>
+            <p className="text-sm text-gray-600">
+              <span className="font-medium">Slug:</span> {post.slug}
+            </p>
+            <p className="text-sm text-gray-600">
+              <span className="font-medium">URL Preview:</span> /blog/{post.slug}
+            </p>
+            <p className="text-sm text-gray-600 line-clamp-3">
+              <span className="font-medium">Excerpt:</span> {post.excerpt}
+            </p>
+            <div className="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="pinned-post"
+                value={post.id}
+                checked={post.is_pinned}
+                onChange={() => handlePin(post.id)}
+                disabled={loading}
+                className="cursor-pointer h-10 w-10 text-primary focus:ring-primary border-gray-300"
+              />
+              <label htmlFor={`pinned-${post.id}`} className="text-sm text-gray-700">
                 Pinned
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {blogPosts[activeLocale].map((post) => (
-              <tr key={post.id} className={loading ? 'opacity-50' : ''}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">
-                    {post.title}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{post.slug}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">/blog/{post.slug}</div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-500 line-clamp-2">
-                    {post.excerpt}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <input
-                    type="radio"
-                    name="pinned-post"
-                    value={post.id}
-                    checked={post.isPinned}
-                    onChange={() => handlePin(post.id)}
-                    disabled={loading}
-                    className="cursor-pointer"
-                  />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                  <button
-                    onClick={() =>
-                      router.push(
-                        `/admin/sections/blog-posts/edit/${post.id}?locale=${activeLocale}`
-                      )
-                    }
-                    className="text-primary hover:text-primary/90 disabled:opacity-50"
-                    disabled={loading}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(post.id.toString())}
-                    className="text-red-600 hover:text-red-900 disabled:opacity-50"
-                    disabled={loading}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              </label>
+            </div>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() =>
+                  router.push(
+                    `/admin/sections/blog-posts/edit/${post.id}?locale=${activeLocale}`
+                  )
+                }
+                className="text-primary hover:text-primary/90 disabled:opacity-50 font-medium"
+                disabled={loading}
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => handleDelete(post.id.toString())}
+                className="text-red-600 hover:text-red-900 disabled:opacity-50 font-medium"
+                disabled={loading}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )

@@ -43,7 +43,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 })
     }
     data.id = id
-    data.updatedAt = new Date()
+    data.updated_at = new Date()
 
     logger.log(`Updating case study slider: ${id} with data: ${JSON.stringify(data)}`)
     console.log('Processing case study slider update:', {

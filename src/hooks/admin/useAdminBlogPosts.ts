@@ -154,7 +154,7 @@ const useAdminBlogPosts = ({
             errorMessage: 'Failed to pin blog post',
           }
         )
-        // Optimistically update the isPinned status in the local state
+        // Optimistically update the is_pinned status in the local state
         setBlogPosts((prev) => {
           const updatedBlogPosts = { ...prev }
           if (updatedBlogPosts[locale]) {
@@ -162,13 +162,13 @@ const useAdminBlogPosts = ({
             updatedBlogPosts[locale] = updatedBlogPosts[locale].map((bp) => {
               if (bp.is_pinned && bp.id !== id) {
                 // 'id' here is postIdToPin from pinBlogPost params
-                return { ...bp, isPinned: false }
+                return { ...bp, is_pinned: false }
               }
               return bp
             })
             // Then, pin the target post
             updatedBlogPosts[locale] = updatedBlogPosts[locale].map((bp) =>
-              bp.id === id ? { ...bp, isPinned: true } : bp
+              bp.id === id ? { ...bp, is_pinned: true } : bp
             )
           }
           return updatedBlogPosts
