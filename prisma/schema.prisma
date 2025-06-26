@@ -196,7 +196,7 @@ model zirospace_case_study_slider_images {
   alt                          String?
   created_at                   DateTime?                    @default(now()) @db.Timestamptz(6)
   updated_at                   DateTime?                    @default(now()) @db.Timestamptz(6)
-  zirospace_case_study_sliders zirospace_case_study_sliders @relation(fields: [slider_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_slider")
+  slider zirospace_case_study_sliders @relation("SliderToImages", fields: [slider_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_slider")
 }
 
 model zirospace_case_study_sliders {
@@ -204,7 +204,8 @@ model zirospace_case_study_sliders {
   theme                              String?
   created_at                         DateTime?                            @default(now()) @db.Timestamptz(6)
   updated_at                         DateTime?                            @default(now()) @db.Timestamptz(6)
-  zirospace_case_study_slider_images zirospace_case_study_slider_images[]
+  images zirospace_case_study_slider_images[] @relation("SliderToImages")
+
 }
 
 model zirospace_hero_en {
