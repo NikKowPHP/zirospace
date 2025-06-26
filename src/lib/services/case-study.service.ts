@@ -94,7 +94,7 @@ export class CaseStudyService {
       where: { id },
     })
   }
-
+  // TODO : REFACTOR INTO SEPERATE TABLE THE IMAGES
   async updateCaseStudyOrder(
     orders: OrderUpdate[],
     locale: Locale

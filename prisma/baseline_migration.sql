@@ -1,6 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
-
 -- CreateTable
 CREATE TABLE "case_studies_en" (
     "id" TEXT NOT NULL,
