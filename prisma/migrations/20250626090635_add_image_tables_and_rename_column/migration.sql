@@ -23,4 +23,3 @@ ALTER TABLE "zirospace_case_study_images_en" ADD CONSTRAINT "zirospace_case_stud
 
 -- AddForeignKey
 ALTER TABLE "zirospace_case_study_images_pl" ADD CONSTRAINT "zirospace_case_study_images_pl_caseStudyId_fkey" FOREIGN KEY ("caseStudyId") REFERENCES "zirospace_case_studies_pl"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
