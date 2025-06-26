@@ -29,10 +29,10 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
     }
   }, [callApi]);
 
-  const getServiceById = useCallback(async (id: string): Promise<Service | null> => {
+  const getServiceById = useCallback(async (id: string, locale: Locale): Promise<Service | null> => {
     try {
       const data: Service = await callApi(
-        `/api/admin/services/${id}`,
+        `/api/admin/services/${id}?locale=${locale}`,
         { method: 'GET', headers: { 'Content-Type': 'application/json' } },
         {
           loadingMessage: 'Fetching service details...',

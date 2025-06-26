@@ -48,7 +48,7 @@ export async function GET(
     const searchParams = request.nextUrl.searchParams;
     const locale = searchParams.get('locale') as Locale;
     if (!locale) {
-      logger.error('Locale is required for DELETE request');
+      logger.error('Locale is required for get request');
       return NextResponse.json({ error: 'Locale is required' }, { status: 400 });
     }
 

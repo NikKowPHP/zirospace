@@ -16,7 +16,7 @@ export default function EditServicePage({ params }: Props) {
   const { updateService, loading, getServiceById } = useAdminServices()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const locale = searchParams.get('locale') || 'en';
+  const locale = (searchParams.get('locale') || 'en') as Locale;
   const [service, setService] = useState<Service | null>(null);
   const [id, setId] = useState<string>('')
 
@@ -26,7 +26,7 @@ export default function EditServicePage({ params }: Props) {
       setId(id)
     }
 
-    getServiceById(id).then(service => setService(service || null))
+    getServiceById(id, locale).then(service => setService(service || null))
   }, [params, getServiceById, locale])
 
   const handleUpdate = async (data: Partial<Service>) => {
