@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
 
     logger.log(`Fetching all blog posts for locale: ${locale}`);
     const blogPosts = await blogPostService.getBlogPosts(locale);
+     logger.log('all posts' , blogPosts);
     return NextResponse.json(blogPosts);
   } catch (error) {
     logger.error(`Error fetching blog post: ${error}`)

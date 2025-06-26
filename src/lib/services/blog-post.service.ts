@@ -49,8 +49,9 @@ export class BlogPostService {
     const cachedFn = this.withCache(
       async (id: string, locale: Locale) => {
         const model = this.getModel(locale)
+        const idNum = parseInt(id);
         return (model as any).findUnique({
-          where: { id },
+          where: { id:idNum },
         })
       },
       `blog-post-${id}-${locale}`,
@@ -71,8 +72,9 @@ export class BlogPostService {
   async updateBlogPost(id: string, blogPost: Partial<BlogPost>, locale: Locale): Promise<BlogPost> {
     const model = this.getModel(locale)
     const trimmedBlogPost = this.trimBlogPost(blogPost)
+      const idNum = parseInt(id);
     return (model as any).update({
-      where: { id },
+      where: { id:idNum },
       data: trimmedBlogPost as any,
     })
   }
@@ -80,8 +82,9 @@ export class BlogPostService {
   async deleteBlogPost(id: string, locale: Locale): Promise<boolean> {
     const model = this.getModel(locale)
     try {
+        const idNum = parseInt(id);
       await (model as any).delete({
-        where: { id },
+        where: { id:idNum },
       })
       return true
     } catch (error) {
@@ -105,10 +108,11 @@ export class BlogPostService {
         where: { is_pinned: true, locale },
         data: { is_pinned: false },
       });
+      const idNum = parseInt(postIdToPin)
 
       // Pin the target post
       const pinnedPost = await (txModel as any).update({
-        where: { id: postIdToPin },
+        where: { id: idNum },
         data: { is_pinned: true },
       });
       return pinnedPost;
