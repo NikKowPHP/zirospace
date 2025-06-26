@@ -154,7 +154,7 @@ export function BannerList({ initialBanners }: BannerListProps) {
                   <div className="text-sm text-gray-500">{banner.subtitle?.slice(0, 30)}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{banner.isActive ? 'Yes' : 'No'}</div>
+                  <div className="text-sm text-gray-500">{banner.is_active ? 'Yes' : 'No'}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
                   <button

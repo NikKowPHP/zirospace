@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { Locale } from '@/i18n'
-import { Update } from '@/domain/models/update.model'
+import { Update } from '@/domain/models/models'
 import useAdminApi from './useAdminApi'
 import { toast } from 'react-hot-toast'
 
