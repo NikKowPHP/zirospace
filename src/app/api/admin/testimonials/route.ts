@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
-import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
 import { testimonialService } from '@/lib/services/testimonials.service'
 import logger from '@/lib/logger'
+import { Locale } from '@/i18n'
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
   
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     data.id = id;
     console.log('Processing testimonial creation:', {
       locale,
-      mappedData: TestimonialMapper.toPersistence(data)
+      mappedData: (data)
     })
 
     const newTestimonial = await testimonialService.createTestimonial(data, locale)
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     // Revalidate cache
     revalidateTag(CACHE_TAGS.TESTIMONIALS)
 
-    return NextResponse.json(TestimonialMapper.toPersistence(newTestimonial))
+    return NextResponse.json(newTestimonial)
   } catch (error) {
     logger.log('Error creating testimonial:', error)
     return NextResponse.json(
@@ -33,13 +33,13 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const locale = searchParams.get('locale') as string;
+    const locale = searchParams.get('locale') as Locale;
 
     console.log('Processing testimonial retrieval:', { locale })
 
     const testimonials = await testimonialService.getTestimonials(locale);
 
-    return NextResponse.json(testimonials.map(TestimonialMapper.toPersistence));
+    return NextResponse.json(testimonials);
   } catch (error) {
     logger.log('Error retrieving testimonials:', error)
     return NextResponse.json(

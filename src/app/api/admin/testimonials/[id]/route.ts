@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
-import { TestimonialMapper } from '@/infrastructure/mappers/testimonial.mapper'
 import { testimonialService } from '@/lib/services/testimonials.service'
 
 import logger from '@/lib/logger'
@@ -53,10 +52,10 @@ export async function PUT(
     console.log('Processing testimonial update:', {
       id,
       locale,
-      mappedData: TestimonialMapper.toPersistence(data)
+      mappedData: (data)
     })
 
-    const updatedTestimonial = await testimonialService.updateTestimonial(id, TestimonialMapper.toDomain(data), locale)
+    const updatedTestimonial = await testimonialService.updateTestimonial(id, data, locale)
 
     if (!updatedTestimonial) {
       return NextResponse.json(
@@ -64,11 +63,9 @@ export async function PUT(
         { status: 404 }
       )
     }
-
-    // Revalidate cache
     revalidateTag(CACHE_TAGS.TESTIMONIALS)
 
-    return NextResponse.json(TestimonialMapper.toPersistence(updatedTestimonial))
+    return NextResponse.json(updatedTestimonial)
   } catch (error) {
     logger.log('Error updating testimonial:', error)
     return NextResponse.json(

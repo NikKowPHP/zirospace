@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
-import { CaseStudySliderMapper } from '@/infrastructure/mappers/case-study-slider.mapper'
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
 import logger from '@/lib/logger'
 
@@ -12,7 +11,7 @@ export async function POST(request: NextRequest) {
 
   try {
     console.log('Processing case study slider creation:', {
-      mappedData: CaseStudySliderMapper.toPersistence(data)
+      mappedData: (data)
     })
 
     const id = crypto.randomUUID()
@@ -24,7 +23,7 @@ export async function POST(request: NextRequest) {
     // Revalidate cache
     revalidateTag(CACHE_TAGS.CASE_STUDY_SLIDERS)
 
-    return NextResponse.json(CaseStudySliderMapper.toPersistence(newCaseStudySlider))
+    return NextResponse.json(newCaseStudySlider)
   } catch (error) {
     logger.log('Error creating case study slider:', error)
     return NextResponse.json(

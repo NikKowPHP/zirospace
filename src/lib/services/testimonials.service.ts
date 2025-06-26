@@ -61,11 +61,17 @@ export class TestimonialService {
     })
   }
 
-  async deleteTestimonial(id: string, locale: Locale): Promise<void> {
+  async deleteTestimonial(id: string, locale: Locale): Promise<boolean> {
     const model = this.getModel(locale)
-    await (model as any).delete({
-      where: { id },
-    })
+    try {
+      await (model as any).delete({
+        where: { id },
+      })
+      return true
+    } catch (error) {
+      console.error(`Failed to delete testimonial with ID ${id}:`, error)
+      return false
+    }
   }
 }
 
