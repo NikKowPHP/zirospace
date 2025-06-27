@@ -38,8 +38,8 @@ export async function generateMetadata({
   }
 
   return {
-    title: service.metaTitle || service.title,
-    description: service.metaDescription,
+    title: service.meta_title || service.title,
+    description: service.meta_description,
     keywords: service.keywords?.join(', '),
   }
 }
@@ -47,7 +47,7 @@ export async function generateMetadata({
 export default async function ServicePage({ params: { locale, slug } }: Props) {
   const service = await serviceService.getServiceBySlug(slug, locale)
 
-  if (!service || !service.isPublished) {
+  if (!service || !service.is_published) {
     notFound()
   }
 
@@ -55,11 +55,11 @@ export default async function ServicePage({ params: { locale, slug } }: Props) {
     <div className="max-w-3xl mx-auto py-10">
       <h1 className="text-3xl text-center font-bold mb-5">{service.title}</h1>
       {service.subtitle && <h2 className="text-xl mb-3">{service.subtitle}</h2>}
-      {service.imageUrl && (
+      {service.image_url && (
         <div className="relative max-w-3xl h-96 mb-5">
           <Image
-            src={service.imageUrl}
-            alt={service.imageAlt || 'service image'}
+            src={service.image_url}
+            alt={service.image_alt || 'service image'}
             fill
             className="mb-5 rounded-lg shadow-md object-cover"
           />

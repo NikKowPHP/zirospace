@@ -9,6 +9,9 @@ const withAnalyzer = withBundleAnalyzer({
 })
 
 const config = {
+  // Disable font optimization to prevent build issues with Google Fonts
+  optimizeFonts: false,
+
   // Image optimization
   images: {
     domains: [
@@ -95,12 +98,6 @@ const config = {
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
-    useEslintrc: false,
-    overrideConfig: {
-      linterOptions: {
-        reportUnusedDisableDirectives: 'off',
-      },
-    },
   },
 }
 
