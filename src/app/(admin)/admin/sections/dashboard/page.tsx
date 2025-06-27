@@ -2,17 +2,27 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button/button"
+import toast from "react-hot-toast";
+
 // import { AnalyticsDashboard } from "@/components/analytics/analyticsDashboard"
 
 export default function AdminDashboard() {
   const handleRevalidate = async () => {
-    const response = await fetch('/api/admin/revalidate')
-    if (response.ok) {
-      console.log('Cache revalidated')
-    } else {
-      console.error('Failed to revalidate cache')
+    
+
+   
+      const response = await fetch(`/api/admin/revalidate`, {
+        method: 'POST',
+      });
+      if (response.ok) {
+      // console.log(`Cache revalidated for tag: ${all tags }`);
+        toast('revalidated')
+        console.log('revalidated')
+      } else {
+        console.error(`Failed to revalidate cache for tag: `);
+      
     }
-  }
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

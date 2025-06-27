@@ -18,6 +18,7 @@ export default function NewServicePage() {
       logger.log('handleCreate', data)
       await createService(data, activeLocale)
       router.push('/admin/sections/services')
+      router.refresh() // Force a refresh of the services list page
     } catch (error) {
       logger.log('Failed to create service:', error)
     }

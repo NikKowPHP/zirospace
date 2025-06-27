@@ -52,7 +52,7 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
       logger.log('createService', data)
       try {
         
-        const newService: Service = await callApi(
+        await callApi(
           `/api/admin/services?locale=${locale}`,
           {
             method: 'POST',
@@ -65,26 +65,24 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
             errorMessage: 'Failed to create service',
           }
         );
-        setServices((prev) => ({
-          ...prev,
-          [locale]: [...(prev[locale] || []), newService],
-        }));
+        // After successful creation, refetch the list to ensure UI is in sync.
+        await getServices(locale);
       } catch (error) {
         // Error is already handled by useAdminApi
       }
     },
-    [callApi]
+    [callApi, getServices]
   );
 
   const updateService = useCallback(
     async (id: string, data: Partial<Service>, locale: Locale) => {
       try {
-        const updatedService: Service = await callApi(
+        await callApi(
           `/api/admin/services/${id}?locale=${locale}`,
           {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...data, locale }),
+            body: JSON.stringify({ ...data }),
           },
           {
             loadingMessage: 'Updating service...',
@@ -92,17 +90,13 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
             errorMessage: 'Failed to update service',
           }
         );
-        setServices((prev) => ({
-          ...prev,
-          [locale]: (prev[locale] || []).map((service) =>
-            service.id === id ? updatedService : service
-          ),
-        }));
+        // After successful update, refetch the list.
+        await getServices(locale);
       } catch (error) {
         // Error is already handled by useAdminApi
       }
     },
-    [callApi]
+    [callApi, getServices]
   );
 
   const deleteService = useCallback(
@@ -119,15 +113,13 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
             errorMessage: 'Failed to delete service',
           }
         );
-        setServices((prev) => ({
-          ...prev,
-          [locale]: (prev[locale] || []).filter((service) => service.id !== id),
-        }));
+        // After successful deletion, refetch the list.
+        await getServices(locale);
       } catch (error) {
         // Error is already handled by useAdminApi
       }
     },
-    [callApi]
+    [callApi, getServices]
   );
 
   return {

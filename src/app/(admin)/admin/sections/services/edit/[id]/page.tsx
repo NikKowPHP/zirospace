@@ -30,17 +30,14 @@ export default function EditServicePage({ params }: Props) {
     logger.log('locale', locale)
   }, [params, getServiceById, locale])
 
-  const isNumber = (value: string | undefined): boolean => {
-    return value !== undefined && !isNaN(Number(value))
-  }
-
   const handleUpdate = async (data: Partial<Service>, locale: Locale) => {
     if (!service) return
-    if(isNumber(data.order_index))
     try {
       logger.log('Updating service in handleUpdate:', data)
       logger.log('isPublished value in handleUpdate:', data.is_published) // Add logging for isPublished
       await updateService(id, data, locale as Locale)
+      router.push('/admin/sections/services')
+      router.refresh() // Force a refresh of the services list page
     } catch (error) {
       logger.log('Failed to update service:', error)
     }

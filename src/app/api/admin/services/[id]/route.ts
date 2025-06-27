@@ -33,7 +33,7 @@ const putServiceSchema = z.object({
     meta_title: z.string().nullable().optional(),
     meta_description: z.string().nullable().optional(),
     keywords: z.array(z.string()).optional(),
-    order_index: z.number().optional(),
+    order_index: z.coerce.number().optional(),
   }),
 })
 
