@@ -145,7 +145,6 @@ const useAdminCaseStudies = ({ initialCaseStudies }: UseAdminCaseStudiesProps = 
           return updatedCaseStudies;
         });
       } catch (error) {
-        // Error is already handled by useAdminApi
       }
     },
     [callApi]
