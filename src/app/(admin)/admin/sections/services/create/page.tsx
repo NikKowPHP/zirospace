@@ -15,6 +15,7 @@ export default function NewServicePage() {
 
   const handleCreate = async (data: Partial<Service>) => {
     try {
+      logger.log('handleCreate', data)
       await createService(data, activeLocale)
       router.push('/admin/sections/services')
     } catch (error) {

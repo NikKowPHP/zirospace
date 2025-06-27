@@ -16,8 +16,8 @@ export default function EditServicePage({ params }: Props) {
   const { updateService, loading, getServiceById } = useAdminServices()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const locale = (searchParams.get('locale') || 'en') as Locale;
-  const [service, setService] = useState<Service | null>(null);
+  const locale = (searchParams.get('locale') || 'en') as Locale
+  const [service, setService] = useState<Service | null>(null)
   const [id, setId] = useState<string>('')
 
   useEffect(() => {
@@ -26,16 +26,21 @@ export default function EditServicePage({ params }: Props) {
       setId(id)
     }
 
-    getServiceById(id, locale).then(service => setService(service || null))
+    getServiceById(id, locale).then((service) => setService(service || null))
+    logger.log('locale', locale)
   }, [params, getServiceById, locale])
 
-  const handleUpdate = async (data: Partial<Service>) => {
-    if (!service) return;
+  const isNumber = (value: string | undefined): boolean => {
+    return value !== undefined && !isNaN(Number(value))
+  }
+
+  const handleUpdate = async (data: Partial<Service>, locale: Locale) => {
+    if (!service) return
+    if(isNumber(data.order_index))
     try {
-      logger.log('Updating service in handleUpdate:', data);
-      logger.log('isPublished value in handleUpdate:', data.is_published); // Add logging for isPublished
+      logger.log('Updating service in handleUpdate:', data)
+      logger.log('isPublished value in handleUpdate:', data.is_published) // Add logging for isPublished
       await updateService(id, data, locale as Locale)
-      router.push('/admin/sections/services')
     } catch (error) {
       logger.log('Failed to update service:', error)
     }

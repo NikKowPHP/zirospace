@@ -16,21 +16,21 @@ export interface Image {
 }
 
 export interface CaseStudy {
-   id: string
-   slug: string
-   title: string
-   subtitle: string
-   description: string
-  tags:  string[]
-   images:  Image[]
-   cta_url: string
-   created_at: string
-   updated_at: string
+  id: string
+  slug: string
+  title: string
+  subtitle: string
+  description: string
+  tags: string[]
+  images: Image[]
+  cta_url: string
+  created_at: string
+  updated_at: string
   color: string
   background_color: string
   cta_text_name: string
-   order_index: number
-   theme: string
+  order_index: number
+  theme: string
 }
 
 export interface Banner {
@@ -62,15 +62,15 @@ export interface BlogPost {
 }
 
 export interface Testimonial {
-   id: string
-   author: string
-   role: string
-   company: string
-   quote: string
-   image: string
-   image_alt: string
-   created_at: string
-   updated_at: string
+  id: string
+  author: string
+  role: string
+  company: string
+  quote: string
+  image: string
+  image_alt: string
+  created_at: string
+  updated_at: string
 }
 
 export interface CaseStudyImage {
@@ -86,11 +86,11 @@ export interface Service {
   slug: string
   title: string
   subtitle?: string | null
-  contentHtml: string
+  content_html: string
   excerpt?: string | null
-  imageUrl?: string | null
-  imageAlt?: string | null
-  metaTitle?: string | null
+  image_url?: string | null
+  image_alt?: string | null
+  meta_title?: string | null
   meta_description?: string | null
   keywords?: string[]
   is_published: boolean
@@ -100,7 +100,7 @@ export interface Service {
 }
 
 export interface CaseStudySlider {
-   id: string
+  id: string
   images: CaseStudyImage[]
   created_at?: string
   updated_at?: string

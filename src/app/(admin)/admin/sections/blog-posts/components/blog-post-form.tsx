@@ -34,8 +34,12 @@ export function BlogPostForm({
   })
   const [content, setContent] = useState(post?.content_html || '')
   const [excerpt, setExcerpt] = useState(post?.excerpt || '')
-  const { quill: quillContent, quillRef: quillRefContent } = useQuill({ theme: 'snow' })
-  const { quill: quillExcerpt, quillRef: quillRefExcerpt } = useQuill({ theme: 'snow' })
+  const { quill: quillContent, quillRef: quillRefContent } = useQuill({
+    theme: 'snow',
+  })
+  const { quill: quillExcerpt, quillRef: quillRefExcerpt } = useQuill({
+    theme: 'snow',
+  })
 
   React.useEffect(() => {
     if (quillContent) {
@@ -73,9 +77,7 @@ export function BlogPostForm({
           {...register('title', { required: 'Title is required' })}
           className="w-full"
         />
-        {errors.title && (
-          <p className="text-red-600">{errors.title.message}</p>
-        )}
+        {errors.title && <p className="text-red-600">{errors.title.message}</p>}
       </div>
 
       <div>
@@ -86,9 +88,7 @@ export function BlogPostForm({
           {...register('slug', { required: 'Slug is required' })}
           className="w-full"
         />
-        {errors.slug && (
-          <p className="text-red-600">{errors.slug.message}</p>
-        )}
+        {errors.slug && <p className="text-red-600">{errors.slug.message}</p>}
       </div>
 
       <div>
@@ -125,7 +125,7 @@ export function BlogPostForm({
       </div>
 
       <div className="pt-20">
-        <Label htmlFor="contentHtml">Content</Label>
+        <Label htmlFor="content_html">Content</Label>
         <div style={{ width: '100%', height: 500 }}>
           <div ref={quillRefContent} />
         </div>

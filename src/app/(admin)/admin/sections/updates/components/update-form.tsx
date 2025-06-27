@@ -52,7 +52,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
   })
 
   // State for Quill-controlled fields
-  const [contentHtml, setContentHtml] = useState(update?.content_html || '')
+  const [content_html, setcontent_html] = useState(update?.content_html || '')
   const [excerpt, setExcerpt] = useState(update?.excerpt || '')
 
   // State for fields not easily managed by react-hook-form's register (like custom Switch or Date)
@@ -89,7 +89,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
       // Listen for changes
       quillContent.on('text-change', (_delta, _oldDelta, source) => {
         if (source === 'user') {
-          setContentHtml(quillContent.root.innerHTML)
+          setcontent_html(quillContent.root.innerHTML)
         }
       })
     }
@@ -125,7 +125,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
       ...data,
       publish_date: publishDate, // ensure this is a Date object if your model expects it
       excerpt: excerpt,
-      content_html: contentHtml,
+      content_html: content_html,
       is_published: isPublished,
       order_index: Number(data.order_index), // Ensure order_index is a number
     })
@@ -200,7 +200,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         >
           <div ref={quillRefContent} style={{ height: '100%' }} />
         </div>
-        {/* You can add validation for contentHtml if needed */}
+        {/* You can add validation for content_html if needed */}
       </div>
 
       <div>

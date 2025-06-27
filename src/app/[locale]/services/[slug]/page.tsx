@@ -66,7 +66,7 @@ export default async function ServicePage({ params: { locale, slug } }: Props) {
         </div>
       )}
 
-      <div dangerouslySetInnerHTML={{ __html: service.contentHtml }} />
+      <div dangerouslySetInnerHTML={{ __html: service.content_html }} />
     </div>
   )
 }

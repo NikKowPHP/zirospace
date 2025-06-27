@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { Service } from '@/domain/models/models';
 import { Locale } from '@/i18n';
 import useAdminApi from './useAdminApi';
+import logger from '@/lib/logger';
 
 interface UseAdminServicesProps {
   initialServices?: Record<Locale, Service[]>;
@@ -48,7 +49,9 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
 
   const createService = useCallback(
     async (data: Partial<Service>, locale: Locale) => {
+      logger.log('createService', data)
       try {
+        
         const newService: Service = await callApi(
           `/api/admin/services`,
           {
@@ -77,7 +80,7 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
     async (id: string, data: Partial<Service>, locale: Locale) => {
       try {
         const updatedService: Service = await callApi(
-          `/api/admin/services/${id}`,
+          `/api/admin/services/${id}?locale=${locale}`,
           {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },

@@ -56,11 +56,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
 }
 
+
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
-    const validatedBody = postServiceSchema.parse(body);
-    logger.log('body', body)
+     const searchParams = request.nextUrl.searchParams;
+    const getLocale = searchParams.get('locale');
+   
+    const validatedBody = postServiceSchema.parse({data: body});
+    logger.log('body', validatedBody)
 
     const { data, locale } = validatedBody;
     console.log('Processing service creation', data);
