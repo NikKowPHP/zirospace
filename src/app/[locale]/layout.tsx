@@ -1,6 +1,5 @@
 import { NextIntlClientProvider } from 'next-intl'
 import { notFound } from 'next/navigation'
-import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import '@/styles/globals.css'
 import { locales, type Locale } from '@/i18n'
@@ -8,11 +7,6 @@ import { ClientWrapper } from './client-wrapper'
 import { PageProvider } from '@/contexts/page-context'
 import GlobalProgressBar from '@/components/layout/global-progress-bar'
 import logger from '@/lib/logger'
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-})
 import { PostHogProvider } from '@/contexts/posthog-context'
 import { bannerService } from '@/lib/services/banner.service'
 import { siteUrl } from '@/config/constants'
@@ -129,7 +123,7 @@ export default async function LocaleLayout({
           </>
         )}
       </head>
-      <body className={inter.variable}>
+      <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <PostHogProvider>
             <PageProvider
