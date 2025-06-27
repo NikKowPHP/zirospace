@@ -140,7 +140,7 @@ const useAdminCaseStudies = ({ initialCaseStudies }: UseAdminCaseStudiesProps = 
               return cs;
             });
             // Sort case studies by order
-            updatedCaseStudies[locale].sort((a, b) => a.orderIndex - b.orderIndex);
+            updatedCaseStudies[locale].sort((a, b) => a.order_index - b.order_index);
           }
           return updatedCaseStudies;
         });

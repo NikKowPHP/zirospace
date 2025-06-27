@@ -10,9 +10,6 @@ export class CaseStudySliderService {
     return prisma.zirospace_case_study_sliders;
   }
   
-  private getImageModel() {
-    return prisma.zirospace_case_study_slider_images;
-  }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(
     fn: T,
@@ -87,8 +84,6 @@ export class CaseStudySliderService {
   }
 
   async deleteCaseStudySlider(id: string): Promise<void> {
-    const model = this.getModel();
-    const imageModel = this.getImageModel();
 
     await prisma.$transaction(async (tx) => {
       await (tx.zirospace_case_study_slider_images as any).deleteMany({
