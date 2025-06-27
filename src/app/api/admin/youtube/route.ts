@@ -3,7 +3,7 @@ import { revalidateTag } from 'next/cache';
 import { CACHE_TAGS } from '@/lib/utils/cache';
 import { youtubeService } from '@/lib/services/youtube.service';
 import logger from '@/lib/logger';
-
+export const dynamic = 'force-dynamic'
 export async function GET() {
   try {
     logger.log('Fetching YouTube data');

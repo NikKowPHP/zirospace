@@ -4,7 +4,7 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import logger from '@/lib/logger'
 import { Locale } from '@/i18n'
-
+export const dynamic = 'force-dynamic'
 const updateService = new UpdateService()
 
 type Params = { id: string; locale: string }

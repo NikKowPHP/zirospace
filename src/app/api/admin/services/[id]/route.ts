@@ -5,7 +5,7 @@ import { serviceService } from '@/lib/services/service.service'
 import logger from '@/lib/logger'
 import { z } from 'zod'
 import { Locale } from '@/i18n'
-
+export const dynamic = 'force-dynamic'
 // Define Zod schema for PUT request body
 const putServiceSchema = z.object({
   data: z.object({

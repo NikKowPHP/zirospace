@@ -6,7 +6,7 @@ import logger from '@/lib/logger';
 import { validateLocale } from '@/lib/utils/locale';
 import { Locale } from '@/i18n';
 
-
+export const dynamic = 'force-dynamic'
 
 
 const updateService = new UpdateService();

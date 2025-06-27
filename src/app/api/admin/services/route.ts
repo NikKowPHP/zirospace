@@ -8,6 +8,7 @@ import logger from '@/lib/logger';
 import { z } from 'zod';
 import { Locale } from '@/i18n';
 
+export const dynamic = 'force-dynamic'
 // Define Zod schema for POST request body
 const postServiceSchema = z.object({
   data: z.object({

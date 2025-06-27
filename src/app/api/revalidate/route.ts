@@ -2,6 +2,8 @@ import { revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 import { CACHE_TAGS } from '@/lib/utils/cache';
 import logger from '@/lib/logger'
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token = searchParams.get('token');

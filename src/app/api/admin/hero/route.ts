@@ -4,7 +4,7 @@ import { CACHE_TAGS } from '@/lib/utils/cache';
 import { heroService } from '@/lib/services/hero.service';
 import logger from '@/lib/logger';
 import { Locale } from '@/i18n';
-
+export const dynamic = 'force-dynamic'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

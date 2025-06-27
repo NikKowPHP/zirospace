@@ -4,7 +4,7 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 import { testimonialService } from '@/lib/services/testimonials.service'
 
 import logger from '@/lib/logger'
-
+export const dynamic = 'force-dynamic'
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }

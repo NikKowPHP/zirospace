@@ -3,6 +3,8 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { caseStudyService } from '@/lib/services/case-study.service'
 import logger from '@/lib/logger'
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
   

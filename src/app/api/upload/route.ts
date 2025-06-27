@@ -4,7 +4,7 @@ import path from 'path'
 import logger from '@/lib/logger'
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif']
 const MAX_SIZE = 5 * 1024 * 1024 // 5MB
-
+export const dynamic = 'force-dynamic'
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()

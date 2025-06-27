@@ -3,7 +3,7 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { caseStudySliderService } from '@/lib/services/case-study-slider.service'
 import logger from '@/lib/logger'
-
+export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   const { data } = await request.json()

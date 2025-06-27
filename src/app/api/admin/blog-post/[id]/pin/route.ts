@@ -6,7 +6,7 @@ import { blogPostService } from '@/lib/services/blog-post.service'
 import logger from '@/lib/logger'
 import { Locale } from '@/i18n' // Assuming Locale type is exported from your i18n setup
 
-
+export const dynamic = 'force-dynamic'
 
 export async function POST(
   request: NextRequest,

@@ -4,6 +4,9 @@ import { CACHE_TAGS } from '@/lib/utils/cache'
 import { testimonialService } from '@/lib/services/testimonials.service'
 import logger from '@/lib/logger'
 import { Locale } from '@/i18n'
+
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
   
