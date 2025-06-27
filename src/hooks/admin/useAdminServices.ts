@@ -18,7 +18,7 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
     try {
       const data: Service[] = await callApi(
         `/api/admin/services?locale=${locale}`,
-        { method: 'GET' },
+        { method: 'GET', cache: 'no-store' },
         {
           loadingMessage: 'Fetching services...',
           errorMessage: 'Failed to fetch services',
