@@ -79,13 +79,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get all service pages for each locale
   const serviceUrls = await Promise.all(
     locales.map(async (locale) => {
-      const services = await serviceService.getServices(locale)
-      return services.map((service: Service) => ({
-        url: `${baseUrl}/${locale}/services/${service.slug}`,
-        lastModified: service.created_at,
-        changeFrequency: 'weekly' as ChangeFrequency,
-        priority: 0.7,
-      }))
+      try {
+        const services = await serviceService.getServices(locale);
+        return services
+          .filter((service: Service) => service.slug && service.created_at) // Filter out services with missing slug or created_at
+          .map((service: Service) => ({
+            url: `${baseUrl}/${locale}/services/${service.slug}`,
+            lastModified: service.created_at,
+            changeFrequency: 'weekly' as ChangeFrequency,
+            priority: 0.7,
+          }));
+      } catch (error) {
+        console.error(`Error fetching services for locale ${locale}:`, error);
+        return []; // Return an empty array to prevent sitemap generation from failing
+      }
     })
   )
 
