@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { UpdateService } from '@/lib/services/update.service'
 import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
-import { z } from 'zod'
 import logger from '@/lib/logger'
 import { Locale } from '@/i18n'
 
