@@ -53,11 +53,11 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
       try {
         
         const newService: Service = await callApi(
-          `/api/admin/services`,
+          `/api/admin/services?locale=${locale}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data, locale }),
+            body: JSON.stringify({ ...data }),
           },
           {
             loadingMessage: 'Creating service...',

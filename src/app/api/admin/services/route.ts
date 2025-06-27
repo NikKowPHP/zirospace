@@ -24,8 +24,7 @@ const postServiceSchema = z.object({
     meta_description: z.string().nullable().optional(),
     keywords: z.array(z.string()).optional(),
     order_index: z.number().optional(),
-  }),
-  locale: z.string(),
+  })
 });
 
 const serviceLocaleSchema = z.object({
@@ -61,14 +60,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
-     const searchParams = request.nextUrl.searchParams;
-    const getLocale = searchParams.get('locale');
+     logger.log('body', body)
    
-    const validatedBody = postServiceSchema.parse({data: body});
-    logger.log('body', validatedBody)
+    const validatedBody = postServiceSchema.parse(body);
+  
 
-    const { data, locale } = validatedBody;
+
+
+    const { data } = validatedBody;
     console.log('Processing service creation', data);
+
+  const searchParams = request.nextUrl.searchParams;
+    const locale = searchParams.get('locale');
 
     const id = crypto.randomUUID();
     data.id = id;
