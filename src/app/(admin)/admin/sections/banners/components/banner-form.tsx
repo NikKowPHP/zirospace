@@ -42,7 +42,7 @@ export function BannerForm({
       end_date: endDate,
       is_active: isActive,
       created_at: banner?.created_at,
-      updated_at: new Date().toDateString(),
+      updated_at: new Date().toISOString(),
     })
   }
 
