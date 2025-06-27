@@ -3,6 +3,7 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import logger from '@/lib/logger'
 import { bannerService } from '@/lib/services/banner.service'
+import { Locale } from '@/i18n'
 
 export async function DELETE(
   request: NextRequest,
@@ -10,7 +11,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = params
-    const { locale } = await request.json()
+    const locale = (request.nextUrl.searchParams.get('locale') || 'en') as Locale // Default to 'en' if not provided
 
     console.log('Processing banner deletion:', { id, locale })
 
@@ -30,7 +31,11 @@ export async function DELETE(
       { status: 500 }
     )
   }
-} 
+}
+
+export async function GET() {
+  return NextResponse.json({ message: 'GET method not implemented for banners/[id]' }, { status: 200 });
+}
 
 export async function PUT(
   request: NextRequest,
