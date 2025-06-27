@@ -59,8 +59,9 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-[20px] mx-auto px-[15px] max-w-5xl left-0 right-0 z-50 bg-gray-200/50 backdrop-blur-xl transition-all duration-300 ease-in-out border border-white/5 ${isMobileMenuOpen ? 'rounded-[40px]' : 'rounded-[50px]'
-        }`}
+      className={`sticky top-[20px] mx-auto px-[15px] max-w-5xl left-0 right-0 z-50 bg-gray-200/50 backdrop-blur-xl transition-all duration-300 ease-in-out border border-white/5 ${
+        isMobileMenuOpen ? 'rounded-[40px]' : 'rounded-[50px]'
+      }`}
       itemScope
       itemType="https://schema.org/WPHeader"
     >
@@ -114,7 +115,7 @@ export function Navbar() {
           <div className="flex items-center gap-[20px] pr-[2px] ">
             <Button
               size="sm"
-              variant='bookcall'
+              variant="bookcall"
               onClick={() => {
                 window.location.href = 'https://calendly.com/ziro-nikhil/30min'
               }}
@@ -130,17 +131,19 @@ export function Navbar() {
             >
               <span
                 className={`bg-black block transition-all duration-500 [transition-timing-function:cubic-bezier(0.68,-0.55,0.27,1.55)] 
-                    h-0.5 w-6 rounded-sm ${isMobileMenuOpen
-                    ? 'rotate-45 translate-y-1'
-                    : '-translate-y-0.5'
-                  }`}
+                    h-0.5 w-6 rounded-sm ${
+                      isMobileMenuOpen
+                        ? 'rotate-45 translate-y-1'
+                        : '-translate-y-0.5'
+                    }`}
               ></span>
               <span
                 className={`bg-black block transition-all duration-500 [transition-timing-function:cubic-bezier(0.68,-0.55,0.27,1.55)] 
-                    h-0.5 w-6 rounded-sm ${isMobileMenuOpen
-                    ? '-rotate-45 -translate-y-1'
-                    : 'translate-y-0.5'
-                  }`}
+                    h-0.5 w-6 rounded-sm ${
+                      isMobileMenuOpen
+                        ? '-rotate-45 -translate-y-1'
+                        : 'translate-y-0.5'
+                    }`}
               ></span>
             </button>
           </div>
@@ -148,8 +151,9 @@ export function Navbar() {
 
         {/* Mobile Navigation */}
         <div
-          className={`md:hidden w-full overflow-hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-[500px] rounded-b-[50px]' : 'max-h-0'
-            }`}
+          className={`md:hidden w-full overflow-hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'max-h-[500px] rounded-b-[50px]' : 'max-h-0'
+          }`}
           style={{
             background: 'inherit',
             backdropFilter: 'inherit',

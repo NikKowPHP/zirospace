@@ -18,10 +18,10 @@ export function LanguageSwitcher() {
   const router = useRouter()
   const pathname = usePathname()
   const dispatchPosthogEvent = usePosthogEvent()
-  
+
   // Get the path segments and remove empty strings
   const segments = pathname.split('/').filter(Boolean)
-  
+
   // First segment is always the locale if present
   const currentLang = segments[0] === 'pl' ? 'pl' : 'en'
 
@@ -29,18 +29,19 @@ export function LanguageSwitcher() {
     if (currentLang === targetLang) return
 
     // Remove the current locale from segments if it exists
-    const pathWithoutLocale = segments[0] === 'en' || segments[0] === 'pl'
-      ? segments.slice(1)
-      : segments
+    const pathWithoutLocale =
+      segments[0] === 'en' || segments[0] === 'pl'
+        ? segments.slice(1)
+        : segments
 
     // Construct new path with target language
     const newPath = `/${targetLang}${pathWithoutLocale.length > 0 ? '/' + pathWithoutLocale.join('/') : ''}`
-    
+
     dispatchPosthogEvent('language_switched', {
       language: targetLang,
-      path: newPath
+      path: newPath,
     })
-    
+
     router.push(newPath)
   }
 

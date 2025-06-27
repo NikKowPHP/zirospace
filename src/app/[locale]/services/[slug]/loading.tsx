@@ -1,8 +1,8 @@
-import React from 'react';
-import PageLoader from '@/components/ui/loader/page-loader';
+import React from 'react'
+import PageLoader from '@/components/ui/loader/page-loader'
 
 const Loading = () => {
-  return <PageLoader />;
-};
+  return <PageLoader />
+}
 
-export default Loading;
+export default Loading

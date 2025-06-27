@@ -6,23 +6,23 @@ import Link from 'next/link'
 
 export function HeroButtons() {
   const t = useTranslations('navigation')
-  
+
   const handleProcessScroll = () => {
     const element = document.getElementById('our-process')
     if (!element) return
-    
+
     const offset = -100
     const elementPosition = element.getBoundingClientRect().top
     const offsetPosition = elementPosition + window.pageYOffset + offset
-    
+
     window.scrollTo({
       top: offsetPosition,
-      behavior: 'smooth'
+      behavior: 'smooth',
     })
   }
-  
+
   return (
-    <div 
+    <div
       className="flex  gap-2   sm:gap-[16px] pt-[20px] sm:pt-[20px] w-full px-[20px] sm:w-auto sm:px-4 md:px-0"
       role="group"
       aria-label="Primary actions"
@@ -47,7 +47,7 @@ export function HeroButtons() {
       </Button>
 
       {/* Book Call Button */}
-      <Link 
+      <Link
         href="https://calendly.com/ziro-nikhil/30min"
         target="_blank"
         rel="noopener noreferrer"
@@ -70,4 +70,3 @@ export function HeroButtons() {
     </div>
   )
 }
-

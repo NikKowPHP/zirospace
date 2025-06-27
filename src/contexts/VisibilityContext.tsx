@@ -1,29 +1,33 @@
 // File: src/contexts/VisibilityContext.tsx
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react'
 
 interface VisibilityContextType {
-  isOurProcessVisible: boolean;
-  setIsOurProcessVisible: (isVisible: boolean) => void;
+  isOurProcessVisible: boolean
+  setIsOurProcessVisible: (isVisible: boolean) => void
 }
 
-const VisibilityContext = createContext<VisibilityContextType | undefined>(undefined);
+const VisibilityContext = createContext<VisibilityContextType | undefined>(
+  undefined
+)
 
 export const VisibilityProvider = ({ children }: { children: ReactNode }) => {
-  const [isOurProcessVisible, setIsOurProcessVisible] = useState(false);
+  const [isOurProcessVisible, setIsOurProcessVisible] = useState(false)
 
   return (
-    <VisibilityContext.Provider value={{ isOurProcessVisible, setIsOurProcessVisible }}>
+    <VisibilityContext.Provider
+      value={{ isOurProcessVisible, setIsOurProcessVisible }}
+    >
       {children}
     </VisibilityContext.Provider>
-  );
-};
+  )
+}
 
 export const useVisibility = (): VisibilityContextType => {
-  const context = useContext(VisibilityContext);
+  const context = useContext(VisibilityContext)
   if (context === undefined) {
-    throw new Error('useVisibility must be used within a VisibilityProvider');
+    throw new Error('useVisibility must be used within a VisibilityProvider')
   }
-  return context;
-};
+  return context
+}

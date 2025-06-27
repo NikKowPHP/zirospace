@@ -191,4 +191,3 @@ const UpdateList: React.FC<UpdateListProps> = () => {
 }
 
 export default UpdateList
-

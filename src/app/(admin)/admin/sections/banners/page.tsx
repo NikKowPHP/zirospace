@@ -2,18 +2,18 @@ import { Suspense } from 'react'
 import { AdminProvider } from '@/contexts/admin-context'
 import { bannerService } from '@/lib/services/banner.service'
 import { BannerList } from './banner-list'
-import { Locale } from '@/i18n';
+import { Locale } from '@/i18n'
 
 export default async function BannersAdminPage() {
   const [enBanners, plBanners] = await Promise.all([
     bannerService.getBanners('en'),
-    bannerService.getBanners('pl')
+    bannerService.getBanners('pl'),
   ])
 
   const initialBanners: Record<Locale, any[]> = {
     en: enBanners,
-    pl: plBanners
-  };
+    pl: plBanners,
+  }
 
   return (
     <AdminProvider initialBanners={initialBanners}>

@@ -1,5 +1,5 @@
-import NotFound from '../not-found';
+import NotFound from '../not-found'
 
 export default function CatchAllPage() {
-  return <NotFound />;
-} 
+  return <NotFound />
+}

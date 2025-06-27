@@ -1,35 +1,36 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { siteUrl } from '@/config/constants';
+import { siteUrl } from '@/config/constants'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: 'ZIRO | Digital Health Solutions & Development',
-    template: '%s | ZIRO - Healthcare Technology Solutions'
+    template: '%s | ZIRO - Healthcare Technology Solutions',
   },
-  description: 'Transforming healthcare through user-centric digital solutions. Specializing in medical software development, health tech UI/UX, and digital health product design.',
+  description:
+    'Transforming healthcare through user-centric digital solutions. Specializing in medical software development, health tech UI/UX, and digital health product design.',
   icons: {
     icon: [
       {
         url: '/images/favicon.ico',
         sizes: 'any',
-      }
+      },
     ],
     apple: [
       {
         url: '/apple-icon.png',
         sizes: '180x180',
         type: 'image/png',
-      }
+      },
     ],
     other: [
       {
         rel: 'mask-icon',
         url: '/apple-icon.png',
         color: '#000000',
-      }
-    ]
+      },
+    ],
   },
   keywords: [
     'digital health solutions',
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
     'medical software solutions',
     'health app development',
     'patient experience design',
-    'healthcare UX research'
+    'healthcare UX research',
   ],
   openGraph: {
     type: 'website',
@@ -49,21 +50,23 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: 'ZIRO',
     title: 'ZIRO - Digital Health Solutions & Development',
-    description: 'Empowering healthcare through innovative digital solutions. We create user-centric medical software and health tech products that enhance patient care and clinical workflows.',
+    description:
+      'Empowering healthcare through innovative digital solutions. We create user-centric medical software and health tech products that enhance patient care and clinical workflows.',
     images: [
       {
         url: '/images/ziro.avif',
         width: 1200,
         height: 630,
-        alt: 'ZIRO Digital Health Solutions'
-      }
-    ]
+        alt: 'ZIRO Digital Health Solutions',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'ZIRO - Digital Health Solutions & Development',
-    description: 'Creating innovative digital health solutions for better healthcare delivery and patient experience.',
-    images: ['/images/ziro.avif']
+    description:
+      'Creating innovative digital health solutions for better healthcare delivery and patient experience.',
+    images: ['/images/ziro.avif'],
   },
   robots: {
     index: true,
@@ -83,36 +86,37 @@ export const metadata: Metadata = {
 }
 
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "HealthcareBusiness",
-  "name": "ZIRO",
-  "url": siteUrl,
-  "logo": `/images/ziro.avif`,
-  "description": "Digital health solutions provider specializing in medical software development and healthcare technology.",
-  "sameAs": [
-    "https://twitter.com/ziro",
-    "https://linkedin.com/company/ziros",
-    "https://www.instagram.com/ziro.space/",
-    "https://www.nikhil.health/",
-    "https://x.com/NikhilSing69944"
+  '@context': 'https://schema.org',
+  '@type': 'HealthcareBusiness',
+  name: 'ZIRO',
+  url: siteUrl,
+  logo: `/images/ziro.avif`,
+  description:
+    'Digital health solutions provider specializing in medical software development and healthcare technology.',
+  sameAs: [
+    'https://twitter.com/ziro',
+    'https://linkedin.com/company/ziros',
+    'https://www.instagram.com/ziro.space/',
+    'https://www.nikhil.health/',
+    'https://x.com/NikhilSing69944',
   ],
-  "address": {
-    "@type": "PostalAddress",
-    "addressCountry": "Poland"
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'Poland',
   },
-  "knowsAbout": [
-    "Digital Health Solutions",
-    "Healthcare Software Development",
-    "Medical UX Design",
-    "Health Technology",
-    "Patient Experience Design"
+  knowsAbout: [
+    'Digital Health Solutions',
+    'Healthcare Software Development',
+    'Medical UX Design',
+    'Health Technology',
+    'Patient Experience Design',
   ],
-  "serviceType": [
-    "Healthcare Software Development",
-    "Digital Health Product Design",
-    "Medical UX/UI Design",
-    "Health Tech Solutions"
-  ]
+  serviceType: [
+    'Healthcare Software Development',
+    'Digital Health Product Design',
+    'Medical UX/UI Design',
+    'Health Tech Solutions',
+  ],
 }
 
 export default function RootLayout({
@@ -130,11 +134,8 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Suspense>
-          {children}
-
-        </Suspense>
+        <Suspense>{children}</Suspense>
       </body>
     </html>
   )
-} 
+}

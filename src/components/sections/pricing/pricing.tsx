@@ -10,21 +10,21 @@ export function PricingCard({ plan }: PricingCardProps) {
   const t = useTranslations('pricing')
 
   return (
-    <div 
+    <div
       className="flex flex-col items-center p-6 sm:p-8 md:p-10 bg-white rounded-[24px] 
     sm:rounded-[32px] space-y-2 sm:space-y-6"
-      itemScope 
+      itemScope
       itemType="https://schema.org/Offer"
     >
       <meta itemProp="priceCurrency" content="PLN" />
       <meta itemProp="price" content={plan.price.toString()} />
-      <h3 
+      <h3
         className="text-[24px] sm:text-[28px] md:text-[32px] font-medium text-center text-black"
         itemProp="name"
       >
         {t(plan.title)}
       </h3>
-      
+
       <p className="text-sm sm:text-base text-gray-600 text-center">
         {t(plan.description)}
       </p>
@@ -49,8 +49,8 @@ export function PricingCard({ plan }: PricingCardProps) {
 
       <ul className="space-y-3 sm:space-y-4 pt-2 sm:pt-4 w-full">
         {plan.features.map((feature) => (
-          <li 
-            key={feature.id} 
+          <li
+            key={feature.id}
             className="text-sm sm:text-base text-gray-600 text-center"
           >
             {t(feature.name)}
@@ -65,15 +65,15 @@ function PricingContent({ plans }: { plans: PricingPlan[] }) {
   const t = useTranslations('pricing')
 
   return (
-    <section 
-      id="pricing" 
+    <section
+      id="pricing"
       className="md:mx-8 relative overflow-hidden bg-primary py-[10px]  sm:py-32 sm:pb-[60px]  md:py-24 md:pb-[60px]  rounded-primary sm:rounded-primary-lg"
     >
       <div className="container relative mx-auto px-2 sm:px-6">
         <h2 className="text-center text-[36px] sm:text-[46px] md:text-[56px] font-medium text-white mb-8 sm:mb-12 md:mb-16">
           {t('title')}
         </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 max-w-full mx-auto sm:px-10">
           {plans.map((plan) => (
             <PricingCard key={plan.id} plan={plan} />

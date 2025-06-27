@@ -55,7 +55,8 @@ async function fetchUpdates(locale: Locale): Promise<Update[]> {
 function sortUpdates(updates: Update[]): Update[] {
   return [...updates].sort((a, b) => {
     const publishDateComparison =
-      (b.publish_date?.getTime() || 0) - (a.publish_date?.getTime() || 0)
+      (b.publish_date ? new Date(b.publish_date).getTime() : 0) -
+      (a.publish_date ? new Date(a.publish_date).getTime() : 0)
     if (publishDateComparison !== 0) {
       return publishDateComparison
     }

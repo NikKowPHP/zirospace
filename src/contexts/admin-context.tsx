@@ -1,19 +1,21 @@
 'use client'
+import { createContext, useContext, useCallback } from 'react'
 import {
-  createContext,
-  useContext,
-  useCallback,
-} from 'react'
-import { Banner, BlogPost, CaseStudy, CaseStudySlider, Service, Testimonial } from '@/domain/models/models'
+  Banner,
+  BlogPost,
+  CaseStudy,
+  CaseStudySlider,
+  Service,
+  Testimonial,
+} from '@/domain/models/models'
 import { Locale } from '@/i18n'
 
-import useAdminCaseStudies from '@/hooks/admin/useAdminCaseStudies';
-import useAdminBlogPosts from '@/hooks/admin/useAdminBlogPosts';
-import useAdminBanners from '@/hooks/admin/useAdminBanners';
-import useAdminServices from '@/hooks/admin/useAdminServices';
-import useAdminTestimonials from '@/hooks/admin/useAdminTestimonials';
-import useAdminCaseStudySliders from '@/hooks/admin/useAdminCaseStudySliders';
-
+import useAdminCaseStudies from '@/hooks/admin/useAdminCaseStudies'
+import useAdminBlogPosts from '@/hooks/admin/useAdminBlogPosts'
+import useAdminBanners from '@/hooks/admin/useAdminBanners'
+import useAdminServices from '@/hooks/admin/useAdminServices'
+import useAdminTestimonials from '@/hooks/admin/useAdminTestimonials'
+import useAdminCaseStudySliders from '@/hooks/admin/useAdminCaseStudySliders'
 
 interface AdminContextType {
   loading: boolean
@@ -46,37 +48,37 @@ export function AdminProvider({
     loading: caseStudiesLoading,
     error: caseStudiesError,
     clearError: clearCaseStudiesError,
-  } = useAdminCaseStudies({ initialCaseStudies });
+  } = useAdminCaseStudies({ initialCaseStudies })
 
   const {
     loading: blogPostsLoading,
     error: blogPostsError,
     clearError: clearBlogPostsError,
-  } = useAdminBlogPosts({ initialBlogPosts });
+  } = useAdminBlogPosts({ initialBlogPosts })
 
   const {
     loading: bannersLoading,
     error: bannersError,
     clearError: clearBannersError,
-  } = useAdminBanners({ initialBanners });
+  } = useAdminBanners({ initialBanners })
 
   const {
     loading: servicesLoading,
     error: servicesError,
     clearError: clearServicesError,
-  } = useAdminServices({ initialServices });
+  } = useAdminServices({ initialServices })
 
   const {
     loading: testimonialsLoading,
     error: testimonialsError,
     clearError: clearTestimonialsError,
-  } = useAdminTestimonials({ initialTestimonials });
+  } = useAdminTestimonials({ initialTestimonials })
 
   const {
     loading: caseStudySlidersLoading,
     error: caseStudySlidersError,
     clearError: clearCaseStudySlidersError,
-  } = useAdminCaseStudySliders({ initialCaseStudySliders });
+  } = useAdminCaseStudySliders({ initialCaseStudySliders })
 
   const loading =
     caseStudiesLoading ||
@@ -84,7 +86,7 @@ export function AdminProvider({
     bannersLoading ||
     servicesLoading ||
     testimonialsLoading ||
-    caseStudySlidersLoading;
+    caseStudySlidersLoading
 
   const error =
     caseStudiesError ||
@@ -92,15 +94,15 @@ export function AdminProvider({
     bannersError ||
     servicesError ||
     testimonialsError ||
-    caseStudySlidersError;
+    caseStudySlidersError
 
   const clearError = useCallback(() => {
-    clearCaseStudiesError();
-    clearBlogPostsError();
-    clearBannersError();
-    clearServicesError();
-    clearTestimonialsError();
-    clearCaseStudySlidersError();
+    clearCaseStudiesError()
+    clearBlogPostsError()
+    clearBannersError()
+    clearServicesError()
+    clearTestimonialsError()
+    clearCaseStudySlidersError()
   }, [
     clearCaseStudiesError,
     clearBlogPostsError,
@@ -108,7 +110,7 @@ export function AdminProvider({
     clearServicesError,
     clearTestimonialsError,
     clearCaseStudySlidersError,
-  ]);
+  ])
 
   return (
     <AdminContext.Provider
@@ -120,13 +122,13 @@ export function AdminProvider({
     >
       {children}
     </AdminContext.Provider>
-  );
+  )
 }
 
 export const useAdmin = () => {
-  const context = useContext(AdminContext);
+  const context = useContext(AdminContext)
   if (context === undefined) {
-    throw new Error('useAdmin must be used within a AdminProvider');
+    throw new Error('useAdmin must be used within a AdminProvider')
   }
-  return context;
+  return context
 }

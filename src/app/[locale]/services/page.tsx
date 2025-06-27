@@ -6,7 +6,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { stripHtmlTags } from '@/lib/utils/strip-html-tags'
 
-
 interface Props {
   params: { locale: Locale }
 }
@@ -21,11 +20,10 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-
 async function getServices(locale: Locale) {
   try {
     const services = await serviceService.getServices(locale)
-   
+
     return services
       .filter((service) => service.is_published)
       .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0))
@@ -90,16 +88,16 @@ const ServiceItem = ({
               {/* Collaborative Solutions */}
             </p>
           </div>
-          {service.imageUrl && (
+          {service.image_url && (
             <div
               itemProp="image"
               className="w-full sm:w-[400px]  aspect-video overflow-hidden relative"
             >
               <Image
                 className="rounded-xl w-full h-auto "
-                src={service.imageUrl}
+                src={service.image_url}
                 // src="https://picsum.photos/250/150"
-                alt={service.imageAlt || service.title}
+                alt={service.image_alt || service.title}
                 style={{ objectFit: 'cover' }}
                 fill
                 loading="lazy"

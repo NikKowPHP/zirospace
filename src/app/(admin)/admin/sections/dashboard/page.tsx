@@ -1,28 +1,24 @@
 'use client'
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button/button"
-import toast from "react-hot-toast";
+import Link from 'next/link'
+import { Button } from '@/components/ui/button/button'
+import toast from 'react-hot-toast'
 
 // import { AnalyticsDashboard } from "@/components/analytics/analyticsDashboard"
 
 export default function AdminDashboard() {
   const handleRevalidate = async () => {
-    
-
-   
-      const response = await fetch(`/api/admin/revalidate`, {
-        method: 'POST',
-      });
-      if (response.ok) {
+    const response = await fetch(`/api/admin/revalidate`, {
+      method: 'POST',
+    })
+    if (response.ok) {
       // console.log(`Cache revalidated for tag: ${all tags }`);
-        toast('revalidated')
-        console.log('revalidated')
-      } else {
-        console.error(`Failed to revalidate cache for tag: `);
-      
+      toast('revalidated')
+      console.log('revalidated')
+    } else {
+      console.error(`Failed to revalidate cache for tag: `)
     }
-  };
+  }
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -41,7 +37,7 @@ export default function AdminDashboard() {
       </div> */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Link 
+        <Link
           href="/admin/sections/case-studies"
           className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
         >
@@ -90,9 +86,7 @@ export default function AdminDashboard() {
           href="/admin/sections/blog-posts"
           className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
         >
-          <h2 className="text-xl font-medium text-gray-900 mb-2">
-            Blog Posts
-          </h2>
+          <h2 className="text-xl font-medium text-gray-900 mb-2">Blog Posts</h2>
           <p className="text-gray-600 mb-4">
             Manage your blog posts, add new ones, or edit existing ones.
           </p>
@@ -105,9 +99,7 @@ export default function AdminDashboard() {
           href="/admin/sections/banners"
           className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
         >
-          <h2 className="text-xl font-medium text-gray-900 mb-2">
-            Banners
-          </h2>
+          <h2 className="text-xl font-medium text-gray-900 mb-2">Banners</h2>
           <p className="text-gray-600 mb-4">
             Manage your banners, add new ones, or edit existing ones.
           </p>
@@ -120,9 +112,7 @@ export default function AdminDashboard() {
           href="/admin/sections/youtube"
           className="flex flex-col p-6 bg-white rounded-primary hover:shadow-lg transition-shadow"
         >
-          <h2 className="text-xl font-medium text-gray-900 mb-2">
-            Youtube
-          </h2>
+          <h2 className="text-xl font-medium text-gray-900 mb-2">Youtube</h2>
         </Link>
 
         <Link
@@ -144,4 +134,4 @@ export default function AdminDashboard() {
       </div>
     </div>
   )
-} 
+}

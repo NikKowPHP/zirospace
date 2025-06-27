@@ -44,8 +44,8 @@ export function RunningTags({ services, speed = 50 }: RunningTagsProps) {
     <div
       ref={scrollerRef}
       className="max-w-[100vw] overflow-hidden rounded-full bg-black py-8"
-      itemScope 
-      itemType="https://schema.org/ItemList" 
+      itemScope
+      itemType="https://schema.org/ItemList"
     >
       <div
         ref={scrollerInnerRef}
@@ -56,11 +56,11 @@ export function RunningTags({ services, speed = 50 }: RunningTagsProps) {
             key={service.id}
             className="flex-shrink-0 py-6 text-[24px] font-normal text-sm text-white"
             itemProp="itemListElement"
-            itemScope 
+            itemScope
             itemType="https://schema.org/Service"
           >
-             <meta itemProp="position" content={String(index + 1)} />
-             <span itemProp="name">{service.name}</span>
+            <meta itemProp="position" content={String(index + 1)} />
+            <span itemProp="name">{service.name}</span>
           </span>
         ))}
       </div>

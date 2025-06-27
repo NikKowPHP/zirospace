@@ -5,14 +5,15 @@ import { testimonialService } from '@/lib/services/testimonials.service'
 import { TestimonialList } from './testimonials-list'
 
 export default async function TestimonialsAdminPage() {
-
   const [enTestimonials, plTestimonials] = await Promise.all([
     testimonialService.getTestimonials('en'),
-    testimonialService.getTestimonials('pl')
+    testimonialService.getTestimonials('pl'),
   ])
 
   return (
-    <AdminProvider initialTestimonials={{ en: enTestimonials, pl: plTestimonials }}>
+    <AdminProvider
+      initialTestimonials={{ en: enTestimonials, pl: plTestimonials }}
+    >
       <div className="bg-white shadow sm:rounded-lg">
         <div className="px-4 py-5 sm:p-6">
           <h2 className="text-2xl font-bold mb-6">Testimonials Management</h2>

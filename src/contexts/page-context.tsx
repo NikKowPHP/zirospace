@@ -7,9 +7,14 @@ import {
   useEffect,
   useCallback,
 } from 'react'
-import { Banner, BlogPost, CaseStudy, CaseStudySlider, Testimonial } from '@/domain/models/models'
+import {
+  Banner,
+  BlogPost,
+  CaseStudy,
+  CaseStudySlider,
+  Testimonial,
+} from '@/domain/models/models'
 import { Locale } from '@/i18n'
-
 
 interface PageContextType {
   caseStudies: Record<Locale, CaseStudy[]>
@@ -24,7 +29,6 @@ interface PageContextType {
   getCaseStudySliders: () => Promise<void>
   getBlogPost: (slug: string, locale: Locale) => Promise<void>
   getActiveBanner: (locale: Locale) => Promise<void>
-
 }
 
 interface PageProviderProps {
@@ -56,7 +60,9 @@ export function PageProvider({
   const [blogPost, setBlogPost] = useState<BlogPost | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [activeBanner, setActiveBanner] = useState<Banner | null>(initialActiveBanner || null)
+  const [activeBanner, setActiveBanner] = useState<Banner | null>(
+    initialActiveBanner || null
+  )
   // Initialize case studies when initialCaseStudies changes
   useEffect(() => {
     if (initialCaseStudies) {
@@ -123,7 +129,9 @@ export function PageProvider({
     setError(null)
 
     try {
-      const response = await fetch(`/api/admin/blog-post?slug=${slug}&locale=${locale}`)
+      const response = await fetch(
+        `/api/admin/blog-post?slug=${slug}&locale=${locale}`
+      )
       if (!response.ok) {
         throw new Error('Failed to fetch blog post')
       }

@@ -3,7 +3,6 @@ import { heroService } from '@/lib/services/hero.service'
 
 export const HeroSection = async ({ locale }: { locale: 'en' | 'pl' }) => {
   const heroData = await heroService.getHero(locale)
- 
 
   return (
     <section

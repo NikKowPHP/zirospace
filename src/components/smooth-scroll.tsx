@@ -19,12 +19,12 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     })
 
     setLenis(lenis)
-    
+
     function raf(time: number) {
       lenis.raf(time)
       requestAnimationFrame(raf)
     }
-    
+
     requestAnimationFrame(raf)
 
     return () => {

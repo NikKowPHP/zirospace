@@ -6,7 +6,15 @@ import Link from 'next/link'
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'white' | 'navbar' | 'modal' | 'bookcall'
+  variant?:
+    | 'primary'
+    | 'secondary'
+    | 'outline'
+    | 'ghost'
+    | 'white'
+    | 'navbar'
+    | 'modal'
+    | 'bookcall'
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
   isActive?: boolean
   isFullWidth?: boolean
@@ -17,9 +25,12 @@ export interface ButtonProps
 const buttonStyles = {
   base: 'inline-flex items-center justify-center font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0066FF] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   variants: {
-    primary: 'bg-primary text-white hover:bg-[#0066FF]/90 active:bg-[#0066FF]/80',
-    secondary: 'bg-[#0066FF]/10 text-[#0066FF] hover:bg-[#0066FF]/20 active:bg-[#0066FF]/30',
-    outline: 'border-2 border-[#0066FF] text-[#0066FF] hover:bg-[#0066FF]/5 active:bg-[#0066FF]/10',
+    primary:
+      'bg-primary text-white hover:bg-[#0066FF]/90 active:bg-[#0066FF]/80',
+    secondary:
+      'bg-[#0066FF]/10 text-[#0066FF] hover:bg-[#0066FF]/20 active:bg-[#0066FF]/30',
+    outline:
+      'border-2 border-[#0066FF] text-[#0066FF] hover:bg-[#0066FF]/5 active:bg-[#0066FF]/10',
     ghost: (isActive: boolean) =>
       isActive
         ? 'bg-[#0066FF] text-white'
@@ -27,7 +38,8 @@ const buttonStyles = {
     white: 'bg-white text-black hover:bg-white/90 active:bg-white/80',
     navbar: 'text-[16px] font-medium transition-colors text-gray-900',
     modal: 'bg-primary text-white hover:bg-[#0066FF]/90 active:bg-[#0066FF]/80',
-    bookcall: 'rounded-full px-6 py-6 h-10 text-[15px] border border-white/70 bg-white/70 backdrop-blur-xl text-black hover:bg-white/90',
+    bookcall:
+      'rounded-full px-6 py-6 h-10 text-[15px] border border-white/70 bg-white/70 backdrop-blur-xl text-black hover:bg-white/90',
   },
   sizes: {
     sm: 'py-[6px] px-[12px] text-[15px] rounded-full',
@@ -35,7 +47,6 @@ const buttonStyles = {
     lg: 'h-[64px] px-10 text-[18px] rounded-full',
     xl: 'h-[72px] px-12 text-[20px] rounded-full w-full',
     full: 'w-full px-4 py-8 rounded-lg ',
-  
   },
 }
 
@@ -76,15 +87,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       )
     }
 
-    return (
-      <button
-        className={classes}
-        ref={ref}
-        {...props}
-      />
-    )
+    return <button className={classes} ref={ref} {...props} />
   }
 )
 
 Button.displayName = 'Button'
-

@@ -13,7 +13,7 @@ export const Philosophy = async () => {
       }
     >
       <section
-      id='philosophy'
+        id="philosophy"
         className="flex flex-col  items-center text-center   py-[100px] "
         itemScope
         itemType="https://schema.org/WebPageElement"

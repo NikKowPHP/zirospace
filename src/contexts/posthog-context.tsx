@@ -15,12 +15,12 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       console.log('PostHog host is not set')
       return
     }
-    if(process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production') {
       posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
         api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
         person_profiles: 'always', // or 'always' to create profiles for anonymous users as well
         capture_pageview: false, // Disable automatic pageview capture, as we capture manually
-        capture_pageleave: true
+        capture_pageleave: true,
       })
     }
   }, [])

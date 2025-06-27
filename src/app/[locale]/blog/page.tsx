@@ -13,8 +13,6 @@ interface PageProps {
   }
 }
 
-
-
 // Blog JSON-LD
 const blogJsonLd = {
   '@context': 'https://schema.org',
@@ -74,13 +72,12 @@ const breadcrumbJsonLd = {
   ],
 }
 
-
 export default async function BlogPage({ params }: PageProps) {
   const { locale } = params
   const blogPosts = await blogPostService.getBlogPosts(locale)
   logger.log('blog posts', blogPosts)
   return (
-    <div className=' '>
+    <div className=" ">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
@@ -159,7 +156,7 @@ const BlogPostItem = ({
     month: 'short',
     day: 'numeric',
   })
-const cleanedExcerpt = stripHtmlTags(post.excerpt);
+  const cleanedExcerpt = stripHtmlTags(post.excerpt)
 
   return (
     <li
@@ -186,15 +183,17 @@ const cleanedExcerpt = stripHtmlTags(post.excerpt);
             </span>
           </div>
           {post.image_url && (
-           <div itemProp="image" className="w-full sm:w-[400px]  aspect-video overflow-hidden relative">
+            <div
+              itemProp="image"
+              className="w-full sm:w-[400px]  aspect-video overflow-hidden relative"
+            >
               <Image
                 className="rounded-xl w-full h-auto"
                 src={post.image_url}
                 // src="https://picsum.photos/250/150"
                 alt={post.image_alt || post.title}
                 style={{ objectFit: 'cover' }}
-              fill
-
+                fill
                 loading="lazy"
               />
             </div>
@@ -217,7 +216,7 @@ const PinnedBlogPost = ({
     month: 'short',
     day: 'numeric',
   })
-  const cleanedExcerpt = stripHtmlTags(post.excerpt);
+  const cleanedExcerpt = stripHtmlTags(post.excerpt)
   return (
     <Link
       href={`/${locale}/blog/${post.slug}`}
@@ -226,7 +225,10 @@ const PinnedBlogPost = ({
     >
       <div className="flex flex-col sm:flex-row justify-start items-center gap-[32px] rounded-md  mb-[32px] ">
         {post.image_url && (
-          <div itemProp="image" className="w-full sm:w-[350px] md:w-[458px] aspect-video overflow-hidden relative">
+          <div
+            itemProp="image"
+            className="w-full sm:w-[350px] md:w-[458px] aspect-video overflow-hidden relative"
+          >
             <Image
               className="rounded-xl w-full h-auto"
               src={post.image_url}
@@ -234,7 +236,6 @@ const PinnedBlogPost = ({
               alt={post.image_alt || post.title}
               style={{ objectFit: 'cover' }}
               fill
-              
               loading="lazy"
             />
           </div>

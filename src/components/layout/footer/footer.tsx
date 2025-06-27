@@ -18,9 +18,13 @@ export function Footer() {
   }
 
   // Handler for footer links
-  const handleFooterLink = (item: { title: string; href: string; isRoute?: boolean }) => {
+  const handleFooterLink = (item: {
+    title: string
+    href: string
+    isRoute?: boolean
+  }) => {
     if (item.isRoute) {
-      router.push(item.href);
+      router.push(item.href)
     } else {
       // If the current page is not the homepage, redirect first
       if (pathname !== '/') {
@@ -107,7 +111,6 @@ export function Footer() {
                 </span>
               </div>
 
-
               {/* Company Description */}
               <div className="space-y-4">
                 <p
@@ -142,7 +145,6 @@ export function Footer() {
             >
               {/* Main Navigation */}
               <div className="flex flex-col gap-4 justify-start  items-start">
-
                 {footerConfig.mainNav.map((item, index) => (
                   <button
                     key={index}
@@ -152,7 +154,6 @@ export function Footer() {
                     {item.title}
                   </button>
                 ))}
-
               </div>
 
               {/* Social Links */}

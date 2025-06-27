@@ -8,9 +8,7 @@ export default function AdminLayout({
 }) {
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-gray-50">
-        {children}
-      </div>
+      <div className="min-h-screen bg-gray-50">{children}</div>
       <Toaster />
     </AuthProvider>
   )

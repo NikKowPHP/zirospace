@@ -99,7 +99,6 @@ export const CaseStudies = dynamic(
   }
 )
 
-
 export const BannerModalWrapper = dynamic(
   () =>
     import('@/components/BannerModalWrapper').then(

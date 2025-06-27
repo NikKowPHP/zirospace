@@ -33,7 +33,9 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
 
   useEffect(() => {
     if (banner) {
-      const dismissed = JSON.parse(localStorage.getItem('dismissedBanners') || '[]')
+      const dismissed = JSON.parse(
+        localStorage.getItem('dismissedBanners') || '[]'
+      )
       if (!dismissed.includes(banner.id)) {
         setShowModal(true)
       }
@@ -58,7 +60,9 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
   }
   const handleDismissLocalStorage = () => {
     if (banner?.id) {
-      const dismissed = new Set(JSON.parse(localStorage.getItem('dismissedBanners') || '[]'))
+      const dismissed = new Set(
+        JSON.parse(localStorage.getItem('dismissedBanners') || '[]')
+      )
       dismissed.add(banner.id)
       localStorage.setItem('dismissedBanners', JSON.stringify([...dismissed]))
     }
@@ -76,61 +80,62 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
     return null
   }
 
-  return  banner && (
-
-    <Modal isOpen={showModal} onClose={onClose}>
-      <div className="flex flex-col gap-[16px] w-full items-center justify-center">
-        <div className="rounded-lg w-full">
-          {banner?.youtube_url ? (
-            <div className="relative pt-[56.25%] w-full">
-              <div className="absolute top-0 left-0 w-full h-full rounded-lg overflow-hidden">
-                <YouTube
-                  videoId={banner.youtube_url}
-                  opts={opts}
-                  className="w-full h-full"
-                  onReady={(event: any) => {
-                    if (event.target.getPlayerState() !== 1) {
-                      event.target.playVideo()
-                    }
-                  }}
-                  onStateChange={(event: any) => {
-                    if (
-                      window.YT &&
-                      event.data === window.YT.PlayerState.UNSTARTED
-                    ) {
-                      event.target.playVideo()
-                    }
-                  }}
-                  onError={(e: any) => logger.log('YouTube player error:', e)}
-                />
+  return (
+    banner && (
+      <Modal isOpen={showModal} onClose={onClose}>
+        <div className="flex flex-col gap-[16px] w-full items-center justify-center">
+          <div className="rounded-lg w-full">
+            {banner?.youtube_url ? (
+              <div className="relative pt-[56.25%] w-full">
+                <div className="absolute top-0 left-0 w-full h-full rounded-lg overflow-hidden">
+                  <YouTube
+                    videoId={banner.youtube_url}
+                    opts={opts}
+                    className="w-full h-full"
+                    onReady={(event: any) => {
+                      if (event.target.getPlayerState() !== 1) {
+                        event.target.playVideo()
+                      }
+                    }}
+                    onStateChange={(event: any) => {
+                      if (
+                        window.YT &&
+                        event.data === window.YT.PlayerState.UNSTARTED
+                      ) {
+                        event.target.playVideo()
+                      }
+                    }}
+                    onError={(e: any) => logger.log('YouTube player error:', e)}
+                  />
+                </div>
               </div>
-            </div>
-          ) : banner?.image_url ? (
-            <Image
-              src={banner.image_url}
-              alt={banner.title || ''}
-              width={1000}
-              height={1000}
-              quality={100}
-              unoptimized
-              className="w-full h-auto rounded-lg aspect-[6/4] sm:aspect-[16/9] object-cover"
-            />
-          ) : null}
-        </div>
-        <div className="flex flex-col gap-[16px] max-w-[90%] justify-center">
-          <h1 className="text-[24px] leading-[32px] font-semibold">
-            {banner?.title}
-          </h1>
+            ) : banner?.image_url ? (
+              <Image
+                src={banner.image_url}
+                alt={banner.title || ''}
+                width={1000}
+                height={1000}
+                quality={100}
+                unoptimized
+                className="w-full h-auto rounded-lg aspect-[6/4] sm:aspect-[16/9] object-cover"
+              />
+            ) : null}
+          </div>
+          <div className="flex flex-col gap-[16px] max-w-[90%] justify-center">
+            <h1 className="text-[24px] leading-[32px] font-semibold">
+              {banner?.title}
+            </h1>
 
-          <p className="text-[14px] leading-[20px] font-normal">
-            {banner?.content}
-          </p>
+            <p className="text-[14px] leading-[20px] font-normal">
+              {banner?.content}
+            </p>
 
-          <Button onClick={handleClose} variant="primary" size="full">
-            {t('bookCall')}
-          </Button>
+            <Button onClick={handleClose} variant="primary" size="full">
+              {t('bookCall')}
+            </Button>
+          </div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
+    )
   )
 }

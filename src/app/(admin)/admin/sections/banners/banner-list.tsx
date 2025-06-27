@@ -1,15 +1,14 @@
 'use client'
 
-import {  useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useAdminBanners from '@/hooks/admin/useAdminBanners'
 import { Banner } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import logger from '@/lib/logger'
 import { BannerForm } from './components/banner-form'
 
-
 interface BannerListProps {
-  initialBanners: Record<Locale, Banner[]>;
+  initialBanners: Record<Locale, Banner[]>
 }
 
 export function BannerList({ initialBanners }: BannerListProps) {
@@ -20,7 +19,7 @@ export function BannerList({ initialBanners }: BannerListProps) {
     deleteBanner,
     error,
     loading,
-    getBanners
+    getBanners,
   } = useAdminBanners({ initialBanners })
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null)
@@ -28,9 +27,9 @@ export function BannerList({ initialBanners }: BannerListProps) {
 
   useEffect(() => {
     if (!banners[activeLocale] || banners[activeLocale].length === 0) {
-      getBanners(activeLocale);
+      getBanners(activeLocale)
     }
-  }, [activeLocale, getBanners, banners]);
+  }, [activeLocale, getBanners, banners])
 
   const handleCreate = async (data: Partial<Banner>) => {
     try {
@@ -40,7 +39,6 @@ export function BannerList({ initialBanners }: BannerListProps) {
       logger.log('Failed to create banner:', error)
     }
   }
-
 
   const handleUpdate = async (data: Partial<Banner>) => {
     if (!editingBanner) return
@@ -148,13 +146,19 @@ export function BannerList({ initialBanners }: BannerListProps) {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{banner.content.slice(0, 30)}</div>
+                  <div className="text-sm text-gray-500">
+                    {banner.content.slice(0, 30)}
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{banner.subtitle?.slice(0, 30)}</div>
+                  <div className="text-sm text-gray-500">
+                    {banner.subtitle?.slice(0, 30)}
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{banner.is_active ? 'Yes' : 'No'}</div>
+                  <div className="text-sm text-gray-500">
+                    {banner.is_active ? 'Yes' : 'No'}
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
                   <button

@@ -11,7 +11,7 @@ import { type Image as ImageType } from '@/domain/models/models'
 import { type CaseStudy } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { ArrowUpRight } from 'lucide-react'
-import { siteUrl } from '@/config/constants';
+import { siteUrl } from '@/config/constants'
 interface CaseStudyCardProps {
   caseStudy: CaseStudy
   locale: Locale
@@ -62,7 +62,7 @@ const CaseStudyTags = memo(function CaseStudyTags({
   theme: string
 }) {
   return (
-    <div 
+    <div
       className="flex flex-wrap"
       itemProp="keywords"
       aria-label="Project tags"
@@ -100,30 +100,29 @@ export const CaseStudyCard = memo(function CaseStudyCard({
   const ctaText = t('caseStudy.ctaText.viewCaseStudy')
   const caseStudyUrl = `/${locale}/case-studies/${caseStudy.slug}`
 
-
   // JSON-LD for the case study
   const caseStudyJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    "name": caseStudy.title,
-    "headline": caseStudy.subtitle,
-    "description": caseStudy.description,
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: caseStudy.title,
+    headline: caseStudy.subtitle,
+    description: caseStudy.description,
     // "keywords":  caseStudy.tags ? caseStudy.tags.join(", ") : '',
     // "image": caseStudy.images.length > 0 && caseStudy.images[0]?.url ? caseStudy.images[0].url : '',
-    "url": `${siteUrl}${caseStudyUrl}`,
-    "datePublished": caseStudy.created_at,
-    "author": {
-      "@type": "Organization",
-      "name": "ZIRO Healthcare Solutions"
+    url: `${siteUrl}${caseStudyUrl}`,
+    datePublished: caseStudy.created_at,
+    author: {
+      '@type': 'Organization',
+      name: 'ZIRO Healthcare Solutions',
     },
-    "publisher": {
-      "@type": "Organization",
-      "name": "ZIRO Healthcare Solutions",
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${siteUrl}/images/ziro.avif`
-      }
-    }
+    publisher: {
+      '@type': 'Organization',
+      name: 'ZIRO Healthcare Solutions',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/images/ziro.avif`,
+      },
+    },
   }
 
   return (
@@ -138,7 +137,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
         itemType="https://schema.org/CreativeWork"
         role="article"
       >
-        <Link 
+        <Link
           href={caseStudyUrl}
           className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full"
           aria-label={`Read case study: ${caseStudy.title}`}
@@ -163,7 +162,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
             </header>
 
             {/* Description with proper semantic markup */}
-            <div 
+            <div
               className="text-[16px] sm:text-[24px] text-gray-400 line-clamp-4 overflow-hidden leading-[1.2]"
               itemProp="description"
             >
@@ -192,7 +191,7 @@ export const CaseStudyCard = memo(function CaseStudyCard({
           </div>
 
           {/* Images Grid with semantic markup */}
-          <div 
+          <div
             className="w-full aspect-[6/3] sm:h-full sm:w-full"
             role="img"
             aria-label={`${caseStudy.title} preview image`}
@@ -215,7 +214,10 @@ export const CaseStudyCard = memo(function CaseStudyCard({
         </Link>
 
         {/* Add metadata */}
-        <meta itemProp="datePublished" content={new Date(caseStudy.created_at).toString()} />
+        <meta
+          itemProp="datePublished"
+          content={new Date(caseStudy.created_at).toString()}
+        />
         <meta itemProp="author" content="ZIRO " />
         <meta itemProp="publisher" content="ZIRO " />
       </article>
@@ -230,4 +232,3 @@ export const CaseStudyCard = memo(function CaseStudyCard({
 })
 
 CaseStudyCard.displayName = 'CaseStudyCard'
-

@@ -12,12 +12,12 @@ interface Props {
   params: { id: string }
 }
 
-export default function EditBlogPostPage({params}: Props) {
-  const { updateBlogPost, loading, getBlogPost  } = useAdminBlogPosts()
+export default function EditBlogPostPage({ params }: Props) {
+  const { updateBlogPost, loading, getBlogPost } = useAdminBlogPosts()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const locale = searchParams.get('locale') || 'en';
-  const [blogPost, setBlogPost] = useState<BlogPost | null>(null);
+  const locale = searchParams.get('locale') || 'en'
+  const [blogPost, setBlogPost] = useState<BlogPost | null>(null)
   const [id, setId] = useState<string>('')
 
   useEffect(() => {
@@ -25,12 +25,14 @@ export default function EditBlogPostPage({params}: Props) {
     if (id) {
       setId(id)
     }
-  
-    getBlogPost(id, locale as Locale).then((post: BlogPost | null) => setBlogPost(post || null))
+
+    getBlogPost(id, locale as Locale).then((post: BlogPost | null) =>
+      setBlogPost(post || null)
+    )
   }, [params, getBlogPost, locale])
 
   const handleUpdate = async (data: Partial<BlogPost>) => {
-    if (!blogPost) return;
+    if (!blogPost) return
     try {
       await updateBlogPost(id, data, locale as Locale)
       router.push('/admin/sections/blog-posts')
@@ -39,10 +41,10 @@ export default function EditBlogPostPage({params}: Props) {
     }
   }
 
-  if(!blogPost && loading) {
+  if (!blogPost && loading) {
     return <div>Loading...</div>
   }
-  if(!blogPost) {
+  if (!blogPost) {
     return <div>Blog post not found</div>
   }
 

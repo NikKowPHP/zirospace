@@ -7,8 +7,14 @@ import { useRouter } from 'next/navigation'
 import logger from '@/lib/logger'
 
 export function BlogPostList() {
-  const { blogPosts, deleteBlogPost, error, loading, updateBlogPost, getBlogPosts } =
-    useAdminBlogPosts()
+  const {
+    blogPosts,
+    deleteBlogPost,
+    error,
+    loading,
+    updateBlogPost,
+    getBlogPosts,
+  } = useAdminBlogPosts()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const router = useRouter()
   const [pinnedPostId, setPinnedPostId] = useState<string | null>(null)
@@ -99,7 +105,8 @@ export function BlogPostList() {
               <span className="font-medium">Slug:</span> {post.slug}
             </p>
             <p className="text-sm text-gray-600">
-              <span className="font-medium">URL Preview:</span> /blog/{post.slug}
+              <span className="font-medium">URL Preview:</span> /blog/
+              {post.slug}
             </p>
             <p className="text-sm text-gray-600 line-clamp-3">
               <span className="font-medium">Excerpt:</span> {post.excerpt}
@@ -114,7 +121,10 @@ export function BlogPostList() {
                 disabled={loading}
                 className="cursor-pointer h-10 w-10 text-primary focus:ring-primary border-gray-300"
               />
-              <label htmlFor={`pinned-${post.id}`} className="text-sm text-gray-700">
+              <label
+                htmlFor={`pinned-${post.id}`}
+                className="text-sm text-gray-700"
+              >
                 Pinned
               </label>
             </div>

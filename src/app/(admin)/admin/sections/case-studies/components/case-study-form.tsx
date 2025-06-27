@@ -18,12 +18,15 @@ interface ImageInput {
 }
 
 const isGoogleDriveLink = (url: string): boolean => {
-  return url.includes('drive.google.com') || url.includes('googleusercontent.com')
+  return (
+    url.includes('drive.google.com') || url.includes('googleusercontent.com')
+  )
 }
 
 const getGoogleDriveDirectLink = (url: string): string | null => {
   try {
-    const fileId = url.match(/\/d\/(.+?)\/|id=(.+?)&/)?.[1] || url.match(/id=(.+?)&/)?.[1]
+    const fileId =
+      url.match(/\/d\/(.+?)\/|id=(.+?)&/)?.[1] || url.match(/id=(.+?)&/)?.[1]
     if (fileId) {
       return `https://drive.google.com/uc?export=view&id=${fileId}`
     }
@@ -47,7 +50,7 @@ const ImagePreview = ({ url, alt, onError }: ImagePreviewProps) => {
     img.onload = () => setShowImage(true)
     img.onerror = onError
     img.src = url
-    
+
     return () => {
       img.onload = null
       img.onerror = null
@@ -83,20 +86,22 @@ export function CaseStudyForm({
   loading,
 }: CaseStudyFormProps) {
   const [images, setImages] = useState<ImageInput[]>(
-    (study?.images && Array.isArray(study.images)
+    study?.images && Array.isArray(study.images)
       ? study.images.map((img) => ({ url: img.url, alt: img.alt }))
-      : [{ url: '', alt: '' }])
-     
-    
+      : [{ url: '', alt: '' }]
   )
   const [tags, setTags] = useState<readonly string[]>(study?.tags || [])
   const [tagInput, setTagInput] = useState('')
   const [title, setTitle] = useState(study?.title || '')
   const [slug, setSlug] = useState(study?.slug || '')
-  const [imageErrors, setImageErrors] = useState<Record<number, string | null>>({})
+  const [imageErrors, setImageErrors] = useState<Record<number, string | null>>(
+    {}
+  )
 
   const [theme, setTheme] = useState<CaseStudy['theme']>(study?.theme || 'dark')
-  const [backgroundColor, setBackgroundColor] = useState(study?.background_color || '#FFFFFF')
+  const [backgroundColor, setBackgroundColor] = useState(
+    study?.background_color || '#FFFFFF'
+  )
   const [color, setColor] = useState(study?.color || '#000000')
   const [subtitle, setSubtitle] = useState(study?.subtitle || '')
   const [ctaUrl, setCtaUrl] = useState(study?.cta_url || '')
@@ -116,7 +121,7 @@ export function CaseStudyForm({
 
   const handleRemoveImage = (index: number) => {
     setImages(images.filter((_, i) => i !== index))
-    setImageErrors(prev => ({ ...prev, [index]: null }))
+    setImageErrors((prev) => ({ ...prev, [index]: null }))
   }
 
   const handleImageChange = (
@@ -125,29 +130,30 @@ export function CaseStudyForm({
     value: string
   ) => {
     if (field === 'url') {
-      setImageErrors(prev => ({ ...prev, [index]: null }))
-      
+      setImageErrors((prev) => ({ ...prev, [index]: null }))
+
       if (isGoogleDriveLink(value)) {
         const directLink = getGoogleDriveDirectLink(value)
         if (!directLink) {
-          setImageErrors(prev => ({
+          setImageErrors((prev) => ({
             ...prev,
-            [index]: 'Invalid Google Drive link format. Please use a direct image link.'
+            [index]:
+              'Invalid Google Drive link format. Please use a direct image link.',
           }))
         }
         // Always update the URL, even if invalid
-        setImages(images.map((img, i) => 
-          i === index ? { ...img, url: value } : img
-        ))
+        setImages(
+          images.map((img, i) => (i === index ? { ...img, url: value } : img))
+        )
       } else {
-        setImages(images.map((img, i) => 
-          i === index ? { ...img, url: value } : img
-        ))
+        setImages(
+          images.map((img, i) => (i === index ? { ...img, url: value } : img))
+        )
       }
     } else {
-      setImages(images.map((img, i) => 
-        i === index ? { ...img, [field]: value } : img
-      ))
+      setImages(
+        images.map((img, i) => (i === index ? { ...img, [field]: value } : img))
+      )
     }
   }
 
@@ -182,9 +188,10 @@ export function CaseStudyForm({
   }
 
   const handleImageError = (index: number) => {
-    setImageErrors(prev => ({
+    setImageErrors((prev) => ({
       ...prev,
-      [index]: 'Failed to load image. Please check the URL or try a different link format.'
+      [index]:
+        'Failed to load image. Please check the URL or try a different link format.',
     }))
   }
 
@@ -249,11 +256,14 @@ export function CaseStudyForm({
           />
         </div>
         <p className="mt-1 text-sm text-gray-500">
-          This will be the URL of your case study. Use only lowercase letters, numbers, and hyphens.
+          This will be the URL of your case study. Use only lowercase letters,
+          numbers, and hyphens.
         </p>
       </div>
 
-      <div className={`space-y-8 ${!title.trim() ? 'opacity-50 pointer-events-none' : ''}`}>
+      <div
+        className={`space-y-8 ${!title.trim() ? 'opacity-50 pointer-events-none' : ''}`}
+      >
         <div>
           <label
             htmlFor="description"
@@ -281,7 +291,9 @@ export function CaseStudyForm({
                 <input
                   type="text"
                   value={image.url}
-                  onChange={(e) => handleImageChange(index, 'url', e.target.value)}
+                  onChange={(e) =>
+                    handleImageChange(index, 'url', e.target.value)
+                  }
                   placeholder="Image URL (direct link recommended)"
                   className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
                 />
@@ -297,11 +309,16 @@ export function CaseStudyForm({
                     <p>{imageErrors[index]}</p>
                     {isGoogleDriveLink(image.url) && (
                       <p className="mt-1">
-                        For Google Drive images: 
+                        For Google Drive images:
                         <ol className="list-decimal ml-4 mt-1">
                           <li>Open the image in Google Drive</li>
-                          <li>Click &ldquo;Share&rdquo; and make it accessible to anyone with the link</li>
-                          <li>Try using a direct image hosting service instead</li>
+                          <li>
+                            Click &ldquo;Share&rdquo; and make it accessible to
+                            anyone with the link
+                          </li>
+                          <li>
+                            Try using a direct image hosting service instead
+                          </li>
                         </ol>
                       </p>
                     )}
@@ -312,7 +329,9 @@ export function CaseStudyForm({
                 <input
                   type="text"
                   value={image.alt}
-                  onChange={(e) => handleImageChange(index, 'alt', e.target.value)}
+                  onChange={(e) =>
+                    handleImageChange(index, 'alt', e.target.value)
+                  }
                   placeholder="Alt text"
                   required={!!image.url}
                   className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
@@ -379,7 +398,6 @@ export function CaseStudyForm({
           </div>
         </div>
 
-
         <div>
           <label
             htmlFor="theme"
@@ -391,7 +409,7 @@ export function CaseStudyForm({
             name="theme"
             id="theme"
             value={theme}
-            onChange={(e) => setTheme(e.target.value )}
+            onChange={(e) => setTheme(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           >
             <option value="dark">Dark</option>

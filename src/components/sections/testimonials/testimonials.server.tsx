@@ -1,11 +1,11 @@
-import { Locale } from '@/i18n';
-import { Testimonials } from './testimonials';
-import { testimonialService } from '@/lib/services/testimonials.service';
+import { Locale } from '@/i18n'
+import { Testimonials } from './testimonials'
+import { testimonialService } from '@/lib/services/testimonials.service'
 
-async function TestimonialsSection( {locale}: {locale: Locale}) {
-  const testimonials = await testimonialService.getTestimonials(locale);
+async function TestimonialsSection({ locale }: { locale: Locale }) {
+  const testimonials = await testimonialService.getTestimonials(locale)
 
-  return <Testimonials testimonials={testimonials} />;
+  return <Testimonials testimonials={testimonials} />
 }
 
-export default TestimonialsSection;
+export default TestimonialsSection

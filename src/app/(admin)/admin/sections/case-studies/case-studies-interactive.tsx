@@ -5,10 +5,24 @@ import useAdminCaseStudies from '@/hooks/admin/useAdminCaseStudies'
 import { CaseStudy } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { CaseStudyForm } from './components/case-study-form'
-import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from '@hello-pangea/dnd'
 
 export function CaseStudyListInteractive() {
-  const { caseStudies, createCaseStudy, updateCaseStudy, deleteCaseStudy, updateCaseStudyOrder, error, loading, getCaseStudies } = useAdminCaseStudies()
+  const {
+    caseStudies,
+    createCaseStudy,
+    updateCaseStudy,
+    deleteCaseStudy,
+    updateCaseStudyOrder,
+    error,
+    loading,
+    getCaseStudies,
+  } = useAdminCaseStudies()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const [editingStudy, setEditingStudy] = useState<CaseStudy | null>(null)
   const [isCreating, setIsCreating] = useState(false)
@@ -22,7 +36,7 @@ export function CaseStudyListInteractive() {
   useEffect(() => {
     setOrderedStudies(caseStudies[activeLocale])
   }, [activeLocale, caseStudies])
-  
+
   const handleCreate = async (data: Partial<CaseStudy>) => {
     try {
       await createCaseStudy(data, activeLocale)
@@ -61,8 +75,8 @@ export function CaseStudyListInteractive() {
 
     const orders = items.map((study, index) => ({
       id: study.id,
-      order: index
-    }));
+      order: index,
+    }))
     try {
       await updateCaseStudyOrder(orders, activeLocale)
     } catch (error) {
@@ -70,7 +84,9 @@ export function CaseStudyListInteractive() {
     }
   }
 
-  useEffect(() => { console.log(caseStudies) }, [caseStudies])
+  useEffect(() => {
+    console.log(caseStudies)
+  }, [caseStudies])
 
   return (
     <div className="space-y-8">
@@ -85,7 +101,9 @@ export function CaseStudyListInteractive() {
           <button
             onClick={() => setActiveLocale('en')}
             className={`px-6 py-3 rounded-full transition-colors ${
-              activeLocale === 'en' ? 'bg-primary text-white' : 'bg-secondary text-gray-700 hover:bg-secondary/80'
+              activeLocale === 'en'
+                ? 'bg-primary text-white'
+                : 'bg-secondary text-gray-700 hover:bg-secondary/80'
             }`}
           >
             English
@@ -93,7 +111,9 @@ export function CaseStudyListInteractive() {
           <button
             onClick={() => setActiveLocale('pl')}
             className={`px-6 py-3 rounded-full transition-colors ${
-              activeLocale === 'pl' ? 'bg-primary text-white' : 'bg-secondary text-gray-700 hover:bg-secondary/80'
+              activeLocale === 'pl'
+                ? 'bg-primary text-white'
+                : 'bg-secondary text-gray-700 hover:bg-secondary/80'
             }`}
           >
             Polish
@@ -152,9 +172,17 @@ export function CaseStudyListInteractive() {
           <DragDropContext onDragEnd={handleDragEnd}>
             <Droppable droppableId="caseStudies">
               {(provided) => (
-                <tbody className="divide-y divide-gray-200" {...provided.droppableProps} ref={provided.innerRef}>
+                <tbody
+                  className="divide-y divide-gray-200"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
                   {orderedStudies.map((study, index) => (
-                    <Draggable key={study.id} draggableId={study.id} index={index}>
+                    <Draggable
+                      key={study.id}
+                      draggableId={study.id}
+                      index={index}
+                    >
                       {(provided) => (
                         <tr
                           ref={provided.innerRef}

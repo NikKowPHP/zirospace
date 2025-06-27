@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './list-item-skeleton.module.css';
+import React from 'react'
+import styles from './list-item-skeleton.module.css'
 
 const ListItemSkeleton = () => {
   return (
@@ -10,7 +10,7 @@ const ListItemSkeleton = () => {
         <div className={styles.description}></div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ListItemSkeleton;
+export default ListItemSkeleton

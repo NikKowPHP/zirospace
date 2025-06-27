@@ -6,15 +6,17 @@ import Image from 'next/image'
 import logger from '@/lib/logger'
 import { motion, AnimatePresence } from 'framer-motion' // Import Framer Motion
 
-const YouTube = dynamic(
-  () => import('react-youtube').then(mod => mod),
-  { ssr: false, loading: () => <div className="w-[200px] h-[150px] bg-gray-100 animate-pulse" /> }
-)
+const YouTube = dynamic(() => import('react-youtube').then((mod) => mod), {
+  ssr: false,
+  loading: () => (
+    <div className="w-[200px] h-[150px] bg-gray-100 animate-pulse" />
+  ),
+})
 const isProd = process.env.NODE_ENV === 'production'
 
 declare global {
   interface Window {
-    YT: any;
+    YT: any
   }
 }
 
@@ -22,63 +24,63 @@ export const ContactFormYoutubeVideo = () => {
   const [showVideo, setShowVideo] = useState(false)
   const [videoId, setVideoId] = useState('')
 
-  const thumbnailUrl = isProd && videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : '/images/case-studies/gsense/gsense.avif'
+  const thumbnailUrl =
+    isProd && videoId
+      ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+      : '/images/case-studies/gsense/gsense.avif'
 
   useEffect(() => {
     const fetchYoutubeUrl = async () => {
-    try {
-      const response = await fetch('/api/admin/youtube');
-      if (!response.ok) {
-        throw new Error('Failed to fetch YouTube URL');
+      try {
+        const response = await fetch('/api/admin/youtube')
+        if (!response.ok) {
+          throw new Error('Failed to fetch YouTube URL')
+        }
+        const youtubeData = await response.json()
+        setVideoId(youtubeData?.youtube_url || '')
+      } catch (error) {
+        logger.error('Failed to fetch YouTube URL:', error)
       }
-      const youtubeData = await response.json();
-      setVideoId(youtubeData?.youtube_url || '');
-    } catch (error) {
-      logger.error("Failed to fetch YouTube URL:", error);
     }
-  };
-  fetchYoutubeUrl();
-
+    fetchYoutubeUrl()
   }, [])
 
   const opts = {
-
     height: '100%',
     width: '100%',
 
     playerVars: {
-
       autoplay: 1,
       mute: 1,
       controls: 0,
       playlist: videoId,
       loop: 1,
       modestbranding: 1,
-      rel: 0
+      rel: 0,
     },
   }
 
   useEffect(() => {
     const handleLoad = () => {
-      setShowVideo(true);
-      logger.log('Page fully loaded - starting video');
-    };
+      setShowVideo(true)
+      logger.log('Page fully loaded - starting video')
+    }
 
     if (document.readyState === 'complete' && videoId) {
-      handleLoad();
+      handleLoad()
       // No need for event listener cleanup here if we only check readyState once
     } else if (videoId) {
       // Only add listener if videoId is present but document isn't complete yet
-      window.addEventListener('load', handleLoad);
-      return () => window.removeEventListener('load', handleLoad);
+      window.addEventListener('load', handleLoad)
+      return () => window.removeEventListener('load', handleLoad)
     }
-    return undefined;
-  }, [videoId]);
+    return undefined
+  }, [videoId])
 
   const videoVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
     visible: { opacity: 1, y: 0, scale: 1 },
-  };
+  }
 
   return (
     // AnimatePresence handles the mounting/unmounting animation
@@ -89,7 +91,7 @@ export const ContactFormYoutubeVideo = () => {
         initial="hidden"
         animate="visible"
         exit="hidden" // Apply hidden variant on exit
-        transition={{ duration: 0.3, ease: "easeInOut" }} // Adjust duration/easing
+        transition={{ duration: 0.3, ease: 'easeInOut' }} // Adjust duration/easing
       >
         <div className="w-full relative pt-[56.25%] rounded-lg overflow-hidden shadow-lg cursor-pointer">
           {!showVideo ? (
@@ -114,29 +116,32 @@ export const ContactFormYoutubeVideo = () => {
                 </svg>
               </div>
             </div>
+          ) : videoId ? ( // Only render YouTube if videoId is available
+            <div className="absolute inset-0">
+              <YouTube
+                videoId={videoId}
+                opts={opts}
+                className="w-full h-full"
+                onReady={(event) => {
+                  if (event.target.getPlayerState() !== 1) {
+                    event.target.playVideo()
+                  }
+                }}
+                onStateChange={(event) => {
+                  if (
+                    window.YT &&
+                    event.data === window.YT.PlayerState.UNSTARTED
+                  ) {
+                    event.target.playVideo()
+                  }
+                }}
+                onError={(e) => logger.log('YouTube player error:', e)}
+              />
+            </div>
           ) : (
-            videoId ? ( // Only render YouTube if videoId is available
-              <div className='absolute inset-0'>
-                <YouTube
-                  videoId={videoId}
-                  opts={opts}
-                  className="w-full h-full"
-                  onReady={(event) => {
-                    if (event.target.getPlayerState() !== 1) {
-                      event.target.playVideo();
-                    }
-                  }}
-                  onStateChange={(event) => {
-                    if (window.YT && event.data === window.YT.PlayerState.UNSTARTED) {
-                      event.target.playVideo();
-                    }
-                  }}
-                  onError={(e) => logger.log('YouTube player error:', e)}
-                />
-              </div>
-            ) : (
-              <div className="w-[200px] h-[150px] bg-gray-100 animate-pulse flex items-center justify-center text-gray-500">Loading Video...</div>
-            )
+            <div className="w-[200px] h-[150px] bg-gray-100 animate-pulse flex items-center justify-center text-gray-500">
+              Loading Video...
+            </div>
           )}
         </div>
       </motion.section>

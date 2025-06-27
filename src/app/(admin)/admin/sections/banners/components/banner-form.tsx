@@ -24,8 +24,12 @@ export function BannerForm({
   const [subtitle, setSubtitle] = useState(banner?.subtitle || '')
   const [imageUrl, setImageUrl] = useState(banner?.image_url || '')
   const [youtubeUrl, setYoutubeUrl] = useState(banner?.youtube_url || '')
-  const [startDate, setStartDate] = useState<Date | undefined>(banner?.start_date ? new Date(banner.start_date) : undefined)
-  const [endDate, setEndDate] = useState<Date | undefined>(banner?.end_date ? new Date(banner.end_date) : undefined)
+  const [startDate, setStartDate] = useState<Date | undefined>(
+    banner?.start_date ? new Date(banner.start_date) : undefined
+  )
+  const [endDate, setEndDate] = useState<Date | undefined>(
+    banner?.end_date ? new Date(banner.end_date) : undefined
+  )
   const [isActive, setIsActive] = useState(banner?.is_active || false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -146,7 +150,9 @@ export function BannerForm({
           name="startDate"
           id="startDate"
           value={startDate ? startDate.toISOString().split('T')[0] : ''}
-          onChange={(e) => setStartDate(e.target.value ? new Date(e.target.value) : undefined)}
+          onChange={(e) =>
+            setStartDate(e.target.value ? new Date(e.target.value) : undefined)
+          }
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
         />
       </div>
@@ -163,7 +169,9 @@ export function BannerForm({
           name="endDate"
           id="endDate"
           value={endDate ? endDate.toISOString().split('T')[0] : ''}
-          onChange={(e) => setEndDate(e.target.value ? new Date(e.target.value) : undefined)}
+          onChange={(e) =>
+            setEndDate(e.target.value ? new Date(e.target.value) : undefined)
+          }
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
         />
       </div>

@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './card-skeleton.module.css';
+import React from 'react'
+import styles from './card-skeleton.module.css'
 
 const CardSkeleton = () => {
   return (
@@ -10,7 +10,7 @@ const CardSkeleton = () => {
         <div className={styles.description}></div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CardSkeleton;
+export default CardSkeleton

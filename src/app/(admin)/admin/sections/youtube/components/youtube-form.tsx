@@ -1,46 +1,48 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button/button';
-import { YoutubeModel } from '@/domain/models/models';
-import { Loader2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button/button'
+import { YoutubeModel } from '@/domain/models/models'
+import { Loader2 } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 interface YoutubeFormProps {
-  youtube: YoutubeModel | null;
-  onSubmit: (data: Partial<YoutubeModel>) => Promise<void>;
-  onCancel: () => Promise<void>;
+  youtube: YoutubeModel | null
+  onSubmit: (data: Partial<YoutubeModel>) => Promise<void>
+  onCancel: () => Promise<void>
 }
 
 export function YoutubeForm({ youtube, onSubmit, onCancel }: YoutubeFormProps) {
-  const [youtube_url, setYoutubeUrl] = useState(youtube?.youtube_url || '');
-  const [loading, setLoading] = useState(false);
+  const [youtube_url, setYoutubeUrl] = useState(youtube?.youtube_url || '')
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (youtube) {
-      setYoutubeUrl(youtube.youtube_url || '');
+      setYoutubeUrl(youtube.youtube_url || '')
     }
-  }, [youtube]);
+  }, [youtube])
 
   const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
     try {
-      await onSubmit({ youtube_url });
-      toast.success('YouTube URL updated successfully');
+      await onSubmit({ youtube_url })
+      toast.success('YouTube URL updated successfully')
     } catch (error) {
-      toast.error(`Failed to update YouTube: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error(
+        `Failed to update YouTube: ${error instanceof Error ? error.message : 'Unknown error'}`
+      )
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loader2 className="w-4 h-4 animate-spin" />
       </div>
-    );
+    )
   }
 
   return (
@@ -65,10 +67,15 @@ export function YoutubeForm({ youtube, onSubmit, onCancel }: YoutubeFormProps) {
         <Button variant="primary" type="submit" disabled={loading}>
           {loading ? 'Updating...' : 'Update'}
         </Button>
-        <Button variant="secondary" type="button" onClick={onCancel} disabled={loading}>
+        <Button
+          variant="secondary"
+          type="button"
+          onClick={onCancel}
+          disabled={loading}
+        >
           Cancel
         </Button>
       </div>
     </form>
-  );
+  )
 }

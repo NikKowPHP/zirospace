@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 'use client'
 
@@ -10,7 +10,8 @@ import logger from '@/lib/logger'
 import useAdminServices from '@/hooks/admin/useAdminServices'
 
 export function ServiceList() {
-  const { services, deleteService, error, loading, getServices } = useAdminServices()
+  const { services, deleteService, error, loading, getServices } =
+    useAdminServices()
   const [activeLocale, setActiveLocale] = useState<Locale>('en')
   const router = useRouter()
 
@@ -22,7 +23,9 @@ export function ServiceList() {
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this service?')) {
       try {
-        logger.log(`Deleting service with id: ${id} and locale  and locale : ${activeLocale}`)
+        logger.log(
+          `Deleting service with id: ${id} and locale  and locale : ${activeLocale}`
+        )
         await deleteService(id, activeLocale)
       } catch (error) {
         logger.log('Failed to delete service:', error)
@@ -38,19 +41,21 @@ export function ServiceList() {
         <div className="flex space-x-4">
           <button
             onClick={() => setActiveLocale('en')}
-            className={`px-6 py-3 rounded-full transition-colors ${activeLocale === 'en'
-              ? 'bg-primary text-white'
-              : 'bg-secondary text-gray-700 hover:bg-secondary/80'
-              }`}
+            className={`px-6 py-3 rounded-full transition-colors ${
+              activeLocale === 'en'
+                ? 'bg-primary text-white'
+                : 'bg-secondary text-gray-700 hover:bg-secondary/80'
+            }`}
           >
             English
           </button>
           <button
             onClick={() => setActiveLocale('pl')}
-            className={`px-6 py-3 rounded-full transition-colors ${activeLocale === 'pl'
-              ? 'bg-primary text-white'
-              : 'bg-secondary text-gray-700 hover:bg-secondary/80'
-              }`}
+            className={`px-6 py-3 rounded-full transition-colors ${
+              activeLocale === 'pl'
+                ? 'bg-primary text-white'
+                : 'bg-secondary text-gray-700 hover:bg-secondary/80'
+            }`}
           >
             Polish
           </button>
@@ -84,7 +89,8 @@ export function ServiceList() {
                 <span className="font-medium">Slug:</span> {service.slug}
               </p>
               <p className="text-sm text-gray-600">
-                <span className="font-medium">URL Preview:</span> /services/{service.slug}
+                <span className="font-medium">URL Preview:</span> /services/
+                {service.slug}
               </p>
               <p className="text-sm text-gray-600 line-clamp-3">
                 <span className="font-medium">Excerpt:</span> {service.excerpt}
@@ -92,7 +98,9 @@ export function ServiceList() {
               <div className="flex items-center space-x-2">
                 <span
                   className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    service.is_published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                    service.is_published
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-yellow-100 text-yellow-800'
                   }`}
                 >
                   {service.is_published ? 'Published' : 'Draft'}

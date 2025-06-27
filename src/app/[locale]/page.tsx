@@ -122,8 +122,6 @@ export default async function HomePage({ params }: HomePageProps) {
                 </div>
               </Suspense>
 
-             
-
               <Suspense fallback={null}>
                 <BannerModalWrapper />
               </Suspense>

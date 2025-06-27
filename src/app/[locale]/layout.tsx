@@ -6,7 +6,7 @@ import '@/styles/globals.css'
 import { locales, type Locale } from '@/i18n'
 import { ClientWrapper } from './client-wrapper'
 import { PageProvider } from '@/contexts/page-context'
-import GlobalProgressBar from '@/components/layout/global-progress-bar';
+import GlobalProgressBar from '@/components/layout/global-progress-bar'
 import logger from '@/lib/logger'
 const inter = Inter({
   subsets: ['latin'],
@@ -15,9 +15,8 @@ const inter = Inter({
 })
 import { PostHogProvider } from '@/contexts/posthog-context'
 import { bannerService } from '@/lib/services/banner.service'
-import { siteUrl } from '@/config/constants';
+import { siteUrl } from '@/config/constants'
 import { SmoothScroll } from '@/components/smooth-scroll'
-
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -61,25 +60,25 @@ export async function generateMetadata({
     keywords:
       locale === 'en'
         ? [
-          'digital health solutions',
-          'healthcare software development',
-          'medical app design',
-          'health tech UI/UX',
-          'patient experience design',
-          'clinical workflow solutions',
-          'healthcare technology',
-          'medical software systems'
-        ]
+            'digital health solutions',
+            'healthcare software development',
+            'medical app design',
+            'health tech UI/UX',
+            'patient experience design',
+            'clinical workflow solutions',
+            'healthcare technology',
+            'medical software systems',
+          ]
         : [
-          'rozwiązania cyfrowe dla zdrowia',
-          'rozwój oprogramowania medycznego',
-          'projektowanie aplikacji medycznych',
-          'technologia medyczna',
-          'doświadczenie pacjenta',
-          'systemy dla służby zdrowia',
-          'informatyka medyczna',
-          'rozwiązania dla klinik'
-        ],
+            'rozwiązania cyfrowe dla zdrowia',
+            'rozwój oprogramowania medycznego',
+            'projektowanie aplikacji medycznych',
+            'technologia medyczna',
+            'doświadczenie pacjenta',
+            'systemy dla służby zdrowia',
+            'informatyka medyczna',
+            'rozwiązania dla klinik',
+          ],
   }
 }
 
@@ -101,13 +100,14 @@ export default async function LocaleLayout({
     notFound()
   }
 
-  const initialActiveBanner = await bannerService.getActiveBanner(locale as Locale)
-  const isProduction = process.env.NODE_ENV === 'production';
-  
+  const initialActiveBanner = await bannerService.getActiveBanner(
+    locale as Locale
+  )
+  const isProduction = process.env.NODE_ENV === 'production'
 
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
   if (!GA_MEASUREMENT_ID) {
-    console.warn('Google Analytics Measurement ID is not set.');
+    console.warn('Google Analytics Measurement ID is not set.')
   }
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -132,7 +132,9 @@ export default async function LocaleLayout({
       <body className={inter.variable}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <PostHogProvider>
-            <PageProvider initialActiveBanner={initialActiveBanner || undefined}>
+            <PageProvider
+              initialActiveBanner={initialActiveBanner || undefined}
+            >
               <SmoothScroll>
                 <ClientWrapper>
                   <GlobalProgressBar />

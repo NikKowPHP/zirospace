@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { teamItems} from '@/lib/data/team'
+import { teamItems } from '@/lib/data/team'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button/button'
@@ -32,13 +32,13 @@ export function Team() {
               <p className="text-gray-900 text-lg leading-relaxed">
                 &quot;{t(`${teamItems[currentIndex].id}.quote`)}&quot;
               </p>
-              
+
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden">
-                  <Image 
-                    src={teamItems[currentIndex].imagePerson} 
+                  <Image
+                    src={teamItems[currentIndex].imagePerson}
                     alt={t(`${teamItems[currentIndex].id}.imageAlt`)}
-                    width={40} 
+                    width={40}
                     height={40}
                     className="object-cover w-full h-full"
                   />
@@ -48,7 +48,8 @@ export function Team() {
                     {teamItems[currentIndex].author}
                   </span>
                   <span className="text-sm text-gray-500">
-                    {t(`${teamItems[currentIndex].id}.role`)}, {t(`${teamItems[currentIndex].id}.company`)}
+                    {t(`${teamItems[currentIndex].id}.role`)},{' '}
+                    {t(`${teamItems[currentIndex].id}.company`)}
                   </span>
                 </div>
               </div>
@@ -61,10 +62,10 @@ export function Team() {
           <p className="text-gray-900 text-base sm:text-lg font-medium text-center sm:text-left max-w-[500px]">
             {t('alwaysOpen')}
           </p>
-          <Button 
-            variant='white' 
-            size='lg' 
-            href='https://calendly.com/ziro-nikhil/30min'
+          <Button
+            variant="white"
+            size="lg"
+            href="https://calendly.com/ziro-nikhil/30min"
             className="whitespace-nowrap w-full sm:w-auto"
           >
             {t('bookCall')}
@@ -73,4 +74,4 @@ export function Team() {
       </div>
     </section>
   )
-} 
+}
