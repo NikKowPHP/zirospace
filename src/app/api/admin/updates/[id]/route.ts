@@ -4,17 +4,7 @@ import { revalidateTag } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 import { z } from 'zod'
 import logger from '@/lib/logger'
-
-const updateSchema = z.object({
-  title: z.string().min(3),
-  publish_date: z.string(),
-  content_html: z.string().optional(),
-  excerpt: z.string().optional(),
-  image_url: z.string().optional(),
-  image_alt: z.string().optional(),
-  is_published: z.boolean().default(false),
-  order_index: z.number().default(0),
-})
+import { Locale } from '@/i18n'
 
 const updateService = new UpdateService()
 
@@ -26,7 +16,7 @@ export async function GET(
 ) {
   const { id } = params
   const { searchParams } = new URL(request.url)
-  const locale = searchParams.get('locale')
+  const locale = searchParams.get('locale') as Locale
 
   if (!locale) {
     return NextResponse.json({ error: 'Locale is required' }, { status: 400 })
@@ -49,7 +39,7 @@ export async function PUT(
 ) {
   const { id } = params
   const { searchParams } = new URL(request.url)
-  const locale = searchParams.get('locale')
+  const locale = searchParams.get('locale') as Locale
 
   if (!locale) {
     return NextResponse.json({ error: 'Locale is required' }, { status: 400 })
@@ -57,25 +47,8 @@ export async function PUT(
 
   try {
     const json = await request.json()
-    const result = updateSchema.safeParse(json)
-    if (result.error) {
-      console.error('Update validation failed:', result.error.errors)
-      return NextResponse.json({ errors: result.error.errors }, { status: 400 })
-    }
 
-    const { publish_date: pubDate, ...updateData } = result.data
-    const updatedUpdate = await updateService.updateUpdate(
-      id,
-      {
-        ...updateData,
-        publish_date: new Date(pubDate),
-        content_html: updateData.content_html ?? null,
-        excerpt: updateData.excerpt ?? null,
-        image_url: updateData.image_url ?? null,
-        image_alt: updateData.image_alt ?? null,
-      },
-      locale
-    )
+    const updatedUpdate = await updateService.updateUpdate(id, json, locale)
     revalidateTag(CACHE_TAGS.UPDATES)
     return NextResponse.json(updatedUpdate)
   } catch (error: any) {
@@ -89,7 +62,7 @@ export async function DELETE(
 ) {
   const { id } = params
   const { searchParams } = new URL(request.url)
-  const locale = searchParams.get('locale')
+  const locale = searchParams.get('locale') as Locale
 
   logger.log(`DELETE request received for ID: ${id}, Locale: ${locale}`)
 

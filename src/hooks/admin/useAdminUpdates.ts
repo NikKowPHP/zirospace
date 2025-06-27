@@ -27,16 +27,16 @@ export const useAdminUpdates = (
   )
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const adminApi = useAdminApi()
+  const {callApi} = useAdminApi()
 
   const fetchUpdates = useCallback(
     async (locale: Locale) => {
       setLoading(true)
       setError(null)
       try {
-        const response = await adminApi.callApi<Update[]>(
+        const response = await callApi<Update[]>(
           `/api/admin/updates?locale=${locale}`,
-        { method: 'GET', cache: 'no-store' },
+            { method: 'GET', cache: 'no-store' },
         )
         setUpdates((prevUpdates) => {
           // Only update if the data has actually changed to prevent infinite re-renders
@@ -53,13 +53,13 @@ export const useAdminUpdates = (
         setLoading(false)
       }
     },
-    [adminApi, setUpdates, setError, setLoading]
+    [callApi]
   )
 
   const createUpdate = useCallback(
     async (data: any, locale: Locale) => {
       return toast.promise(
-        adminApi.callApi<Update>(`/api/admin/updates?locale=${locale}`, {
+        callApi<Update>(`/api/admin/updates?locale=${locale}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -82,13 +82,13 @@ export const useAdminUpdates = (
         }
       )
     },
-    [adminApi, setUpdates]
+    [callApi]
   )
 
   const updateUpdate = useCallback(
     async (id: string, data: any, locale: Locale) => {
       return toast.promise(
-        adminApi.callApi<Update>(`/api/admin/updates/${id}?locale=${locale}`, {
+        callApi<Update>(`/api/admin/updates/${id}?locale=${locale}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -111,13 +111,13 @@ export const useAdminUpdates = (
         }
       )
     },
-    [adminApi, setUpdates]
+    [callApi]
   )
 
   const deleteUpdate = useCallback(
     async (id: string, locale: Locale) => {
       return toast.promise(
-        adminApi.callApi<void>(`/api/admin/updates/${id}?locale=${locale}`, {
+        callApi<void>(`/api/admin/updates/${id}?locale=${locale}`, {
           method: 'DELETE',
         }),
         {
@@ -136,15 +136,15 @@ export const useAdminUpdates = (
         }
       )
     },
-    [adminApi, setUpdates]
+    [callApi]
   )
 
   const getUpdateById = useCallback(
     async (id: string, locale: Locale): Promise<Update | undefined> => {
       return toast.promise(
-        adminApi.callApi<Update>(
+        callApi<Update>(
           `/api/admin/updates/${id}?locale=${locale}`,
-          {}
+           { method: 'GET', cache: 'no-store' },
         ),
         {
           loading: 'Fetching update...',
@@ -156,7 +156,7 @@ export const useAdminUpdates = (
         }
       )
     },
-    [adminApi]
+    [callApi]
   )
 
   return {
