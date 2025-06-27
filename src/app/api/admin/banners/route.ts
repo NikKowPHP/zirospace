@@ -5,6 +5,8 @@ import logger from '@/lib/logger'
 import { bannerService } from '@/lib/services/banner.service'
 import { Locale } from '@/i18n'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
 
