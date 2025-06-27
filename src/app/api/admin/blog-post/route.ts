@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { blogPostService } from '@/lib/services/blog-post.service'
 import logger from '@/lib/logger'
 import { Locale } from '@/i18n'
-
+export const dynamic = 'force-dynamic'
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
