@@ -32,7 +32,7 @@ export class YoutubeService {
     const model = this.getModel()
     return (model as any).update({
       where: { id: '123413123' }, // Assuming a fixed ID for the single YouTube entry
-      data: { youtubeUrl },
+      data: { youtube_url: youtubeUrl },
     })
   }
 }

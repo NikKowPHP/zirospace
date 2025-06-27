@@ -36,7 +36,7 @@ export const useAdminUpdates = (
       try {
         const response = await adminApi.callApi<Update[]>(
           `/api/admin/updates?locale=${locale}`,
-          {}
+        { method: 'GET', cache: 'no-store' },
         )
         setUpdates((prevUpdates) => {
           // Only update if the data has actually changed to prevent infinite re-renders

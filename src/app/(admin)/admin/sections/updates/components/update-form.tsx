@@ -20,10 +20,12 @@ interface UpdateFormProps {
 }
 
 // Helper to format date for input type="date"
-const formatDateForInput = (date?: Date | string): string => {
-  if (!date) return new Date().toISOString().split('T')[0]
-  return new Date(date).toISOString().split('T')[0]
-}
+const formatDateForInput = (date?: Date | string | null): string => {
+  if (!date) return '';
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return '';
+  return d.toISOString().split('T')[0];
+};
 
 const UpdateForm: React.FC<UpdateFormProps> = ({
   update,
@@ -56,9 +58,13 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
   const [excerpt, setExcerpt] = useState(update?.excerpt || '')
 
   // State for fields not easily managed by react-hook-form's register (like custom Switch or Date)
-  const [publishDate, setPublishDate] = useState(
-    update?.publish_date ? new Date(update.publish_date) : new Date()
-  )
+  const [publishDate, setPublishDate] = useState<Date | null>(() => {
+    if (update?.publish_date) {
+      const d = new Date(update.publish_date);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    return null;
+  });
   const [isPublished, setIsPublished] = useState(
     Boolean(update?.is_published) || false
   )
@@ -123,7 +129,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
   ) => {
     await onSubmit({
       ...data,
-      publish_date: publishDate, // ensure this is a Date object if your model expects it
+      publish_date: publishDate && publishDate.toISOString(), // Ensure this is an ISO string
       excerpt: excerpt,
       content_html: content_html,
       is_published: isPublished,
@@ -165,7 +171,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
           type="date"
           id="publishDate"
           value={formatDateForInput(publishDate)}
-          onChange={(e) => setPublishDate(new Date(e.target.value))}
+          onChange={(e) => setPublishDate(e.target.value ? new Date(e.target.value) : null)}
           className="w-full"
         />
         {/* Add error handling for publishDate if needed */}

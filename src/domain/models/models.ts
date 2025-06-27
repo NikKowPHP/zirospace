@@ -109,7 +109,7 @@ export interface Update {
   id: string
   slug: string
   title: string
-  publish_date: Date
+  publish_date: string | null
   content_html: string | null
   excerpt: string | null
   image_url: string | null

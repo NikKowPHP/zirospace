@@ -48,12 +48,13 @@ export class UpdateService {
   }
 
   async createUpdate(update: Partial<Update>, locale: Locale): Promise<Update> {
-    const slug = generateSlug(update.title || '') // Ensure title is not undefined
+    
     const model = this.getModel(locale)
     return (model as any).create({
       data: {
         ...update,
-        slug: slug,
+        created_at: update.created_at || new Date().toISOString(),
+        updated_at: update.updated_at || new Date().toISOString(),
       } as any,
     })
   }
@@ -63,13 +64,14 @@ export class UpdateService {
     update: Partial<Update>,
     locale: Locale
   ): Promise<Update> {
-    const slug = update.title ? generateSlug(update.title) : undefined // Generate slug only if title is provided
+    const slug = update.title ? generateSlug(update.title) : undefined
     const model = this.getModel(locale)
     return (model as any).update({
       where: { id },
       data: {
         ...update,
-        ...(slug && { slug }), // Only add slug if it was generated
+        ...(slug && { slug }),
+        updated_at: new Date().toISOString(),
       } as any,
     })
   }
