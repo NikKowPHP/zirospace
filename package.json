@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test": "jest",
     "preview": "next build && next start",
+    "postinstall": "prisma generate",
     "test:watch": "jest --watch",
     "format": "prettier --write .",
     "analyze": "cross-env ANALYZE=true next build",
