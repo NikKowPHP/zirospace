@@ -22,13 +22,17 @@ function FaqAccordion({ itemId, isOpen, onToggle }: FaqAccordionProps) {
       )}
       key={itemId}
       itemScope
+      itemProp="mainEntity" 
       itemType="https://schema.org/Question"
     >
       <button
         className="flex w-full items-center justify-between py-6 text-left px-10"
         onClick={onToggle}
       >
-        <span className="text-base sm:text-lg lg:text-xl font-medium">
+        <span
+          itemProp="name" // FIX: Added itemprop for the question name
+          className="text-base sm:text-lg lg:text-xl font-medium"
+        >
           {t(`${itemId}.question`)}
         </span>
         <span className="ml-6 flex-shrink-0">
@@ -81,10 +85,8 @@ export function Faq() {
         >
           {t('title')}
         </h2>
-        <div
-          className="mx-auto flex flex-col gap-[12px] text-black"
-          itemProp="mainEntity"
-        >
+   
+        <div className="mx-auto flex flex-col gap-[12px] text-black">
           {faqItems.map((item) => (
             <FaqAccordion
               key={item.id}
