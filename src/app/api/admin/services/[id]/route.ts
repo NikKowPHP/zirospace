@@ -100,7 +100,7 @@ export async function PUT(
     const searchParams = request.nextUrl.searchParams
     const body = await request.json()
     logger.log('validated body and body', body)
-    const validatedBody = putServiceSchema.parse({ data: body })
+    const validatedBody = putServiceSchema.parse( body )
 
   
 

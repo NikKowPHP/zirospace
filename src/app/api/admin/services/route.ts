@@ -10,21 +10,6 @@ import { Locale } from '@/i18n';
 
 export const dynamic = 'force-dynamic'
 // Define Zod schema for POST request body
-const postServiceSchema = z.object({
-    id: z.string().optional(),
-    title: z.string().min(3, { message: "Title must be at least 3 characters" }),
-    slug: z.string().optional(),
-    subtitle: z.string().nullable().optional(),
-    content_html: z.string().optional(),
-    excerpt: z.string().nullable().optional(),
-    image_url: z.string().nullable().optional(),
-    image_alt: z.string().nullable().optional(),
-    is_published: z.boolean().default(false),
-    meta_title: z.string().nullable().optional(),
-    meta_description: z.string().nullable().optional(),
-    keywords: z.array(z.string()).optional(),
-    order_index: z.coerce.number().optional(),
-});
 
 const serviceLocaleSchema = z.object({
   locale: z.string(),
@@ -55,19 +40,28 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 
+const postServiceSchema = z.object({
+    id: z.string().optional(),
+    title: z.string().min(3, { message: "Title must be at least 3 characters" }),
+    slug: z.string().optional(),
+    subtitle: z.string().nullable().optional(),
+    content_html: z.string().optional(),
+    excerpt: z.string().nullable().optional(),
+    image_url: z.string().nullable().optional(),
+    image_alt: z.string().nullable().optional(),
+    is_published: z.boolean().default(false),
+    meta_title: z.string().nullable().optional(),
+    meta_description: z.string().nullable().optional(),
+    keywords: z.array(z.string()).optional(),
+    order_index: z.coerce.number().optional(),
+});
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json();
      logger.log('body', body)
-   
     const validatedBody = postServiceSchema.parse(body);
-  
-
-
-
-
-    console.log('Processing service creation', validatedBody);
+    logger.log('Processing service creation', validatedBody);
 
   const searchParams = request.nextUrl.searchParams;
     const locale = searchParams.get('locale');
