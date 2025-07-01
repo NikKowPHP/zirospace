@@ -5,6 +5,7 @@ import { Session, User, AuthError } from '@supabase/supabase-js'
 import { SupabaseAuthService } from '@/infrastructure/services/supabase-auth.service'
 import { useRouter } from 'next/navigation'
 import { MockAuthService } from '@/infrastructure/services/mock-auth-service.service'
+import logger from '@/lib/logger'
 
 interface AuthContextType {
   user: User | null
@@ -27,14 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 
   const isAdminRoute = (path: string) => {
-    const adminRoutes = [
-      '/admin',
-      '/admin/login',
-      '/admin/sections/dashboard',
-      '/admin/sections/case-studies',
-      '/admin/sections/case-study-sliders',
-      '/admin/sections/testimonials',
-    ]
+    const adminRoutes = ['/admin']
     return adminRoutes.some((route) => path.startsWith(route))
   }
 
@@ -69,6 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Get current path using window.location
       const currentPath = window.location.pathname
       console.log('is mocked', isMock)
+      logger.log('current path', currentPath)
 
       if (
         (isMock && !isAdminRoute(currentPath)) ||

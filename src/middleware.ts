@@ -1,20 +1,22 @@
-import createMiddleware from 'next-intl/middleware';
-import { locales, defaultLocale, pathnames } from './i18n';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import createMiddleware from 'next-intl/middleware'
+import { locales, defaultLocale, pathnames } from './i18n'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import logger from './lib/logger'
 
 const intlMiddleware = createMiddleware({
   defaultLocale,
   locales,
   pathnames,
-  localePrefix: 'always'
-});
+  localePrefix: 'always',
+})
 
-const PUBLIC_FILE = /\.(.*)$/;
+const PUBLIC_FILE = /\.(.*)$/
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl
 
+  logger.log('pathname in middleware', pathname)
   // Handle public files and API routes
   if (
     PUBLIC_FILE.test(pathname) ||
@@ -22,26 +24,23 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/api') ||
     pathname.startsWith('/_vercel')
   ) {
-    return NextResponse.next();
+    return NextResponse.next()
   }
 
   // Check if it's an admin route
   if (pathname.startsWith('/admin')) {
-    return NextResponse.next();
+    return NextResponse.next()
   }
 
   // Handle root path redirect
   if (pathname === '/') {
-    return NextResponse.redirect(new URL(`/${defaultLocale}`, request.url));
+    return NextResponse.redirect(new URL(`/${defaultLocale}`, request.url))
   }
 
-
-  return intlMiddleware(request);
+  return intlMiddleware(request)
 }
 
 export const config = {
-  matcher: [
-    '/((?!api|_next|_vercel|.*\\.[^/]*$).*)',
-    '/api/auth/:path*'
-  ]
-}; 
+  matcher: ['/((?!api|_next|_vercel|.*\\.[^/]*$).*)', '/api/auth/:path*'],
+}
+

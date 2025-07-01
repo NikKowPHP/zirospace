@@ -8,7 +8,6 @@ import { Locale } from '@/i18n'
 export const dynamic = 'force-dynamic'
 // Define Zod schema for PUT request body
 const putServiceSchema = z.object({
-  data: z.object({
     title: z
       .string()
       .min(3, { message: 'Title must be at least 3 characters' })
@@ -34,7 +33,6 @@ const putServiceSchema = z.object({
     meta_description: z.string().nullable().optional(),
     keywords: z.array(z.string()).optional(),
     order_index: z.coerce.number().optional(),
-  }),
 })
 
 // Define Zod schema for GET/DELETE request params
@@ -104,7 +102,7 @@ export async function PUT(
     logger.log('validated body and body', body)
     const validatedBody = putServiceSchema.parse({ data: body })
 
-    const { data: domainData } = validatedBody
+  
 
     const locale = searchParams.get('locale') as Locale
 
@@ -116,11 +114,11 @@ export async function PUT(
     }
 
     logger.log(`PUT request received with id=${id}, locale=${locale}`)
-    logger.log(`data after validation ${JSON.stringify(domainData)}`)
+    logger.log(`data after validation ${JSON.stringify(validatedBody)}`)
 
     const updatedService = await serviceService.updateService(
       id,
-      domainData,
+      validatedBody,
       locale as Locale
     )
     logger.log(`updatedService ${JSON.stringify(updatedService)} `)

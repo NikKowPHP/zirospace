@@ -11,7 +11,6 @@ import { Locale } from '@/i18n';
 export const dynamic = 'force-dynamic'
 // Define Zod schema for POST request body
 const postServiceSchema = z.object({
-  data: z.object({
     id: z.string().optional(),
     title: z.string().min(3, { message: "Title must be at least 3 characters" }),
     slug: z.string().optional(),
@@ -25,7 +24,6 @@ const postServiceSchema = z.object({
     meta_description: z.string().nullable().optional(),
     keywords: z.array(z.string()).optional(),
     order_index: z.coerce.number().optional(),
-  })
 });
 
 const serviceLocaleSchema = z.object({
@@ -68,16 +66,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
 
 
-    const { data } = validatedBody;
-    console.log('Processing service creation', data);
+
+    console.log('Processing service creation', validatedBody);
 
   const searchParams = request.nextUrl.searchParams;
     const locale = searchParams.get('locale');
 
     const id = crypto.randomUUID();
-    data.id = id;
+    validatedBody.id = id;
 
-    const newService = await serviceService.createService(data, locale as Locale);
+    const newService = await serviceService.createService(validatedBody, locale as Locale);
 
     revalidateTag(CACHE_TAGS.SERVICES);
 
