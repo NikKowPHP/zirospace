@@ -1,9 +1,10 @@
+// src/contexts/auth-context.tsx
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { Session, User, AuthError } from '@supabase/supabase-js'
+import { Session, User, AuthError, AuthChangeEvent } from '@supabase/supabase-js' // Import AuthChangeEvent
 import { SupabaseAuthService } from '@/infrastructure/services/supabase-auth.service'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation' 
 import { MockAuthService } from '@/infrastructure/services/mock-auth-service.service'
 import logger from '@/lib/logger'
 
@@ -27,68 +28,77 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isMock ? new MockAuthService() : new SupabaseAuthService()
   )
 
-  const isAdminRoute = (path: string) => {
-    const adminRoutes = ['/admin']
-    return adminRoutes.some((route) => path.startsWith(route))
-  }
-
   const [session, setSession] = useState<Session | null>(null)
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
+    setLoading(true);
     authService
       .getSession()
       .then((session) => {
         setSession(session)
         setUser(session?.user ?? null)
-        setLoading(false)
       })
       .catch((error) => {
         setError(
           error instanceof Error ? error.message : 'Session error occurred'
         )
+      })
+      .finally(() => {
         setLoading(false)
       })
 
     const {
       data: { subscription },
-    } = authService.onAuthStateChange(async (event, session) => {
+    } = authService.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
 
-      // Get current path using window.location
-      const currentPath = window.location.pathname
-      console.log('is mocked', isMock)
-      logger.log('current path', currentPath)
-
-      if (
-        (isMock && !isAdminRoute(currentPath)) ||
-        (event === 'SIGNED_IN' && !isAdminRoute(currentPath))
-      ) {
-        console.log('redirecting to admin dashboard')
-        router.replace('/admin/sections/dashboard')
-      } else if (event === 'SIGNED_OUT') {
-        router.replace('/admin/login')
+      // --- 💡 START OF THE FIX ---
+      // When a user successfully signs in or out, the cookie is set/cleared on the client.
+      // We need to trigger a server request to make the new session state available
+      // to the middleware and Server Components. `router.refresh()` does this.
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+        router.refresh();
       }
+      // --- END OF THE FIX ---
     })
 
     return () => subscription.unsubscribe()
-  }, [router])
+  }, [authService, router]);
 
-  const login = async (email: string, password: string) => {
+
+  useEffect(() => {
+    if (loading) return;
+
+    const isLoginPage = pathname === '/admin/login';
+    logger.log('AuthProvider: Current pathname:', pathname);
+    logger.log('AuthProvider: Is login page:', isLoginPage);
+    logger.log('AuthProvider: User:', user);
+    
+    if (user && isLoginPage) {
+      console.log('AuthProvider: User detected on login page, redirecting to dashboard...');
+      router.replace('/admin/sections/dashboard');
+    }
+
+    const isAdminPage = pathname.startsWith('/admin/');
+    if (!user && isAdminPage && !isLoginPage) {
+      console.log('AuthProvider: No user detected on protected page, redirecting to login...');
+      router.replace('/admin/login');
+    }
+
+  }, [user, loading, router, pathname]);
+    const login = async (email: string, password: string) => {
     setError(null)
     setLoading(true)
     try {
-      const { user, session } = await authService.login(email, password)
-      setUser(user)
-      setSession(session)
-      if (user) {
-        router.push('/admin/sections/dashboard')
-      }
+      await authService.login(email, password)
+      // The onAuthStateChange listener will handle the refresh and redirect.
     } catch (error) {
       const message =
         error instanceof AuthError ? error.message : 'Failed to login'
@@ -105,6 +115,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await authService.logout()
       setUser(null)
       setSession(null)
+      // Redirecting after logout is good practice.
+      router.replace('/admin/login'); 
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Logout failed')
     }

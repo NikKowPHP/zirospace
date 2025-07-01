@@ -10,6 +10,7 @@ import {
   Youtube,
 } from 'lucide-react'
 import { AdminProvider } from '@/contexts/admin-context'
+import { ProtectedRoute } from '@/components/protected-route'
 
 export default async function AdminLayout({
   children,
@@ -18,6 +19,7 @@ export default async function AdminLayout({
 }) {
   return (
     <AdminProvider>
+       <ProtectedRoute>
       <div className="min-h-screen bg-gray-50 flex">
         {/* Sidebar */}
         <aside className="w-72 bg-white shadow-sm py-8 px-6 fixed top-0 left-0 h-full">
@@ -123,7 +125,8 @@ export default async function AdminLayout({
         <main className="ml-72 flex-1 py-8">
           <div className="max-w-7xl mx-auto px-8">{children}</div>
         </main>
-      </div>
+        </div>
+        </ProtectedRoute>
     </AdminProvider>
   )
 }

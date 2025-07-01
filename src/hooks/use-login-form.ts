@@ -21,7 +21,7 @@ export function useLoginForm() {
 
     try {
       await login(form.email, form.password)
-      window.location.href = '/admin/case-studies'
+  
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Login failed')
     } finally {
