@@ -1,8 +1,7 @@
-// src/contexts/auth-context.tsx
-'use client'
 
+'use client'
 import { createContext, useContext, useEffect, useState } from 'react'
-import { Session, User, AuthError, AuthChangeEvent } from '@supabase/supabase-js' // Import AuthChangeEvent
+import { Session, User, AuthError, AuthChangeEvent } from '@supabase/supabase-js'
 import { SupabaseAuthService } from '@/infrastructure/services/supabase-auth.service'
 import { useRouter, usePathname } from 'next/navigation' 
 import { MockAuthService } from '@/infrastructure/services/mock-auth-service.service'
@@ -58,15 +57,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
-
-      // --- 💡 START OF THE FIX ---
-      // When a user successfully signs in or out, the cookie is set/cleared on the client.
-      // We need to trigger a server request to make the new session state available
-      // to the middleware and Server Components. `router.refresh()` does this.
       if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
         router.refresh();
       }
-      // --- END OF THE FIX ---
     })
 
     return () => subscription.unsubscribe()
