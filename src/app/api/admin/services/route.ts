@@ -32,7 +32,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     console.log('processing service get request for all services', { locale: validatedLocale });
     logger.log(`Fetching all services for locale: ${validatedLocale}`);
     const services = await serviceService.getServices(validatedLocale as Locale);
-    return NextResponse.json(services);
+     return NextResponse.json(services, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error: unknown) {
     logger.error(`Error fetching service: ${error}`);
     return NextResponse.json({ error: 'Failed to fetch service' }, { status: 500 });

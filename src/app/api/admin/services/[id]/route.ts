@@ -81,7 +81,15 @@ export async function GET(
     if (!service) {
       return NextResponse.json({ error: 'Service not found' }, { status: 404 })
     }
-    return NextResponse.json(service)
+
+
+     return NextResponse.json(service, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error: unknown) {
     logger.error(`Error fetching service: ${error}`)
     return NextResponse.json(

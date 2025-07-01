@@ -3,7 +3,7 @@ import { Service } from '@/domain/models/models';
 import { Locale } from '@/i18n';
 import useAdminApi from './useAdminApi';
 import logger from '@/lib/logger';
-
+import { useRouter } from 'next/navigation'
 interface UseAdminServicesProps {
   initialServices?: Record<Locale, Service[]>;
 }
@@ -13,11 +13,13 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
     initialServices || { en: [], pl: [] }
   );
   const { loading, error, callApi, clearError } = useAdminApi();
+  const router = useRouter()
 
   const getServices = useCallback(async (locale: Locale) => {
     try {
-      const data: Service[] = await callApi(
-        `/api/admin/services?locale=${locale}`,
+      const cacheBuster = `&t=${new Date().getTime()}`;
+    const data: Service[] = await callApi(
+        `/api/admin/services?locale=${locale}${cacheBuster}`, 
         { method: 'GET', cache: 'no-store' },
         {
           loadingMessage: 'Fetching services...',
@@ -32,8 +34,10 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
 
   const getServiceById = useCallback(async (id: string, locale: Locale): Promise<Service | null> => {
     try {
+      const cacheBuster = `&t=${new Date().getTime()}`;
+
       const data: Service = await callApi(
-        `/api/admin/services/${id}?locale=${locale}`,
+        `/api/admin/services/${id}?locale=${locale}${cacheBuster}`,
         { method: 'GET', cache: 'no-store', headers: { 'Content-Type': 'application/json' } },
         {
           loadingMessage: 'Fetching service details...',
@@ -67,6 +71,7 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
         );
         // After successful creation, refetch the list to ensure UI is in sync.
         await getServices(locale);
+        router.refresh(); // Refresh the page to reflect changes
       } catch (error) {
         // Error is already handled by useAdminApi
       }
@@ -92,6 +97,8 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
         );
         // After successful update, refetch the list.
         await getServices(locale);
+        router.refresh(); // Refresh the page to reflect changes
+        
       } catch (error) {
         // Error is already handled by useAdminApi
       }
@@ -115,6 +122,7 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
         );
         // After successful deletion, refetch the list.
         await getServices(locale);
+        router.refresh(); // Refresh the page to reflect changes
       } catch (error) {
         // Error is already handled by useAdminApi
       }
