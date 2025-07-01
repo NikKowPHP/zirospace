@@ -34,7 +34,7 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
     try {
       const data: Service = await callApi(
         `/api/admin/services/${id}?locale=${locale}`,
-        { method: 'GET', headers: { 'Content-Type': 'application/json' } },
+        { method: 'GET', cache: 'no-store', headers: { 'Content-Type': 'application/json' } },
         {
           loadingMessage: 'Fetching service details...',
           errorMessage: 'Failed to fetch service details',
@@ -55,7 +55,7 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
         await callApi(
           `/api/admin/services?locale=${locale}`,
           {
-            method: 'POST',
+            method: 'POST', cache: 'no-store',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...data }),
           },
@@ -80,7 +80,7 @@ const useAdminServices = ({ initialServices }: UseAdminServicesProps = {}) => {
         await callApi(
           `/api/admin/services/${id}?locale=${locale}`,
           {
-            method: 'PUT',
+            method: 'PUT', cache: 'no-store',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...data }),
           },
