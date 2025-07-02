@@ -9,7 +9,7 @@ import GlobalProgressBar from '@/components/layout/global-progress-bar'
 import logger from '@/lib/logger'
 import { PostHogProvider } from '@/contexts/posthog-context'
 import { bannerService } from '@/lib/services/banner.service'
-import { siteUrl } from '@/config/constants'
+
 import { SmoothScroll } from '@/components/smooth-scroll'
 
 export function generateStaticParams() {
