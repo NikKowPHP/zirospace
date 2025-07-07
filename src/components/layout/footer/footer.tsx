@@ -150,6 +150,7 @@ export function Footer() {
                     key={index}
                     className="text-gray-600 text-[14px] hover:text-primary transition-colors"
                     onClick={() => handleFooterLink(item)}
+                    aria-label={item.title}
                   >
                     {item.title}
                   </button>

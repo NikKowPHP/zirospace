@@ -43,6 +43,7 @@ export function PricingCard({ plan }: PricingCardProps) {
       <Button
         size="lg"
         className="w-full sm:w-auto rounded-full px-8 sm:px-20 md:px-28 h-[48px] sm:h-[56px] text-[15px] sm:text-[16px] bg-[#0066FF] hover:bg-[#0066FF]/90"
+        aria-label={t(plan.ctaText)}
       >
         {t(plan.ctaText)}
       </Button>

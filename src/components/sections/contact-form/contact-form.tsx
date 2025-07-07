@@ -144,6 +144,7 @@ export const ContactFormSection = async () => {
                   type="submit"
                   variant="primary"
                   className="w-full rounded-xl"
+                  aria-label={t('submit')}
                 >
                   {t('submit')}
                 </Button>

@@ -128,9 +128,10 @@ export function Navbar() {
             <button
               onClick={handleHamburgerClick}
               className="flex flex-col justify-center gap-[6px] items-center md:hidden"
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
               <span
-                className={`bg-black block transition-all duration-500 [transition-timing-function:cubic-bezier(0.68,-0.55,0.27,1.55)] 
+                className={`bg-black block transition-all duration-500 [transition-timing-function:cubic-bezier(0.68,-0.55,0.27,1.55)]
                     h-0.5 w-6 rounded-sm ${
                       isMobileMenuOpen
                         ? 'rotate-45 translate-y-1'
@@ -138,7 +139,7 @@ export function Navbar() {
                     }`}
               ></span>
               <span
-                className={`bg-black block transition-all duration-500 [transition-timing-function:cubic-bezier(0.68,-0.55,0.27,1.55)] 
+                className={`bg-black block transition-all duration-500 [transition-timing-function:cubic-bezier(0.68,-0.55,0.27,1.55)]
                     h-0.5 w-6 rounded-sm ${
                       isMobileMenuOpen
                         ? '-rotate-45 -translate-y-1'

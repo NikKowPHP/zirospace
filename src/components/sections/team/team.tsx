@@ -67,6 +67,7 @@ export function Team() {
             size="lg"
             href="https://calendly.com/ziro-nikhil/30min"
             className="whitespace-nowrap w-full sm:w-auto"
+            aria-label={t('bookCall')}
           >
             {t('bookCall')}
           </Button>

@@ -282,7 +282,7 @@ export const ProcessItemListClient = ({
               onClick={togglePlayPause}
               className="flex items-center justify-center p-[20px] bg-gray-200/50 backdrop-blur-xl transition-all duration-300 rounded-full text-gray-800 hover:bg-gray-300/50 focus:outline-none  transition-colors"
               aria-label={
-                isPlaying ? 'Pause carousel autoplay' : 'Play carousel autoplay'
+                isPlaying ? 'Pause process autoplay' : 'Play process autoplay'
               }
               aria-pressed={isPlaying}
             >
@@ -314,7 +314,7 @@ export const ProcessItemListClient = ({
                       'relative h-[40px] w-[40px] flex items-center justify-center px-1',
                       'focus:outline-none focus:ring-1 focus:ring-white/50 rounded-full'
                     )}
-                    aria-label={`Go to process step ${index + 1}`}
+                    aria-label={`Go to process step ${index + 1}: ${processItems[index].title}`}
                   >
                     {/* Active State Background / Progress Track */}
                     <AnimatePresence>

@@ -28,6 +28,7 @@ function FaqAccordion({ itemId, isOpen, onToggle }: FaqAccordionProps) {
       <button
         className="flex w-full items-center justify-between py-6 text-left px-10"
         onClick={onToggle}
+        aria-label={isOpen ? `Collapse answer for ${t(`${itemId}.question`)}` : `Expand answer for ${t(`${itemId}.question`)}`}
       >
         <span
           itemProp="name" // FIX: Added itemprop for the question name

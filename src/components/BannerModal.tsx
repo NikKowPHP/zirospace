@@ -130,7 +130,7 @@ export const BannerModal = ({ banner }: BannerModalProps) => {
               {banner?.content}
             </p>
 
-            <Button onClick={handleClose} variant="primary" size="full">
+            <Button onClick={handleClose} variant="primary" size="full" aria-label={t('bookCall')}>
               {t('bookCall')}
             </Button>
           </div>

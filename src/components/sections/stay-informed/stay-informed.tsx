@@ -44,7 +44,7 @@ const Form = ({ t }: any) => {
         <Input label={t('form.lastName')} placeholder="Doe" />
         <Input label={t('form.email')} placeholder="jane@doe.com" />
       </div>
-      <button className="bg-primary text-white px-4 py-2 rounded-md">
+      <button className="bg-primary text-white px-4 py-2 rounded-md" aria-label={t('form.submit')}>
         {t('form.submit')}
       </button>
     </form>

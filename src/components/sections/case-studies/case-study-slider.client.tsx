@@ -86,6 +86,7 @@ export function CaseStudySliderClient({
         <button
           onClick={() => handleScrollButtonClick('left')}
           className="absolute left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-50 transition-colors z-10"
+          aria-label="Scroll left"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
@@ -94,6 +95,7 @@ export function CaseStudySliderClient({
         <button
           onClick={() => handleScrollButtonClick('right')}
           className="absolute right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-gray-50 transition-colors z-10"
+          aria-label="Scroll right"
         >
           <ChevronRight className="w-6 h-6" />
         </button>

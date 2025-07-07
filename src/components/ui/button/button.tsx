@@ -20,6 +20,7 @@ export interface ButtonProps
   isFullWidth?: boolean
   href?: string
   target?: string
+  'aria-label'?: string
 }
 
 const buttonStyles = {
@@ -87,7 +88,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       )
     }
 
-    return <button className={classes} ref={ref} {...props} />
+    const ariaLabel = props['aria-label'] || (typeof props.children === 'string' ? props.children : undefined);
+
+    return <button className={classes} ref={ref} {...props} aria-label={ariaLabel} />
   }
 )
 

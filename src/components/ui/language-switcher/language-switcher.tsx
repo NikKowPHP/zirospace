@@ -62,6 +62,7 @@ export function LanguageSwitcher() {
                 ? 'bg-primary text-white'
                 : 'text-gray-700 hover:text-gray-900'
             )}
+            aria-label={`Switch to ${lang.name} language`}
           >
             {lang.name}
           </button>
