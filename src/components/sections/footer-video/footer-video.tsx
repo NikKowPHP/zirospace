@@ -1,4 +1,3 @@
-// File: src/components/sections/float-video/float-video.tsx
 'use client'
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
@@ -59,23 +58,6 @@ export const ContactFormYoutubeVideo = () => {
       rel: 0,
     },
   }
-
-  useEffect(() => {
-    const handleLoad = () => {
-      setShowVideo(true)
-      logger.log('Page fully loaded - starting video')
-    }
-
-    if (document.readyState === 'complete' && videoId) {
-      handleLoad()
-      // No need for event listener cleanup here if we only check readyState once
-    } else if (videoId) {
-      // Only add listener if videoId is present but document isn't complete yet
-      window.addEventListener('load', handleLoad)
-      return () => window.removeEventListener('load', handleLoad)
-    }
-    return undefined
-  }, [videoId])
 
   const videoVariants = {
     hidden: { opacity: 0, y: 20, scale: 0.95 },
@@ -148,4 +130,3 @@ export const ContactFormYoutubeVideo = () => {
     </AnimatePresence>
   )
 }
-// --- NEW CODE END ---
