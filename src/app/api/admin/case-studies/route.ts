@@ -7,20 +7,16 @@ export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   const { data, locale } = await request.json()
-  
+
   try {
     console.log('Processing case study creation:', {
       locale,
     })
-        // generate id
-        const id = crypto.randomUUID()
-        data.id = id;
+    // generate id
+    const id = crypto.randomUUID()
+    data.id = id
 
-    
-    const newCaseStudy = await caseStudyService.createCaseStudy(
-      data,
-      locale
-    )
+    const newCaseStudy = await caseStudyService.createCaseStudy(data, locale)
 
     // Revalidate cache
     revalidateTag(CACHE_TAGS.CASE_STUDIES)
@@ -29,27 +25,41 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     logger.log('Error creating case study:', error)
     return NextResponse.json(
-      { error: 'Failed to create case study', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to create case study',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     )
   }
 }
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const localeParam = searchParams.get('locale');
-  const locale: 'en' | 'pl' = (localeParam === 'en' || localeParam === 'pl') ? localeParam : 'en';
+  const { searchParams } = new URL(request.url)
+  const localeParam = searchParams.get('locale')
+  const locale: 'en' | 'pl' =
+    localeParam === 'en' || localeParam === 'pl' ? localeParam : 'en'
 
   try {
-    console.log('Processing case study retrieval:', { locale });
+    console.log('Processing case study retrieval:', { locale })
 
-    const caseStudies = await caseStudyService.getCaseStudies(locale);
+    const caseStudies = await caseStudyService.getCaseStudies(locale)
     console.log('caseStudies', caseStudies)
 
-    return NextResponse.json(caseStudies);
+    return NextResponse.json(caseStudies, {
+      headers: {
+        'Cache-Control':
+          'no-store, no-cache, must-revalidate, proxy-revalidate',
+        Pragma: 'no-cache',
+        Expires: '0',
+      },
+    })
   } catch (error) {
     logger.log('Error retrieving case studies:', error)
     return NextResponse.json(
-      { error: 'Failed to retrieve case studies', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to retrieve case studies',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     )
   }

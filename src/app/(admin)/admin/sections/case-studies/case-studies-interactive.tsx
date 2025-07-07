@@ -31,7 +31,7 @@ export function CaseStudyListInteractive() {
   // Fetch case studies when locale changes
   useEffect(() => {
     getCaseStudies(activeLocale)
-  }, [activeLocale, getCaseStudies]) // Added getCaseStudies to dependency array
+  }, [activeLocale])
 
   useEffect(() => {
     setOrderedStudies(caseStudies[activeLocale])

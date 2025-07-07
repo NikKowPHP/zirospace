@@ -17,7 +17,7 @@ const useAdminCaseStudies = ({ initialCaseStudies }: UseAdminCaseStudiesProps = 
     try {
       const data: CaseStudy[] = await callApi(
         `/api/admin/case-studies?locale=${locale}`,
-        { method: 'GET' },
+        { method: 'GET', cache: 'no-store' },
         {
           loadingMessage: 'Fetching case studies...',
           errorMessage: 'Failed to fetch case studies',
