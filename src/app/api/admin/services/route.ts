@@ -79,7 +79,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     revalidateTag(CACHE_TAGS.SERVICES);
 
-    return NextResponse.json(newService);
+   return NextResponse.json(newService, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       logger.error('Validation error creating service:', error.issues);

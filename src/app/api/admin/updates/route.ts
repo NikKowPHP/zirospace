@@ -30,7 +30,14 @@ export async function GET(request: NextRequest) {
 
   try {
     const updates = await updateService.getUpdates(locale);
-    return NextResponse.json(updates);
+
+     return NextResponse.json(updates, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

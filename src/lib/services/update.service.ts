@@ -8,7 +8,9 @@ import logger from '@/lib/logger'
 
 export class UpdateService {
   private getModel(locale: Locale) {
-    return locale === 'pl' ? prisma.zirospace_updates_pl : prisma.zirospace_updates_en
+    return locale === 'pl'
+      ? prisma.zirospace_updates_pl
+      : prisma.zirospace_updates_en
   }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(
@@ -33,6 +35,21 @@ export class UpdateService {
     return cachedFn(locale)
   }
 
+  async getPublishedUpdates(locale: Locale): Promise<Update[]> {
+    const cachedFn = this.withCache(
+      async (locale: Locale) => {
+        const model = this.getModel(locale)
+        return (model as any).findMany({
+          where: { is_published: true },
+          orderBy: { publish_date: 'desc' },
+        })
+      },
+      `published-updates-${locale}`,
+      [CACHE_TAGS.UPDATES, `published-updates:${locale}`]
+    )
+    return cachedFn(locale)
+  }
+
   async getUpdateBySlug(slug: string, locale: Locale): Promise<Update | null> {
     const model = this.getModel(locale)
     return (model as any).findFirst({
@@ -48,7 +65,6 @@ export class UpdateService {
   }
 
   async createUpdate(update: Partial<Update>, locale: Locale): Promise<Update> {
-    
     const model = this.getModel(locale)
     return (model as any).create({
       data: {
@@ -85,4 +101,4 @@ export class UpdateService {
   }
 }
 
-export const updateService = new UpdateService();
+export const updateService = new UpdateService()

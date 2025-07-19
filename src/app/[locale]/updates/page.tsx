@@ -46,22 +46,10 @@ export const generateMetadata = async ({
     },
   }
 }
-async function fetchUpdates(locale: Locale): Promise<Update[]> {
-  const updates = await updateService.getUpdates(locale)
+async function fetchPublishedUpdates(locale: Locale): Promise<Update[]> {
+  const updates = await updateService.getPublishedUpdates(locale)
   if (!updates) notFound()
   return updates
-}
-
-function sortUpdates(updates: Update[]): Update[] {
-  return [...updates].sort((a, b) => {
-    const publishDateComparison =
-      (b.publish_date ? new Date(b.publish_date).getTime() : 0) -
-      (a.publish_date ? new Date(a.publish_date).getTime() : 0)
-    if (publishDateComparison !== 0) {
-      return publishDateComparison
-    }
-    return (a.order_index || 0) - (b.order_index || 0)
-  })
 }
 
 function renderPublishDate(update: Update): String {
@@ -80,14 +68,12 @@ const UpdatesPage = async ({
   params: { locale: Locale }
 }) => {
   try {
-    const updates = await fetchUpdates(locale)
-
-    const sortedUpdates = sortUpdates(updates)
+    const updates = await fetchPublishedUpdates(locale)
 
     return (
       <div className="max-w-3xl mx-auto py-24">
         <h1 className="text-2xl font-bold mb-4">Updates</h1>
-        {sortedUpdates.map((update) => (
+        {updates.map((update) => (
           <div key={update.id} className="mb-4">
             <h2 className="text-xl font-semibold">{update.title}</h2>
             <p className="text-gray-600">{renderPublishDate(update)}</p>
