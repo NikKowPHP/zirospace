@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -6,6 +7,12 @@ import { Testimonial } from '@/domain/models/models'
 import { Locale } from '@/i18n'
 import { TestimonialForm } from './components/testimonials-form'
 import logger from '@/lib/logger'
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from '@hello-pangea/dnd'
 
 export function TestimonialList() {
   const {
@@ -13,6 +20,7 @@ export function TestimonialList() {
     createTestimonial,
     updateTestimonial,
     deleteTestimonial,
+    updateTestimonialOrder,
     error,
     loading,
     getTestimonials,
@@ -21,10 +29,17 @@ export function TestimonialList() {
   const [editingTestimonial, setEditingTestimonial] =
     useState<Testimonial | null>(null)
   const [isCreating, setIsCreating] = useState(false)
+  const [orderedTestimonials, setOrderedTestimonials] = useState<Testimonial[]>(
+    []
+  )
 
   useEffect(() => {
     getTestimonials(activeLocale)
   }, [activeLocale, getTestimonials])
+
+  useEffect(() => {
+    setOrderedTestimonials(testimonials[activeLocale] || [])
+  }, [activeLocale, testimonials])
 
   const handleCreate = async (data: Partial<Testimonial>) => {
     try {
@@ -52,6 +67,24 @@ export function TestimonialList() {
       } catch (error) {
         logger.log('Failed to delete testimonial:', error)
       }
+    }
+  }
+
+  const handleDragEnd = async (result: DropResult) => {
+    if (!result.destination) return
+    const items = Array.from(orderedTestimonials)
+    const [reorderedItem] = items.splice(result.source.index, 1)
+    items.splice(result.destination.index, 0, reorderedItem)
+    setOrderedTestimonials(items)
+
+    const orders = items.map((testimonial, index) => ({
+      id: testimonial.id,
+      order: index,
+    }))
+    try {
+      await updateTestimonialOrder(orders, activeLocale)
+    } catch (error) {
+      console.error('Failed to update order:', error)
     }
   }
 
@@ -132,48 +165,72 @@ export function TestimonialList() {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
-            {testimonials[activeLocale]?.map((testimonial) => (
-              <tr key={testimonial.id} className={loading ? 'opacity-50' : ''}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">
-                    {testimonial.author}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">
-                    {testimonial.role}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">
-                    {testimonial.company}
-                  </div>
-                </td>
-                <td className="px-6 py-4">
-                  <div className="text-sm text-gray-500 line-clamp-2">
-                    {testimonial.quote}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                  <button
-                    onClick={() => setEditingTestimonial(testimonial)}
-                    className="text-primary hover:text-primary/90 disabled:opacity-50"
-                    disabled={loading}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(testimonial.id)}
-                    className="text-red-600 hover:text-red-900 disabled:opacity-50"
-                    disabled={loading}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="testimonials">
+              {(provided) => (
+                <tbody
+                  className="divide-y divide-gray-200"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {orderedTestimonials.map((testimonial, index) => (
+                    <Draggable
+                      key={testimonial.id}
+                      draggableId={testimonial.id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <tr
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={loading ? 'opacity-50' : ''}
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">
+                              {testimonial.author}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-500">
+                              {testimonial.role}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-500">
+                              {testimonial.company}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-gray-500 line-clamp-2">
+                              {testimonial.quote}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
+                            <button
+                              onClick={() => setEditingTestimonial(testimonial)}
+                              className="text-primary hover:text-primary/90 disabled:opacity-50"
+                              disabled={loading}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(testimonial.id)}
+                              className="text-red-600 hover:text-red-900 disabled:opacity-50"
+                              disabled={loading}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </tbody>
+              )}
+            </Droppable>
+          </DragDropContext>
         </table>
       </div>
     </div>

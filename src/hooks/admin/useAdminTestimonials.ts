@@ -112,6 +112,43 @@ const useAdminTestimonials = ({ initialTestimonials }: UseAdminTestimonialsProps
     [callApi]
   );
 
+  const updateTestimonialOrder = useCallback(
+    async (orders: { id: string; order: number }[], locale: Locale) => {
+      try {
+        await callApi(
+          `/api/admin/testimonials-order`,
+          {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orders, locale }),
+          },
+          {
+            loadingMessage: 'Updating testimonial order...',
+            successMessage: 'Order updated successfully!',
+            errorMessage: 'Failed to update order',
+          }
+        );
+        // Optimistically update the order in the local state
+        setTestimonials((prev) => {
+          const updatedTestimonials = { ...prev };
+          if (updatedTestimonials[locale]) {
+            updatedTestimonials[locale] = updatedTestimonials[locale].map((t) => {
+              const orderUpdate = orders.find((o) => o.id === t.id);
+              if (orderUpdate) {
+                return { ...t, order_index: orderUpdate.order };
+              }
+              return t;
+            }).sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+          }
+          return updatedTestimonials;
+        });
+      } catch (error) {
+        // Error is already handled by useAdminApi
+      }
+    },
+    [callApi]
+  );
+
   return {
     testimonials,
     loading,
@@ -120,6 +157,7 @@ const useAdminTestimonials = ({ initialTestimonials }: UseAdminTestimonialsProps
     createTestimonial,
     updateTestimonial,
     deleteTestimonial,
+    updateTestimonialOrder,
     clearError,
   };
 };

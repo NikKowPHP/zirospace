@@ -1,12 +1,19 @@
+
 import { Locale } from '@/i18n'
 import { Testimonial } from '@/domain/models/models'
 import { prisma } from '@/lib/prisma'
 import { unstable_cache } from 'next/cache'
 import { CACHE_TAGS } from '@/lib/utils/cache'
 
+export interface OrderUpdate {
+  id: string
+  order: number
+}
 export class TestimonialService {
   private getModel(locale: Locale) {
-    return locale === 'pl' ? prisma.zirospace_testimonials_pl : prisma.zirospace_testimonials_en
+    return locale === 'pl'
+      ? prisma.zirospace_testimonials_pl
+      : prisma.zirospace_testimonials_en
   }
 
   private withCache<T extends (...args: any[]) => Promise<any>>(
@@ -21,7 +28,9 @@ export class TestimonialService {
     const cachedFn = this.withCache(
       async (locale: Locale) => {
         const model = this.getModel(locale)
-        return (model as any).findMany()
+        return (model as any).findMany({
+          orderBy: { order_index: 'asc' },
+        })
       },
       `testimonials-${locale}`,
       [CACHE_TAGS.TESTIMONIALS, `testimonials:${locale}`]
@@ -72,6 +81,21 @@ export class TestimonialService {
       console.error(`Failed to delete testimonial with ID ${id}:`, error)
       return false
     }
+  }
+
+  async updateTestimonialOrder(
+    orders: OrderUpdate[],
+    locale: Locale
+  ): Promise<void> {
+    const model = this.getModel(locale) as any
+    await prisma.$transaction(
+      orders.map((order) =>
+        model.update({
+          where: { id: order.id },
+          data: { order_index: order.order },
+        })
+      )
+    )
   }
 }
 

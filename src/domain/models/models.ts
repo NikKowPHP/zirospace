@@ -1,3 +1,4 @@
+
 export interface YoutubeModel {
   id: string
   youtube_url: string
@@ -71,6 +72,7 @@ export interface Testimonial {
   image_alt: string
   created_at: string
   updated_at: string
+  order_index: number
 }
 
 export interface CaseStudyImage {

@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { CaseStudy } from '@/domain/models/models';
 import { Locale } from '@/i18n';
@@ -135,7 +136,7 @@ const useAdminCaseStudies = ({ initialCaseStudies }: UseAdminCaseStudiesProps = 
             updatedCaseStudies[locale] = updatedCaseStudies[locale].map((cs) => {
               const orderUpdate = orders.find((o) => o.id === cs.id);
               if (orderUpdate) {
-                return { ...cs, order: orderUpdate.order };
+                return { ...cs, order_index: orderUpdate.order };
               }
               return cs;
             });
