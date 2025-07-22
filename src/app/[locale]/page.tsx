@@ -1,3 +1,4 @@
+
 // File: src/app/[locale]/page.tsx
 import { Suspense } from 'react'
 import { type Locale } from '@/i18n'
@@ -14,6 +15,7 @@ import {
   BannerModalWrapper,
   ContactFormSection,
   TeamSection,
+  AdvisorsSection,
 } from '@/helpers/componentsLoad'
 import { companyConfig } from '@/config/company'
 import { siteUrl } from '@/config/constants'
@@ -118,6 +120,7 @@ export default async function HomePage({ params }: HomePageProps) {
                   <Faq />
                   <ContactFormSection />
                   <TeamSection />
+                  <AdvisorsSection locale={locale} />
                   {/* <StayInformed /> */}
                 </div>
               </Suspense>

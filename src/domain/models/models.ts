@@ -75,6 +75,17 @@ export interface Testimonial {
   order_index: number
 }
 
+export interface Advisor {
+  id: string
+  name: string
+  role: string
+  image_url: string
+  image_alt: string
+  order_index: number
+  created_at: string
+  updated_at: string
+}
+
 export interface CaseStudyImage {
   id: string
   image: string

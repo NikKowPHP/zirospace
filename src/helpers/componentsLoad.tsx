@@ -1,3 +1,4 @@
+
 import dynamic from 'next/dynamic'
 
 export const HeroSection = dynamic(
@@ -128,6 +129,13 @@ export const ContactFormSection = dynamic(
 
 export const TeamSection = dynamic(
   () => import('@/components/sections/team/team').then((mod) => mod.Team),
+  {
+    ssr: true,
+  }
+)
+
+export const AdvisorsSection = dynamic(
+  () => import('@/components/sections/advisors/advisors'),
   {
     ssr: true,
   }

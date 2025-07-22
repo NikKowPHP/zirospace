@@ -1,3 +1,4 @@
+
 import { Locale } from '@/i18n'
 
 export const CACHE_TAGS = {
@@ -10,6 +11,7 @@ export const CACHE_TAGS = {
   UPDATES: 'updates',
   HERO: 'hero',
   YOUTUBE: 'youtube',
+  ADVISORS: 'advisors',
 } as const
 
 export const CACHE_TIMES = {

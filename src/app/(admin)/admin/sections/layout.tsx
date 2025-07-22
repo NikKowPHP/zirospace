@@ -1,3 +1,4 @@
+
 import Image from 'next/image'
 import Link from 'next/link'
 import {
@@ -8,6 +9,7 @@ import {
   FileText,
   Image as ImageIcon,
   Youtube,
+  Users,
 } from 'lucide-react'
 import { AdminProvider } from '@/contexts/admin-context'
 import { ProtectedRoute } from '@/components/protected-route'
@@ -69,6 +71,14 @@ export default async function AdminLayout({
             >
               <MessageCircle className="w-5 h-5" />
               <span className="font-medium">Testimonials</span>
+            </Link>
+
+            <Link
+              href="/admin/sections/advisors"
+              className="flex items-center gap-3 py-3 px-4 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <Users className="w-5 h-5" />
+              <span className="font-medium">Advisors</span>
             </Link>
 
             <Link
