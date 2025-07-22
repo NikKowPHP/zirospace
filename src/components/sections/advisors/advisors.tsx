@@ -33,7 +33,7 @@ async function AdvisorsSection({ locale }: { locale: Locale }) {
                 </div>
               </div>
               <div className="px-6 pb-6 pt-4 flex-grow">
-                <h3 className="text-xl font-semibold text-gray-900">
+                <h3 className="text-xl  font-semibold text-primary">
                   {advisor.name}
                 </h3>
                 <p className="text-gray-600 mt-1">{advisor.role}</p>
