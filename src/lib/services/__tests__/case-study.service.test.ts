@@ -1,6 +1,4 @@
 
-import { CaseStudyService } from '../case-study.service'
-import { prisma } from '@/lib/prisma'
 import { PrismaClient } from '@prisma/client'
 import { mockDeep, mockReset, DeepMockProxy } from 'jest-mock-extended'
 
@@ -9,13 +7,18 @@ jest.mock('next/cache', () => ({
   unstable_cache: jest.fn((fn) => fn),
 }))
 
-// Mock the prisma client
+// 1. Create the mock instance of prisma client first
+const prismaMock = mockDeep<PrismaClient>()
+
+// 2. Mock the prisma module and provide the pre-created mock instance
 jest.mock('@/lib/prisma', () => ({
   __esModule: true,
-  prisma: mockDeep<PrismaClient>(),
+  prisma: prismaMock,
 }))
 
-const prismaMock = prisma as unknown as DeepMockProxy<PrismaClient>
+// 3. Import the service AFTER setting up the mocks
+import { CaseStudyService } from '../case-study.service'
+
 const caseStudyService = new CaseStudyService()
 
 describe('CaseStudyService', () => {
