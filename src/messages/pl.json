@@ -1,3 +1,4 @@
+
 {
   "hero": {
     "title1": "Tworzymy marki",
@@ -277,5 +278,8 @@
     "emailPlaceholder": "Twój email",
     "telephonePlaceholder": "Twój numer telefonu",
     "messagePlaceholder": "Twoja wiadomość"
+  },
+  "advisorsSection": {
+    "title": "Nasi Doradcy"
   }
 }

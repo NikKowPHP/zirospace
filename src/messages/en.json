@@ -1,3 +1,4 @@
+
 {
   "hero": {
     "title1": "Pioneering Integrated",
@@ -279,5 +280,8 @@
     "emailPlaceholder": "Your Email",
     "telephonePlaceholder": "Your Telephone",
     "messagePlaceholder": "Your Message"
+  },
+  "advisorsSection": {
+    "title": "Our Advisors"
   }
 }

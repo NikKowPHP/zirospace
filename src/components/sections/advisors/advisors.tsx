@@ -1,10 +1,11 @@
-
 import { advisorService } from '@/lib/services/advisor.service'
 import { Locale } from '@/i18n'
 import Image from 'next/image'
+import { getTranslations } from 'next-intl/server'
 
 async function AdvisorsSection({ locale }: { locale: Locale }) {
   const advisors = await advisorService.getAdvisors(locale)
+  const t = await getTranslations('advisorsSection')
 
   if (!advisors || advisors.length === 0) {
     return null
@@ -13,7 +14,7 @@ async function AdvisorsSection({ locale }: { locale: Locale }) {
   return (
     <section className="py-12 sm:py-16">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-center mb-12">Our Advisors</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">{t('title')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {advisors.map((advisor) => (
             <div key={advisor.id} className="text-center">
