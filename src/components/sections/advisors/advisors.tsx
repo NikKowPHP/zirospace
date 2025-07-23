@@ -15,7 +15,7 @@ async function AdvisorsSection({ locale }: { locale: Locale }) {
   return (
     <section className="py-12 sm:py-16">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-primary text-center mb-12">{t('title')}.</h2>
+        <h2 className="text-[40px] sm:text-[56px] lg:text-[48px] leading-[1.1] font-medium tracking-[-0.02em] text-primary text-center mb-12">{t('title')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {advisors.map((advisor) => (
             <div
