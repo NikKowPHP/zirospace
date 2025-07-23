@@ -1,4 +1,3 @@
-
 export interface YoutubeModel {
   id: string
   youtube_url: string
@@ -79,8 +78,10 @@ export interface Advisor {
   id: string
   name: string
   role: string
+  expertise?: string
   image_url: string
   image_alt: string
+  linkedin_url?: string
   order_index: number
   created_at: string
   updated_at: string

@@ -23,7 +23,13 @@ export async function POST(request: NextRequest) {
 
     revalidateTag(CACHE_TAGS.ADVISORS)
 
-    return NextResponse.json(newAdvisor)
+     return NextResponse.json(newAdvisor, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error) {
     logger.log('Error creating advisor:', error)
     return NextResponse.json(
@@ -42,7 +48,13 @@ export async function GET(request: NextRequest) {
 
     const advisors = await advisorService.getAdvisors(locale);
 
-    return NextResponse.json(advisors);
+   return NextResponse.json(advisors, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+    });
   } catch (error) {
     logger.log('Error retrieving advisors:', error)
     return NextResponse.json(

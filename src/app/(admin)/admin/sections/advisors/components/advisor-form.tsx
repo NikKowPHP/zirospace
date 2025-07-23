@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useState } from 'react'
@@ -20,12 +19,21 @@ export function AdvisorForm({
 }: AdvisorFormProps) {
   const [name, setName] = useState(advisor?.name || '')
   const [role, setRole] = useState(advisor?.role || '')
+  const [expertise, setExpertise] = useState(advisor?.expertise || '')
   const [imageUrl, setImageUrl] = useState(advisor?.image_url || '')
   const [imageAlt, setImageAlt] = useState(advisor?.image_alt || '')
+  const [linkedinUrl, setLinkedinUrl] = useState(advisor?.linkedin_url || '')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await onSubmit({ name, role, image_url: imageUrl, image_alt: imageAlt })
+    await onSubmit({
+      name,
+      role,
+      expertise,
+      image_url: imageUrl,
+      image_alt: imageAlt,
+      linkedin_url: linkedinUrl,
+    })
   }
 
   return (
@@ -63,6 +71,21 @@ export function AdvisorForm({
       </div>
       <div>
         <label
+          htmlFor="expertise"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Expertise
+        </label>
+        <input
+          type="text"
+          id="expertise"
+          className="mt-1 block w-full border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          value={expertise}
+          onChange={(e) => setExpertise(e.target.value)}
+        />
+      </div>
+      <div>
+        <label
           htmlFor="image_url"
           className="block text-sm font-medium text-gray-700"
         >
@@ -89,6 +112,21 @@ export function AdvisorForm({
           className="mt-1 block w-full border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
           value={imageAlt}
           onChange={(e) => setImageAlt(e.target.value)}
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="linkedin_url"
+          className="block text-sm font-medium text-gray-700"
+        >
+          LinkedIn URL
+        </label>
+        <input
+          type="text"
+          id="linkedin_url"
+          className="mt-1 block w-full border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          value={linkedinUrl}
+          onChange={(e) => setLinkedinUrl(e.target.value)}
         />
       </div>
       <div className="flex justify-end space-x-4">

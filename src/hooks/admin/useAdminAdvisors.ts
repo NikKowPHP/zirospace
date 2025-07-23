@@ -12,7 +12,7 @@ const useAdminAdvisors = () => {
     try {
       const data: Advisor[] = await callApi(
         `/api/admin/advisors?locale=${locale}`,
-        { method: 'GET' },
+        { method: 'GET', cache: 'no-store' },
         {
           loadingMessage: 'Fetching advisors...',
           errorMessage: 'Failed to fetch advisors',
